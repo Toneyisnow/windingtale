@@ -1,0 +1,16 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# https://www.codeandweb.com/texturepacker/unity
+#
+# $TexturePacker:SmartUpdate:e1848b194d0148413012908e6edb7a11:9beff210a13d7f4712fdaccf098c90ec:8205926be9e174326fbc693c8c12d396$
+#
+:format=40300
+:texture=Fight_709_1.png
+:size=132x108
+:pivotpoints=enabled
+:borders=disabled
+:alphahandling=ClearTransparentPixels
+
+动作序列273-帧0;0;2;129;106; 0.5;0.5; 0;0;0;0

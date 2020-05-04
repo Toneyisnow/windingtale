@@ -1,0 +1,27 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# https://www.codeandweb.com/texturepacker/unity
+#
+# $TexturePacker:SmartUpdate:22eb0e9d0ec5d2cea00e8055831dadac:8607067398408c3b7302445b93dca7d5:dfc06743a5b1177ded30edf637b1ca25$
+#
+:format=40300
+:texture=Fight_709_2.png
+:size=488x868
+:pivotpoints=enabled
+:borders=disabled
+:alphahandling=ClearTransparentPixels
+
+动作序列274-帧0;0;762;128;106; 0.5;0.5; 0;0;0;0
+动作序列274-帧1;128;762;128;106; 0.5;0.5; 0;0;0;0
+动作序列274-帧2;256;762;127;106; 0.5;0.5; 0;0;0;0
+动作序列274-帧3;0;595;244;167; 0.5;0.5; 0;0;0;0
+动作序列274-帧4;244;589;243;173; 0.5;0.5; 0;0;0;0
+动作序列274-帧5;0;417;243;172; 0.5;0.5; 0;0;0;0
+动作序列274-帧6;243;411;243;178; 0.5;0.5; 0;0;0;0
+动作序列274-帧7;0;264;244;147; 0.5;0.5; 0;0;0;0
+动作序列274-帧8;244;268;242;143; 0.5;0.5; 0;0;0;0
+动作序列274-帧9;0;119;242;145; 0.5;0.5; 0;0;0;0
+动作序列274-帧10;242;136;154;128; 0.5;0.5; 0;0;0;0
+动作序列274-帧11;0;3;136;116; 0.5;0.5; 0;0;0;0

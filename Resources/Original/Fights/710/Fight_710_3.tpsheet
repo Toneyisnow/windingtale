@@ -1,0 +1,27 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# https://www.codeandweb.com/texturepacker/unity
+#
+# $TexturePacker:SmartUpdate:6de75cb3c431ffee0a69305f74cfc0b0:44d0bebdddf9c0604e4419c265969477:d31ed4957730cac11a1ffac85f200164$
+#
+:format=40300
+:texture=Fight_710_3.png
+:size=444x540
+:pivotpoints=enabled
+:borders=disabled
+:alphahandling=ClearTransparentPixels
+
+动作序列278-帧0;0;434;128;106; 0.5;0.5; 0;0;0;0
+动作序列278-帧1;128;434;128;106; 0.5;0.5; 0;0;0;0
+动作序列278-帧2;256;434;127;106; 0.5;0.5; 0;0;0;0
+动作序列278-帧3;290;296;140;138; 0.5;0.5; 0;0;0;0
+动作序列278-帧4;286;152;139;144; 0.5;0.5; 0;0;0;0
+动作序列278-帧5;0;153;141;143; 0.5;0.5; 0;0;0;0
+动作序列278-帧6;294;3;147;149; 0.5;0.5; 0;0;0;0
+动作序列278-帧7;148;5;146;147; 0.5;0.5; 0;0;0;0
+动作序列278-帧8;141;153;145;143; 0.5;0.5; 0;0;0;0
+动作序列278-帧9;0;7;148;145; 0.5;0.5; 0;0;0;0
+动作序列278-帧10;136;306;154;128; 0.5;0.5; 0;0;0;0
+动作序列278-帧11;0;318;136;116; 0.5;0.5; 0;0;0;0

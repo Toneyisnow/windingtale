@@ -1,0 +1,28 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# https://www.codeandweb.com/texturepacker/unity
+#
+# $TexturePacker:SmartUpdate:f8ff9a60ae035708538b216158cd2665:16ac228aa230c3a3882b9e46380806ad:22458fb0e1c0e395c9f6d67221919977$
+#
+:format=40300
+:texture=Fight_703_2.png
+:size=384x348
+:pivotpoints=enabled
+:borders=disabled
+:alphahandling=ClearTransparentPixels
+
+Fight_703_2_0;0;240;121;108; 0.5;0.5; 0;0;0;0
+Fight_703_2_1;121;238;121;110; 0.5;0.5; 0;0;0;0
+Fight_703_2_2;242;239;121;109; 0.5;0.5; 0;0;0;0
+Fight_703_2_3;0;112;121;126; 0.5;0.5; 0;0;0;0
+Fight_703_2_4;121;94;101;144; 0.5;0.5; 0;0;0;0
+Fight_703_2_5;121;94;101;144; 0.5;0.5; 0;0;0;0
+Fight_703_2_6;222;93;106;145; 0.5;0.5; 0;0;0;0
+Fight_703_2_7;0;3;105;90; 0.5;0.5; 0;0;0;0
+Fight_703_2_8;0;112;121;126; 0.5;0.5; 0;0;0;0
+Fight_703_2_9;121;94;101;144; 0.5;0.5; 0;0;0;0
+Fight_703_2_10;222;93;106;145; 0.5;0.5; 0;0;0;0
+Fight_703_2_11;0;3;105;90; 0.5;0.5; 0;0;0;0
+Fight_703_2_12;105;3;105;90; 0.5;0.5; 0;0;0;0
