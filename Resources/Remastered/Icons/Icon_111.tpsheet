@@ -1,0 +1,27 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# https://www.codeandweb.com/texturepacker/unity
+#
+# $TexturePacker:SmartUpdate:f8da471b52ad32fd8fe6507a85b6df6f:25facb6d596e59f571b1e962a48d4b44:05ec764f00b4ca41bb3b56719f31b92f$
+#
+:format=40300
+:texture=Icon_111.png
+:size=72x96
+:pivotpoints=enabled
+:borders=disabled
+:alphahandling=ClearTransparentPixels
+
+Icon-111-01;0;72;24;24; 0.5;0.5; 0;0;0;0
+Icon-111-02;24;72;24;24; 0.5;0.5; 0;0;0;0
+Icon-111-03;48;72;24;24; 0.5;0.5; 0;0;0;0
+Icon-111-04;0;48;24;24; 0.5;0.5; 0;0;0;0
+Icon-111-05;0;24;24;24; 0.5;0.5; 0;0;0;0
+Icon-111-06;0;0;24;24; 0.5;0.5; 0;0;0;0
+Icon-111-07;24;48;24;24; 0.5;0.5; 0;0;0;0
+Icon-111-08;48;48;24;24; 0.5;0.5; 0;0;0;0
+Icon-111-09;24;24;24;24; 0.5;0.5; 0;0;0;0
+Icon-111-10;24;0;24;24; 0.5;0.5; 0;0;0;0
+Icon-111-11;48;24;24;24; 0.5;0.5; 0;0;0;0
+Icon-111-12;48;0;24;24; 0.5;0.5; 0;0;0;0
