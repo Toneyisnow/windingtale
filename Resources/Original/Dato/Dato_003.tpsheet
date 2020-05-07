@@ -1,0 +1,19 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# https://www.codeandweb.com/texturepacker/unity
+#
+# $TexturePacker:SmartUpdate:4ca7b13f3c7d19ae323cccbdf8b95211:340ac178e4ae8199a6c511dfaa26ba0e:e97ab97cf08c0b7e7f2a2bb212ebebd5$
+#
+:format=40300
+:texture=Dato_003.png
+:size=160x160
+:pivotpoints=enabled
+:borders=disabled
+:alphahandling=ClearTransparentPixels
+
+image37;0;80;80;80; 0.5;0.5; 0;0;0;0; 4;80;0;0;0;0;80;80;80; 2;1;2;3;0;1;3
+image38;80;80;80;80; 0.5;0.5; 0;0;0;0; 4;80;0;0;0;0;80;80;80; 2;1;2;3;0;1;3
+image39;0;0;80;80; 0.5;0.5; 0;0;0;0; 4;80;0;0;0;0;80;80;80; 2;1;2;3;0;1;3
+image40;80;0;80;80; 0.5;0.5; 0;0;0;0; 4;80;0;0;0;0;80;80;80; 2;1;2;3;0;1;3
