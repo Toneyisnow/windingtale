@@ -57,9 +57,9 @@ namespace FigAniTool2.ObjectModels
                         map.Width = reader.ReadInt16();
                         map.Height = reader.ReadInt16();
 
-                        for(int x = 0; x < map.Width; x++)
+                        for(int y = 0; y < map.Height; y++)
                         {
-                            for(int y = 0; y < map.Height; y++)
+                            for (int x = 0; x < map.Width; x++)
                             {
                                 int shapeIndex = reader.ReadInt16();
                                 map.SetShapeAt(x, y, shapeIndex);

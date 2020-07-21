@@ -66,10 +66,29 @@
     <Compile Include="source\ObjectModels\ShapeDataFile.cs" />
     <Compile Include="source\ObjectModels\ShapeInfo.cs" />
     <Compile Include="source\ObjectModels\ShapePanel.cs" />
+    <Compile Include="source\Utils\FieldMapExporter.cs" />
     <Compile Include="source\Utils\ImageDataExporter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="source\Utils\StreamHelper.cs" />
+    <Content Include="resources\MapBlock_0.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\MapBlock_1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\MapBlock_2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\MapBlock_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\MapBlock_4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\MapBlock_5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

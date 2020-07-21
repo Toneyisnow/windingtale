@@ -83,7 +83,7 @@ namespace FigAniTool2.ObjectModels
                         for (int c = 0; c < shapeCount; c++)
                         {
                             ShapeInfo shape = panel.Shapes[c];
-
+                            shape.Index = c;
                             shape.EventId = reader.ReadByte();
                             shape.Type = (ShapeInfo.ShapeType)reader.ReadByte();
                             shape.BattleGroundId = reader.ReadInt16();

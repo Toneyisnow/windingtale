@@ -58,19 +58,25 @@ namespace FigAniTool2
             FieldDataFile fieldData = new FieldDataFile(@".\FDFIELD.DAT");
             fieldData.LoadData(shapeData);
 
-            FieldMap map = fieldData.GetField(4);
-            for(int x = 0; x < map.Width; x++)
+            for (int m = 1; m < 33; m++)
             {
-                for(int y = 0; y < map.Height; y++)
+                FieldMap map = fieldData.GetField(m);
+                HashSet<int> shapes = new HashSet<int>();
+                for (int i = 0; i < map.Width; i++)
                 {
-                    ShapeInfo shape = map.GetShapeAt(x, y);
-                    if (shape == null)
+                    for (int j = 0; j < map.Height; j++)
                     {
-                        continue;
+                        var shape = map.GetShapeAt(i, j);
+                        shapes.Add(shape.Index);
                     }
+                }
 
+                ShapePanel shapePanel = shapeData.GetPanel(m);
+                foreach (int sh in shapes)
+                {
+                    ShapeInfo shape = shapePanel.Shapes[sh];
                     ImageDataExporter exporter = new ImageDataExporter(shape.Image);
-                    exporter.ExportToPng(string.Format(@"D:\Temp\FDII\Shapes\Shape_{0}_{1}.png", x, y));
+                    exporter.ExportToPng(string.Format(@"D:\Temp\FDII\Shapes\Shape_{0}_{1}.png", m, sh));
                 }
             }
         }

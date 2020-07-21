@@ -29,6 +29,11 @@ namespace FigAniTool2.ObjectModels
             get; set;
         }
 
+        public int Index
+        {
+            get; set;
+        }
+
         /// <summary>
         /// Event on this shape, 02: Treasure box; 04: Hidden treasure box
         /// </summary>
