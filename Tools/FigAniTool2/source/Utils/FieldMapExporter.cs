@@ -22,9 +22,15 @@ namespace FigAniTool2.Utils
 
         private FieldMap fieldMap = null;
 
-        public FieldMapExporter(FieldMap map)
+        private ShapePanel shapePanel = null;
+
+        private FDPalette palette = null;
+
+        public FieldMapExporter(FieldMap map, ShapePanel shapePanel, FDPalette palette)
         {
             this.fieldMap = map;
+            this.shapePanel = shapePanel;
+            this.palette = palette;
 
             this.canvasWidth = (map.Width + 2) * unitWidth;
             this.canvasHeight = (map.Height + 2) * unitHeight;
@@ -37,13 +43,19 @@ namespace FigAniTool2.Utils
             {
                 for (int yy = 0; yy < fieldMap.Height; yy++)
                 {
-                    var shape = fieldMap.GetShapeAt(xx, yy);
+                    var shapeIndex = fieldMap.GetShapeIndexAt(xx, yy);
+                    if (shapeIndex < 0)
+                    {
+                        continue;
+                    }
+
+                    ShapeInfo shape = shapePanel.Shapes[shapeIndex];
                     if (shape == null)
                     {
                         continue;
                     }
 
-                    DrawOnCanvas(shape.Image, xx, yy);
+                    DrawOnCanvas(shape.Image.GenerateBitmap(palette), xx, yy);
                 }
             }
 
@@ -72,7 +84,13 @@ namespace FigAniTool2.Utils
                                 {
                                     for (int yy = 0; yy < fieldMap.Height; yy++)
                                     {
-                                        var shape = fieldMap.GetShapeAt(xx, yy);
+                                        var shapeIndex = fieldMap.GetShapeIndexAt(xx, yy);
+                                        if (shapeIndex < 0)
+                                        {
+                                            continue;
+                                        }
+
+                                        ShapeInfo shape = shapePanel.Shapes[shapeIndex];
                                         if (shape == null)
                                         {
                                             continue;
@@ -91,7 +109,7 @@ namespace FigAniTool2.Utils
             }
         }
 
-        private void DrawOnCanvas(FDImage imageData, int posX, int posY, byte rotation = 0)
+        private void DrawOnCanvas(FDBitmap imageData, int posX, int posY, byte rotation = 0)
         {
             if (imageData == null)
             {

@@ -1,0 +1,3 @@
+D:\GitRoot\toneyisnow\windingtale\Resources\Remastered\Shapes\ShapePanel2
+D:\GitRoot\toneyisnow\windingtale\Resources\Remastered\Shapes\ShapePanel2\obj
+true

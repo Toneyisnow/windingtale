@@ -19,7 +19,7 @@ namespace FigAniTool2.ObjectModels
             this.fileFullName = fileFullName;
         }
 
-        public void LoadData(ShapeDataFile shapeData)
+        public void LoadData()
         {
             using (FileStream streamData = new FileStream(fileFullName, FileMode.Open, FileAccess.Read))
             {
@@ -52,11 +52,11 @@ namespace FigAniTool2.ObjectModels
                         }
 
                         reader.Seek(mapAddresses[mapIndex], SeekOrigin.Begin);
+                        int width = reader.ReadInt16();
+                        int height = reader.ReadInt16();
 
-                        FieldMap map = new FieldMap(mapIndex, shapeData.GetPanel(mapIndex));
-                        map.Width = reader.ReadInt16();
-                        map.Height = reader.ReadInt16();
-
+                        FieldMap map = new FieldMap(mapIndex, width, height);
+                        
                         for(int y = 0; y < map.Height; y++)
                         {
                             for (int x = 0; x < map.Width; x++)

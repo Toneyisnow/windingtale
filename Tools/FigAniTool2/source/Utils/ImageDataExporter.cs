@@ -12,12 +12,12 @@ namespace FigAniTool2.Utils
 {
     public class ImageDataExporter
     {
-        private FDImage imageData = null;
+        private FDBitmap bitmapData = null;
 
 
-        public ImageDataExporter(FDImage imageData)
+        public ImageDataExporter(FDBitmap data)
         {
-            this.imageData = imageData;
+            this.bitmapData = data;
         }
 
         public void ExportToPng(string pngFileFullPath, byte rotate = 0)
@@ -38,10 +38,10 @@ namespace FigAniTool2.Utils
                     }
                     */
 
-                    byte[] updatedData = imageData.RawData;
+                    byte[] updatedData = bitmapData.RawData;
                     fixed (byte* ptr = updatedData)
                     {
-                        using (Bitmap image = new Bitmap(imageData.Width, imageData.Height, imageData.Width * 4, PixelFormat.Format32bppPArgb, new IntPtr(ptr)))
+                        using (Bitmap image = new Bitmap(bitmapData.Width, bitmapData.Height, bitmapData.Width * 4, PixelFormat.Format32bppPArgb, new IntPtr(ptr)))
                         {
                             image.Save(output, ImageFormat.Png);
                         }

@@ -12,14 +12,11 @@ namespace FigAniTool2.ObjectModels
     {
         private string fileFullName = string.Empty;
 
-        private FDPalette palette = null;
-
         private List<ShapePanel> ShapePanels = null;
 
-        public ShapeDataFile(string fileFullName, FDPalette palette)
+        public ShapeDataFile(string fileFullName)
         {
             this.fileFullName = fileFullName;
-            this.palette = palette;
         }
 
         public void LoadData()
@@ -74,7 +71,7 @@ namespace FigAniTool2.ObjectModels
                             reader.Seek(panelAddresses[panelIndex] + shapeAddresses[c]);
 
                             ShapeInfo shape = new ShapeInfo();
-                            shape.Image = FDImage.ReadFromBinary(reader, palette, panel.ShapeWidth, panel.ShapeHeight);
+                            shape.Image = FDImage.ReadFromBinary(reader, panel.ShapeWidth, panel.ShapeHeight);
                             panel.Shapes.Add(shape);
                         }
 

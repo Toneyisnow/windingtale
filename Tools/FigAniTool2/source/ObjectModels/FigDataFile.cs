@@ -12,15 +12,12 @@ namespace FigAniTool2.ObjectModels
     {
         private string fileFullName = null;
 
-        private FDPalette palette = null;
-
         private List<FigAnimation> Animations = null;
 
 
-        public FigDataFile(string fileFullName, FDPalette palette)
+        public FigDataFile(string fileFullName)
         {
             this.fileFullName = fileFullName;
-            this.palette = palette;
         }
 
         public FigAnimation GetAnimation(int index)
@@ -105,7 +102,7 @@ namespace FigAniTool2.ObjectModels
 
                             reader.ReadInt16();
 
-                            frame.Image = FDImage.ReadFromBinary(reader, palette);
+                            frame.Image = FDImage.ReadFromBinary(reader);
 
                             string characterId = (aniIndex / 3).ToString("X2");
                             int type = aniIndex % 3;

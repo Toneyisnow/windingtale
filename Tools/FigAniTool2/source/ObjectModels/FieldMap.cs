@@ -9,9 +9,11 @@ namespace FigAniTool2.ObjectModels
 {
     public class FieldMap
     {
-        private ShapePanel shapePanel = null;
 
-        private Dictionary<FDPosition, ShapeInfo> shapeMap = null;
+        public int[,] ShapeMatrix
+        {
+            get; set;
+        }
 
         public int Width
         {
@@ -25,26 +27,48 @@ namespace FigAniTool2.ObjectModels
 
         public int Index
         {
-            get; private set;
+            get; set;
         }
 
-        public FieldMap(int index, ShapePanel shapePanel)
+        public FieldMap()
+        {
+
+        }
+
+        public FieldMap(int index, int width, int height)
         {
             this.Index = index;
-            this.shapePanel = shapePanel;
-            this.shapeMap = new Dictionary<FDPosition, ShapeInfo>();
+            this.Width = width;
+            this.Height = height;
+
+            // this.shapePanel = shapePanel;
+            this.ShapeMatrix = new int[width, height];
         }
 
-        public ShapeInfo GetShapeAt(int x, int y)
+        public int GetShapeIndexAt(int x, int y)
         {
-            FDPosition position = new FDPosition(x, y);
-            return shapeMap[position];
+            return this.ShapeMatrix[x, y];
         }
 
         public void SetShapeAt(int x, int y, int shapeIndex)
         {
-            FDPosition position = new FDPosition(x, y);
-            shapeMap[position] = shapePanel.Shapes[shapeIndex];
+            this.ShapeMatrix[x, y] = shapeIndex;
         }
+
+        public HashSet<int> GetAllShapeIndexes()
+        {
+            HashSet<int> shapes = new HashSet<int>();
+            for (int i = 0; i < this.Width; i++)
+            {
+                for (int j = 0; j < this.Height; j++)
+                {
+                    var shapeIndex = this.GetShapeIndexAt(i, j);
+                    shapes.Add(shapeIndex);
+                }
+            }
+            return shapes;
+        }
+
+
     }
 }
