@@ -62,8 +62,7 @@ namespace FigAniTool2
 
         private void button5_Click(object sender, EventArgs e)
         {
-            RenameObjFileNames();
-            //// GenerateAllVoxes();
+            GenerateAllVoxes();
         }
 
         private void GenerateAllVoxes()
@@ -81,7 +80,7 @@ namespace FigAniTool2
 
 
             // For each map, generate the vox files
-            for (int m = 1; m < 33; m++)
+            for (int m = 1; m < 2; m++)
             {
                 FieldMap map = fieldData.GetField(m);
                 HashSet<int> shapes = map.GetAllShapeIndexes();
@@ -306,6 +305,7 @@ namespace FigAniTool2
             ShapeDataFile shapeData = new ShapeDataFile(@".\FDSHAP.DAT");
             shapeData.LoadData();
 
+            MakeVoxPaletteMapping(shapeData, 1, 20, paletteMapping);
             MakeVoxPaletteMapping(shapeData, 2, 205, paletteMapping);
             MakeVoxPaletteMapping(shapeData, 3, 24, paletteMapping);
             MakeVoxPaletteMapping(shapeData, 3, 144, paletteMapping);
