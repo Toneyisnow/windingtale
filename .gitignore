@@ -1,2 +1,8 @@
 Tools/FigAniTool2/bin
 Tools/FigAniTool2/obj
+
+WindingTale/Library
+WindingTale/Temp
+WindingTale/bin
+WindingTale/obj
+*.meta

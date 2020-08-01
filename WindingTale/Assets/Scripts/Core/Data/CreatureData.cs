@@ -1,0 +1,82 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+
+namespace WindingTale.Core.Components
+{
+    public class CreatureData
+    {
+        public int CreatureId
+        {
+            get; set;
+        }
+
+        public int DefinitionId
+        {
+            get; set;
+        }
+
+        public int Level
+        {
+            get; set;
+        }
+
+        public int Hp
+        {
+            get; set;
+        }
+
+        public int Mp
+        {
+            get; set;
+        }
+
+        public int HpMax
+        {
+            get; set;
+        }
+
+        public int MpMax
+        {
+            get; set;
+        }
+
+        public int Ap
+        {
+            get; set;
+        }
+
+        public int Dp
+        {
+            get; set;
+        }
+
+        public int Dx
+        {
+            get; set;
+        }
+
+        public int Mv
+        {
+            get; set;
+        }
+
+        public int Ex
+        {
+            get; set;
+        }
+
+        public List<int> Items
+        {
+            get; set;
+        }
+
+        public List<int> Magics
+        {
+            get; set;
+        }
+
+
+    }
+}
