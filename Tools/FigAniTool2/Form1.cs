@@ -52,7 +52,7 @@ namespace FigAniTool2
 
         private void button3_Click(object sender, EventArgs e)
         {
-            ExportAllUsedShapes();
+            ExportFieldMapData();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -213,6 +213,17 @@ namespace FigAniTool2
                         var shapeIndex = map.GetShapeIndexAt(i, j);
                         shapes.Add(shapeIndex);
                     }
+                }
+
+                var shapePanel = shapeData.GetPanel(m);
+                foreach(int shapeIndex in shapes)
+                {
+                    ShapeInfo shapeInfo = shapePanel.Shapes[shapeIndex];
+
+                    FieldShape shape = new FieldShape();
+                    shape.Type = shapeInfo.Type;
+                    shape.BattleGroundId = shapeInfo.BattleGroundId;
+                    map.Shapes[shapeIndex] = shape;
                 }
 
                 string mapString = JsonConvert.SerializeObject(map, Formatting.Indented);

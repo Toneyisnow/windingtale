@@ -1,20 +1,20 @@
 ﻿using FigAniTool2.Common;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static FigAniTool2.ObjectModels.ShapeInfo;
 
 namespace FigAniTool2.ObjectModels
 {
     public class FieldMap
     {
-
-        public int[,] ShapeMatrix
+        public int Index
         {
             get; set;
         }
-
         public int Width
         {
             get; set;
@@ -25,7 +25,12 @@ namespace FigAniTool2.ObjectModels
             get; set;
         }
 
-        public int Index
+        public int[,] ShapeMatrix
+        {
+            get; set;
+        }
+
+        public Dictionary<int, FieldShape> Shapes
         {
             get; set;
         }
@@ -43,6 +48,7 @@ namespace FigAniTool2.ObjectModels
 
             // this.shapePanel = shapePanel;
             this.ShapeMatrix = new int[width, height];
+            this.Shapes = new Dictionary<int, FieldShape>();
         }
 
         public int GetShapeIndexAt(int x, int y)
@@ -70,5 +76,19 @@ namespace FigAniTool2.ObjectModels
         }
 
 
+    }
+
+    public class FieldShape
+    {
+        public ShapeType Type
+        {
+            get; set;
+        }
+
+        [JsonProperty(PropertyName = "bg")]
+        public int BattleGroundId
+        {
+            get; set;
+        }
     }
 }
