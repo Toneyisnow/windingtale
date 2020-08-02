@@ -6,6 +6,11 @@ namespace WindingTale.Core.Components.ActionStates
 {
     public class ActionMenuState : ActionState
     {
-        
+        public ActionMenuState(IGameAction action, IGameCallback callback)
+            : base(action, callback)
+        {
+
+        }
+
     }
 }

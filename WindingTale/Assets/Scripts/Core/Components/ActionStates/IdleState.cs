@@ -8,6 +8,10 @@ namespace WindingTale.Core.Components.ActionStates
 {
     public class IdleState : ActionState
     {
+        public IdleState(IGameAction action, IGameCallback callback) : base(action, callback)
+        {
+
+        }
         
     }
 }

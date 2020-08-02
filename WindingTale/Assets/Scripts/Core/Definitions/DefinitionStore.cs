@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace WindingTale.Core.Definitions
@@ -43,6 +45,18 @@ namespace WindingTale.Core.Definitions
 
         }
 
+        /// <summary>
+        /// Load two files: chapter_N.dat for json, chapter_N_data.dat for plain text
+        /// </summary>
+        /// <param name="chapterId"></param>
+        /// <returns></returns>
+        public ChapterDefinition LoadChapter(int chapterId)
+        {
+            string mapData = File.ReadAllText(string.Format(@"D:\GitRoot\toneyisnow\windingtale\WindingTale\Assets\Resources\Data\Chapters\Chapter_{0}.dat", chapterId));
+            ChapterDefinition chapter = JsonConvert.DeserializeObject<ChapterDefinition>(mapData);
+            chapter.ChapterId = chapterId;
 
+            return chapter;
+        }
     }
 }

@@ -75,13 +75,18 @@
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\AttackRangeFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\MagicRangeFilder.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\MoveRangeFinder.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Events\Chapters\EventChapter1.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Events\Chapters\EventChapter2.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Events\EventCondition.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Events\EventLoader.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\GameEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\GameEventManager.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\TriggeredEvent.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\TurnEvent.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Events\TriggeredEventCondition.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Events\TurnEventCondition.cs" />
     <Compile Include="Assets\Scripts\Core\Components\GameField.cs" />
     <Compile Include="Assets\Scripts\Core\Components\GameManager.cs" />
     <Compile Include="Assets\Scripts\Core\Components\IGameAction.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\IGameCallback.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ClearRangePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureMovePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\PackBase.cs" />
@@ -91,9 +96,10 @@
     <Compile Include="Assets\Scripts\Core\Components\Packs\ShowMenuPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ShowRangePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\TalkPack.cs" />
+    <Compile Include="Assets\Scripts\Core\Data\BattleRecord.cs" />
+    <Compile Include="Assets\Scripts\Core\Data\ChapterRecord.cs" />
     <Compile Include="Assets\Scripts\Core\Data\CreatureData.cs" />
-    <Compile Include="Assets\Scripts\Core\Data\GameBattleRecord.cs" />
-    <Compile Include="Assets\Scripts\Core\Data\GameStageRecord.cs" />
+    <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\CreatureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\DefinitionStore.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\AttackItemDefinition.cs" />
@@ -105,11 +111,11 @@
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LeveledCreatureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\MagicDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\MapDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\OccupationDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ShopDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\ObjectModels\FDCreature.cs" />
     <Compile Include="Assets\Scripts\Core\ObjectModels\FDMenu.cs" />
+    <Compile Include="Assets\Scripts\UI\Common\NewBehaviourScript.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBase.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\CallbackActivity.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\GameActivityManager.cs" />
@@ -119,7 +125,8 @@
     <Compile Include="Assets\Scripts\UI\Components\Activities\ShowRangeActivity.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\TalkActivity.cs" />
     <Compile Include="Assets\Scripts\UI\Components\GameInterface.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\IGameCallback.cs" />
+    <Compile Include="Assets\Scripts\UI\FieldMap\FieldTransform.cs" />
+    <Compile Include="Assets\Scripts\UI\FieldMap\ShapeMappings.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UICreature.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UICursor.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UIIndicator.cs" />
@@ -307,6 +314,9 @@
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>

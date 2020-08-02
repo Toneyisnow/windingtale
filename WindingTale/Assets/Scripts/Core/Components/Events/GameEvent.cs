@@ -6,7 +6,10 @@ namespace WindingTale.Core.Components.Events
 {
     public abstract class GameEvent
     {
-
+        public EventCondition Condition
+        {
+            get; set;
+        }
 
         public int EventId
         {
