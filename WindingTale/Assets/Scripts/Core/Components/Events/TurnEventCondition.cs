@@ -17,5 +17,15 @@ namespace WindingTale.Core.Components.Events
             get; set;
         }
 
+        public TurnEventCondition(int turnId, CreatureFaction phase)
+        {
+            this.TurnId = turnId;
+            this.TurnPhase = phase;
+        }
+
+        public override bool Match(IGameAction gameAction)
+        {
+            return gameAction.TurnId() == TurnId && gameAction.TurnPhase() == TurnPhase;
+        }
     }
 }

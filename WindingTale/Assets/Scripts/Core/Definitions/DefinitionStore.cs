@@ -12,6 +12,10 @@ namespace WindingTale.Core.Definitions
     {
         private static DefinitionStore instance = null;
 
+        private Dictionary<int, CreatureDefinition> creatureDefinitions = null;
+
+
+
         private DefinitionStore()
         {
 
@@ -32,7 +36,7 @@ namespace WindingTale.Core.Definitions
 
         private void LoadAll()
         {
-
+            creatureDefinitions = new Dictionary<int, CreatureDefinition>();
         }
 
         private void LoadCreatureDefinitions()
@@ -44,6 +48,8 @@ namespace WindingTale.Core.Definitions
         {
 
         }
+
+
 
         /// <summary>
         /// Load two files: chapter_N.dat for json, chapter_N_data.dat for plain text
@@ -58,5 +64,12 @@ namespace WindingTale.Core.Definitions
 
             return chapter;
         }
+
+        public CreatureDefinition GetCreatureDefinition(int creatureDefId)
+        {
+            return null;
+        }
+
+
     }
 }

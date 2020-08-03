@@ -64,8 +64,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Common\Constants.cs" />
+    <Compile Include="Assets\Scripts\Common\FDMovePath.cs" />
     <Compile Include="Assets\Scripts\Common\FDPosition.cs" />
     <Compile Include="Assets\Scripts\Common\FDRange.cs" />
+    <Compile Include="Assets\Scripts\Common\GameFormula.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ActionMenuState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ActionState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\GameStateDispatcher.cs" />
@@ -87,8 +89,10 @@
     <Compile Include="Assets\Scripts\Core\Components\GameManager.cs" />
     <Compile Include="Assets\Scripts\Core\Components\IGameAction.cs" />
     <Compile Include="Assets\Scripts\Core\Components\IGameCallback.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\BatchPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ClearRangePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureMovePack.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\IdlePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\PackBase.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\PromptPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\RefreshCreaturePack.cs" />

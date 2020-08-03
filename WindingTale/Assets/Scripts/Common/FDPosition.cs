@@ -17,6 +17,11 @@ namespace WindingTale.Common
             get; private set;
         }
 
+        public bool AreSame(FDPosition other)
+        {
+            return this.X == other.X && this.Y == other.Y;
+        }
+
         public FDPosition(int x, int y)
         {
             this.X = x;
@@ -28,6 +33,10 @@ namespace WindingTale.Common
             return new FDPosition(x, y);
         }
 
+        public static FDPosition Invalid()
+        {
+            return new FDPosition(-1, -1);
+        }
     }
 
 }

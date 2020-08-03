@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using WindingTale.Common;
 
 namespace WindingTale.Core.Components
 {
@@ -66,6 +66,47 @@ namespace WindingTale.Core.Components
         {
             get; set;
         }
+
+        public int CalculatedAp
+        {
+            get
+            {
+                return GameFormula.CalculateAp(this);
+            }
+        }
+
+        public int CalculatedDp
+        {
+            get
+            {
+                return GameFormula.CalculateAp(this);
+            }
+        }
+
+        public int CalculatedDx
+        {
+            get
+            {
+                return GameFormula.CalculateAp(this);
+            }
+        }
+
+        public int CalculatedMv
+        {
+            get
+            {
+                return GameFormula.CalculateAp(this);
+            }
+        }
+
+        public int CalculatedEx
+        {
+            get
+            {
+                return GameFormula.CalculateAp(this);
+            }
+        }
+
 
         public List<int> Items
         {

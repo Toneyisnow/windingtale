@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.Definitions;
 
 namespace WindingTale.Core.Components.Events
 {
@@ -23,7 +25,7 @@ namespace WindingTale.Core.Components.Events
 
     public abstract class EventLoader
     {
-        private GameEventManager eventManager = null;
+        protected GameEventManager eventManager = null;
 
         public EventLoader(GameEventManager eventManager)
         {
@@ -33,6 +35,14 @@ namespace WindingTale.Core.Components.Events
         public virtual void LoadEvents()
         {
 
+        }
+
+        protected void LoadTurnEvent(int eventId, int turnId, CreatureFaction turnPhase, Action<IGameAction> action)
+        {
+            TurnEventCondition condition = new TurnEventCondition(turnId, turnPhase);
+            GameEvent even = new GameEvent(eventId, condition, action);
+
+            eventManager.RegisterEvent(even);
         }
     }
 }

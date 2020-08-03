@@ -28,12 +28,12 @@ namespace WindingTale.Core.Components.Events
         /// </summary>
         /// <param name="turnId"></param>
         /// <param name="faction"></param>
-        public void notifyTurnEvents(int turnId, CreatureFaction faction)
+        public void NotifyTurnEvents(int turnId, CreatureFaction faction)
         {
 
         }
 
-        public void notifyTriggeredEvents()
+        public void NotifyTriggeredEvents()
         {
 
         }
