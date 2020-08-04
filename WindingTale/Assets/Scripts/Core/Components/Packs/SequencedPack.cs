@@ -4,19 +4,12 @@ using UnityEngine;
 
 namespace WindingTale.Core.Components.Packs
 {
-    public class BatchPack : PackBase
+
+    public class SequencedPack : PackBase
     {
-        public BatchPack()
-        {
-
-        
-        
-        }
-
-        public void Add(PackBase pack)
+        public SequencedPack(PackBase pack1, PackBase pack2)
         {
 
         }
-
     }
 }

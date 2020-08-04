@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using WindingTale.Common;
 
 namespace WindingTale.Core.Definitions
 {
@@ -13,7 +14,8 @@ namespace WindingTale.Core.Definitions
         private static DefinitionStore instance = null;
 
         private Dictionary<int, CreatureDefinition> creatureDefinitions = null;
-
+        private Dictionary<int, CreatureDefinition> creatureBaseDefinitions = null;
+        private Dictionary<int, CreatureDefinition> creatureChapterDefinitions = null;
 
 
         private DefinitionStore()
@@ -36,11 +38,37 @@ namespace WindingTale.Core.Definitions
 
         private void LoadAll()
         {
-            creatureDefinitions = new Dictionary<int, CreatureDefinition>();
+            LoadCreatureDefinitions();
+
+            LoadItemDefinitions();
+
+            LoadMagicDefinitions();
         }
 
         private void LoadCreatureDefinitions()
         {
+            creatureDefinitions = new Dictionary<int, CreatureDefinition>();
+
+            ResourceDataFile fileReader = new ResourceDataFile(@"Data/Creature");
+            int creatureCount = fileReader.ReadInt();
+
+            for(int i = 0; i < creatureCount; i++)
+            {
+                CreatureDefinition def = CreatureDefinition.ReadFromFile(fileReader);
+                creatureDefinitions[def.DefinitionId] = def;
+            }
+
+            creatureBaseDefinitions = new Dictionary<int, CreatureDefinition>();
+
+            ResourceDataFile fileReader2 = new ResourceDataFile(@"Data/LeveledCreature");
+            int creatureBaseCount = fileReader2.ReadInt();
+
+            for (int i = 0; i < creatureBaseCount; i++)
+            {
+                CreatureDefinition def = CreatureDefinition.ReadBaseFromFile(fileReader2);
+                creatureBaseDefinitions[def.DefinitionId] = def;
+            }
+
 
         }
 
@@ -49,7 +77,10 @@ namespace WindingTale.Core.Definitions
 
         }
 
+        private void LoadMagicDefinitions()
+        {
 
+        }
 
         /// <summary>
         /// Load two files: chapter_N.dat for json, chapter_N_data.dat for plain text
@@ -58,15 +89,35 @@ namespace WindingTale.Core.Definitions
         /// <returns></returns>
         public ChapterDefinition LoadChapter(int chapterId)
         {
-            string mapData = File.ReadAllText(string.Format(@"D:\GitRoot\toneyisnow\windingtale\WindingTale\Assets\Resources\Data\Chapters\Chapter_{0}.dat", chapterId));
-            ChapterDefinition chapter = JsonConvert.DeserializeObject<ChapterDefinition>(mapData);
+            ChapterDefinition chapter = ResourceJsonFile.Load<ChapterDefinition>(string.Format(@"Data/Chapters/Chapter_{0}", chapterId));
             chapter.ChapterId = chapterId;
+
+            // Load Chapter Creatures
+            creatureChapterDefinitions = new Dictionary<int, CreatureDefinition>();
+            ResourceDataFile fileReader2 = new ResourceDataFile(string.Format(@"Data/Chapters/Chapter_{0}_Creature", chapterId));
+            int cCount = fileReader2.ReadInt();
+
+            for (int i = 0; i < cCount; i++)
+            {
+                CreatureDefinition def = CreatureDefinition.ReadFromFile(fileReader2, creatureBaseDefinitions);
+                creatureChapterDefinitions[def.DefinitionId] = def;
+            }
 
             return chapter;
         }
 
         public CreatureDefinition GetCreatureDefinition(int creatureDefId)
         {
+            if (creatureDefinitions.ContainsKey(creatureDefId))
+            {
+                return creatureDefinitions[creatureDefId];
+            }
+
+            if (creatureChapterDefinitions.ContainsKey(creatureDefId))
+            {
+                return creatureChapterDefinitions[creatureDefId];
+            }
+
             return null;
         }
 

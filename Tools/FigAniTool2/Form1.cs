@@ -227,7 +227,7 @@ namespace FigAniTool2
                 }
 
                 string mapString = JsonConvert.SerializeObject(map, Formatting.Indented);
-                File.WriteAllText(string.Format(@"D:\Temp\FDII\Chapter_{0}.dat", m + 1), mapString);
+                File.WriteAllText(string.Format(@"D:\Temp\FDII\Chapter_{0}.txt", m + 1), mapString);
             }
         }
 

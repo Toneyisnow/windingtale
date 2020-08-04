@@ -2,8 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor.iOS;
 using UnityEngine;
 using WindingTale.Core.Components;
+using WindingTale.Core.Components.Packs;
+using WindingTale.UI.Components.Activities;
 using WindingTale.UI.FieldMap;
 
 namespace WindingTale.UI.Components
@@ -15,9 +18,14 @@ namespace WindingTale.UI.Components
 
         private GameManager gameManager = null;
 
+        private GameActivityManager activityManager = null;
+
+
         // Start is called before the first frame update
         void Start()
         {
+            activityManager = new GameActivityManager(this);
+
             gameManager = new GameManager(this);
             ChapterRecord record = ChapterRecord.NewGame();
             gameManager.StartGame(record);
@@ -76,5 +84,11 @@ namespace WindingTale.UI.Components
 
 
         }
+
+        public void OnReceivePack(PackBase pack)
+        {
+            activityManager.PushPack(pack);
+        }
+
     }
 }

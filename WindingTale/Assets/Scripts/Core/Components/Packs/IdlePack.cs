@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdlePack : MonoBehaviour
+namespace WindingTale.Core.Components.Packs
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public class IdlePack : PackBase
     {
-        
+        public int TimeUnit
+        {
+            get; private set;
+        }
+
+        public static IdlePack FromTimeUnit(int unit)
+        {
+            IdlePack pack = new IdlePack();
+            pack.TimeUnit = unit;
+            return pack;
+        }
     }
 }

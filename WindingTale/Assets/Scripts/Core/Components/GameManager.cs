@@ -5,6 +5,7 @@ using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components.ActionStates;
 using WindingTale.Core.Components.Events;
+using WindingTale.Core.Components.Packs;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.ObjectModels;
 using WindingTale.UI.Components;
@@ -129,16 +130,46 @@ namespace WindingTale.Core.Components
         /// The Walk is only used for animation, not used during the game playing
         /// </summary>
         /// <param name="moveAction"></param>
-        public void CreatureWalk(List<SingleWalkAction> moveAction)
+        public void CreatureWalk(List<SingleWalkAction> walkActions)
         {
-            if (moveAction == null || moveAction.Count == 0)
+            if (walkActions == null || walkActions.Count == 0)
             {
                 return;
             }
 
+            if (walkActions.Count == 1)
+            {
+                SingleWalkAction walkAction = walkActions[0];
+                if (walkAction.DelayUnits > 0)
+                {
+                    IdlePack idle = IdlePack.FromTimeUnit(walkAction.DelayUnits);
+                    gameCallback.OnReceivePack(idle);
+                }
 
-
-
+                CreatureMovePack movePack = new CreatureMovePack();
+                gameCallback.OnReceivePack(movePack);
+            }
+            else
+            {
+                BatchPack batch = new BatchPack();
+                for(int i = 0; i < walkActions.Count; i++)
+                {
+                    SingleWalkAction walkAction = walkActions[0];
+                    if (walkAction.DelayUnits > 0)
+                    {
+                        IdlePack idle = IdlePack.FromTimeUnit(walkAction.DelayUnits);
+                        CreatureMovePack movePack = new CreatureMovePack();
+                        SequencedPack sequenced = new SequencedPack(idle, movePack);
+                        batch.Add(sequenced);
+                    }
+                    else
+                    {
+                        CreatureMovePack movePack = new CreatureMovePack();
+                        batch.Add(movePack);
+                    }
+                }
+                gameCallback.OnReceivePack(batch);
+            }
         }
 
         #region Information

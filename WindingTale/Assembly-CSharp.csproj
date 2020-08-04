@@ -68,6 +68,8 @@
     <Compile Include="Assets\Scripts\Common\FDPosition.cs" />
     <Compile Include="Assets\Scripts\Common\FDRange.cs" />
     <Compile Include="Assets\Scripts\Common\GameFormula.cs" />
+    <Compile Include="Assets\Scripts\Common\ResourceDataFile.cs" />
+    <Compile Include="Assets\Scripts\Common\ResourceJsonFile.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ActionMenuState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ActionState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\GameStateDispatcher.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="Assets\Scripts\Core\Components\Packs\PackBase.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\PromptPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\RefreshCreaturePack.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\SequencedPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ShowInfoPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ShowMenuPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ShowRangePack.cs" />
@@ -136,6 +139,17 @@
     <Compile Include="Assets\Scripts\UI\MapObjects\UIIndicator.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UIMenu.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UIObject.cs" />
+    <None Include="Assets\Resources\Data\Chapters\Chapter_2.txt" />
+    <None Include="Assets\Resources\Data\Item.txt" />
+    <None Include="Assets\Resources\Data\Chapters\Chapter_1_Creature.txt" />
+    <None Include="Assets\Resources\Data\Chapters\Chapter_1.txt" />
+    <None Include="Assets\Resources\Data\Creature.txt" />
+    <None Include="Assets\Resources\Data\LeveledCreatureOld.txt" />
+    <None Include="Assets\Resources\Data\Chapters\Chapter_4.txt" />
+    <None Include="Assets\Resources\Data\Chapters\Chapter_5.txt" />
+    <None Include="Assets\Resources\Data\Levelup.txt" />
+    <None Include="Assets\Resources\Data\Chapters\Chapter_3.txt" />
+    <None Include="Assets\Resources\Data\LeveledCreature.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
