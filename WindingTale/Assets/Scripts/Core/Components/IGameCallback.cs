@@ -9,5 +9,9 @@ namespace WindingTale.Core.Components
     {
         void OnReceivePack(PackBase pack);
 
+        void ComposeCreatureAt(int creatureId, int posX, int posY);
+
+
+
     }
 }

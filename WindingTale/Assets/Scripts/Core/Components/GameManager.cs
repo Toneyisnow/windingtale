@@ -104,7 +104,7 @@ namespace WindingTale.Core.Components
         public void ComposeCreatureByDef(CreatureFaction faction, int creatureId, int definitionId, FDPosition position)
         {
             CreatureDefinition creatureDef = DefinitionStore.Instance.GetCreatureDefinition(definitionId);
-            FDCreature creature = new FDCreature(creatureDef, position);
+            FDCreature creature = new FDCreature(creatureId, creatureDef, position);
 
             switch(faction)
             {

@@ -1,21 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.Components;
 
 namespace WindingTale.UI.Components.Activities
 {
-    public class ActivityBase : MonoBehaviour
+    public abstract class ActivityBase
     {
-        // Start is called before the first frame update
-        void Start()
+        public bool HasFinished
         {
-
+            get; protected set;
         }
+
+        public ActivityBase()
+        {
+            this.HasFinished = false;
+        }
+
+
+        // Start is called before the first frame update
+        public abstract void Start(IGameCallback gameCallback);
 
         // Update is called once per frame
-        void Update()
-        {
-
-        }
+        public abstract void Update(IGameCallback gameCallback);
     }
 }

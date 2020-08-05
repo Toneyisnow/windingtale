@@ -6,8 +6,10 @@ using UnityEditor.iOS;
 using UnityEngine;
 using WindingTale.Core.Components;
 using WindingTale.Core.Components.Packs;
+using WindingTale.Core.ObjectModels;
 using WindingTale.UI.Components.Activities;
 using WindingTale.UI.FieldMap;
+using WindingTale.UI.MapObjects;
 
 namespace WindingTale.UI.Components
 {
@@ -20,6 +22,8 @@ namespace WindingTale.UI.Components
 
         private GameActivityManager activityManager = null;
 
+        public GameObject creaturePrefab = null;
+
 
         // Start is called before the first frame update
         void Start()
@@ -31,6 +35,14 @@ namespace WindingTale.UI.Components
             gameManager.StartGame(record);
 
             RenderFieldMap(record.ChapterId);
+
+
+            // Add creature
+            ComposeCreatureAt(2, 1, 1);
+            ComposeCreatureAt(3, 1, 2);
+            ComposeCreatureAt(4, 1, 3);
+            ComposeCreatureAt(5, 1, 5);
+
         }
 
         // Update is called once per frame
@@ -77,12 +89,26 @@ namespace WindingTale.UI.Components
                     var renderer = shape.GetComponentInChildren<MeshRenderer>();
                     renderer.sharedMaterial = defaultMaterial;
 
-                    GameObject go = FieldTransform.CreateShapeObject(shape, x, y);
-                    go.transform.parent = this.transform;
+                    // Note the the FlameDragon is counting matrix from 1, not 0
+                    GameObject go = FieldTransform.CreateShapeObject(shape, x + 1, y + 1);
+                    go.transform.parent = fieldRoot;
                 }
             }
 
 
+        }
+
+        public void ComposeCreatureAt(int creatureId, int posX, int posY)
+        {
+            GameObject creature = GameObject.Instantiate(creaturePrefab);
+
+            creature.transform.parent = this.transform.Find("FieldObjects");
+            creature.transform.localPosition = FieldTransform.GetCreaturePosition(posX, posY);
+            creature.transform.localRotation = new Quaternion(0, 180, 0, 0);
+            var creatureCom = creature.GetComponent<UICreature>();
+
+            FDCreature c = new FDCreature(creatureId);
+            creatureCom.Initialize(c);
         }
 
         public void OnReceivePack(PackBase pack)

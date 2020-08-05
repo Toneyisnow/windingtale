@@ -14,6 +14,10 @@ namespace WindingTale.Core.ObjectModels
     {
         private CreatureData data = null;
 
+        public int CreatureId
+        {
+            get; private set;
+        }
 
         public FDPosition PreMovePosition
         {
@@ -25,14 +29,14 @@ namespace WindingTale.Core.ObjectModels
             get; private set;
         }
 
-        public FDCreature()
+        public FDCreature(int creatureId)
         {
-
+            this.CreatureId = creatureId;
         }
 
-        public FDCreature(CreatureDefinition creatureDefinition, FDPosition position)
+        public FDCreature(int creatureId, CreatureDefinition creatureDefinition, FDPosition position)
         {
-
+            this.CreatureId = creatureId;
         }
 
         public bool HasMoved()
