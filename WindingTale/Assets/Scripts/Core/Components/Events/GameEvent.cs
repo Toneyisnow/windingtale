@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.Components.Events.Conditions;
 
 namespace WindingTale.Core.Components.Events
 {
@@ -38,7 +39,7 @@ namespace WindingTale.Core.Components.Events
                 return;
             }
 
-            if(!this.Condition.Match(gameAction))
+            if(!this.Condition.IsMatched(gameAction))
             {
                 return;
             }

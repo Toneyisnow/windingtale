@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Definitions;
+using WindingTale.Core.ObjectModels;
 
 namespace WindingTale.Core.Components
 {
@@ -62,15 +63,41 @@ namespace WindingTale.Core.Components
 
         #endregion
 
+        #region Informational Actions
+
+        FDCreature GetCreature(int creatureId);
+
+        FDCreature GetDeadCreature(int creatureId);
+
+        #endregion
+
         #region Game Operations
 
-        void ComposeCreatureByDef(CreatureFaction faction, int creatureId, int definitionId, FDPosition position);
+        void ComposeCreature(CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItem = 0);
+
+        void DisposeCreature(int creatureId, bool disposeFromUI = true);
+
+        void SwitchCreature(int creatureId, CreatureFaction faction);
 
         /// <summary>
         /// The Walk is only used for animation, not used during the game playing
         /// </summary>
         /// <param name="moveAction"></param>
-        void CreatureWalk(List<SingleWalkAction> moveAction);
+        void CreatureWalks(List<SingleWalkAction> moveActions);
+
+        void CreatureWalk(SingleWalkAction moveAction);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="creatureId"></param>
+        /// <param name="sequenceId"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="endIndex"></param>
+        void ShowTalk(int sequenceId, int startIndex, int endIndex);
+
+
+        void GameOver();
 
         #endregion
 

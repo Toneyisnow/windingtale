@@ -118,6 +118,12 @@ namespace WindingTale.Core.Components
             get; set;
         }
 
-
+        /// <summary>
+        /// This is only used for Enemy
+        /// </summary>
+        public int DropItem
+        {
+            get; set;
+        }
     }
 }

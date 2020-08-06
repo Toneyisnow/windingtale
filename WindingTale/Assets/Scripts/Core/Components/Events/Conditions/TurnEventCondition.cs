@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Definitions;
 
-namespace WindingTale.Core.Components.Events
+namespace WindingTale.Core.Components.Events.Conditions
 {
     public class TurnEventCondition : EventCondition
     {
@@ -19,11 +19,13 @@ namespace WindingTale.Core.Components.Events
 
         public TurnEventCondition(int turnId, CreatureFaction phase)
         {
+            this.Type = ConditionType.Turn;
+
             this.TurnId = turnId;
             this.TurnPhase = phase;
         }
 
-        public override bool Match(IGameAction gameAction)
+        public override bool IsMatched(IGameAction gameAction)
         {
             return gameAction.TurnId() == TurnId && gameAction.TurnPhase() == TurnPhase;
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WindingTale.Core.Components.Events
+namespace WindingTale.Core.Components.Events.Conditions
 {
     public abstract class EventCondition
     {
@@ -12,7 +12,12 @@ namespace WindingTale.Core.Components.Events
             Triggered = 2
         }
 
-        public abstract bool Match(IGameAction gameAction);
+        protected ConditionType Type
+        {
+            get; protected set;
+        }
+
+        public abstract bool IsMatched(IGameAction gameAction);
 
 
     }

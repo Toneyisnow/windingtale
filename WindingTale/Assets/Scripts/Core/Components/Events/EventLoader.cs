@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.Components.Events.Conditions;
 using WindingTale.Core.Definitions;
 
 namespace WindingTale.Core.Components.Events
@@ -32,6 +33,13 @@ namespace WindingTale.Core.Components.Events
             this.eventManager = eventManager;
         }
 
+        protected Action<IGameAction> gameOver = (game) =>
+        {
+            game.GameOver();
+        };
+
+
+
         public virtual void LoadEvents()
         {
 
@@ -41,7 +49,27 @@ namespace WindingTale.Core.Components.Events
         {
             TurnEventCondition condition = new TurnEventCondition(turnId, turnPhase);
             GameEvent even = new GameEvent(eventId, condition, action);
+            eventManager.RegisterEvent(even);
+        }
 
+        protected void LoadDeadEvent(int eventId, int creatureId, Action<IGameAction> action)
+        {
+            CreatureDeadCondition condition = new CreatureDeadCondition(creatureId);
+            GameEvent even = new GameEvent(eventId, condition, action);
+            eventManager.RegisterEvent(even);
+        }
+
+        protected void LoadDyingEvent(int eventId, int creatureId, Action<IGameAction> action)
+        {
+            CreatureDyingCondition condition = new CreatureDyingCondition(creatureId);
+            GameEvent even = new GameEvent(eventId, condition, action);
+            eventManager.RegisterEvent(even);
+        }
+
+        protected void LoadTeamEvent(int eventId, CreatureFaction faction, Action<IGameAction> action)
+        {
+            TeamEliminatedCondition condition = new TeamEliminatedCondition(faction);
+            GameEvent even = new GameEvent(eventId, condition, action);
             eventManager.RegisterEvent(even);
         }
     }

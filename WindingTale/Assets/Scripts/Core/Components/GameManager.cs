@@ -23,12 +23,18 @@ namespace WindingTale.Core.Components
 
         private GameEventManager eventManager = null;
 
+        public int ChapterId
+        {
+            get; private set;
+        }
+
         private int turnId = 0;
         private CreatureFaction turnPhase = CreatureFaction.Friend;
 
         private List<FDCreature> Friends = null;
         private List<FDCreature> Enemies = null;
         private List<FDCreature> Npcs = null;
+        private List<FDCreature> Deads = null;
 
         private IGameCallback gameCallback = null;
 
@@ -40,6 +46,7 @@ namespace WindingTale.Core.Components
             this.Friends = new List<FDCreature>();
             this.Enemies = new List<FDCreature>();
             this.Npcs = new List<FDCreature>();
+            this.Deads = new List<FDCreature>();
 
             eventManager = new GameEventManager(this);
 
@@ -88,6 +95,7 @@ namespace WindingTale.Core.Components
 
         private void InitializeChapter(int chapterId)
         {
+            this.ChapterId = chapterId;
             // Load Field Map
             ChapterDefinition chapter = DefinitionStore.Instance.LoadChapter(chapterId);
             gameField = new GameField(chapter);
@@ -100,18 +108,51 @@ namespace WindingTale.Core.Components
 
         }
 
+        #region Actions
 
-        public void ComposeCreatureByDef(CreatureFaction faction, int creatureId, int definitionId, FDPosition position)
+        public FDCreature GetCreature(int creatureId)
+        {
+            FDCreature cre = this.Friends.Find((c) => { return c.CreatureId == creatureId; });
+            if (cre != null)
+            {
+                return cre;
+            }
+
+            cre = this.Enemies.Find((c) => { return c.CreatureId == creatureId; });
+            if (cre != null)
+            {
+                return cre;
+            }
+
+            cre = this.Npcs.Find((c) => { return c.CreatureId == creatureId; });
+            if (cre != null)
+            {
+                return cre;
+            }
+
+            return null;
+        }
+
+        public FDCreature GetDeadCreature(int creatureId)
+        {
+            return this.Deads.Find((c) => { return c.CreatureId == creatureId; });
+        }
+
+        public void ComposeCreature(CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItem = 0)
         {
             CreatureDefinition creatureDef = DefinitionStore.Instance.GetCreatureDefinition(definitionId);
             FDCreature creature = new FDCreature(creatureId, creatureDef, position);
 
-            switch(faction)
+            switch (faction)
             {
                 case CreatureFaction.Friend:
                     this.Friends.Add(creature);
                     break;
                 case CreatureFaction.Enemy:
+                    if (dropItem > 0)
+                    {
+                        creature.Data.DropItem = dropItem;
+                    }
                     this.Enemies.Add(creature);
                     break;
                 case CreatureFaction.Npc:
@@ -121,16 +162,81 @@ namespace WindingTale.Core.Components
                     break;
             }
 
+            ComposeCreaturePack pack = new ComposeCreaturePack(creature);
+            gameCallback.OnReceivePack(pack);
+        }
 
+        public void DisposeCreature(int creatureId, bool disposeFromUI = true)
+        {
+            FDCreature creature = GetCreature(creatureId);
+            if (creature != null)
+            {
+                for (int i = 0; i < this.Friends.Count; i++)
+                {
+                    if (this.Friends[i].CreatureId == creatureId)
+                    {
+                        this.Friends.RemoveAt(i);
+                    }
+                }
+                for (int i = 0; i < this.Enemies.Count; i++)
+                {
+                    if (this.Enemies[i].CreatureId == creatureId)
+                    {
+                        this.Enemies.RemoveAt(i);
+                    }
+                }
+                for (int i = 0; i < this.Npcs.Count; i++)
+                {
+                    if (this.Npcs[i].CreatureId == creatureId)
+                    {
+                        this.Npcs.RemoveAt(i);
+                    }
+                }
 
+                if (disposeFromUI)
+                {
+                    DisposeCreaturePack pack = new DisposeCreaturePack(creature);
+                    gameCallback.OnReceivePack(pack);
+                }
+            }
+            else
+            {
+                creature = GetDeadCreature(creatureId);
+                if (creature != null)
+                {
+                    this.Deads.Remove(creature);
+                }
+            }
+        }
 
+        public void SwitchCreature(int creatureId, CreatureFaction faction)
+        {
+            FDCreature creature = GetCreature(creatureId);
+            if (creature != null)
+            {
+                DisposeCreature(creatureId, false);
+                switch(faction)
+                {
+                    case CreatureFaction.Friend:
+                        this.Friends.Add(creature);
+                        break;
+                    case CreatureFaction.Npc:
+                        this.Npcs.Add(creature);
+                        break;
+                    case CreatureFaction.Enemy:
+                        this.Enemies.Add(creature);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         /// <summary>
         /// The Walk is only used for animation, not used during the game playing
         /// </summary>
         /// <param name="moveAction"></param>
-        public void CreatureWalk(List<SingleWalkAction> walkActions)
+        public void CreatureWalks(List<SingleWalkAction> walkActions)
         {
             if (walkActions == null || walkActions.Count == 0)
             {
@@ -139,14 +245,7 @@ namespace WindingTale.Core.Components
 
             if (walkActions.Count == 1)
             {
-                SingleWalkAction walkAction = walkActions[0];
-                if (walkAction.DelayUnits > 0)
-                {
-                    IdlePack idle = IdlePack.FromTimeUnit(walkAction.DelayUnits);
-                    gameCallback.OnReceivePack(idle);
-                }
-
-                CreatureMovePack movePack = new CreatureMovePack();
+                var movePack = HandleWalkAction(walkActions[0]);
                 gameCallback.OnReceivePack(movePack);
             }
             else
@@ -154,23 +253,44 @@ namespace WindingTale.Core.Components
                 BatchPack batch = new BatchPack();
                 for(int i = 0; i < walkActions.Count; i++)
                 {
-                    SingleWalkAction walkAction = walkActions[0];
-                    if (walkAction.DelayUnits > 0)
-                    {
-                        IdlePack idle = IdlePack.FromTimeUnit(walkAction.DelayUnits);
-                        CreatureMovePack movePack = new CreatureMovePack();
-                        SequencedPack sequenced = new SequencedPack(idle, movePack);
-                        batch.Add(sequenced);
-                    }
-                    else
-                    {
-                        CreatureMovePack movePack = new CreatureMovePack();
-                        batch.Add(movePack);
-                    }
+                    var movePack = HandleWalkAction(walkActions[i]);
+                    batch.Add(movePack);
                 }
                 gameCallback.OnReceivePack(batch);
             }
         }
+
+        public void CreatureWalk(SingleWalkAction walkAction)
+        {
+            var movePack = HandleWalkAction(walkAction);
+            gameCallback.OnReceivePack(movePack);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="creatureId"></param>
+        /// <param name="sequenceId"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="endIndex"></param>
+        public void ShowTalk(int sequenceId, int startIndex, int endIndex)
+        {
+            for(int i = startIndex; i <= endIndex; i++)
+            {
+                string conversationId = string.Format(@"Conversation_{0}_{1}_{2}", this.ChapterId, sequenceId, i);
+                TalkPack pack = new TalkPack(conversationId);
+                gameCallback.OnReceivePack(pack);
+            }
+
+            
+        }
+
+        public void GameOver()
+        {
+
+        }
+
+        #endregion
 
         #region Information
 
@@ -270,6 +390,33 @@ namespace WindingTale.Core.Components
         #endregion
 
         #region Private Methods
+
+        private PackBase HandleWalkAction(SingleWalkAction walkAction)
+        {
+            if (walkAction == null)
+            {
+                return null;
+            }
+
+            CreatureMovePack movePack = new CreatureMovePack(walkAction.CreatureId, walkAction.MovePath);
+
+            FDCreature creature = GetCreature(walkAction.CreatureId);
+            if (creature == null)
+            {
+                return null;
+            }
+
+            creature.MoveTo(walkAction.MovePath.Desitination);
+
+            if (walkAction.DelayUnits > 0)
+            {
+                IdlePack idle = IdlePack.FromTimeUnit(walkAction.DelayUnits);
+                return new SequencedPack(idle, movePack);
+            }
+
+            return movePack;
+        }
+
 
         private void postCreatureAction()
         {
