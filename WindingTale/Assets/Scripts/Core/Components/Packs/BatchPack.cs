@@ -8,7 +8,7 @@ namespace WindingTale.Core.Components.Packs
     {
         public BatchPack()
         {
-
+            this.Type = PackType.Batch;
         
         
         }

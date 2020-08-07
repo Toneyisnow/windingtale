@@ -21,7 +21,10 @@ namespace WindingTale.UI.MapObjects
         private GameObject icon2 = null;
         private GameObject icon3 = null;
 
-        private FDCreature creature = null;
+        public FDCreature Creature
+        {
+            get; private set;
+        }
 
         private AnimateState animateState = AnimateState.Idle;
 
@@ -37,12 +40,13 @@ namespace WindingTale.UI.MapObjects
         {
             Material defaultMaterial = Resources.Load<Material>(@"common-mat");
 
-            this.creature = creature;
+            this.Creature = creature;
             this.animateState = AnimateState.Idle;
 
-            icon1 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/00{0}/Icon_00{0}_01", creature.CreatureId), this.transform);
-            icon2 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/00{0}/Icon_00{0}_02", creature.CreatureId), this.transform);
-            icon3 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/00{0}/Icon_00{0}_03", creature.CreatureId), this.transform);
+            string animationIdStr = StringUtils.FormatDigit3(creature.Definition.AnimationId);
+            icon1 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_01", animationIdStr), this.transform);
+            icon2 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_02", animationIdStr), this.transform);
+            icon3 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_03", animationIdStr), this.transform);
 
         }
 
@@ -99,6 +103,11 @@ namespace WindingTale.UI.MapObjects
          
         void UpdateIdleAnimation()
         {
+            if (icon1 == null || icon2 == null || icon3 == null)
+            {
+                return;
+            }
+
             aniIndex = (aniIndex + 1) % 4;
             if (aniIndex == 0)
             {

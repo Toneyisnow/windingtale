@@ -28,14 +28,26 @@ namespace WindingTale.Core.Components.Events
         /// </summary>
         /// <param name="turnId"></param>
         /// <param name="faction"></param>
-        public void NotifyTurnEvents(int turnId, CreatureFaction faction)
+        public void NotifyTurnEvents()
         {
-
+            foreach(GameEvent even in this.Events)
+            {
+                if (even.Condition.Type == Conditions.EventCondition.ConditionType.Turn)
+                {
+                    even.Notify(gameAction);
+                }
+            }
         }
 
         public void NotifyTriggeredEvents()
         {
-
+            foreach (GameEvent even in this.Events)
+            {
+                if (even.Condition.Type == Conditions.EventCondition.ConditionType.Triggered)
+                {
+                    even.Notify(gameAction);
+                }
+            }
         }
 
 

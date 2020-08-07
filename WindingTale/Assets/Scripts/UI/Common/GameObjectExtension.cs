@@ -10,7 +10,14 @@ namespace WindingTale.UI.Common
 
         public static GameObject CreateFromObj(string resourcePath, Transform parent = null)
         {
-            GameObject obj = GameObject.Instantiate(Resources.Load<GameObject>(resourcePath));
+            GameObject iconPrefab = Resources.Load<GameObject>(resourcePath);
+            if (iconPrefab == null)
+            {
+                int here = 1;
+            }
+            
+            GameObject obj = GameObject.Instantiate(iconPrefab);
+            
             if (parent != null)
             {
                 obj.transform.parent = parent;

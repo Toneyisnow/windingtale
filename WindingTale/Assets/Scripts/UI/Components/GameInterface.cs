@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor.iOS;
 using UnityEngine;
+using WindingTale.Core.Definitions;
 using WindingTale.Core.Components;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.ObjectModels;
 using WindingTale.UI.Components.Activities;
 using WindingTale.UI.FieldMap;
 using WindingTale.UI.MapObjects;
+using WindingTale.Common;
 
 namespace WindingTale.UI.Components
 {
@@ -38,17 +40,18 @@ namespace WindingTale.UI.Components
 
 
             // Add creature
-            ComposeCreatureAt(2, 1, 1);
-            ComposeCreatureAt(3, 1, 2);
-            ComposeCreatureAt(4, 1, 3);
-            ComposeCreatureAt(5, 1, 5);
+            //// FDCreature creature = new FDCreature(2, new CreatureDefinition() { DefinitionId = 2 }, FDPosition.At(1, 2));
+            //// PlaceCreature(creature);
 
         }
 
         // Update is called once per frame
         void Update()
         {
-
+            if (activityManager != null)
+            {
+                activityManager.Update();
+            }
         }
 
         void RenderFieldMap(int chapterId)
@@ -98,17 +101,16 @@ namespace WindingTale.UI.Components
 
         }
 
-        public void ComposeCreatureAt(int creatureId, int posX, int posY)
+        public void PlaceCreature(FDCreature creature)
         {
-            GameObject creature = GameObject.Instantiate(creaturePrefab);
+            GameObject creaturePre = GameObject.Instantiate(creaturePrefab);
 
-            creature.transform.parent = this.transform.Find("FieldObjects");
-            creature.transform.localPosition = FieldTransform.GetCreaturePosition(posX, posY);
-            creature.transform.localRotation = new Quaternion(0, 180, 0, 0);
-            var creatureCom = creature.GetComponent<UICreature>();
+            creaturePre.transform.parent = this.transform.Find("FieldObjects");
+            creaturePre.transform.localPosition = FieldTransform.GetCreaturePosition(creature.Position);
+            creaturePre.transform.localRotation = new Quaternion(0, 180, 0, 0);
+            var creatureCom = creaturePre.GetComponent<UICreature>();
 
-            FDCreature c = new FDCreature(creatureId);
-            creatureCom.Initialize(c);
+            creatureCom.Initialize(creature);
         }
 
         public void OnReceivePack(PackBase pack)

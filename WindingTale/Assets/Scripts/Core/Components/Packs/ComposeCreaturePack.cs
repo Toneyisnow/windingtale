@@ -7,11 +7,15 @@ namespace WindingTale.Core.Components.Packs
 {
     public class ComposeCreaturePack : PackBase
     {
-        private FDCreature creature = null;
+        public FDCreature Creature
+        {
+            get; private set;
+        }
 
         public ComposeCreaturePack(FDCreature creature)
         {
-            this.creature = creature;
+            this.Type = PackType.ComposeCreature;
+            this.Creature = creature;
         }
     }
 }

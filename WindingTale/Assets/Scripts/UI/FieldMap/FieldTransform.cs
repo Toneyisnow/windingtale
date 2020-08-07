@@ -22,6 +22,11 @@ namespace WindingTale.UI.FieldMap
             return new Vector3(x * 2.4f + 1.2f, 2.4f, -y * 2.4f + 1.2f);
         }
 
+        public static Vector3 GetCreaturePosition(FDPosition position)
+        {
+            return GetCreaturePosition(position.X, position.Y);
+        }
+
         public static GameObject CreateShapeObject(GameObject shapePrefab, int x, int y)
         {
             GameObject go = GameObject.Instantiate(shapePrefab);

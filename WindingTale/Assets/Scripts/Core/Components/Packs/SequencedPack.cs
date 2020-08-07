@@ -9,7 +9,7 @@ namespace WindingTale.Core.Components.Packs
     {
         public SequencedPack(PackBase pack1, PackBase pack2)
         {
-
+            this.Type = PackType.Sequence;
         }
     }
 }

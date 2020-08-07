@@ -6,6 +6,9 @@ namespace WindingTale.Core.Components.Packs
 {
     public class ClearRangePack : PackBase
     {
-        
+        public ClearRangePack()
+        {
+            this.Type = PackType.ClearRange;
+        }
     }
 }

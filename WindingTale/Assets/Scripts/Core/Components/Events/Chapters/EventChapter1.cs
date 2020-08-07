@@ -19,7 +19,7 @@ namespace WindingTale.Core.Components.Events
         private Action<IGameAction> turn1 = (game) =>
         {
             // Friends appear
-            game.ComposeCreature(CreatureFaction.Friend, 1, 1, FDPosition.At(8, 20));
+            //// game.ComposeCreature(CreatureFaction.Friend, 1, 1, FDPosition.At(8, 20));
             game.ComposeCreature(CreatureFaction.Friend, 2, 2, FDPosition.At(11, 21));
             game.ComposeCreature(CreatureFaction.Friend, 3, 3, FDPosition.At(9, 22));
             game.ComposeCreature(CreatureFaction.Friend, 4, 4, FDPosition.At(12, 23));

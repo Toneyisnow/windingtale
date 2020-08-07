@@ -142,7 +142,9 @@
     <Compile Include="Assets\Scripts\Core\ObjectModels\FDCreature.cs" />
     <Compile Include="Assets\Scripts\Core\ObjectModels\FDMenu.cs" />
     <Compile Include="Assets\Scripts\UI\Common\GameObjectExtension.cs" />
+    <Compile Include="Assets\Scripts\UI\Common\StringUtils.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBase.cs" />
+    <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBuilder.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\CallbackActivity.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\GameActivityManager.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\MoveCreatureActivity.cs" />

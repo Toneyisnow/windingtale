@@ -65,7 +65,7 @@ namespace WindingTale.Core.Components
             turnId = 1;
             turnPhase = CreatureFaction.Friend;
 
-            eventManager.NotifyTurnEvents(turnId, turnPhase);
+            eventManager.NotifyTurnEvents();
         }
 
         public void LoadGame(BattleRecord battleRecord)

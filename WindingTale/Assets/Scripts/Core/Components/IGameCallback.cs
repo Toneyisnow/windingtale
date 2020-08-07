@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Components.Packs;
+using WindingTale.Core.ObjectModels;
 
 namespace WindingTale.Core.Components
 {
@@ -9,9 +10,11 @@ namespace WindingTale.Core.Components
     {
         void OnReceivePack(PackBase pack);
 
-        void ComposeCreatureAt(int creatureId, int posX, int posY);
+        #region Activity Called Functions
+
+        void PlaceCreature(FDCreature creature);
 
 
-
+        #endregion
     }
 }

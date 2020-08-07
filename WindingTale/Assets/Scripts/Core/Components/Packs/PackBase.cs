@@ -12,10 +12,14 @@ namespace WindingTale.Core.Components.Packs
             MoveCreature = 10,
             ShowRange = 20,
             ShowMenu = 21,
+            ClearRange = 22,
+            CloseMenu = 23,
 
             Talk = 31,
             Prompt = 32,
 
+            Batch = 90,
+            Sequence = 91,
 
         }
 

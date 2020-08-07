@@ -12,16 +12,31 @@ namespace WindingTale.Core.ObjectModels
     /// </summary>
     public class FDCreature
     {
-        private CreatureData data = null;
 
         private bool hasActioned = false;
 
-        public int CreatureId
+
+        public CreatureData Data
         {
             get; private set;
         }
 
-        public CreatureData Data
+        public int CreatureId
+        {
+            get
+            {
+                return (this.Data != null ? this.Data.CreatureId : 0);
+            }
+        }
+
+        public int DefinitionId
+        {
+            get
+            {
+                return this.Definition != null ? this.Definition.DefinitionId : 0;
+            }
+        }
+        public CreatureDefinition Definition
         {
             get; private set;
         }
@@ -38,12 +53,18 @@ namespace WindingTale.Core.ObjectModels
 
         public FDCreature(int creatureId)
         {
-            this.CreatureId = creatureId;
+            this.Data = new CreatureData();
+            this.Data.CreatureId = creatureId;
         }
 
         public FDCreature(int creatureId, CreatureDefinition creatureDefinition, FDPosition position)
         {
-            this.CreatureId = creatureId;
+            this.Data = new CreatureData();
+            this.Data.CreatureId = creatureId;
+            this.Data.DefinitionId = creatureDefinition.DefinitionId;
+
+            this.Definition = creatureDefinition;
+            this.Position = position;
         }
 
         public bool HasMoved()

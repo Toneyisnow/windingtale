@@ -27,16 +27,10 @@ namespace WindingTale.UI.Components.Activities
 
         public void PushPack(PackBase pack)
         {
-            switch(pack.Type)
+            var activity = ActivityBuilder.BuildFromPack(pack);
+            if (activity != null)
             {
-                case PackBase.PackType.ComposeCreature:
-
-                    CallbackActivity act = new CallbackActivity(
-                        (callback) => { callback.ComposeCreatureAt(3, 10, 20); });
-                    PushActivity(act);
-                    break;
-                default:
-                    break;
+                this.PushActivity(activity);
             }
         }
 
@@ -49,15 +43,16 @@ namespace WindingTale.UI.Components.Activities
 
             if (currentActivity == null || currentActivity.HasFinished)
             {
-                currentActivity = activityQueue.Dequeue();
-                currentActivity.Start(gameCallback);
+                if (activityQueue != null && activityQueue.Count > 0)
+                {
+                    currentActivity = activityQueue.Dequeue();
+                    currentActivity.Start(gameCallback);
+                }
+                
                 return;
             }
 
             currentActivity.Update(gameCallback);
-
         }
-
-
     }
 }

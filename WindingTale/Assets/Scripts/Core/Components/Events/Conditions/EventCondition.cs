@@ -12,7 +12,7 @@ namespace WindingTale.Core.Components.Events.Conditions
             Triggered = 2
         }
 
-        protected ConditionType Type
+        public ConditionType Type
         {
             get; protected set;
         }

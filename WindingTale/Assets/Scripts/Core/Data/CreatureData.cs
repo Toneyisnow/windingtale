@@ -1,12 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Definitions;
 
 namespace WindingTale.Core.Components
 {
     public class CreatureData
     {
+        public static CreatureData FromDefinition(int creatureId, CreatureDefinition definition)
+        {
+            CreatureData data = new CreatureData();
+            data.CreatureId = creatureId;
+            data.DefinitionId = definition.DefinitionId;
+
+            data.Level = definition.InitialLevel;
+            data.Hp = data.HpMax = definition.InitialHp;
+            data.Mp = data.MpMax = definition.InitialMp;
+
+            data.Ap = definition.InitialAp;
+            data.Dp = definition.InitialDp;
+            data.Dx = definition.InitialDx;
+            data.Mv = definition.InitialMv;
+            data.Ex = definition.InitialEx;
+
+            return data;
+        }
+
         public int CreatureId
         {
             get; set;

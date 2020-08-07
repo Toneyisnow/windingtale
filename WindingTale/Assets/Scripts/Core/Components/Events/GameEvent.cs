@@ -10,11 +10,14 @@ namespace WindingTale.Core.Components.Events
     {
         private Action<IGameAction> actionDelegate = null;
 
+
         public GameEvent(int eventId, EventCondition condition, Action<IGameAction> action)
         {
             this.EventId = eventId;
             this.Condition = condition;
             this.actionDelegate = action;
+
+            this.IsActive = true;
         }
 
         public EventCondition Condition
@@ -32,7 +35,7 @@ namespace WindingTale.Core.Components.Events
             get; set;
         }
 
-        public void CheckAndExecute(IGameAction gameAction)
+        public void Notify(IGameAction gameAction)
         {
             if (!this.IsActive)
             {
