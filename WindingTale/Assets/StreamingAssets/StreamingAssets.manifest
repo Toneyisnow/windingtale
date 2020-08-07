@@ -1,0 +1,10 @@
+ManifestFileVersion: 0
+CRC: 4198041643
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: assetbundletest
+      Dependencies: {}
+    Info_1:
+      Name: iconbundle
+      Dependencies: {}

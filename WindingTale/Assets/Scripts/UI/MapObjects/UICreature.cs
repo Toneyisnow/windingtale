@@ -44,9 +44,13 @@ namespace WindingTale.UI.MapObjects
             this.animateState = AnimateState.Idle;
 
             string animationIdStr = StringUtils.FormatDigit3(creature.Definition.AnimationId);
-            icon1 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_01", animationIdStr), this.transform);
-            icon2 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_02", animationIdStr), this.transform);
-            icon3 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_03", animationIdStr), this.transform);
+            //// icon1 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_01", animationIdStr), this.transform);
+            //// icon2 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_02", animationIdStr), this.transform);
+            //// icon3 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_03", animationIdStr), this.transform);
+
+            icon1 = GameObjectExtension.LoadCreatureIcon(string.Format(@"Icon_{0}_01", animationIdStr), this.transform);
+            icon2 = GameObjectExtension.LoadCreatureIcon(string.Format(@"Icon_{0}_02", animationIdStr), this.transform);
+            icon3 = GameObjectExtension.LoadCreatureIcon(string.Format(@"Icon_{0}_03", animationIdStr), this.transform);
 
         }
 
@@ -64,15 +68,18 @@ namespace WindingTale.UI.MapObjects
             switch (state)
             {
                 case AnimateState.Idle:
-                    
+                    this.transform.localRotation = new Quaternion(0f, 180f, 0, 0);
                     break;
                 case AnimateState.WalkLeft:
+                    this.transform.localRotation = new Quaternion(0f, -90f, 0, 0);
                     break;
                 case AnimateState.WalkRight:
                     break;
                 case AnimateState.WalkUp:
+                    this.transform.localRotation = new Quaternion(0f, 0, 0, 0); 
                     break;
                 case AnimateState.WalkDown:
+                    this.transform.localRotation = new Quaternion(0f, 180f, 0, 0);
                     break;
                 default:
                     break;

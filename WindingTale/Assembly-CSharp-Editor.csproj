@@ -9,10 +9,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{D9176146-9110-062C-C27E-962CDA9312BC}</ProjectGuid>
+    <ProjectGuid>{7B39566F-5664-C52F-72AD-ED922D5B60F9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_2019_3_12;UNITY_2019_3;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_2019_3_12;UNITY_2019_3;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -47,7 +47,7 @@
   <PropertyGroup>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Unity/VSTU</UnityProjectGenerator>
-    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>2019.3.12f1</UnityVersion>
   </PropertyGroup>
@@ -63,144 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
-    <Compile Include="Assets\Scripts\AI\Delegates\AIAggressiveDelegate.cs" />
-    <Compile Include="Assets\Scripts\AI\Delegates\AIDefensiveDelegate.cs" />
-    <Compile Include="Assets\Scripts\AI\Delegates\AIDelegate.cs" />
-    <Compile Include="Assets\Scripts\AI\Delegates\AIEscapeDelegate.cs" />
-    <Compile Include="Assets\Scripts\AI\Delegates\AIGuardDelegate.cs" />
-    <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalAggressiveDelegate.cs" />
-    <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDefensiveDelegate.cs" />
-    <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDelegate.cs" />
-    <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalGuardDelegate.cs" />
-    <Compile Include="Assets\Scripts\AI\Delegates\AIStandByDelegate.cs" />
-    <Compile Include="Assets\Scripts\AI\Delegates\AITreasureDelegate.cs" />
-    <Compile Include="Assets\Scripts\Common\Constants.cs" />
-    <Compile Include="Assets\Scripts\Common\FDMovePath.cs" />
-    <Compile Include="Assets\Scripts\Common\FDPosition.cs" />
-    <Compile Include="Assets\Scripts\Common\FDRange.cs" />
-    <Compile Include="Assets\Scripts\Common\GameFormula.cs" />
-    <Compile Include="Assets\Scripts\Common\ResourceDataFile.cs" />
-    <Compile Include="Assets\Scripts\Common\ResourceJsonFile.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\ActionStates\ActionMenuState.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\ActionStates\ActionState.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\ActionStates\GameStateDispatcher.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\ActionStates\IdleState.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\ActionStates\SelectAttackTargetState.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\ActionStates\ShowMoveScopeState.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Algorithms\AttackRangeFinder.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Algorithms\MagicRangeFilder.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Algorithms\MoveRangeFinder.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\Chapters\EventChapter1.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\Chapters\EventChapter2.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\CreatureDeadCondition.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\CreatureDyingCondition.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\EventCondition.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\ReachPositionCondition.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\TeamEliminatedCondition.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\TriggeredEventCondition.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\TurnDelayCondition.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\TurnEventCondition.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\EventLoader.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\GameEvent.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Events\GameEventManager.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\GameField.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\GameManager.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\IGameAction.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\IGameCallback.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\BatchPack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\ClearRangePack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\ComposeCreaturePack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureMovePack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\DisposeCreaturePack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\IdlePack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\PackBase.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\PromptPack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\RefreshCreaturePack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\SequencedPack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\ShowInfoPack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\ShowMenuPack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\ShowRangePack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\TalkPack.cs" />
-    <Compile Include="Assets\Scripts\Core\Data\BattleRecord.cs" />
-    <Compile Include="Assets\Scripts\Core\Data\ChapterRecord.cs" />
-    <Compile Include="Assets\Scripts\Core\Data\CreatureData.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\CreatureDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\DefinitionStore.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\Items\AttackItemDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\Items\ConsumableItemDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\Items\DefendItemDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\Items\ItemDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\Items\MoneyItemDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\Items\SpecialItemDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\LevelUpDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\LeveledCreatureDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\MagicDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\OccupationDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\ShopDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\ObjectModels\FDCreature.cs" />
-    <Compile Include="Assets\Scripts\Core\ObjectModels\FDMenu.cs" />
-    <Compile Include="Assets\Scripts\UI\Common\GameObjectExtension.cs" />
-    <Compile Include="Assets\Scripts\UI\Common\StringUtils.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBase.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBuilder.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\Activities\CallbackActivity.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\Activities\GameActivityManager.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\Activities\MoveCreatureActivity.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\Activities\PromptActivity.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\Activities\ShowMenuActivity.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\Activities\ShowRangeActivity.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\Activities\TalkActivity.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\AssetManager.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\BundleObjectLoader.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\GameInterface.cs" />
-    <Compile Include="Assets\Scripts\UI\FieldMap\FieldTransform.cs" />
-    <Compile Include="Assets\Scripts\UI\FieldMap\ShapeMappings.cs" />
-    <Compile Include="Assets\Scripts\UI\MapObjects\UICreature.cs" />
-    <Compile Include="Assets\Scripts\UI\MapObjects\UICursor.cs" />
-    <Compile Include="Assets\Scripts\UI\MapObjects\UIIndicator.cs" />
-    <Compile Include="Assets\Scripts\UI\MapObjects\UIMenu.cs" />
-    <Compile Include="Assets\Scripts\UI\MapObjects\UIObject.cs" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_16.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_20.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_21.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_25.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_11.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_2.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_7.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_8.txt" />
-    <None Include="Assets\Resources\Data\Item.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_1_Creature.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_32.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_6.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_19.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_1.txt" />
-    <None Include="Assets\Resources\Data\Creature.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_33.txt" />
-    <None Include="Assets\Resources\Data\LeveledCreatureOld.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_15.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_12.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_30.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_29.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_4.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_23.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_18.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_5.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_24.txt" />
-    <None Include="Assets\Resources\Data\Levelup.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_31.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_13.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_3.txt" />
-    <None Include="Assets\Resources\Data\LeveledCreature.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_10.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_26.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_22.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_17.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_9.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_27.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_28.txt" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_14.txt" />
+    <Compile Include="Assets\Editor\CreateAssetBundles.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -384,8 +247,26 @@
     <Reference Include="UnityEditor">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.VR">
+      <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/UnityExtensions/Unity/UnityVR/Editor/UnityEditor.VR.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Graphs">
+      <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+      <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions">
+      <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
+      <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
@@ -747,6 +628,12 @@
     <Reference Include="Boo.Lang">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/MonoBleedingEdge/lib/mono/unityscript/Boo.Lang.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.TestRunner">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TestRunner">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
@@ -775,7 +662,13 @@
       <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp.csproj">
+      <Project>{D9176146-9110-062C-C27E-962CDA9312BC}</Project>
+      <Name>Assembly-CSharp</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

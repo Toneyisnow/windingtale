@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor.iOS;
 using UnityEngine;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Components;
@@ -111,6 +110,7 @@ namespace WindingTale.UI.Components
             var creatureCom = creaturePre.GetComponent<UICreature>();
 
             creatureCom.Initialize(creature);
+            creatureCom.SetAnimateState(UICreature.AnimateState.WalkUp); 
         }
 
         public void OnReceivePack(PackBase pack)

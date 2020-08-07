@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using WindingTale.UI.Components;
 
 namespace WindingTale.UI.Common
 {
@@ -29,7 +31,28 @@ namespace WindingTale.UI.Common
             var renderer = obj.GetComponentInChildren<MeshRenderer>();
             renderer.sharedMaterial = defaultMaterial;
 
-            
+            return obj;
+        }
+
+        public static GameObject LoadCreatureIcon(string iconName, Transform parent = null)
+        {
+            GameObject iconPrefab = AssetManager.Instance().LoadIconPrefab(iconName);
+            if (iconPrefab == null)
+            {
+                return null;
+            }
+
+            GameObject obj = GameObject.Instantiate(iconPrefab);
+            if (parent != null)
+            {
+                obj.transform.parent = parent;
+            }
+
+            obj.transform.localPosition = new Vector3(0, 0, 0);
+            obj.transform.localRotation = new Quaternion(0, 0, 0, 0);
+
+            var renderer = obj.GetComponentInChildren<MeshRenderer>();
+            renderer.sharedMaterial = defaultMaterial;
 
             return obj;
         }
