@@ -10,13 +10,13 @@ namespace WindingTale.UI.Components.Activities
     {
         private Queue<ActivityBase> activityQueue = null;
 
-        private IGameCallback gameCallback = null;
+        private IGameInterface gameInterface = null;
 
         private ActivityBase currentActivity = null;
 
-        public GameActivityManager(IGameCallback gameCallback)
+        public GameActivityManager(IGameInterface gameInterface)
         {
-            this.gameCallback = gameCallback;
+            this.gameInterface = gameInterface;
             this.activityQueue = new Queue<ActivityBase>();
         }
 
@@ -27,6 +27,7 @@ namespace WindingTale.UI.Components.Activities
 
         public void PushPack(PackBase pack)
         {
+            Debug.LogFormat("PushPack: type={0}", pack.Type);
             var activity = ActivityBuilder.BuildFromPack(pack);
             if (activity != null)
             {
@@ -46,13 +47,13 @@ namespace WindingTale.UI.Components.Activities
                 if (activityQueue != null && activityQueue.Count > 0)
                 {
                     currentActivity = activityQueue.Dequeue();
-                    currentActivity.Start(gameCallback);
+                    currentActivity.Start(gameInterface);
                 }
                 
                 return;
             }
 
-            currentActivity.Update(gameCallback);
+            currentActivity.Update(gameInterface);
         }
     }
 }

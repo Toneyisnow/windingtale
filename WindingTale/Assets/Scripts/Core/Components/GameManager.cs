@@ -254,7 +254,10 @@ namespace WindingTale.Core.Components
                 for(int i = 0; i < walkActions.Count; i++)
                 {
                     var movePack = HandleWalkAction(walkActions[i]);
-                    batch.Add(movePack);
+                    if (movePack != null)
+                    {
+                        batch.Add(movePack);
+                    }
                 }
                 gameCallback.OnReceivePack(batch);
             }

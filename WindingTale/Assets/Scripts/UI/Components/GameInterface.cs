@@ -11,11 +11,12 @@ using WindingTale.UI.Components.Activities;
 using WindingTale.UI.FieldMap;
 using WindingTale.UI.MapObjects;
 using WindingTale.Common;
+using System;
 
 namespace WindingTale.UI.Components
 {
 
-    public class GameInterface : MonoBehaviour, IGameCallback
+    public class GameInterface : MonoBehaviour, IGameCallback, IGameInterface
     {
         public int ChapterId = 0;
 
@@ -23,7 +24,13 @@ namespace WindingTale.UI.Components
 
         private GameActivityManager activityManager = null;
 
+        private Global globalVariables = null;
+        
         public GameObject creaturePrefab = null;
+
+        private Transform fieldObjectsRoot = null;
+
+        private Transform fieldMapRoot = null;
 
 
         // Start is called before the first frame update
@@ -37,33 +44,39 @@ namespace WindingTale.UI.Components
 
             RenderFieldMap(record.ChapterId);
 
-
+            globalVariables = Global.Instance();
             // Add creature
             //// FDCreature creature = new FDCreature(2, new CreatureDefinition() { DefinitionId = 2 }, FDPosition.At(1, 2));
             //// PlaceCreature(creature);
 
+            fieldObjectsRoot = this.transform.Find("FieldObjects");
         }
 
         // Update is called once per frame
         void Update()
         {
+            globalVariables.Tick();
+
             if (activityManager != null)
             {
                 activityManager.Update();
             }
         }
 
+        public IGameAction GetGameAction()
+        {
+            return gameManager;
+        }
+
         void RenderFieldMap(int chapterId)
         {
             // Draw map on UI
             GameField field = gameManager.GetField();
-
             Material defaultMaterial = Resources.Load<Material>(@"common-mat");
 
+            fieldMapRoot = this.transform.Find("FieldMap");
             string mappingData = File.ReadAllText(@"D:\GitRoot\toneyisnow\windingtale\Resources\Remastered\Shapes\ShapePanel1\shape-mapping-1.json");
             ShapeMappings mappings = JsonConvert.DeserializeObject<ShapeMappings>(mappingData);
-
-            Transform fieldRoot = this.transform.Find("FieldMap");
 
             HashSet<int> missingShapes = new HashSet<int>();
             for (int x = 0; x < field.Width; x++)
@@ -71,52 +84,68 @@ namespace WindingTale.UI.Components
                 for (int y = 0; y < field.Height; y++)
                 {
                     int shapeIndex = field.Map[x, y];
-                    string voxIndex = shapeIndex.ToString();
+                    string voxIndexStr = shapeIndex.ToString();
                     foreach (string key in mappings.mappings.Keys)
                     {
                         if (mappings.mappings[key].Contains(shapeIndex))
                         {
-                            voxIndex = key;
+                            voxIndexStr = key;
                             break;
                         }
                     }
 
-                    GameObject shape = Resources.Load<GameObject>(string.Format(@"Maps/ShapePanel{0}/Shape_{0}_{1}", chapterId, voxIndex));
-                    if (shape == null)
+                    Int32.TryParse(voxIndexStr, out int voxIndex);
+                    GameObject shapePrefab = AssetManager.Instance().LoadShapePrefab(chapterId, voxIndex);
+                    if (shapePrefab == null)
                     {
                         missingShapes.Add(shapeIndex);
                         continue;
                     }
-
-                    var renderer = shape.GetComponentInChildren<MeshRenderer>();
+                    
+                    var renderer = shapePrefab.GetComponentInChildren<MeshRenderer>();
                     renderer.sharedMaterial = defaultMaterial;
 
                     // Note the the FlameDragon is counting matrix from 1, not 0
-                    GameObject go = FieldTransform.CreateShapeObject(shape, x + 1, y + 1);
-                    go.transform.parent = fieldRoot;
+                    GameObject go = FieldTransform.CreateShapeObject(shapePrefab, fieldMapRoot, x + 1, y + 1);
                 }
             }
-
 
         }
 
         public void PlaceCreature(FDCreature creature)
         {
             GameObject creaturePre = GameObject.Instantiate(creaturePrefab);
+            creaturePre.name = string.Format(@"creature_{0}", creature.CreatureId);
+            creaturePre.transform.parent = fieldObjectsRoot;
+            creaturePre.transform.localPosition = FieldTransform.GetCreaturePixelPosition(creature.Position);
 
-            creaturePre.transform.parent = this.transform.Find("FieldObjects");
-            creaturePre.transform.localPosition = FieldTransform.GetCreaturePosition(creature.Position);
-            creaturePre.transform.localRotation = new Quaternion(0, 180, 0, 0);
             var creatureCom = creaturePre.GetComponent<UICreature>();
 
             creatureCom.Initialize(creature);
-            creatureCom.SetAnimateState(UICreature.AnimateState.WalkUp); 
         }
 
         public void OnReceivePack(PackBase pack)
         {
             activityManager.PushPack(pack);
         }
+
+
+
+        #region IGameInterface
+
+        public UICreature GetUICreature(int creatureId)
+        {
+            string name = string.Format(@"creature_{0}", creatureId);
+            Transform cTransform = this.fieldObjectsRoot.Find(name);
+            if (cTransform != null)
+            {
+                return cTransform.GetComponent<UICreature>();
+            }
+
+            return null;
+        }
+
+        #endregion
 
     }
 }

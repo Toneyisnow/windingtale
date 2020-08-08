@@ -34,9 +34,9 @@ namespace WindingTale.UI.Common
             return obj;
         }
 
-        public static GameObject LoadCreatureIcon(string iconName, Transform parent = null)
+        public static GameObject LoadCreatureIcon(int animationId, int animationIndex, Transform parent = null)
         {
-            GameObject iconPrefab = AssetManager.Instance().LoadIconPrefab(iconName);
+            GameObject iconPrefab = AssetManager.Instance().LoadIconPrefab(animationId, animationIndex);
             if (iconPrefab == null)
             {
                 return null;

@@ -10,6 +10,9 @@ namespace WindingTale.Core.Components
     {
         void OnReceivePack(PackBase pack);
 
+        IGameAction GetGameAction();
+
+
         #region Activity Called Functions
 
         void PlaceCreature(FDCreature creature);

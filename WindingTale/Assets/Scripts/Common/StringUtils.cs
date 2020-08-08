@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WindingTale.UI.Common
+namespace WindingTale.Common
 {
 
     public class StringUtils
     {
-        public static string FormatDigit3(int number)
+        public static string Digit3(int number)
         {
             if (number < 10)
             {
@@ -15,6 +15,16 @@ namespace WindingTale.UI.Common
             }
 
             if (number < 100)
+            {
+                return string.Format(@"0{0}", number);
+            }
+
+            return number.ToString();
+        }
+
+        public static string Digit2(int number)
+        {
+            if (number < 10)
             {
                 return string.Format(@"0{0}", number);
             }

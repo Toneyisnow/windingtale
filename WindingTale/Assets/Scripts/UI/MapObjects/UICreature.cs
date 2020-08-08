@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.ObjectModels;
+using WindingTale.Common;
 using WindingTale.UI.Common;
+using WindingTale.UI.FieldMap;
 
 namespace WindingTale.UI.MapObjects
 {
     public class UICreature : UIObject
     {
-        public enum AnimateState
+        public enum AnimateStates
         {
             Idle,
             WalkLeft,
@@ -26,96 +28,90 @@ namespace WindingTale.UI.MapObjects
             get; private set;
         }
 
-        private AnimateState animateState = AnimateState.Idle;
+        public AnimateStates AnimateState
+        {
+            get; private set;
+        }
 
         private int aniIndex = 0;
-        private int tickCount = 0;
 
         public UICreature()
         {
 
         }
 
+
         public void Initialize(FDCreature creature)
         {
             Material defaultMaterial = Resources.Load<Material>(@"common-mat");
 
             this.Creature = creature;
-            this.animateState = AnimateState.Idle;
+            this.AnimateState = AnimateStates.Idle;
 
-            string animationIdStr = StringUtils.FormatDigit3(creature.Definition.AnimationId);
+            int animationId = creature.Definition.AnimationId;
             //// icon1 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_01", animationIdStr), this.transform);
             //// icon2 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_02", animationIdStr), this.transform);
             //// icon3 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_03", animationIdStr), this.transform);
 
-            icon1 = GameObjectExtension.LoadCreatureIcon(string.Format(@"Icon_{0}_01", animationIdStr), this.transform);
-            icon2 = GameObjectExtension.LoadCreatureIcon(string.Format(@"Icon_{0}_02", animationIdStr), this.transform);
-            icon3 = GameObjectExtension.LoadCreatureIcon(string.Format(@"Icon_{0}_03", animationIdStr), this.transform);
+            icon1 = GameObjectExtension.LoadCreatureIcon(animationId, 1, this.transform);
+            icon2 = GameObjectExtension.LoadCreatureIcon(animationId, 2, this.transform);
+            icon3 = GameObjectExtension.LoadCreatureIcon(animationId, 3, this.transform);
 
         }
 
         void Update()
         {
-            if (tickCount++ > 80)
+            if (this.AnimateState == AnimateStates.Idle)
             {
-                tickCount = 0;
-                UpdateAnimation();
+                UpdateAnimation(80);
+            }
+            else
+            {
+                UpdateAnimation(20);
             }
         }
 
-        public void SetAnimateState(AnimateState state)
+        public void SetAnimateState(AnimateStates state)
         {
+            
             switch (state)
             {
-                case AnimateState.Idle:
-                    this.transform.localRotation = new Quaternion(0f, 180f, 0, 0);
+                case AnimateStates.Idle:
+                    this.transform.localRotation = new Quaternion(0, 1.0f, 0, 0);
                     break;
-                case AnimateState.WalkLeft:
-                    this.transform.localRotation = new Quaternion(0f, -90f, 0, 0);
+                case AnimateStates.WalkLeft:
+                    this.transform.localRotation = new Quaternion(0, -0.7f, 0, 0.7f);
                     break;
-                case AnimateState.WalkRight:
+                case AnimateStates.WalkRight:
+                    this.transform.localRotation = new Quaternion(0, 0.7f, 0, 0.7f);
                     break;
-                case AnimateState.WalkUp:
-                    this.transform.localRotation = new Quaternion(0f, 0, 0, 0); 
+                case AnimateStates.WalkUp:
+                    this.transform.localRotation = new Quaternion(0, 0f, 0, 0);
                     break;
-                case AnimateState.WalkDown:
-                    this.transform.localRotation = new Quaternion(0f, 180f, 0, 0);
+                case AnimateStates.WalkDown:
+                    this.transform.localRotation = new Quaternion(0, 1.0f, 0, 0);
                     break;
                 default:
                     break;
             }
 
-            this.animateState = state;
+            this.AnimateState = state;
         }
 
-        void UpdateAnimation()
-        {
-            switch(this.animateState)
-            {
-                case AnimateState.Idle:
-                    UpdateIdleAnimation();
-                    break;
-                case AnimateState.WalkLeft:
-                    break;
-                case AnimateState.WalkRight:
-                    break;
-                case AnimateState.WalkUp:
-                    break;
-                case AnimateState.WalkDown:
-                    break;
-                default:
-                    break;
-            }
-        }
-         
-        void UpdateIdleAnimation()
+        void UpdateAnimation(int speedFrames)
         {
             if (icon1 == null || icon2 == null || icon3 == null)
             {
                 return;
             }
 
-            aniIndex = (aniIndex + 1) % 4;
+            int tick = Global.Instance().CurrentTick % speedFrames;
+            if (tick != 0)
+            {
+                return;
+            }
+
+            int aniIndex = (Global.Instance().CurrentTick / speedFrames) % 4;
             if (aniIndex == 0)
             {
                 icon1.SetActive(true);
@@ -140,6 +136,21 @@ namespace WindingTale.UI.MapObjects
                 icon2.SetActive(true);
                 icon3.SetActive(false);
             }
+        }
+
+        public FDPosition GetCurrentPosition()
+        {
+            return FieldTransform.GetCreatureUnitPosition(this.transform.localPosition);
+        }
+
+        public Vector3 GetCurrentPixelPosition()
+        {
+            return this.transform.localPosition;
+        }
+
+        public void SetPixelPosition(Vector3 vector3)
+        {
+            this.transform.localPosition = vector3;
         }
     }
 }

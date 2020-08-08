@@ -7,12 +7,12 @@ namespace WindingTale.UI.Components.Activities
 {
     public class NewBehaviourScript : ActivityBase
     {
-        public override void Start(IGameCallback gameCallback)
+        public override void Start(IGameInterface gameInterface)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Update(IGameCallback gameCallback)
+        public override void Update(IGameInterface gameInterface)
         {
             throw new System.NotImplementedException();
         }

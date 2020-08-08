@@ -8,25 +8,25 @@ namespace WindingTale.UI.Components.Activities
 {
     public class CallbackActivity : ActivityBase
     {
-        private Action<IGameCallback> callbackAction = null;
+        private Action<IGameInterface> callbackAction = null;
 
-        public CallbackActivity(Action<IGameCallback> action)
+        public CallbackActivity(Action<IGameInterface> action)
         {
             this.callbackAction = action;
         }
 
-        public override void Start(IGameCallback gameCallback)
+        public override void Start(IGameInterface gameInterface)
         {
-            if (callbackAction != null && gameCallback != null)
+            if (callbackAction != null && gameInterface != null)
             {
-                callbackAction(gameCallback);
+                callbackAction(gameInterface);
             }
 
             this.HasFinished = true;
         }
 
         // Update is called once per frame
-        public override void Update(IGameCallback gameCallback)
+        public override void Update(IGameInterface gameInterface)
         {
 
         }

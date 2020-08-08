@@ -5,8 +5,24 @@ using WindingTale.Core.Components;
 
 namespace WindingTale.UI.Components.Activities
 {
-    public class ShowMenuActivity : ActivityBase
+    public class SequenceActivity : ActivityBase
     {
+
+        private Queue<ActivityBase> Activities
+        {
+            get; set;
+        }
+
+        public SequenceActivity()
+        {
+            this.Activities = new Queue<ActivityBase>();
+        }
+
+        public void Add(ActivityBase a)
+        {
+            this.Activities.Enqueue(a);
+        }
+
         public override void Start(IGameInterface gameInterface)
         {
             throw new System.NotImplementedException();
@@ -16,6 +32,5 @@ namespace WindingTale.UI.Components.Activities
         {
             throw new System.NotImplementedException();
         }
-
     }
 }

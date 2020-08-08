@@ -1,10 +1,10 @@
 ManifestFileVersion: 0
-CRC: 4198041643
+CRC: 2706545935
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: assetbundletest
+      Name: iconbundle
       Dependencies: {}
     Info_1:
-      Name: iconbundle
+      Name: shapepanel01
       Dependencies: {}

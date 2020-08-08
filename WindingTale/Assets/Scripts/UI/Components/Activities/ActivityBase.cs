@@ -19,9 +19,9 @@ namespace WindingTale.UI.Components.Activities
 
 
         // Start is called before the first frame update
-        public abstract void Start(IGameCallback gameCallback);
+        public abstract void Start(IGameInterface gameInterface);
 
         // Update is called once per frame
-        public abstract void Update(IGameCallback gameCallback);
+        public abstract void Update(IGameInterface gameInterface);
     }
 }
