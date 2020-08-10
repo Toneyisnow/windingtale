@@ -24,12 +24,12 @@ namespace WindingTale.Core.Components.Events
             game.ComposeCreature(CreatureFaction.Friend, 3, 3, FDPosition.At(9, 22));
             game.ComposeCreature(CreatureFaction.Friend, 4, 4, FDPosition.At(12, 23));
 
-            List<SingleWalkAction> walks = new List<SingleWalkAction>();
+            List<SingleWalkAction> walks1 = new List<SingleWalkAction>();
             //// walks.Add(new SingleWalkAction(1, FDMovePath.Create(FDPosition.At(8, 15))));
-            walks.Add(new SingleWalkAction(2, FDMovePath.Create(FDPosition.At(11, 16))));
-            walks.Add(new SingleWalkAction(3, FDMovePath.Create(FDPosition.At(9, 17))));
-            walks.Add(new SingleWalkAction(4, FDMovePath.Create(FDPosition.At(12, 18))));
-            game.CreatureWalks(walks);
+            walks1.Add(new SingleWalkAction(2, FDMovePath.Create(FDPosition.At(11, 16))));
+            walks1.Add(new SingleWalkAction(3, FDMovePath.Create(FDPosition.At(9, 17))));
+            walks1.Add(new SingleWalkAction(4, FDMovePath.Create(FDPosition.At(12, 18))));
+            game.CreatureWalks(walks1);
 
             // Talking
             game.ShowTalk(1, 1, 5);
@@ -41,11 +41,11 @@ namespace WindingTale.Core.Components.Events
             game.ComposeCreature(CreatureFaction.Enemy, 14, 50101, FDPosition.At(5, 23));
 
             List<SingleWalkAction> walks2 = new List<SingleWalkAction>();
-            walks2.Add(new SingleWalkAction(11, FDMovePath.Create(FDPosition.At(3, 19))));
-            walks2.Add(new SingleWalkAction(12, FDMovePath.Create(FDPosition.At(4, 19))));
-            walks2.Add(new SingleWalkAction(13, FDMovePath.Create(FDPosition.At(6, 20))));
+            walks2.Add(new SingleWalkAction(11, FDMovePath.Create(FDPosition.At(2, 19), FDPosition.At(3, 19))));
+            walks2.Add(new SingleWalkAction(12, FDMovePath.Create(FDPosition.At(4, 22), FDPosition.At(4, 19))));
+            walks2.Add(new SingleWalkAction(13, FDMovePath.Create(FDPosition.At(6, 23), FDPosition.At(6, 20))));
             walks2.Add(new SingleWalkAction(14, FDMovePath.Create(FDPosition.At(5, 20))));
-            game.CreatureWalks(walks);
+            game.CreatureWalks(walks2);
 
             // Enemy Group2 appear
             game.ComposeCreature(CreatureFaction.Enemy, 15, 50101, FDPosition.At(4, 2), 101);
@@ -58,7 +58,7 @@ namespace WindingTale.Core.Components.Events
             walks3.Add(new SingleWalkAction(16, FDMovePath.Create(FDPosition.At(2, 5))));
             walks3.Add(new SingleWalkAction(17, FDMovePath.Create(FDPosition.At(3, 3))));
             walks3.Add(new SingleWalkAction(18, FDMovePath.Create(FDPosition.At(3, 3))));
-            game.CreatureWalks(walks);
+            game.CreatureWalks(walks3);
 
             // Talking
             game.ShowTalk(1, 6, 7);

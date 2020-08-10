@@ -11,7 +11,7 @@ namespace WindingTale.UI.Components.Activities
 {
     public class MoveCreatureActivity : ActivityBase
     {
-        private float moveSpeed = 0.05f;
+        private float moveSpeed = 0.03f;
 
         private int currentVertex = 0;
 
@@ -63,6 +63,13 @@ namespace WindingTale.UI.Components.Activities
         {
             if (IsCurrentMoveDone())
             {
+                // Set precise position for the UI
+                if (currentVertex >= 0)
+                {
+                    var vertex = this.MovePath.Vertexes[currentVertex];
+                    this.UICreature.SetPixelPosition(FieldTransform.GetCreaturePixelPosition(vertex));
+                }
+
                 // Pick the next vertex, or finish
                 currentVertex++;
                 if (currentVertex < this.MovePath.Vertexes.Count)
@@ -85,9 +92,13 @@ namespace WindingTale.UI.Components.Activities
                     }
                     else if (targetVertex.Y < current.Y)
                     {
-                        this.UICreature.SetAnimateState(UICreature.AnimateStates.WalkRight);
+                        this.UICreature.SetAnimateState(UICreature.AnimateStates.WalkUp);
                     }
-
+                    else
+                    {
+                        // Make the status to done so that next Update will pick the next vertex
+                        this.UICreature.SetAnimateState(UICreature.AnimateStates.Idle);
+                    }
 
                 }
                 else
@@ -140,6 +151,7 @@ namespace WindingTale.UI.Components.Activities
 
         private void DoMoving()
         {
+
             Vector3 delta = Vector3.zero;
             switch(this.UICreature.AnimateState)
             {
@@ -151,6 +163,34 @@ namespace WindingTale.UI.Components.Activities
                     break;
                 case UICreature.AnimateStates.WalkLeft:
                     delta = new Vector3(- moveSpeed, 0, 0);
+                    break;
+                case UICreature.AnimateStates.WalkRight:
+                    delta = new Vector3(moveSpeed, 0, 0);
+                    break;
+                case UICreature.AnimateStates.Idle:
+                    break;
+                default:
+                    break;
+            }
+
+            Vector3 position = this.UICreature.GetCurrentPixelPosition();
+            this.UICreature.SetPixelPosition(position + delta);
+
+        }
+
+        private void DoMoving2()
+        {
+            Vector3 delta = Vector3.zero;
+            switch (this.UICreature.AnimateState)
+            {
+                case UICreature.AnimateStates.WalkUp:
+                    delta = new Vector3(0, 0, moveSpeed);
+                    break;
+                case UICreature.AnimateStates.WalkDown:
+                    delta = new Vector3(0, 0, -moveSpeed);
+                    break;
+                case UICreature.AnimateStates.WalkLeft:
+                    delta = new Vector3(-moveSpeed, 0, 0);
                     break;
                 case UICreature.AnimateStates.WalkRight:
                     delta = new Vector3(moveSpeed, 0, 0);

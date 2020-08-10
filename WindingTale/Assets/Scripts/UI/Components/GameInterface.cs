@@ -112,16 +112,17 @@ namespace WindingTale.UI.Components
 
         }
 
-        public void PlaceCreature(FDCreature creature)
+        public void PlaceCreature(int creatureId, int animationid, FDPosition position)
         {
-            GameObject creaturePre = GameObject.Instantiate(creaturePrefab);
-            creaturePre.name = string.Format(@"creature_{0}", creature.CreatureId);
-            creaturePre.transform.parent = fieldObjectsRoot;
-            creaturePre.transform.localPosition = FieldTransform.GetCreaturePixelPosition(creature.Position);
+            GameObject creatureObj = GameObject.Instantiate(creaturePrefab);
+            creatureObj.name = string.Format(@"creature_{0}", creatureId);
+            creatureObj.transform.parent = fieldObjectsRoot;
+            creatureObj.transform.localPosition = FieldTransform.GetCreaturePixelPosition(position);
 
-            var creatureCom = creaturePre.GetComponent<UICreature>();
+            var creatureCom = creatureObj.GetComponent<UICreature>();
+            creatureCom.Initialize(animationid);
 
-            creatureCom.Initialize(creature);
+
         }
 
         public void OnReceivePack(PackBase pack)

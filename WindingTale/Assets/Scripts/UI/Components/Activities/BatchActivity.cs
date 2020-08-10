@@ -42,7 +42,7 @@ namespace WindingTale.UI.Components.Activities
                 }
             }
 
-            this.HasFinished = HasFinished;
+            this.HasFinished = hasFinished;
         }
     }
 }

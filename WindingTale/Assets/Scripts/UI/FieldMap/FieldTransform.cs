@@ -7,6 +7,8 @@ namespace WindingTale.UI.FieldMap
 {
     public class FieldTransform
     {
+        private static readonly float FloatPrecision = 0.01f;
+
         public static Vector3 GetShapePixelPosition(int x, int y)
         {
             return new Vector3(x * 2.4f, 0, - y * 2.4f);
@@ -24,8 +26,8 @@ namespace WindingTale.UI.FieldMap
 
         public static FDPosition GetCreatureUnitPosition(Vector3 vector3)
         {
-            int posX = (int)((vector3.x - 1.2f) / 2.4f);
-            int posY = (int)(-(vector3.z - 1.2f) / 2.4f);
+            int posX = (int)((vector3.x + FloatPrecision - 1.2f) / 2.4f);
+            int posY = (int)(-(vector3.z - 1.2f - FloatPrecision) / 2.4f);
             return FDPosition.At(posX, posY);
         }
 

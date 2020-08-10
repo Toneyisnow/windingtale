@@ -9,6 +9,7 @@ namespace WindingTale.UI.Common
     public class GameObjectExtension
     {
         private static Material defaultMaterial = Resources.Load<Material>(@"common-mat");
+        private static Material transparentMaterial = Resources.Load<Material>(@"common-transparent");
 
         public static GameObject CreateFromObj(string resourcePath, Transform parent = null)
         {
@@ -52,7 +53,10 @@ namespace WindingTale.UI.Common
             obj.transform.localRotation = new Quaternion(0, 0, 0, 0);
 
             var renderer = obj.GetComponentInChildren<MeshRenderer>();
-            renderer.sharedMaterial = defaultMaterial;
+            renderer.sharedMaterial = transparentMaterial;
+            var clr = renderer.sharedMaterial.color;
+            renderer.sharedMaterial.color = new Color(clr.r, clr.g, clr.b, 0.3f);
+
 
             return obj;
         }

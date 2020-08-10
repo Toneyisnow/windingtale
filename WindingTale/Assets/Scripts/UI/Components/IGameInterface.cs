@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Common;
 using WindingTale.Core.ObjectModels;
 using WindingTale.UI.MapObjects;
 
@@ -10,7 +11,7 @@ namespace WindingTale.UI.Components
     {
         UICreature GetUICreature(int creatureId);
 
-        void PlaceCreature(FDCreature creature);
+        void PlaceCreature(int creatureId, int animationid, FDPosition position);
 
     }
 }

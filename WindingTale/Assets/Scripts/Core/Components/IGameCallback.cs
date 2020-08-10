@@ -12,12 +12,5 @@ namespace WindingTale.Core.Components
 
         IGameAction GetGameAction();
 
-
-        #region Activity Called Functions
-
-        void PlaceCreature(FDCreature creature);
-
-
-        #endregion
     }
 }

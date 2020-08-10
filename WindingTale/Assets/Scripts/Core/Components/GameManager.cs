@@ -162,7 +162,7 @@ namespace WindingTale.Core.Components
                     break;
             }
 
-            ComposeCreaturePack pack = new ComposeCreaturePack(creature);
+            ComposeCreaturePack pack = new ComposeCreaturePack(creatureId, creatureDef.AnimationId, position);
             gameCallback.OnReceivePack(pack);
         }
 

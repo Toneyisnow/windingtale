@@ -18,6 +18,7 @@ namespace WindingTale.Core.Components.Packs
 
         public TalkPack(string convId)
         {
+            this.Type = PackType.Talk;
             this.Conversationid = convId;
         }
 

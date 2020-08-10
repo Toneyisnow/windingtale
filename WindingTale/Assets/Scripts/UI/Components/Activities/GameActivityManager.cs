@@ -44,9 +44,17 @@ namespace WindingTale.UI.Components.Activities
 
             if (currentActivity == null || currentActivity.HasFinished)
             {
+                if (currentActivity != null)
+                {
+                    Debug.LogFormat("ActivityManager: Finished activity. type={0}", currentActivity.GetType());
+                    currentActivity = null;
+                }
+
                 if (activityQueue != null && activityQueue.Count > 0)
                 {
                     currentActivity = activityQueue.Dequeue();
+                    Debug.LogFormat("ActivityManager: Starting activity. type={0}", currentActivity.GetType());
+
                     currentActivity.Start(gameInterface);
                 }
                 

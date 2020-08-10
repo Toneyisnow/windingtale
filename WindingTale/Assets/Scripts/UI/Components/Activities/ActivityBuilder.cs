@@ -18,37 +18,16 @@ namespace WindingTale.UI.Components.Activities
             switch (pack.Type)
             {
                 case PackBase.PackType.ComposeCreature:
-                    ComposeCreaturePack composeCreature = pack as ComposeCreaturePack;
-                    if (composeCreature != null)
-                    {
-                        CallbackActivity act = new CallbackActivity(
-                            (callback) => { callback.PlaceCreature(composeCreature.Creature); });
-                        return act;
-                    }
-                    break;
+                    return BuildComposeCreatureActivity(pack as ComposeCreaturePack);
+
                 case PackBase.PackType.MoveCreature:
+                    return BuildMoveCreatureActivity(pack as CreatureMovePack);
 
-                    return BuildMoveCreature(pack as CreatureMovePack);
+                case PackBase.PackType.Talk:
+                    return BuildTalkActivity(pack as TalkPack);
+
                 case PackBase.PackType.Batch:
-                    BatchActivity batch = new BatchActivity();
-                    BatchPack batchPack = pack as BatchPack;
-                    if (batchPack != null)
-                    {
-                        foreach(PackBase p in batchPack.Packs)
-                        {
-                            if (p == null)
-                            {
-                                throw new ArgumentNullException("BatchActivity");
-                            }
-
-                            var a = BuildFromPack(p);
-                            if (a != null)
-                            {
-                                batch.Add(a);
-                            }
-                        }
-                    }
-                    return batch;
+                    return BuildBatchActivity(pack as BatchPack);
 
                 default:
                     break;
@@ -57,7 +36,20 @@ namespace WindingTale.UI.Components.Activities
             return null;
         }
 
-        private static ActivityBase BuildMoveCreature(CreatureMovePack pack)
+        private static ActivityBase BuildComposeCreatureActivity(ComposeCreaturePack pack)
+        {
+            if (pack == null)
+            {
+                throw new ArgumentNullException("CreatureMovePack");
+            }
+            
+            CallbackActivity act = new CallbackActivity(
+                    (callback) => { callback.PlaceCreature(pack.CreatureId, pack.AnimationId, pack.Position); });
+            
+            return act;
+        }
+
+        private static ActivityBase BuildMoveCreatureActivity(CreatureMovePack pack)
         {
             if (pack == null)
             {
@@ -68,6 +60,39 @@ namespace WindingTale.UI.Components.Activities
             return moveCreature;
         }
 
+        private static ActivityBase BuildTalkActivity(TalkPack pack)
+        {
+            if (pack == null)
+            {
+                throw new ArgumentNullException("pack");
+            }
+
+            TalkActivity activity = new TalkActivity(pack.CreatureId, pack.Conversationid);
+            return activity;
+
+        }
+
+        private static ActivityBase BuildBatchActivity(BatchPack pack)
+        {
+            BatchActivity batch = new BatchActivity();
+            if (pack != null)
+            {
+                foreach (PackBase p in pack.Packs)
+                {
+                    if (p == null)
+                    {
+                        throw new ArgumentNullException("BatchActivity");
+                    }
+
+                    var a = BuildFromPack(p);
+                    if (a != null)
+                    {
+                        batch.Add(a);
+                    }
+                }
+            }
+            return batch;
+        }
 
     }
 
