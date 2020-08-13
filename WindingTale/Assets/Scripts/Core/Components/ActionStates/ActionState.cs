@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using WindingTale.Common;
 
 namespace WindingTale.Core.Components.ActionStates
 {
@@ -9,12 +9,22 @@ namespace WindingTale.Core.Components.ActionStates
     {
         protected IGameAction gameAction = null;
 
-        protected IGameCallback gameCallback = null;
 
-        public ActionState(IGameAction action, IGameCallback callback)
+        public ActionState(IGameAction action)
         {
             this.gameAction = action;
-            this.gameCallback = callback;
         }
+
+        public abstract void OnEnter();
+
+        public abstract void OnExit();
+
+        #region State Operations
+
+        public abstract void OnSelectPosition(FDPosition position);
+
+
+
+        #endregion
     }
 }

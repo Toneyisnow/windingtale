@@ -5,6 +5,7 @@ using WindingTale.Core.ObjectModels;
 using WindingTale.Common;
 using WindingTale.UI.Common;
 using WindingTale.UI.FieldMap;
+using WindingTale.UI.Components;
 
 namespace WindingTale.UI.MapObjects
 {
@@ -33,6 +34,8 @@ namespace WindingTale.UI.MapObjects
             get; private set;
         }
 
+        private IGameInterface gameInterface = null;
+
         public AnimateStates AnimateState
         {
             get; private set;
@@ -40,13 +43,15 @@ namespace WindingTale.UI.MapObjects
 
         public UICreature()
         {
-
+            
         }
 
 
-        public void Initialize(int animationId)
+        public void Initialize(IGameInterface gameInterface, int creatureId, int animationId)
         {
-            Material defaultMaterial = Resources.Load<Material>(@"common-mat");
+            this.gameInterface = gameInterface;
+            this.CreatureId = creatureId;
+            //// Material defaultMaterial = Resources.Load<Material>(@"common-mat");
 
             this.AnimateState = AnimateStates.Idle;
 
@@ -58,18 +63,26 @@ namespace WindingTale.UI.MapObjects
             icon2 = GameObjectExtension.LoadCreatureIcon(animationId, 2, this.transform);
             icon3 = GameObjectExtension.LoadCreatureIcon(animationId, 3, this.transform);
 
+            var box = this.gameObject.AddComponent<BoxCollider>();
+            box.size = new Vector3(2.0f, 2.0f, 2.0f);
+            box.center = new Vector3(0f, 1f, 0f);
         }
 
         void Update()
         {
             if (this.AnimateState == AnimateStates.Idle)
             {
-                UpdateAnimation(80);
+                UpdateAnimation(WindingTale.UI.Common.Constants.TICK_PER_FRAME * 4);
             }
             else
             {
-                UpdateAnimation(20);
+                UpdateAnimation(WindingTale.UI.Common.Constants.TICK_PER_FRAME);
             }
+        }
+        protected override void OnTouched()
+        {
+            gameInterface.TouchCreature(this.CreatureId);
+
         }
 
         public void SetAnimateState(AnimateStates state)
@@ -141,7 +154,7 @@ namespace WindingTale.UI.MapObjects
 
         public FDPosition GetCurrentPosition()
         {
-            return FieldTransform.GetCreatureUnitPosition(this.transform.localPosition);
+            return FieldTransform.GetObjectUnitPosition(this.transform.localPosition);
         }
 
         public Vector3 GetCurrentPixelPosition()

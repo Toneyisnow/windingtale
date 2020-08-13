@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using WindingTale.UI.Components;
+using static WindingTale.UI.Common.Constants;
 
 namespace WindingTale.UI.Common
 {
@@ -48,15 +49,40 @@ namespace WindingTale.UI.Common
             {
                 obj.transform.parent = parent;
             }
+            
+            obj.transform.localPosition = new Vector3(0, 0, 0);
+            obj.transform.localRotation = new Quaternion(0, 0, 0, 0);
+
+            var renderer = obj.GetComponentInChildren<MeshRenderer>();
+            renderer.sharedMaterial = defaultMaterial;
+            var clr = renderer.sharedMaterial.color;
+            renderer.sharedMaterial.color = new Color(clr.r, clr.g, clr.b, 1.0f);
+
+
+            return obj;
+        }
+
+        public static GameObject LoadCursor(CursorType type, Transform parent)
+        {
+            GameObject cursorPrefab = AssetManager.Instance().LoadCursorPrefab(type);
+            if (cursorPrefab == null)
+            {
+                return null;
+            }
+
+            GameObject obj = GameObject.Instantiate(cursorPrefab);
+            if (parent != null)
+            {
+                obj.transform.parent = parent;
+            }
 
             obj.transform.localPosition = new Vector3(0, 0, 0);
             obj.transform.localRotation = new Quaternion(0, 0, 0, 0);
 
             var renderer = obj.GetComponentInChildren<MeshRenderer>();
-            renderer.sharedMaterial = transparentMaterial;
+            renderer.sharedMaterial = defaultMaterial;
             var clr = renderer.sharedMaterial.color;
-            renderer.sharedMaterial.color = new Color(clr.r, clr.g, clr.b, 0.3f);
-
+            renderer.sharedMaterial.color = new Color(clr.r, clr.g, clr.b, 1.0f);
 
             return obj;
         }

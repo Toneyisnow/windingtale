@@ -13,5 +13,6 @@ namespace WindingTale.UI.Components
 
         void PlaceCreature(int creatureId, int animationid, FDPosition position);
 
+        void TouchCreature(int creatureId);
     }
 }

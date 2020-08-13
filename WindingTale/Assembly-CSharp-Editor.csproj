@@ -64,6 +64,69 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Editor\CreateAssetBundles.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\BulkUpdateWindow.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\CreateLanguageWindow.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\EditRootLanguageFileWindow.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\LanguageExportWindow.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\LanguageImportWindow.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\LanguageUpdateWindow.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\CreateLanguageListAdaptor.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\CreateLanguageMenuControl.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\EditorColumns.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\LocalizedObjectListAdaptor.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\LocalizedObjectMenuControl.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\SettingsListAdaptor.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\SettingsMenuControl.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\SmartCultureInfoListAdaptor.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\SmartCultureInfoMenuControl.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\SmartLocalizationWindow.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\TranslateLanguageWindow.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileOperations\CustomResxImporter.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileOperations\LanguageHandlerEditor.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileOperations\LocalizationWorkspace.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\CSVExporter.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\CSVParser.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\DirectoryUtility.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\FileUtility.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\StringExtensions.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\XLSExporter.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\InspectorScripts\LocalizedAudioSourceInspector.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\InspectorScripts\LocalizedBaseInspector.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\InspectorScripts\LocalizedImageInspector.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\InspectorScripts\LocalizedSpriteInspector.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\InspectorScripts\LocalizedTextInspector.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\InspectorScripts\LocalizedTextMeshProInspector.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\HOEditorUndoManager.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\MiniJSON.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\GenericListAdaptor.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\IReorderableListAdaptor.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\Internal\GUIHelper.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\Internal\ReorderableListResources.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\ReorderableListControl.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\ReorderableListFlags.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\ReorderableListGUI.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\SerializedPropertyAdaptor.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\Translation\IAutomaticTranslator.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\Translation\MicrosoftAutomaticTranslator.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\Utility\EditorThreadQueuer.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\Utility\LanguageDictionaryHelper.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\Utility\LocalizationWindowUtility.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\Utility\LocalizedKeySelector.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\Editor\Utility\SmartCultureInfoEx.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\NGUI\Editor\SL_NGUILabelInspector.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\NGUI\Editor\SL_NGUISpriteAtlasInspector.cs" />
+    <Compile Include="Assets\SmartLocalization\Scripts\NGUI\Editor\SL_NGUISpriteNameInspector.cs" />
+    <Compile Include="Assets\Tests\Editor\ApplicationExtensionTests.cs" />
+    <Compile Include="Assets\Tests\Editor\CSVExporterTests.cs" />
+    <Compile Include="Assets\Tests\Editor\CSVParserTests.cs" />
+    <Compile Include="Assets\Tests\Editor\LanguageDataHandlerTests.cs" />
+    <Compile Include="Assets\Tests\Editor\LanguageDictionaryHelperTests.cs" />
+    <Compile Include="Assets\Tests\Editor\Mocks\MockLocalizedAssetLoader.cs" />
+    <Compile Include="Assets\Tests\Editor\PluralFormTests.cs" />
+    <Compile Include="Assets\Tests\Editor\SmartCultureInfoTests.cs" />
+    <Compile Include="Assets\Tests\Editor\XLSExporterTests.cs" />
+    <None Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\README.txt" />
+    <None Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\LICENSE.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -264,6 +327,27 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="CsvHelper">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/SmartLocalization/Scripts/Editor/ThirdParty/CSVHelper/CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelLibrary">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/SmartLocalization/Scripts/Editor/ThirdParty/ExcelLibrary/ExcelLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/SmartLocalization/Scripts/Editor/ThirdParty/NPOI/ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/SmartLocalization/Scripts/Editor/ThirdParty/NPOI/NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/SmartLocalization/Scripts/Editor/ThirdParty/NPOI/NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/SmartLocalization/Scripts/Editor/ThirdParty/NPOI/NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/SmartLocalization/Scripts/Editor/ThirdParty/NPOI/NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>

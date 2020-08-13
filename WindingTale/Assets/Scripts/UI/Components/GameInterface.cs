@@ -12,6 +12,7 @@ using WindingTale.UI.FieldMap;
 using WindingTale.UI.MapObjects;
 using WindingTale.Common;
 using System;
+using SmartLocalization;
 
 namespace WindingTale.UI.Components
 {
@@ -33,15 +34,22 @@ namespace WindingTale.UI.Components
         private Transform fieldMapRoot = null;
 
 
+        private GameObject gameCursor = null;
+
+        private Material defaultMaterial = null;
+
+
         // Start is called before the first frame update
         void Start()
         {
+            TestLocalization();
             activityManager = new GameActivityManager(this);
 
             gameManager = new GameManager(this);
             ChapterRecord record = ChapterRecord.NewGame();
             gameManager.StartGame(record);
 
+            defaultMaterial = Resources.Load<Material>(@"common-mat");
             RenderFieldMap(record.ChapterId);
 
             globalVariables = Global.Instance();
@@ -49,7 +57,10 @@ namespace WindingTale.UI.Components
             //// FDCreature creature = new FDCreature(2, new CreatureDefinition() { DefinitionId = 2 }, FDPosition.At(1, 2));
             //// PlaceCreature(creature);
 
+            
             fieldObjectsRoot = this.transform.Find("FieldObjects");
+
+            InitializeObjects();
         }
 
         // Update is called once per frame
@@ -63,6 +74,23 @@ namespace WindingTale.UI.Components
             }
         }
 
+        private void TestLocalization()
+        {
+            if (LanguageManager.Instance.IsCultureSupported("en-US"))
+            {
+                int here = 1;
+            }
+
+            if (LanguageManager.Instance.IsCultureSupported("zh-CN"))
+            {
+                int here = 2;
+            }
+
+            LanguageManager.Instance.ChangeLanguage("zh-CN");
+            //Returns a text value in the current language for the key
+            string myKey = LanguageManager.Instance.GetTextValue("talk1");
+        }
+
         public IGameAction GetGameAction()
         {
             return gameManager;
@@ -72,8 +100,7 @@ namespace WindingTale.UI.Components
         {
             // Draw map on UI
             GameField field = gameManager.GetField();
-            Material defaultMaterial = Resources.Load<Material>(@"common-mat");
-
+            
             fieldMapRoot = this.transform.Find("FieldMap");
             string mappingData = File.ReadAllText(@"D:\GitRoot\toneyisnow\windingtale\Resources\Remastered\Shapes\ShapePanel1\shape-mapping-1.json");
             ShapeMappings mappings = JsonConvert.DeserializeObject<ShapeMappings>(mappingData);
@@ -120,10 +147,28 @@ namespace WindingTale.UI.Components
             creatureObj.transform.localPosition = FieldTransform.GetCreaturePixelPosition(position);
 
             var creatureCom = creatureObj.GetComponent<UICreature>();
-            creatureCom.Initialize(animationid);
+            creatureCom.Initialize(this, creatureId, animationid);
 
 
         }
+
+        public void TouchCreature(int creatureId)
+        {
+            UICreature creature = GetUICreature(creatureId);
+            FDPosition creaturePosition = creature.GetCurrentPosition();
+            FDPosition cursorPosition = FieldTransform.GetObjectUnitPosition(gameCursor.transform.localPosition);
+
+            if(!creaturePosition.AreSame(cursorPosition))
+            {
+                gameCursor.transform.localPosition = FieldTransform.GetObjectPixelPosition(FieldTransform.FieldObjectLayer.Ground, creaturePosition.X, creaturePosition.Y);
+            }
+            else
+            {
+                // Do the actuall game event
+                gameManager.OnSelectPosition(creaturePosition);
+            }
+        }
+
 
         public void OnReceivePack(PackBase pack)
         {
@@ -147,6 +192,25 @@ namespace WindingTale.UI.Components
         }
 
         #endregion
+
+        #region Private Methods
+
+        private void InitializeObjects()
+        {
+            // Init the cursor
+            gameCursor = new GameObject();
+            gameCursor.name = string.Format(@"game_cursor");
+            gameCursor.transform.parent = fieldObjectsRoot;
+            gameCursor.transform.localPosition = FieldTransform.GetObjectPixelPosition(FieldTransform.FieldObjectLayer.Ground, 10, 10);
+
+            var comp = gameCursor.AddComponent<UICursor>();
+            comp.Initialize(this);
+
+        }
+
+
+        #endregion
+
 
     }
 }

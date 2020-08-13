@@ -48,12 +48,13 @@ namespace WindingTale.Core.Components
 
     }
 
-
     /// <summary>
     /// All of the actions that GameState/GameEvent could call for
     /// </summary>
     public interface IGameAction
     {
+        public IGameCallback GetCallback();
+
         #region Information
 
         int TurnId();
@@ -69,9 +70,17 @@ namespace WindingTale.Core.Components
 
         FDCreature GetDeadCreature(int creatureId);
 
+        FDCreature GetCreatureAt(FDPosition position);
+
         #endregion
 
-        #region Game Operations
+        #region Game Operation called from Interface
+
+        void OnSelectPosition(FDPosition position);
+
+        #endregion
+
+        #region Game Internal Actions
 
         void ComposeCreature(CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItem = 0);
 
@@ -101,7 +110,7 @@ namespace WindingTale.Core.Components
 
         #endregion
 
-        #region Do Operations
+        #region Do Actions
 
         void DoCreatureMove(int creatureId, FDMovePath movePath);
 
@@ -123,8 +132,7 @@ namespace WindingTale.Core.Components
 
         #endregion
 
-        #region Can Operations
-
+        #region Can Actions
 
         bool CanCreatureMove(int creatureId, FDPosition targetPosition);
 

@@ -11,7 +11,7 @@ namespace WindingTale.UI.Components.Activities
 {
     public class MoveCreatureActivity : ActivityBase
     {
-        private float moveSpeed = 0.03f;
+        private float moveDeltaPerTick = 1.0f / WindingTale.UI.Common.Constants.TICK_PER_FRAME;
 
         private int currentVertex = 0;
 
@@ -156,16 +156,16 @@ namespace WindingTale.UI.Components.Activities
             switch(this.UICreature.AnimateState)
             {
                 case UICreature.AnimateStates.WalkUp:
-                    delta = new Vector3(0, 0, moveSpeed);
+                    delta = new Vector3(0, 0, moveDeltaPerTick);
                     break;
                 case UICreature.AnimateStates.WalkDown:
-                    delta = new Vector3(0, 0, - moveSpeed);
+                    delta = new Vector3(0, 0, - moveDeltaPerTick);
                     break;
                 case UICreature.AnimateStates.WalkLeft:
-                    delta = new Vector3(- moveSpeed, 0, 0);
+                    delta = new Vector3(- moveDeltaPerTick, 0, 0);
                     break;
                 case UICreature.AnimateStates.WalkRight:
-                    delta = new Vector3(moveSpeed, 0, 0);
+                    delta = new Vector3(moveDeltaPerTick, 0, 0);
                     break;
                 case UICreature.AnimateStates.Idle:
                     break;
@@ -184,16 +184,16 @@ namespace WindingTale.UI.Components.Activities
             switch (this.UICreature.AnimateState)
             {
                 case UICreature.AnimateStates.WalkUp:
-                    delta = new Vector3(0, 0, moveSpeed);
+                    delta = new Vector3(0, 0, moveDeltaPerTick);
                     break;
                 case UICreature.AnimateStates.WalkDown:
-                    delta = new Vector3(0, 0, -moveSpeed);
+                    delta = new Vector3(0, 0, -moveDeltaPerTick);
                     break;
                 case UICreature.AnimateStates.WalkLeft:
-                    delta = new Vector3(-moveSpeed, 0, 0);
+                    delta = new Vector3(-moveDeltaPerTick, 0, 0);
                     break;
                 case UICreature.AnimateStates.WalkRight:
-                    delta = new Vector3(moveSpeed, 0, 0);
+                    delta = new Vector3(moveDeltaPerTick, 0, 0);
                     break;
                 case UICreature.AnimateStates.Idle:
                     break;

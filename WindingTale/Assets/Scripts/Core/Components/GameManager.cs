@@ -50,7 +50,7 @@ namespace WindingTale.Core.Components
 
             eventManager = new GameEventManager(this);
 
-            dispatcher = new GameStateDispatcher(this, gameCallback);
+            dispatcher = new GameStateDispatcher(this);
         }
 
         public void StartGame(ChapterRecord record)
@@ -108,7 +108,18 @@ namespace WindingTale.Core.Components
 
         }
 
-        #region Actions
+
+        #region Information
+
+        public int TurnId()
+        {
+            return this.turnId;
+        }
+
+        public CreatureFaction TurnPhase()
+        {
+            return this.turnPhase;
+        }
 
         public FDCreature GetCreature(int creatureId)
         {
@@ -138,10 +149,37 @@ namespace WindingTale.Core.Components
             return this.Deads.Find((c) => { return c.CreatureId == creatureId; });
         }
 
+        public FDCreature GetCreatureAt(FDPosition position)
+        {
+            FDCreature creature = this.Friends.Find(c => { return c.Position.AreSame(position); });
+            if (creature != null)
+            {
+                return creature;
+            }
+
+            creature = this.Enemies.Find(c => { return c.Position.AreSame(position); });
+            if (creature != null)
+            {
+                return creature;
+            }
+
+            creature = this.Npcs.Find(c => { return c.Position.AreSame(position); });
+            if (creature != null)
+            {
+                return creature;
+            }
+
+            return null;
+        }
+
+        #endregion
+
+        #region Actions
+
         public void ComposeCreature(CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItem = 0)
         {
             CreatureDefinition creatureDef = DefinitionStore.Instance.GetCreatureDefinition(definitionId);
-            FDCreature creature = new FDCreature(creatureId, creatureDef, position);
+            FDCreature creature = new FDCreature(creatureId, faction, creatureDef, position);
 
             switch (faction)
             {
@@ -295,16 +333,15 @@ namespace WindingTale.Core.Components
 
         #endregion
 
-        #region Information
+        #region Game Operation called from interface
 
-        public int TurnId()
+        /// <summary>
+        /// Game operation when user clicked on position
+        /// </summary>
+        /// <param name="position"></param>
+        public void OnSelectPosition(FDPosition position)
         {
-            return this.turnId;
-        }
-
-        public CreatureFaction TurnPhase()
-        {
-            return this.turnPhase;
+            dispatcher.OnSelectPosition(position);
         }
 
         #endregion
@@ -421,7 +458,7 @@ namespace WindingTale.Core.Components
         }
 
 
-        private void postCreatureAction()
+        private void PostCreatureAction()
         {
             // Check all creatures are taken actions, and do startNewTurn
 

@@ -15,6 +15,10 @@ namespace WindingTale.Core.ObjectModels
 
         private bool hasActioned = false;
 
+        public CreatureFaction Faction
+        {
+            get; private set;
+        }
 
         public CreatureData Data
         {
@@ -57,8 +61,10 @@ namespace WindingTale.Core.ObjectModels
             this.Data.CreatureId = creatureId;
         }
 
-        public FDCreature(int creatureId, CreatureDefinition creatureDefinition, FDPosition position)
+        public FDCreature(int creatureId, CreatureFaction faction, CreatureDefinition creatureDefinition, FDPosition position)
         {
+            this.Faction = faction;
+
             this.Data = new CreatureData();
             this.Data.CreatureId = creatureId;
             this.Data.DefinitionId = creatureDefinition.DefinitionId;

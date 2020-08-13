@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using WindingTale.Common;
+using static WindingTale.UI.Common.Constants;
 
 namespace WindingTale.UI.Components
 {
@@ -65,6 +66,12 @@ namespace WindingTale.UI.Components
             }
 
             return null;
+        }
+
+        public GameObject LoadCursorPrefab(CursorType cursorType)
+        {
+            GameObject cursorPrefab = Resources.Load<GameObject>("Others/Cursor");
+            return cursorPrefab;
         }
 
         public GameObject LoadShapePrefab(int shapePanelIndex, int shapeIndex)

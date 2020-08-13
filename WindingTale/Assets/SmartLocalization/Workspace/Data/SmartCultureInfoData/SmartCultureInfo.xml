@@ -1,0 +1,2064 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SmartCultureCollections xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <version>4</version>
+  <CultureInfos>
+    <CultureInfo>
+      <languageCode />
+      <englishName>Invariant Language (Invariant Country)</englishName>
+      <nativeName>Invariant Language (Invariant Country)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar</languageCode>
+      <englishName>Arabic</englishName>
+      <nativeName>العربية</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>bg</languageCode>
+      <englishName>Bulgarian</englishName>
+      <nativeName>български</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ca</languageCode>
+      <englishName>Catalan</englishName>
+      <nativeName>català</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>zh-Hans</languageCode>
+      <englishName>Chinese (Simplified)</englishName>
+      <nativeName>中文</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>zh-CHS</languageCode>
+      <englishName>Chinese (Simplified) Legacy</englishName>
+      <nativeName>中文</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>cs</languageCode>
+      <englishName>Czech</englishName>
+      <nativeName>čeština</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>da</languageCode>
+      <englishName>Danish</englishName>
+      <nativeName>dansk</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>de</languageCode>
+      <englishName>German</englishName>
+      <nativeName>Deutsch</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>el</languageCode>
+      <englishName>Greek</englishName>
+      <nativeName>Ελληνικά</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en</languageCode>
+      <englishName>English</englishName>
+      <nativeName>English</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es</languageCode>
+      <englishName>Spanish</englishName>
+      <nativeName>español</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fi</languageCode>
+      <englishName>Finnish</englishName>
+      <nativeName>suomi</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr</languageCode>
+      <englishName>French</englishName>
+      <nativeName>français</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>he</languageCode>
+      <englishName>Hebrew</englishName>
+      <nativeName>עברית</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>hu</languageCode>
+      <englishName>Hungarian</englishName>
+      <nativeName>magyar</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>is</languageCode>
+      <englishName>Icelandic</englishName>
+      <nativeName>íslenska</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>it</languageCode>
+      <englishName>Italian</englishName>
+      <nativeName>italiano</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ja</languageCode>
+      <englishName>Japanese</englishName>
+      <nativeName>日本語</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ko</languageCode>
+      <englishName>Korean</englishName>
+      <nativeName>한국어</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>nl</languageCode>
+      <englishName>Dutch</englishName>
+      <nativeName>Nederlands</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>no</languageCode>
+      <englishName>Norwegian</englishName>
+      <nativeName>norsk</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>pl</languageCode>
+      <englishName>Polish</englishName>
+      <nativeName>polski</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>pt</languageCode>
+      <englishName>Portuguese</englishName>
+      <nativeName>português</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>rm</languageCode>
+      <englishName>Romansh</englishName>
+      <nativeName>rumantsch</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ro</languageCode>
+      <englishName>Romanian</englishName>
+      <nativeName>română</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ru</languageCode>
+      <englishName>Russian</englishName>
+      <nativeName>русский</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>hr</languageCode>
+      <englishName>Croatian</englishName>
+      <nativeName>hrvatski</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sk</languageCode>
+      <englishName>Slovak</englishName>
+      <nativeName>slovenčina</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sq</languageCode>
+      <englishName>Albanian</englishName>
+      <nativeName>shqip</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sv</languageCode>
+      <englishName>Swedish</englishName>
+      <nativeName>svenska</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>th</languageCode>
+      <englishName>Thai</englishName>
+      <nativeName>ไทย</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tr</languageCode>
+      <englishName>Turkish</englishName>
+      <nativeName>Türkçe</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ur</languageCode>
+      <englishName>Urdu</englishName>
+      <nativeName>اردو</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>id</languageCode>
+      <englishName>Indonesian</englishName>
+      <nativeName>Indonesia</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>uk</languageCode>
+      <englishName>Ukrainian</englishName>
+      <nativeName>українська</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>be</languageCode>
+      <englishName>Belarusian</englishName>
+      <nativeName>беларуская</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sl</languageCode>
+      <englishName>Slovenian</englishName>
+      <nativeName>slovenščina</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>et</languageCode>
+      <englishName>Estonian</englishName>
+      <nativeName>eesti</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>lv</languageCode>
+      <englishName>Latvian</englishName>
+      <nativeName>latviešu</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>lt</languageCode>
+      <englishName>Lithuanian</englishName>
+      <nativeName>lietuvių</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tg</languageCode>
+      <englishName>Tajik</englishName>
+      <nativeName>Тоҷикӣ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fa</languageCode>
+      <englishName>Persian</englishName>
+      <nativeName>فارسی</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>vi</languageCode>
+      <englishName>Vietnamese</englishName>
+      <nativeName>Tiếng Việt</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>hy</languageCode>
+      <englishName>Armenian</englishName>
+      <nativeName>հայերեն</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>az</languageCode>
+      <englishName>Azerbaijani</englishName>
+      <nativeName>azərbaycan</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>eu</languageCode>
+      <englishName>Basque</englishName>
+      <nativeName>euskara</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>hsb</languageCode>
+      <englishName>Upper Sorbian</englishName>
+      <nativeName>hornjoserbšćina</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>mk</languageCode>
+      <englishName>Macedonian</englishName>
+      <nativeName>македонски</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>st</languageCode>
+      <englishName>Southern Sotho</englishName>
+      <nativeName>Sesotho</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ts</languageCode>
+      <englishName>Tsonga</englishName>
+      <nativeName>Xitsonga</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tn</languageCode>
+      <englishName>Tswana</englishName>
+      <nativeName>Setswana</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>xh</languageCode>
+      <englishName>Xhosa</englishName>
+      <nativeName>isiXhosa</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>zu</languageCode>
+      <englishName>Zulu</englishName>
+      <nativeName>isiZulu</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>af</languageCode>
+      <englishName>Afrikaans</englishName>
+      <nativeName>Afrikaans</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ka</languageCode>
+      <englishName>Georgian</englishName>
+      <nativeName>ქართული</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fo</languageCode>
+      <englishName>Faroese</englishName>
+      <nativeName>føroyskt</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>hi</languageCode>
+      <englishName>Hindi</englishName>
+      <nativeName>हिन्दी</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>mt</languageCode>
+      <englishName>Maltese</englishName>
+      <nativeName>Malti</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>se</languageCode>
+      <englishName>Northern Sami</englishName>
+      <nativeName>davvisámegiella</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ga</languageCode>
+      <englishName>Irish</englishName>
+      <nativeName>Gaeilge</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ms</languageCode>
+      <englishName>Malay</englishName>
+      <nativeName>Bahasa Melayu</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>kk</languageCode>
+      <englishName>Kazakh</englishName>
+      <nativeName>қазақ тілі</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ky</languageCode>
+      <englishName>Kyrgyz</englishName>
+      <nativeName>кыргызча</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sw</languageCode>
+      <englishName>Swahili</englishName>
+      <nativeName>Kiswahili</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tk</languageCode>
+      <englishName>Turkmen</englishName>
+      <nativeName>türkmençe</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>uz</languageCode>
+      <englishName>Uzbek</englishName>
+      <nativeName>o‘zbek</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>bn</languageCode>
+      <englishName>Bangla</englishName>
+      <nativeName>বাংলা</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>pa</languageCode>
+      <englishName>Punjabi</englishName>
+      <nativeName>ਪੰਜਾਬੀ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>gu</languageCode>
+      <englishName>Gujarati</englishName>
+      <nativeName>ગુજરાતી</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>or</languageCode>
+      <englishName>Odia</englishName>
+      <nativeName>ଓଡ଼ିଆ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ta</languageCode>
+      <englishName>Tamil</englishName>
+      <nativeName>தமிழ்</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>te</languageCode>
+      <englishName>Telugu</englishName>
+      <nativeName>తెలుగు</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>kn</languageCode>
+      <englishName>Kannada</englishName>
+      <nativeName>ಕನ್ನಡ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ml</languageCode>
+      <englishName>Malayalam</englishName>
+      <nativeName>മലയാളം</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>as</languageCode>
+      <englishName>Assamese</englishName>
+      <nativeName>অসমীয়া</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>mr</languageCode>
+      <englishName>Marathi</englishName>
+      <nativeName>मराठी</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>mn</languageCode>
+      <englishName>Mongolian</englishName>
+      <nativeName>монгол</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>bo</languageCode>
+      <englishName>Tibetan</englishName>
+      <nativeName>བོད་སྐད་</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>cy</languageCode>
+      <englishName>Welsh</englishName>
+      <nativeName>Cymraeg</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>km</languageCode>
+      <englishName>Khmer</englishName>
+      <nativeName>ខ្មែរ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>lo</languageCode>
+      <englishName>Lao</englishName>
+      <nativeName>ລາວ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>my</languageCode>
+      <englishName>Burmese</englishName>
+      <nativeName>မြန်မာ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>gl</languageCode>
+      <englishName>Galician</englishName>
+      <nativeName>galego</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>kok</languageCode>
+      <englishName>Konkani</englishName>
+      <nativeName>कोंकणी</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>si</languageCode>
+      <englishName>Sinhala</englishName>
+      <nativeName>සිංහල</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>chr</languageCode>
+      <englishName>Cherokee</englishName>
+      <nativeName>ᏣᎳᎩ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>am</languageCode>
+      <englishName>Amharic</englishName>
+      <nativeName>አማርኛ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tzm</languageCode>
+      <englishName>Central Atlas Tamazight</englishName>
+      <nativeName>Tamaziɣt n laṭlaṣ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ne</languageCode>
+      <englishName>Nepali</englishName>
+      <nativeName>नेपाली</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fy</languageCode>
+      <englishName>Western Frisian</englishName>
+      <nativeName>West-Frysk</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ps</languageCode>
+      <englishName>Pashto</englishName>
+      <nativeName>پښتو</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fil</languageCode>
+      <englishName>Filipino</englishName>
+      <nativeName>Filipino</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ff</languageCode>
+      <englishName>Fulah</englishName>
+      <nativeName>Pulaar</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ha</languageCode>
+      <englishName>Hausa</englishName>
+      <nativeName>Hausa</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>yo</languageCode>
+      <englishName>Yoruba</englishName>
+      <nativeName>Èdè Yorùbá</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>nso</languageCode>
+      <englishName>Northern Sotho</englishName>
+      <nativeName>Sesotho sa Leboa</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>lb</languageCode>
+      <englishName>Luxembourgish</englishName>
+      <nativeName>Lëtzebuergesch</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>kl</languageCode>
+      <englishName>Kalaallisut</englishName>
+      <nativeName>kalaallisut</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ig</languageCode>
+      <englishName>Igbo</englishName>
+      <nativeName>Igbo</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>om</languageCode>
+      <englishName>Oromo</englishName>
+      <nativeName>Oromoo</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ti</languageCode>
+      <englishName>Tigrinya</englishName>
+      <nativeName>ትግርኛ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>haw</languageCode>
+      <englishName>Hawaiian</englishName>
+      <nativeName>ʻŌlelo Hawaiʻi</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>so</languageCode>
+      <englishName>Somali</englishName>
+      <nativeName>Soomaali</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ii</languageCode>
+      <englishName>Sichuan Yi</englishName>
+      <nativeName>ꆈꌠꉙ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>br</languageCode>
+      <englishName>Breton</englishName>
+      <nativeName>brezhoneg</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ug</languageCode>
+      <englishName>Uyghur</englishName>
+      <nativeName>ئۇيغۇرچە</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>gsw</languageCode>
+      <englishName>Swiss German</englishName>
+      <nativeName>Schwiizertüütsch</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sah</languageCode>
+      <englishName>Sakha</englishName>
+      <nativeName>саха тыла</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>rw</languageCode>
+      <englishName>Kinyarwanda</englishName>
+      <nativeName>Kinyarwanda</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>gd</languageCode>
+      <englishName>Scottish Gaelic</englishName>
+      <nativeName>Gàidhlig</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-SA</languageCode>
+      <englishName>Arabic (Saudi Arabia)</englishName>
+      <nativeName>العربية (المملكة العربية السعودية)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>bg-BG</languageCode>
+      <englishName>Bulgarian (Bulgaria)</englishName>
+      <nativeName>български (България)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ca-ES</languageCode>
+      <englishName>Catalan (Spain)</englishName>
+      <nativeName>català (Espanya)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>zh-TW</languageCode>
+      <englishName>Chinese (Traditional)</englishName>
+      <nativeName>中文 (台湾)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>cs-CZ</languageCode>
+      <englishName>Czech (Czech Republic)</englishName>
+      <nativeName>čeština (Česká republika)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>da-DK</languageCode>
+      <englishName>Danish (Denmark)</englishName>
+      <nativeName>dansk (Danmark)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>de-DE</languageCode>
+      <englishName>German (Germany)</englishName>
+      <nativeName>Deutsch (Deutschland)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>el-GR</languageCode>
+      <englishName>Greek (Greece)</englishName>
+      <nativeName>Ελληνικά (Ελλάδα)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-US</languageCode>
+      <englishName>English (United States)</englishName>
+      <nativeName>English (United States)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fi-FI</languageCode>
+      <englishName>Finnish (Finland)</englishName>
+      <nativeName>suomi (Suomi)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-FR</languageCode>
+      <englishName>French (France)</englishName>
+      <nativeName>français (France)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>he-IL</languageCode>
+      <englishName>Hebrew (Israel)</englishName>
+      <nativeName>עברית (ישראל)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>hu-HU</languageCode>
+      <englishName>Hungarian (Hungary)</englishName>
+      <nativeName>magyar (Magyarország)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>is-IS</languageCode>
+      <englishName>Icelandic (Iceland)</englishName>
+      <nativeName>íslenska (Ísland)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>it-IT</languageCode>
+      <englishName>Italian (Italy)</englishName>
+      <nativeName>italiano (Italia)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ja-JP</languageCode>
+      <englishName>Japanese (Japan)</englishName>
+      <nativeName>日本語 (日本)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ko-KR</languageCode>
+      <englishName>Korean (South Korea)</englishName>
+      <nativeName>한국어 (대한민국)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>nl-NL</languageCode>
+      <englishName>Dutch (Netherlands)</englishName>
+      <nativeName>Nederlands (Nederland)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>nb-NO</languageCode>
+      <englishName>Norwegian Bokmål (Norway)</englishName>
+      <nativeName>norsk bokmål (Norge)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>pl-PL</languageCode>
+      <englishName>Polish (Poland)</englishName>
+      <nativeName>polski (Polska)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>pt-BR</languageCode>
+      <englishName>Portuguese (Brazil)</englishName>
+      <nativeName>português (Brasil)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>rm-CH</languageCode>
+      <englishName>Romansh (Switzerland)</englishName>
+      <nativeName>rumantsch (Svizra)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ro-RO</languageCode>
+      <englishName>Romanian (Romania)</englishName>
+      <nativeName>română (România)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ru-RU</languageCode>
+      <englishName>Russian (Russia)</englishName>
+      <nativeName>русский (Россия)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>hr-HR</languageCode>
+      <englishName>Croatian (Croatia)</englishName>
+      <nativeName>hrvatski (Hrvatska)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sk-SK</languageCode>
+      <englishName>Slovak (Slovakia)</englishName>
+      <nativeName>slovenčina (Slovensko)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sq-AL</languageCode>
+      <englishName>Albanian (Albania)</englishName>
+      <nativeName>shqip (Shqipëri)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sv-SE</languageCode>
+      <englishName>Swedish (Sweden)</englishName>
+      <nativeName>svenska (Sverige)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>th-TH</languageCode>
+      <englishName>Thai (Thailand)</englishName>
+      <nativeName>ไทย (ไทย)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tr-TR</languageCode>
+      <englishName>Turkish (Turkey)</englishName>
+      <nativeName>Türkçe (Türkiye)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ur-PK</languageCode>
+      <englishName>Urdu (Pakistan)</englishName>
+      <nativeName>اردو (پاکستان)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>id-ID</languageCode>
+      <englishName>Indonesian (Indonesia)</englishName>
+      <nativeName>Indonesia (Indonesia)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>uk-UA</languageCode>
+      <englishName>Ukrainian (Ukraine)</englishName>
+      <nativeName>українська (Україна)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>be-BY</languageCode>
+      <englishName>Belarusian (Belarus)</englishName>
+      <nativeName>беларуская (Беларусь)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sl-SI</languageCode>
+      <englishName>Slovenian (Slovenia)</englishName>
+      <nativeName>slovenščina (Slovenija)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>et-EE</languageCode>
+      <englishName>Estonian (Estonia)</englishName>
+      <nativeName>eesti (Eesti)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>lv-LV</languageCode>
+      <englishName>Latvian (Latvia)</englishName>
+      <nativeName>latviešu (Latvija)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>lt-LT</languageCode>
+      <englishName>Lithuanian (Lithuania)</englishName>
+      <nativeName>lietuvių (Lietuva)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tg-Cyrl-TJ</languageCode>
+      <englishName>Tajik (Cyrillic, Tajikistan)</englishName>
+      <nativeName>Тоҷикӣ (Тоҷикистон)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fa-IR</languageCode>
+      <englishName>Persian (Iran)</englishName>
+      <nativeName>فارسی (ایران)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>vi-VN</languageCode>
+      <englishName>Vietnamese (Vietnam)</englishName>
+      <nativeName>Tiếng Việt (Việt Nam)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>hy-AM</languageCode>
+      <englishName>Armenian (Armenia)</englishName>
+      <nativeName>հայերեն (Հայաստան)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>az-Latn-AZ</languageCode>
+      <englishName>Azerbaijani (Latin, Azerbaijan)</englishName>
+      <nativeName>azərbaycan (Azərbaycan)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>eu-ES</languageCode>
+      <englishName>Basque (Spain)</englishName>
+      <nativeName>euskara (Espainia)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>hsb-DE</languageCode>
+      <englishName>Upper Sorbian (Germany)</englishName>
+      <nativeName>hornjoserbšćina (Němska)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>mk-MK</languageCode>
+      <englishName>Macedonian (Macedonia)</englishName>
+      <nativeName>македонски (Македонија)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>st-ZA</languageCode>
+      <englishName>Southern Sotho (South Africa)</englishName>
+      <nativeName>Sesotho</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ts-ZA</languageCode>
+      <englishName>Tsonga (South Africa)</englishName>
+      <nativeName>Xitsonga</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tn-ZA</languageCode>
+      <englishName>Tswana (South Africa)</englishName>
+      <nativeName>Setswana</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>xh-ZA</languageCode>
+      <englishName>Xhosa (South Africa)</englishName>
+      <nativeName>isiXhosa</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>zu-ZA</languageCode>
+      <englishName>Zulu (South Africa)</englishName>
+      <nativeName>isiZulu (i-South Africa)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>af-ZA</languageCode>
+      <englishName>Afrikaans (South Africa)</englishName>
+      <nativeName>Afrikaans (Suid-Afrika)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ka-GE</languageCode>
+      <englishName>Georgian (Georgia)</englishName>
+      <nativeName>ქართული (საქართველო)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fo-FO</languageCode>
+      <englishName>Faroese (Faroe Islands)</englishName>
+      <nativeName>føroyskt (Føroyar)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>hi-IN</languageCode>
+      <englishName>Hindi (India)</englishName>
+      <nativeName>हिन्दी (भारत)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>mt-MT</languageCode>
+      <englishName>Maltese (Malta)</englishName>
+      <nativeName>Malti (Malta)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>se-NO</languageCode>
+      <englishName>Northern Sami (Norway)</englishName>
+      <nativeName>davvisámegiella (Norga)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ms-MY</languageCode>
+      <englishName>Malay (Malaysia)</englishName>
+      <nativeName>Bahasa Melayu (Malaysia)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>kk-KZ</languageCode>
+      <englishName>Kazakh (Kazakhstan)</englishName>
+      <nativeName>қазақ тілі (Қазақстан)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ky-KG</languageCode>
+      <englishName>Kyrgyz (Kyrgyzstan)</englishName>
+      <nativeName>кыргызча (Кыргызстан)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sw-KE</languageCode>
+      <englishName>Swahili (Kenya)</englishName>
+      <nativeName>Kiswahili (Kenya)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tk-TM</languageCode>
+      <englishName>Turkmen (Turkmenistan)</englishName>
+      <nativeName>türkmençe (Türkmenistan)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>uz-Latn-UZ</languageCode>
+      <englishName>Uzbek (Latin, Uzbekistan)</englishName>
+      <nativeName>o‘zbek (Oʻzbekiston)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>bn-IN</languageCode>
+      <englishName>Bangla (India)</englishName>
+      <nativeName>বাংলা (ভারত)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>gu-IN</languageCode>
+      <englishName>Gujarati (India)</englishName>
+      <nativeName>ગુજરાતી (ભારત)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>or-IN</languageCode>
+      <englishName>Odia (India)</englishName>
+      <nativeName>ଓଡ଼ିଆ (ଭାରତ)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ta-IN</languageCode>
+      <englishName>Tamil (India)</englishName>
+      <nativeName>தமிழ் (இந்தியா)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>te-IN</languageCode>
+      <englishName>Telugu (India)</englishName>
+      <nativeName>తెలుగు (భారత దేశం)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>kn-IN</languageCode>
+      <englishName>Kannada (India)</englishName>
+      <nativeName>ಕನ್ನಡ (ಭಾರತ)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ml-IN</languageCode>
+      <englishName>Malayalam (India)</englishName>
+      <nativeName>മലയാളം (ഇന്ത്യ)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>as-IN</languageCode>
+      <englishName>Assamese (India)</englishName>
+      <nativeName>অসমীয়া (ভাৰত)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>mr-IN</languageCode>
+      <englishName>Marathi (India)</englishName>
+      <nativeName>मराठी (भारत)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>mn-MN</languageCode>
+      <englishName>Mongolian (Mongolia)</englishName>
+      <nativeName>монгол (Монгол)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>bo-CN</languageCode>
+      <englishName>Tibetan (China)</englishName>
+      <nativeName>བོད་སྐད་ (རྒྱ་ནག)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>cy-GB</languageCode>
+      <englishName>Welsh (United Kingdom)</englishName>
+      <nativeName>Cymraeg (Y Deyrnas Unedig)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>km-KH</languageCode>
+      <englishName>Khmer (Cambodia)</englishName>
+      <nativeName>ខ្មែរ (កម្ពុជា)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>lo-LA</languageCode>
+      <englishName>Lao (Laos)</englishName>
+      <nativeName>ລາວ (ລາວ)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>my-MM</languageCode>
+      <englishName>Burmese (Myanmar (Burma))</englishName>
+      <nativeName>မြန်မာ (မြန်မာ)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>gl-ES</languageCode>
+      <englishName>Galician (Spain)</englishName>
+      <nativeName>galego (España)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>kok-IN</languageCode>
+      <englishName>Konkani (India)</englishName>
+      <nativeName>कोंकणी (भारत)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>si-LK</languageCode>
+      <englishName>Sinhala (Sri Lanka)</englishName>
+      <nativeName>සිංහල (ශ්‍රී ලංකාව)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>am-ET</languageCode>
+      <englishName>Amharic (Ethiopia)</englishName>
+      <nativeName>አማርኛ (ኢትዮጵያ)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ne-NP</languageCode>
+      <englishName>Nepali (Nepal)</englishName>
+      <nativeName>नेपाली (नेपाल)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fy-NL</languageCode>
+      <englishName>Western Frisian (Netherlands)</englishName>
+      <nativeName>West-Frysk (Nederlân)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ps-AF</languageCode>
+      <englishName>Pashto (Afghanistan)</englishName>
+      <nativeName>پښتو (افغانستان)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fil-PH</languageCode>
+      <englishName>Filipino (Philippines)</englishName>
+      <nativeName>Filipino (Pilipinas)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ha-Latn-NG</languageCode>
+      <englishName>Hausa (Latin, Nigeria)</englishName>
+      <nativeName>Hausa (Najeriya)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>yo-NG</languageCode>
+      <englishName>Yoruba (Nigeria)</englishName>
+      <nativeName>Èdè Yorùbá (Orílẹ́ède Nàìjíríà)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>nso-ZA</languageCode>
+      <englishName>Northern Sotho (South Africa)</englishName>
+      <nativeName>Sesotho sa Leboa</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>lb-LU</languageCode>
+      <englishName>Luxembourgish (Luxembourg)</englishName>
+      <nativeName>Lëtzebuergesch (Lëtzebuerg)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>kl-GL</languageCode>
+      <englishName>Kalaallisut (Greenland)</englishName>
+      <nativeName>kalaallisut (Kalaallit Nunaat)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ig-NG</languageCode>
+      <englishName>Igbo (Nigeria)</englishName>
+      <nativeName>Igbo (Nigeria)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>om-ET</languageCode>
+      <englishName>Oromo (Ethiopia)</englishName>
+      <nativeName>Oromoo (Itoophiyaa)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ti-ET</languageCode>
+      <englishName>Tigrinya (Ethiopia)</englishName>
+      <nativeName>ትግርኛ (ኢትዮጵያ)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>haw-US</languageCode>
+      <englishName>Hawaiian (United States)</englishName>
+      <nativeName>ʻŌlelo Hawaiʻi (ʻAmelika Hui Pū ʻIa)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>so-SO</languageCode>
+      <englishName>Somali (Somalia)</englishName>
+      <nativeName>Soomaali (Soomaaliya)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ii-CN</languageCode>
+      <englishName>Sichuan Yi (China)</englishName>
+      <nativeName>ꆈꌠꉙ (ꍏꇩ)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>br-FR</languageCode>
+      <englishName>Breton (France)</englishName>
+      <nativeName>brezhoneg (Frañs)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ug-CN</languageCode>
+      <englishName>Uyghur (China)</englishName>
+      <nativeName>ئۇيغۇرچە (جۇڭگو)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>gsw-FR</languageCode>
+      <englishName>Swiss German (France)</englishName>
+      <nativeName>Schwiizertüütsch (Frankriich)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sah-RU</languageCode>
+      <englishName>Sakha (Russia)</englishName>
+      <nativeName>саха тыла (Арассыыйа)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>rw-RW</languageCode>
+      <englishName>Kinyarwanda (Rwanda)</englishName>
+      <nativeName>Kinyarwanda (Rwanda)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>gd-GB</languageCode>
+      <englishName>Scottish Gaelic (United Kingdom)</englishName>
+      <nativeName>Gàidhlig (An Rìoghachd Aonaichte)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-IQ</languageCode>
+      <englishName>Arabic (Iraq)</englishName>
+      <nativeName>العربية (العراق)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ca-ES-valencia</languageCode>
+      <englishName>Catalan (Spain)</englishName>
+      <nativeName>català (Espanya)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>zh-CN</languageCode>
+      <englishName>Chinese (Simplified)</englishName>
+      <nativeName>中文 (中国)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>de-CH</languageCode>
+      <englishName>German (Switzerland)</englishName>
+      <nativeName>Deutsch (Schweiz)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-GB</languageCode>
+      <englishName>English (United Kingdom)</englishName>
+      <nativeName>English (United Kingdom)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-MX</languageCode>
+      <englishName>Spanish (Mexico)</englishName>
+      <nativeName>español (México)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-BE</languageCode>
+      <englishName>French (Belgium)</englishName>
+      <nativeName>français (Belgique)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>it-CH</languageCode>
+      <englishName>Italian (Switzerland)</englishName>
+      <nativeName>italiano (Svizzera)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>nl-BE</languageCode>
+      <englishName>Dutch (Belgium)</englishName>
+      <nativeName>Nederlands (België)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>nn-NO</languageCode>
+      <englishName>Norwegian Nynorsk (Norway)</englishName>
+      <nativeName>nynorsk (Noreg)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>pt-PT</languageCode>
+      <englishName>Portuguese (Portugal)</englishName>
+      <nativeName>português (Portugal)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ro-MD</languageCode>
+      <englishName>Romanian (Moldova)</englishName>
+      <nativeName>română (Republica Moldova)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ru-MD</languageCode>
+      <englishName>Russian (Moldova)</englishName>
+      <nativeName>русский (Молдова)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sv-FI</languageCode>
+      <englishName>Swedish (Finland)</englishName>
+      <nativeName>svenska (Finland)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ur-IN</languageCode>
+      <englishName>Urdu (India)</englishName>
+      <nativeName>اردو (بھارت)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>az-Cyrl-AZ</languageCode>
+      <englishName>Azerbaijani (Cyrillic, Azerbaijan)</englishName>
+      <nativeName>azərbaycan (Azərbaycan)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>dsb-DE</languageCode>
+      <englishName>Lower Sorbian (Germany)</englishName>
+      <nativeName>dolnoserbšćina (Nimska)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tn-BW</languageCode>
+      <englishName>Tswana (Botswana)</englishName>
+      <nativeName>Setswana</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>se-SE</languageCode>
+      <englishName>Northern Sami (Sweden)</englishName>
+      <nativeName>davvisámegiella (Ruoŧŧa)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ga-IE</languageCode>
+      <englishName>Irish (Ireland)</englishName>
+      <nativeName>Gaeilge (Éire)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ms-BN</languageCode>
+      <englishName>Malay (Brunei)</englishName>
+      <nativeName>Bahasa Melayu (Brunei)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>uz-Cyrl-UZ</languageCode>
+      <englishName>Uzbek (Cyrillic, Uzbekistan)</englishName>
+      <nativeName>o‘zbek (Oʻzbekiston)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>bn-BD</languageCode>
+      <englishName>Bangla (Bangladesh)</englishName>
+      <nativeName>বাংলা (বাংলাদেশ)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>pa-Arab-PK</languageCode>
+      <englishName>Punjabi (Arabic, Pakistan)</englishName>
+      <nativeName>ਪੰਜਾਬੀ (ਪਾਕਿਸਤਾਨ)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ta-LK</languageCode>
+      <englishName>Tamil (Sri Lanka)</englishName>
+      <nativeName>தமிழ் (இலங்கை)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ne-IN</languageCode>
+      <englishName>Nepali (India)</englishName>
+      <nativeName>नेपाली (भारत)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ti-ER</languageCode>
+      <englishName>Tigrinya (Eritrea)</englishName>
+      <nativeName>ትግርኛ (ኤርትራ)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-EG</languageCode>
+      <englishName>Arabic (Egypt)</englishName>
+      <nativeName>العربية (مصر)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>zh-HK</languageCode>
+      <englishName>Chinese (Traditional, Hong Kong SAR China)</englishName>
+      <nativeName>中文 (中国香港特别行政区)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>de-AT</languageCode>
+      <englishName>German (Austria)</englishName>
+      <nativeName>Deutsch (Österreich)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-AU</languageCode>
+      <englishName>English (Australia)</englishName>
+      <nativeName>English (Australia)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-ES</languageCode>
+      <englishName>Spanish (Spain)</englishName>
+      <nativeName>español (España)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-CA</languageCode>
+      <englishName>French (Canada)</englishName>
+      <nativeName>français (Canada)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>se-FI</languageCode>
+      <englishName>Northern Sami (Finland)</englishName>
+      <nativeName>davvisámegiella (Suopma)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-LY</languageCode>
+      <englishName>Arabic (Libya)</englishName>
+      <nativeName>العربية (ليبيا)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>zh-SG</languageCode>
+      <englishName>Chinese (Simplified, Singapore)</englishName>
+      <nativeName>中文 (新加坡)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>de-LU</languageCode>
+      <englishName>German (Luxembourg)</englishName>
+      <nativeName>Deutsch (Luxemburg)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-CA</languageCode>
+      <englishName>English (Canada)</englishName>
+      <nativeName>English (Canada)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-GT</languageCode>
+      <englishName>Spanish (Guatemala)</englishName>
+      <nativeName>español (Guatemala)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-CH</languageCode>
+      <englishName>French (Switzerland)</englishName>
+      <nativeName>français (Suisse)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>hr-BA</languageCode>
+      <englishName>Croatian (Bosnia &amp; Herzegovina)</englishName>
+      <nativeName>hrvatski (Bosna i Hercegovina)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-DZ</languageCode>
+      <englishName>Arabic (Algeria)</englishName>
+      <nativeName>العربية (الجزائر)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>zh-MO</languageCode>
+      <englishName>Chinese (Traditional, Macau SAR China)</englishName>
+      <nativeName>中文 (中国澳门特别行政区)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>de-LI</languageCode>
+      <englishName>German (Liechtenstein)</englishName>
+      <nativeName>Deutsch (Liechtenstein)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-NZ</languageCode>
+      <englishName>English (New Zealand)</englishName>
+      <nativeName>English (New Zealand)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-CR</languageCode>
+      <englishName>Spanish (Costa Rica)</englishName>
+      <nativeName>español (Costa Rica)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-LU</languageCode>
+      <englishName>French (Luxembourg)</englishName>
+      <nativeName>français (Luxembourg)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>bs-Latn-BA</languageCode>
+      <englishName>Bosnian (Latin, Bosnia &amp; Herzegovina)</englishName>
+      <nativeName>bosanski (Bosna i Hercegovina)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-MA</languageCode>
+      <englishName>Arabic (Morocco)</englishName>
+      <nativeName>العربية (المغرب)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-IE</languageCode>
+      <englishName>English (Ireland)</englishName>
+      <nativeName>English (Ireland)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-PA</languageCode>
+      <englishName>Spanish (Panama)</englishName>
+      <nativeName>español (Panamá)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-MC</languageCode>
+      <englishName>French (Monaco)</englishName>
+      <nativeName>français (Monaco)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sr-Latn-BA</languageCode>
+      <englishName>Serbian (Latin, Bosnia &amp; Herzegovina)</englishName>
+      <nativeName>српски (Босна и Херцеговина)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-TN</languageCode>
+      <englishName>Arabic (Tunisia)</englishName>
+      <nativeName>العربية (تونس)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-ZA</languageCode>
+      <englishName>English (South Africa)</englishName>
+      <nativeName>English (South Africa)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-DO</languageCode>
+      <englishName>Spanish (Dominican Republic)</englishName>
+      <nativeName>español (República Dominicana)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sr-Cyrl-BA</languageCode>
+      <englishName>Serbian (Cyrillic, Bosnia &amp; Herzegovina)</englishName>
+      <nativeName>српски (Босна и Херцеговина)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-OM</languageCode>
+      <englishName>Arabic (Oman)</englishName>
+      <nativeName>العربية (عُمان)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-JM</languageCode>
+      <englishName>English (Jamaica)</englishName>
+      <nativeName>English (Jamaica)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-VE</languageCode>
+      <englishName>Spanish (Venezuela)</englishName>
+      <nativeName>español (Venezuela)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-RE</languageCode>
+      <englishName>French (Réunion)</englishName>
+      <nativeName>français (La Réunion)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>bs-Cyrl-BA</languageCode>
+      <englishName>Bosnian (Cyrillic, Bosnia &amp; Herzegovina)</englishName>
+      <nativeName>bosanski (Bosna i Hercegovina)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-YE</languageCode>
+      <englishName>Arabic (Yemen)</englishName>
+      <nativeName>العربية (اليمن)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-CO</languageCode>
+      <englishName>Spanish (Colombia)</englishName>
+      <nativeName>español (Colombia)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-CD</languageCode>
+      <englishName>French (Congo - Kinshasa)</englishName>
+      <nativeName>français (Congo-Kinshasa)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sr-Latn-RS</languageCode>
+      <englishName>Serbian (Latin, Serbia)</englishName>
+      <nativeName>српски (Србија)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>smn-FI</languageCode>
+      <englishName>Inari Sami (Finland)</englishName>
+      <nativeName>anarâškielâ (Suomâ)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-SY</languageCode>
+      <englishName>Arabic (Syria)</englishName>
+      <nativeName>العربية (سوريا)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-BZ</languageCode>
+      <englishName>English (Belize)</englishName>
+      <nativeName>English (Belize)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-PE</languageCode>
+      <englishName>Spanish (Peru)</englishName>
+      <nativeName>español (Perú)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-SN</languageCode>
+      <englishName>French (Senegal)</englishName>
+      <nativeName>français (Sénégal)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sr-Cyrl-RS</languageCode>
+      <englishName>Serbian (Cyrillic, Serbia)</englishName>
+      <nativeName>српски (Србија)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-JO</languageCode>
+      <englishName>Arabic (Jordan)</englishName>
+      <nativeName>العربية (الأردن)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-TT</languageCode>
+      <englishName>English (Trinidad &amp; Tobago)</englishName>
+      <nativeName>English (Trinidad &amp; Tobago)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-AR</languageCode>
+      <englishName>Spanish (Argentina)</englishName>
+      <nativeName>español (Argentina)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-CM</languageCode>
+      <englishName>French (Cameroon)</englishName>
+      <nativeName>français (Cameroun)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sr-Latn-ME</languageCode>
+      <englishName>Serbian (Latin, Montenegro)</englishName>
+      <nativeName>српски (Црна Гора)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-LB</languageCode>
+      <englishName>Arabic (Lebanon)</englishName>
+      <nativeName>العربية (لبنان)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-ZW</languageCode>
+      <englishName>English (Zimbabwe)</englishName>
+      <nativeName>English (Zimbabwe)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-EC</languageCode>
+      <englishName>Spanish (Ecuador)</englishName>
+      <nativeName>español (Ecuador)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-CI</languageCode>
+      <englishName>French (Côte d’Ivoire)</englishName>
+      <nativeName>français (Côte d’Ivoire)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sr-Cyrl-ME</languageCode>
+      <englishName>Serbian (Cyrillic, Montenegro)</englishName>
+      <nativeName>српски (Црна Гора)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-KW</languageCode>
+      <englishName>Arabic (Kuwait)</englishName>
+      <nativeName>العربية (الكويت)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-PH</languageCode>
+      <englishName>English (Philippines)</englishName>
+      <nativeName>English (Philippines)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-CL</languageCode>
+      <englishName>Spanish (Chile)</englishName>
+      <nativeName>español (Chile)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-ML</languageCode>
+      <englishName>French (Mali)</englishName>
+      <nativeName>français (Mali)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-AE</languageCode>
+      <englishName>Arabic (United Arab Emirates)</englishName>
+      <nativeName>العربية (الإمارات العربية المتحدة)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-UY</languageCode>
+      <englishName>Spanish (Uruguay)</englishName>
+      <nativeName>español (Uruguay)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-MA</languageCode>
+      <englishName>French (Morocco)</englishName>
+      <nativeName>français (Maroc)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-BH</languageCode>
+      <englishName>Arabic (Bahrain)</englishName>
+      <nativeName>العربية (البحرين)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-HK</languageCode>
+      <englishName>English (Hong Kong SAR China)</englishName>
+      <nativeName>English (Hong Kong SAR China)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-PY</languageCode>
+      <englishName>Spanish (Paraguay)</englishName>
+      <nativeName>español (Paraguay)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>fr-HT</languageCode>
+      <englishName>French (Haiti)</englishName>
+      <nativeName>français (Haïti)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ar-QA</languageCode>
+      <englishName>Arabic (Qatar)</englishName>
+      <nativeName>العربية (قطر)</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-IN</languageCode>
+      <englishName>English (India)</englishName>
+      <nativeName>English (India)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-BO</languageCode>
+      <englishName>Spanish (Bolivia)</englishName>
+      <nativeName>español (Bolivia)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-MY</languageCode>
+      <englishName>English (Malaysia)</englishName>
+      <nativeName>English (Malaysia)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-SV</languageCode>
+      <englishName>Spanish (El Salvador)</englishName>
+      <nativeName>español (El Salvador)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>en-SG</languageCode>
+      <englishName>English (Singapore)</englishName>
+      <nativeName>English (Singapore)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-HN</languageCode>
+      <englishName>Spanish (Honduras)</englishName>
+      <nativeName>español (Honduras)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-NI</languageCode>
+      <englishName>Spanish (Nicaragua)</englishName>
+      <nativeName>español (Nicaragua)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-PR</languageCode>
+      <englishName>Spanish (Puerto Rico)</englishName>
+      <nativeName>español (Puerto Rico)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-US</languageCode>
+      <englishName>Spanish (United States)</englishName>
+      <nativeName>español (Estados Unidos)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>es-CU</languageCode>
+      <englishName>Spanish (Cuba)</englishName>
+      <nativeName>español (Cuba)</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>bs-Cyrl</languageCode>
+      <englishName>Bosnian (Cyrillic)</englishName>
+      <nativeName>bosanski</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>bs-Latn</languageCode>
+      <englishName>Bosnian (Latin)</englishName>
+      <nativeName>bosanski</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sr-Cyrl</languageCode>
+      <englishName>Serbian (Cyrillic)</englishName>
+      <nativeName>српски</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sr-Latn</languageCode>
+      <englishName>Serbian (Latin)</englishName>
+      <nativeName>српски</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>smn</languageCode>
+      <englishName>Inari Sami</englishName>
+      <nativeName>anarâškielâ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>az-Cyrl</languageCode>
+      <englishName>Azerbaijani (Cyrillic)</englishName>
+      <nativeName>azərbaycan</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>zh</languageCode>
+      <englishName>Chinese (Simplified)</englishName>
+      <nativeName>中文</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>nn</languageCode>
+      <englishName>Norwegian Nynorsk</englishName>
+      <nativeName>nynorsk</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>bs</languageCode>
+      <englishName>Bosnian</englishName>
+      <nativeName>bosanski</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>az-Latn</languageCode>
+      <englishName>Azerbaijani (Latin)</englishName>
+      <nativeName>azərbaycan</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>uz-Cyrl</languageCode>
+      <englishName>Uzbek (Cyrillic)</englishName>
+      <nativeName>o‘zbek</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>mn-Cyrl</languageCode>
+      <englishName>Mongolian (Cyrillic)</englishName>
+      <nativeName>монгол</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>zh-Hant</languageCode>
+      <englishName>Chinese (Traditional)</englishName>
+      <nativeName>中文</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>zh-CHT</languageCode>
+      <englishName>Chinese (Traditional) Legacy</englishName>
+      <nativeName>中文</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>nb</languageCode>
+      <englishName>Norwegian Bokmål</englishName>
+      <nativeName>norsk bokmål</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>sr</languageCode>
+      <englishName>Serbian</englishName>
+      <nativeName>српски</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tg-Cyrl</languageCode>
+      <englishName>Tajik (Cyrillic)</englishName>
+      <nativeName>Тоҷикӣ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>dsb</languageCode>
+      <englishName>Lower Sorbian</englishName>
+      <nativeName>dolnoserbšćina</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>uz-Latn</languageCode>
+      <englishName>Uzbek (Latin)</englishName>
+      <nativeName>o‘zbek</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>pa-Arab</languageCode>
+      <englishName>Punjabi (Arabic)</englishName>
+      <nativeName>ਪੰਜਾਬੀ</nativeName>
+      <isRightToLeft>true</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tzm-Latn</languageCode>
+      <englishName>Central Atlas Tamazight (Latin)</englishName>
+      <nativeName>Tamaziɣt n laṭlaṣ</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ha-Latn</languageCode>
+      <englishName>Hausa (Latin)</englishName>
+      <nativeName>Hausa</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>ms</languageCode>
+      <englishName>Malaysia</englishName>
+      <nativeName>Malaysia</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tlh</languageCode>
+      <englishName>Klingon</englishName>
+      <nativeName>tlhIngan Hol</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+    <CultureInfo>
+      <languageCode>tlh-Qaak</languageCode>
+      <englishName>Klingon (pIqaD)</englishName>
+      <nativeName>tlhIngan Hol</nativeName>
+      <isRightToLeft>false</isRightToLeft>
+    </CultureInfo>
+  </CultureInfos>
+</SmartCultureCollections>

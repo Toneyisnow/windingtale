@@ -14,25 +14,41 @@ namespace WindingTale.Core.Components.ActionStates
 
         private IGameAction gameAction = null;
 
-        private IGameCallback gameCallback = null;
-
-        public GameStateDispatcher(IGameAction gameAction, IGameCallback gameCallback)
+        public GameStateDispatcher(IGameAction gameAction)
         {
             this.gameAction = gameAction;
-            this.gameCallback = gameCallback;
 
             this.actionStateStack = new Stack<ActionState>();
 
             // Push Idle State for init
-            var idle = new IdleState(gameAction, gameCallback);
+            var idle = new IdleState(gameAction);
             actionStateStack.Push(idle);
             
 
         }
 
-
-        public void ClickAtPosition(FDPosition position)
+        public ActionState CurrentState
         {
+            get
+            {
+                if (actionStateStack == null || actionStateStack.Count == 0)
+                {
+                    return null;
+                }
+
+                return actionStateStack.Peek();
+            }
+        }
+
+        public void OnSelectPosition(FDPosition position)
+        {
+            if (this.CurrentState == null)
+            {
+                throw new InvalidOperationException("current state is null.");
+            }
+
+            this.CurrentState.OnSelectPosition(position);
+
 
         }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace WindingTale.UI.MapObjects
 {
-    public class UIObject : MonoBehaviour
+    public abstract class UIObject : MonoBehaviour
     {
         // Start is called before the first frame update
         void Start()
@@ -15,6 +15,22 @@ namespace WindingTale.UI.MapObjects
         // Update is called once per frame
         void Update()
         {
+
+        }
+
+
+        private void OnMouseOver()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Debug.LogFormat(@"Clicked!");
+                this.OnTouched();
+            }
+        }
+
+        protected virtual void OnTouched()
+        {
+
 
         }
     }
