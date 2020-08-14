@@ -37,6 +37,25 @@ namespace WindingTale.Common
             directionedScope[position] = lastPosition;
         }
 
+        /// <summary>
+        /// Generate the moving path for that position
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public FDMovePath GetPath(FDPosition position)
+        {
+            return FDMovePath.Create(position);
+        }
+
+        public override bool Contains(FDPosition position)
+        {
+            if (directionedScope== null)
+            {
+                return false;
+            }
+
+            return directionedScope.ContainsKey(position);
+        }
 
     }
 }

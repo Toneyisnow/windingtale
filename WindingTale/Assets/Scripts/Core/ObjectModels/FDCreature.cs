@@ -83,6 +83,14 @@ namespace WindingTale.Core.ObjectModels
             return hasActioned;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool IsActionable()
+        {
+            return this.Faction == CreatureFaction.Friend && !hasActioned && !this.Data.Effects.Contains(0);
+        }
         public void MoveTo(FDPosition position)
         {
             this.PreMovePosition = position;

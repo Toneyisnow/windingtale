@@ -45,40 +45,33 @@ namespace WindingTale.Core.Components
         }
 
 
-
     }
 
     /// <summary>
-    /// All of the actions that GameState/GameEvent could call for
+    /// 
     /// </summary>
-    public interface IGameAction
+    public interface IGameInformative
     {
-        public IGameCallback GetCallback();
-
-        #region Information
-
         int TurnId();
 
         CreatureFaction TurnPhase();
 
-
-        #endregion
-
-        #region Informational Actions
+        GameField GetField();
 
         FDCreature GetCreature(int creatureId);
 
         FDCreature GetDeadCreature(int creatureId);
 
         FDCreature GetCreatureAt(FDPosition position);
+    }
 
-        #endregion
+    /// <summary>
+    /// All of the actions that GameState/GameEvent could call for
+    /// </summary>
+    public interface IGameAction : IGameInformative
+    {
+        public IGameCallback GetCallback();
 
-        #region Game Operation called from Interface
-
-        void OnSelectPosition(FDPosition position);
-
-        #endregion
 
         #region Game Internal Actions
 
@@ -151,4 +144,20 @@ namespace WindingTale.Core.Components
         #endregion
 
     }
+
+    /// <summary>
+    /// Game Operation called from Interface
+    /// </summary>
+    public interface IGameHandler : IGameInformative
+    {
+        void StartGame(ChapterRecord record);
+
+        void HandleOperation(FDPosition position);
+
+        void HandleOperation(int index);
+
+    }
+
+
+
 }

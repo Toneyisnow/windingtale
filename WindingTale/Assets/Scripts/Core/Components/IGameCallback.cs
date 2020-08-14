@@ -8,9 +8,10 @@ namespace WindingTale.Core.Components
 {
     public interface IGameCallback
     {
-        void OnReceivePack(PackBase pack);
-
-        IGameAction GetGameAction();
-
+        /// <summary>
+        /// The Handler send a pack back to Interface
+        /// </summary>
+        /// <param name="pack"></param>
+        void OnCallback(PackBase pack);
     }
 }

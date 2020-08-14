@@ -15,7 +15,7 @@ namespace WindingTale.Core.Components
     /// <summary>
     /// 
     /// </summary>
-    public class GameManager : IGameAction
+    public class GameManager : IGameAction, IGameHandler
     {
         private GameStateDispatcher dispatcher = null;
 
@@ -201,7 +201,7 @@ namespace WindingTale.Core.Components
             }
 
             ComposeCreaturePack pack = new ComposeCreaturePack(creatureId, creatureDef.AnimationId, position);
-            gameCallback.OnReceivePack(pack);
+            gameCallback.OnCallback(pack);
         }
 
         public void DisposeCreature(int creatureId, bool disposeFromUI = true)
@@ -234,7 +234,7 @@ namespace WindingTale.Core.Components
                 if (disposeFromUI)
                 {
                     DisposeCreaturePack pack = new DisposeCreaturePack(creature);
-                    gameCallback.OnReceivePack(pack);
+                    gameCallback.OnCallback(pack);
                 }
             }
             else
@@ -284,7 +284,7 @@ namespace WindingTale.Core.Components
             if (walkActions.Count == 1)
             {
                 var movePack = HandleWalkAction(walkActions[0]);
-                gameCallback.OnReceivePack(movePack);
+                gameCallback.OnCallback(movePack);
             }
             else
             {
@@ -297,14 +297,14 @@ namespace WindingTale.Core.Components
                         batch.Add(movePack);
                     }
                 }
-                gameCallback.OnReceivePack(batch);
+                gameCallback.OnCallback(batch);
             }
         }
 
         public void CreatureWalk(SingleWalkAction walkAction)
         {
             var movePack = HandleWalkAction(walkAction);
-            gameCallback.OnReceivePack(movePack);
+            gameCallback.OnCallback(movePack);
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace WindingTale.Core.Components
             {
                 string conversationId = string.Format(@"Conversation_{0}_{1}_{2}", this.ChapterId, sequenceId, i);
                 TalkPack pack = new TalkPack(conversationId);
-                gameCallback.OnReceivePack(pack);
+                gameCallback.OnCallback(pack);
             }
 
             
@@ -339,9 +339,14 @@ namespace WindingTale.Core.Components
         /// Game operation when user clicked on position
         /// </summary>
         /// <param name="position"></param>
-        public void OnSelectPosition(FDPosition position)
+        public void HandleOperation(FDPosition position)
         {
             dispatcher.OnSelectPosition(position);
+        }
+
+        public void HandleOperation(int index)
+        {
+            dispatcher.OnSelectIndex(index);
         }
 
         #endregion

@@ -31,5 +31,25 @@ namespace WindingTale.Core.Components.ActionStates
             this.NextState = next;
         }
 
+        public static StateOperationResult None()
+        {
+            return new StateOperationResult(ResultType.None);
+        }
+
+        public static StateOperationResult Push(ActionState next)
+        {
+            return new StateOperationResult(ResultType.Push, next);
+        }
+
+        public static StateOperationResult Pop()
+        {
+            return new StateOperationResult(ResultType.Pop);
+        }
+
+        public static StateOperationResult Clear()
+        {
+            return new StateOperationResult(ResultType.Clear);
+        }
+
     }
 }

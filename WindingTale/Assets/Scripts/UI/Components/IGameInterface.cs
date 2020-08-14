@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Components;
 using WindingTale.Core.ObjectModels;
 using WindingTale.UI.MapObjects;
 
 namespace WindingTale.UI.Components
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IGameInterface
     {
+        IGameHandler GetGameHandler();
+
         UICreature GetUICreature(int creatureId);
 
         void PlaceCreature(int creatureId, int animationid, FDPosition position);

@@ -28,6 +28,11 @@ namespace WindingTale.Common
             this.Y = y;
         }
 
+        public override int GetHashCode()
+        {
+            return X * 100 + Y;
+        }
+
         public static FDPosition At(int x, int y)
         {
             return new FDPosition(x, y);

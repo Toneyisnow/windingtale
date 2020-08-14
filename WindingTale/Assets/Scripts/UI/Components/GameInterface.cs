@@ -21,7 +21,7 @@ namespace WindingTale.UI.Components
     {
         public int ChapterId = 0;
 
-        private GameManager gameManager = null;
+        private IGameHandler gameManager = null;
 
         private GameActivityManager activityManager = null;
 
@@ -91,7 +91,7 @@ namespace WindingTale.UI.Components
             string myKey = LanguageManager.Instance.GetTextValue("talk1");
         }
 
-        public IGameAction GetGameAction()
+        public IGameHandler GetGameHandler()
         {
             return gameManager;
         }
@@ -136,7 +136,6 @@ namespace WindingTale.UI.Components
                     GameObject go = FieldTransform.CreateShapeObject(shapePrefab, fieldMapRoot, x + 1, y + 1);
                 }
             }
-
         }
 
         public void PlaceCreature(int creatureId, int animationid, FDPosition position)
@@ -148,7 +147,6 @@ namespace WindingTale.UI.Components
 
             var creatureCom = creatureObj.GetComponent<UICreature>();
             creatureCom.Initialize(this, creatureId, animationid);
-
 
         }
 
@@ -165,12 +163,12 @@ namespace WindingTale.UI.Components
             else
             {
                 // Do the actuall game event
-                gameManager.OnSelectPosition(creaturePosition);
+                gameManager.HandleOperation(creaturePosition);
             }
         }
 
 
-        public void OnReceivePack(PackBase pack)
+        public void OnCallback(PackBase pack)
         {
             activityManager.PushPack(pack);
         }

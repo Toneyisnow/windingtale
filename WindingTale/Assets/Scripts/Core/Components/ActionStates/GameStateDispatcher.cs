@@ -14,6 +14,8 @@ namespace WindingTale.Core.Components.ActionStates
 
         private IGameAction gameAction = null;
 
+        private ActionState currentState = null;
+
         public GameStateDispatcher(IGameAction gameAction)
         {
             this.gameAction = gameAction;
@@ -23,35 +25,48 @@ namespace WindingTale.Core.Components.ActionStates
             // Push Idle State for init
             var idle = new IdleState(gameAction);
             actionStateStack.Push(idle);
-            
+
+            currentState = RetrieveCurrentState();
 
         }
 
-        public ActionState CurrentState
+        public ActionState RetrieveCurrentState()
         {
-            get
+            if (actionStateStack == null || actionStateStack.Count == 0)
             {
-                if (actionStateStack == null || actionStateStack.Count == 0)
-                {
-                    return null;
-                }
-
-                return actionStateStack.Peek();
+                return null;
             }
+
+            return actionStateStack.Peek();
         }
 
         public void OnSelectPosition(FDPosition position)
         {
-            if (this.CurrentState == null)
+            if (currentState == null)
             {
                 throw new InvalidOperationException("current state is null.");
             }
 
-            this.CurrentState.OnSelectPosition(position);
-
-
+            var result = currentState.OnSelectPosition(position);
+            this.HandleOperationResult(result);
         }
 
+        public void OnSelectIndex(int index)
+        {
+            if (currentState == null)
+            {
+                throw new InvalidOperationException("current state is null.");
+            }
+
+            var result = currentState.OnSelectIndex(index);
+            this.HandleOperationResult(result);
+        }
+
+
+
+        /*
+         * 
+        // Might not be used
         public void SelectCreature(int creatureId)
         {
 
@@ -71,8 +86,44 @@ namespace WindingTale.Core.Components.ActionStates
         {
 
         }
+        */
 
+        private void HandleOperationResult(StateOperationResult result)
+        {
+            switch(result.Type)
+            {
+                case StateOperationResult.ResultType.None:
+                    // Nothing to do here
+                    break;
+                case StateOperationResult.ResultType.Push:
+                    if (result.NextState != null)
+                    {
+                        currentState.OnExit();
+                        actionStateStack.Push(result.NextState);
+                        result.NextState.OnEnter();
+                        currentState = actionStateStack.Peek();
 
+                    }
+                    break;
+                case StateOperationResult.ResultType.Pop:   // Pop the last state
+                    currentState.OnExit();
+                    actionStateStack.Pop();
+                    currentState = actionStateStack.Peek();
+                    currentState.OnEnter();
+                    break;
+                case StateOperationResult.ResultType.Clear: // Clear all states and only keep the first one IdleState
+                    currentState.OnExit();
+                    while(actionStateStack.Count > 1)
+                    {
+                        actionStateStack.Pop();
+                    }
+                    currentState = actionStateStack.Peek();
+                    currentState.OnEnter();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
 }

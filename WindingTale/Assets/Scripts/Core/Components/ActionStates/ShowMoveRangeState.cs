@@ -38,18 +38,32 @@ namespace WindingTale.Core.Components.ActionStates
 
             ShowRangePack pack = new ShowRangePack(moveRange);
             var gameCallback = gameAction.GetCallback();
-            gameCallback.OnReceivePack(pack);
+            gameCallback.OnCallback(pack);
         }
 
         public override void OnExit()
         {
             // Clear move range on UI
+            var gameCallback = gameAction.GetCallback();
+            gameCallback.OnCallback(new ClearRangePack());
         }
 
-        public override void OnSelectPosition(FDPosition position)
+        public override StateOperationResult OnSelectPosition(FDPosition position)
         {
+            // If position is in range
+            if (moveRange.Contains(position))
+            {
+                FDMovePath movePath = moveRange.GetPath(position);
+                gameAction.CreatureWalk(new SingleWalkAction(creature.CreatureId, movePath));
 
-
+                var nextState = new MenuActionState(gameAction, creature.CreatureId, position);
+                return new StateOperationResult(StateOperationResult.ResultType.Push, nextState);
+            }
+            else
+            {
+                // Cancel
+                return new StateOperationResult(StateOperationResult.ResultType.Pop);
+            }
         }
     }
 }

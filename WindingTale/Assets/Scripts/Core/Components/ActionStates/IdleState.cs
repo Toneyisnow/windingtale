@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Components.Packs;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.ObjectModels;
 
@@ -26,21 +27,37 @@ namespace WindingTale.Core.Components.ActionStates
 
 
 
-        public override void OnSelectPosition(FDPosition position)
+        public override StateOperationResult OnSelectPosition(FDPosition position)
         {
 
             FDCreature creature = gameAction.GetCreatureAt(position);
             if (creature == null)
             {
                 // Empty space, show system menu
-
+                MenuSystemState state = new MenuSystemState(gameAction, position);
+                return new StateOperationResult(StateOperationResult.ResultType.Push, state);
             }
-            else if (creature.Faction == CreatureFaction.Friend)
+            else if (creature.IsActionable())
             {
-
+                // Actionable friend
+                ShowMoveRangeState nextState = new ShowMoveRangeState(gameAction, creature);
+                return new StateOperationResult(StateOperationResult.ResultType.Push, nextState);
             }
+            else
+            {
+                // Show creature information
+                ShowCreatureInfoPack pack = new ShowCreatureInfoPack();
+                var gameCallback = gameAction.GetCallback();
+                gameCallback.OnCallback(pack);
+            }
+
+            return null;
         }
 
+        public override StateOperationResult OnSelectIndex(int index)
+        {
+            return StateOperationResult.None();
+        }
 
     }
 }

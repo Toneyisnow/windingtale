@@ -25,6 +25,10 @@ namespace WindingTale.Core.Components
             data.Mv = definition.InitialMv;
             data.Ex = definition.InitialEx;
 
+            data.Items = new List<int>();
+            data.Magics = new List<int>();
+            data.Effects = new List<int>();
+
             return data;
         }
 
@@ -131,12 +135,17 @@ namespace WindingTale.Core.Components
 
         public List<int> Items
         {
-            get; set;
+            get; private set;
         }
 
         public List<int> Magics
         {
-            get; set;
+            get; private set;
+        }
+
+        public List<int> Effects
+        {
+            get; private set;
         }
 
         /// <summary>

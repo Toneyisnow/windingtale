@@ -34,5 +34,10 @@ namespace WindingTale.Common
 
             this.positions.Add(position);
         }
+
+        public virtual bool Contains(FDPosition position)
+        {
+            return this.positions.Contains(position);
+        }
     }
 }

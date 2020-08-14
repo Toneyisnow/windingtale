@@ -84,10 +84,15 @@
     <Compile Include="Assets\Scripts\Common\ResourceDataFile.cs" />
     <Compile Include="Assets\Scripts\Common\ResourceJsonFile.cs" />
     <Compile Include="Assets\Scripts\Common\StringUtils.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\ActionStates\ActionMenuState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ActionState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\GameStateDispatcher.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\IdleState.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuActionState.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuItemState.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuRecordState.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuSettingsState.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuState.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuSystemState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\SelectAttackTargetState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ShowMoveRangeState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\StateOperationResult.cs" />
@@ -121,7 +126,7 @@
     <Compile Include="Assets\Scripts\Core\Components\Packs\PromptPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\RefreshCreaturePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\SequencedPack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\ShowInfoPack.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\ShowCreatureInfoPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ShowMenuPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ShowRangePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\TalkPack.cs" />
@@ -159,10 +164,8 @@
     <Compile Include="Assets\Scripts\UI\Components\Activities\ShowRangeActivity.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\TalkActivity.cs" />
     <Compile Include="Assets\Scripts\UI\Components\AssetManager.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\BundleObjectLoader.cs" />
     <Compile Include="Assets\Scripts\UI\Components\GameInterface.cs" />
     <Compile Include="Assets\Scripts\UI\Components\IGameInterface.cs" />
-    <Compile Include="Assets\Scripts\UI\FieldMap\FieldObject.cs" />
     <Compile Include="Assets\Scripts\UI\FieldMap\FieldTransform.cs" />
     <Compile Include="Assets\Scripts\UI\FieldMap\ShapeMappings.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UICreature.cs" />
