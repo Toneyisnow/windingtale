@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.UI;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Components.Packs;
 
 namespace WindingTale.Core.Components.ActionStates
 {
@@ -20,6 +21,11 @@ namespace WindingTale.Core.Components.ActionStates
         }
 
         public MenuItemId[] MenuItemIds
+        {
+            get; private set;
+        }
+
+        public bool[] MenuItemEnabled
         {
             get; private set;
         }
@@ -43,9 +49,23 @@ namespace WindingTale.Core.Components.ActionStates
 
             this.MenuItemIds = new MenuItemId[4];
             this.MenuActions = new Func<StateOperationResult>[4];
+            this.MenuItemEnabled = new bool[4];
         }
 
-        public void SetMenu(int index, MenuItemId menuItemId, Func<StateOperationResult> action)
+        public override void OnEnter()
+        {
+            // Show Action Menu
+            ShowMenuPack pack = new ShowMenuPack(this.MenuItemIds, this.MenuItemEnabled, this.Central);
+            SendPack(pack);
+        }
+
+        public override void OnExit()
+        {
+            // Close Action Menu
+            
+        }
+
+        protected void SetMenu(int index, MenuItemId menuItemId, bool enabled, Func<StateOperationResult> action)
         {
             if (index < 0 || index >= 4)
             {
@@ -54,16 +74,22 @@ namespace WindingTale.Core.Components.ActionStates
 
             this.MenuItemIds[index] = menuItemId;
             this.MenuActions[index] = action;
+            this.MenuItemEnabled[index] = enabled;
         }
 
         public override StateOperationResult OnSelectPosition(FDPosition position)
         {
-            return StateOperationResult.None();
-        }
+            for(int index = 0; index < 4; index++)
+            {
+                if (this.MenuItemEnabled[index] && this.MenuItemPositions[index] == position)
+                {
+                    // Clicked on menu
+                    return this.MenuActions[index]();
+                }
+            }
 
-        public override StateOperationResult OnSelectIndex(int index)
-        {
-            return StateOperationResult.None();
+            // Cancell the menu
+            return StateOperationResult.Pop();
         }
 
     }

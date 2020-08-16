@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Definitions;
@@ -32,6 +33,30 @@ namespace WindingTale.Core.Components
             return data;
         }
 
+        public CreatureData Clone()
+        {
+            CreatureData data = new CreatureData();
+            data.CreatureId = this.CreatureId;
+            data.DefinitionId = this.DefinitionId;
+
+            data.Level = this.Level;
+            data.Hp = this.Hp;
+            data.Mp = this.Mp;
+            data.HpMax = this.HpMax;
+            data.MpMax = this.MpMax;
+
+            data.Ap = this.Ap;
+            data.Dp = this.Dp;
+            data.Dx = this.Dx;
+            data.Mv = this.Mv;
+            data.Ex = this.Ex;
+
+            data.Items = Shared.CloneList<int>(this.Items);
+            data.Magics = Shared.CloneList<int>(this.Magics);
+            data.Effects = Shared.CloneList<int>(this.Effects);
+
+            return data;
+        }
         public int CreatureId
         {
             get; set;
@@ -154,6 +179,32 @@ namespace WindingTale.Core.Components
         public int DropItem
         {
             get; set;
+        }
+
+        public bool IsItemsFull()
+        {
+            return this.Items != null && this.Items.Count >= 8;
+        }
+
+        public void RemoveItemAt(int index)
+        {
+
+        }
+
+        public void AddItem(int itemId)
+        {
+
+        }
+
+        public bool CanSpellMagic()
+        {
+            // If the current creature is not having "Forbidden" effect
+            return this.Magics != null && this.Magics.Count > 0 && !this.Effects.Contains(1);
+        }
+
+        public void AddMagic(int magicId)
+        {
+
         }
     }
 }

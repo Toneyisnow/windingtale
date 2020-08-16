@@ -83,6 +83,7 @@
     <Compile Include="Assets\Scripts\Common\GameFormula.cs" />
     <Compile Include="Assets\Scripts\Common\ResourceDataFile.cs" />
     <Compile Include="Assets\Scripts\Common\ResourceJsonFile.cs" />
+    <Compile Include="Assets\Scripts\Common\Shared.cs" />
     <Compile Include="Assets\Scripts\Common\StringUtils.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ActionState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\GameStateDispatcher.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuSystemState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\SelectAttackTargetState.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\ActionStates\SelecteMagicTargetState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ShowMoveRangeState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\StateOperationResult.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\AttackRangeFinder.cs" />

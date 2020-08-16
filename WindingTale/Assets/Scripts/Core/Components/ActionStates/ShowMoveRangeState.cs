@@ -36,9 +36,13 @@ namespace WindingTale.Core.Components.ActionStates
                 moveRange = finder.CalculateMoveRange();
             }
 
-            ShowRangePack pack = new ShowRangePack(moveRange);
-            var gameCallback = gameAction.GetCallback();
-            gameCallback.OnCallback(pack);
+            // If the creature has moved, reset the creature position
+            this.creature.ResetPosition();
+            RefreshCreaturePack reset = new RefreshCreaturePack(this.creature.Clone());
+            SendPack(reset);
+
+            ShowRangePack showRange = new ShowRangePack(moveRange);
+            SendPack(showRange);
         }
 
         public override void OnExit()

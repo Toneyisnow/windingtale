@@ -119,6 +119,7 @@ namespace WindingTale.Core.Components
 
         void DoCreatureRest(int creatureId);
 
+        void PickTreasure(int creatureId, int itemIndex = -1);
 
         void DoCreatureAllRest();
 

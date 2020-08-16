@@ -91,10 +91,14 @@ namespace WindingTale.Core.ObjectModels
         {
             return this.Faction == CreatureFaction.Friend && !hasActioned && !this.Data.Effects.Contains(0);
         }
-        public void MoveTo(FDPosition position)
+        public void SetMoveTo(FDPosition position)
         {
-            this.PreMovePosition = position;
+            this.PreMovePosition = this.Position;
             this.Position = position;
+        }
+        public void ResetPosition()
+        {
+            this.Position = this.PreMovePosition;
         }
 
         public void OnTurnStart()
@@ -102,5 +106,19 @@ namespace WindingTale.Core.ObjectModels
             this.hasActioned = false;
             this.PreMovePosition = this.Position;
         }
+
+
+        public FDCreature Clone()
+        {
+            FDCreature another = new FDCreature(this.CreatureId);
+            another.Definition = this.Definition;
+            another.Faction = this.Faction;
+            another.Position = this.Position;
+
+            another.Data = this.Data.Clone();
+
+            return another;
+        }
+
     }
 }

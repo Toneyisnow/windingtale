@@ -17,6 +17,7 @@ namespace WindingTale.Core.Definitions
         private Dictionary<int, CreatureDefinition> creatureBaseDefinitions = null;
         private Dictionary<int, CreatureDefinition> creatureChapterDefinitions = null;
 
+        private Dictionary<int, MagicDefinition> magicDefinitions = null;
 
         private DefinitionStore()
         {
@@ -79,7 +80,15 @@ namespace WindingTale.Core.Definitions
 
         private void LoadMagicDefinitions()
         {
+            magicDefinitions = new Dictionary<int, MagicDefinition>();
+            ResourceDataFile fileReader = new ResourceDataFile(@"Data/Magic");
+            int magicCount = fileReader.ReadInt();
 
+            for (int i = 0; i < magicCount; i++)
+            {
+                MagicDefinition def = MagicDefinition.ReadFromFile(fileReader);
+                creatureDefinitions[def.DefinitionId] = def;
+            }
         }
 
         /// <summary>
@@ -121,6 +130,10 @@ namespace WindingTale.Core.Definitions
             return null;
         }
 
+        public MagicDefinition GetMagicDefinition(int magicId)
+        {
+            if (this.magic)
+        }
 
     }
 }

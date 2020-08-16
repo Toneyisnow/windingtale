@@ -7,9 +7,12 @@ namespace WindingTale.Core.Components.Packs
 {
     public enum CreatureInfoType
     {
-        SelectItem = 1,
-        SelectMagic = 2,
-        View = 3,
+        View = 1,
+        SelectEquipmentItem = 2,
+        SelectUseItem = 3,
+        SelectAllItem = 4,
+        SelectMagic = 5,
+        
     }
 
     public class ShowCreatureInfoPack : PackBase
@@ -19,7 +22,7 @@ namespace WindingTale.Core.Components.Packs
             get; private set;
         }
 
-        public CreatureInfoType Type
+        public CreatureInfoType InfoType
         {
             get; private set;
         }
@@ -27,7 +30,7 @@ namespace WindingTale.Core.Components.Packs
         public ShowCreatureInfoPack(CreatureData data, CreatureInfoType type)
         {
             this.CreatureData = data;
-            this.Type = type;
+            this.InfoType = type;
         }
     }
 }

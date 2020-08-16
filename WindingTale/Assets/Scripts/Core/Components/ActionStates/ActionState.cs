@@ -3,17 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Components.Packs;
 
 namespace WindingTale.Core.Components.ActionStates
 {
     public abstract class ActionState
     {
         protected IGameAction gameAction = null;
-
-        /// <summary>
-        /// This is the delegate function that will be called after interface passed in the index value
-        /// </summary>
-        protected Func<int, StateOperationResult> SelectIndexDelegate = null;
 
         public ActionState(IGameAction action)
         {
@@ -30,12 +26,16 @@ namespace WindingTale.Core.Components.ActionStates
 
         public virtual StateOperationResult OnSelectIndex(int index)
         {
-            if (this.SelectIndexDelegate != null)
+            return StateOperationResult.None();
+        }
+
+        protected void SendPack(PackBase pack)
+        {
+            if (this.gameAction != null && this.gameAction.GetCallback() != null)
             {
-                return this.SelectIndexDelegate(index);
+                this.gameAction.GetCallback().OnCallback(pack);
             }
 
-            return StateOperationResult.None();
         }
 
         #endregion

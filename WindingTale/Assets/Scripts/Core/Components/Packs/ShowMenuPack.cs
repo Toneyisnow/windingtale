@@ -7,7 +7,7 @@ namespace WindingTale.Core.Components.Packs
 {
     public class ShowMenuPack : PackBase
     {
-        public MenuId MenuId
+        public MenuItemId[] MenuItems
         {
             get; private set;
         }
@@ -22,9 +22,9 @@ namespace WindingTale.Core.Components.Packs
             get; private set;
         }
 
-        public ShowMenuPack(MenuId menuId, bool[] enabled, FDPosition position)
+        public ShowMenuPack(MenuItemId[] menuItems, bool[] enabled, FDPosition position)
         {
-            this.MenuId = menuId;
+            this.MenuItems = menuItems;
             this.Enabled = enabled;
             this.Position = position;
         }

@@ -388,6 +388,15 @@ namespace WindingTale.Core.Components
 
         }
 
+        /// <summary>
+        /// To pick up the treature at the current position. The ItemIndex is the exchanged item if item list is full.
+        /// </summary>
+        /// <param name="creatureId"></param>
+        /// <param name="itemIndex"></param>
+        public void PickTreasure(int creatureId, int itemIndex = -1)
+        {
+
+        }
 
         public void DoCreatureAllRest()
         {
@@ -451,7 +460,7 @@ namespace WindingTale.Core.Components
                 return null;
             }
 
-            creature.MoveTo(walkAction.MovePath.Desitination);
+            creature.SetMoveTo(walkAction.MovePath.Desitination);
 
             if (walkAction.DelayUnits > 0)
             {
