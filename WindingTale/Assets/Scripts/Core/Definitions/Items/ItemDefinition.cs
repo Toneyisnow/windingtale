@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Common;
 
 namespace WindingTale.Core.Definitions
 {
@@ -26,6 +27,20 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        public static ItemDefinition ReadFromFile(ResourceDataFile dataFile)
+        {
+            return null;
+        }
+
+        public bool IsEquipment()
+        {
+            return false;
+        }
+
+        public bool IsUsable()
+        {
+            return false;
+        }
 
     }
 }

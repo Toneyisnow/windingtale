@@ -172,6 +172,11 @@ namespace WindingTale.Core.Components
             return null;
         }
 
+        public List<FDCreature> GetAdjacentFriends(int creatureId)
+        {
+            return null;
+        }
+
         #endregion
 
         #region Actions

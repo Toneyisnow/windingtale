@@ -8,7 +8,7 @@ namespace WindingTale.Core.Components.Packs
     public enum CreatureInfoType
     {
         View = 1,
-        SelectEquipmentItem = 2,
+        SelectEquipItem = 2,
         SelectUseItem = 3,
         SelectAllItem = 4,
         SelectMagic = 5,

@@ -63,6 +63,9 @@ namespace WindingTale.Core.Components
         FDCreature GetDeadCreature(int creatureId);
 
         FDCreature GetCreatureAt(FDPosition position);
+
+        List<FDCreature> GetAdjacentFriends(int creatureId);
+
     }
 
     /// <summary>

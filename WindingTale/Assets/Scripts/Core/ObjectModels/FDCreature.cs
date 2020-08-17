@@ -83,6 +83,22 @@ namespace WindingTale.Core.ObjectModels
             return hasActioned;
         }
 
+        public bool HasEquipItem()
+        {
+            return this.Data.Items.Exists(itemId => {
+                ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
+                return item.IsEquipment();
+            });
+        }
+
+        public bool HasUsableItem()
+        {
+            return this.Data.Items.Exists(itemId => {
+                ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
+                return item.IsUsable();
+            });
+        }
+
         /// <summary>
         /// 
         /// </summary>

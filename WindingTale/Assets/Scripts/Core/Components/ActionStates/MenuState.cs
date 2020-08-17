@@ -62,7 +62,8 @@ namespace WindingTale.Core.Components.ActionStates
         public override void OnExit()
         {
             // Close Action Menu
-            
+            CloseMenuPack pack = new CloseMenuPack();
+            SendPack(pack);
         }
 
         protected void SetMenu(int index, MenuItemId menuItemId, bool enabled, Func<StateOperationResult> action)

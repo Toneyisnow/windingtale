@@ -95,6 +95,8 @@
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuSystemState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\SelectAttackTargetState.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\ActionStates\SelectItemExchangeTargetState.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\ActionStates\SelectItemUseTargetState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\SelecteMagicTargetState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ShowMoveRangeState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\StateOperationResult.cs" />
@@ -120,6 +122,7 @@
     <Compile Include="Assets\Scripts\Core\Components\IGameCallback.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\BatchPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ClearRangePack.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\CloseMenuPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ComposeCreaturePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureMovePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\DisposeCreaturePack.cs" />

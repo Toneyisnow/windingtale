@@ -30,24 +30,16 @@ namespace WindingTale.Core.Components.ActionStates
             get; private set;
         }
 
-        public FDPosition Position
-        {
-            get; private set;
-        }
-
         private SubActionState subState = SubActionState.SelectMagic;
-
-        private Action<int> selectIndexDelegate = null;
 
         public MenuActionState(IGameAction gameAction, int creatureId, FDPosition position)
             : base(gameAction, position)
         {
             this.CreatureId = creatureId;
             this.Creature = gameAction.GetCreature(creatureId);
-            this.Position = position;
 
             // Magic
-            this.SetMenu(0, MenuItemId.ActionMagic, () =>
+            this.SetMenu(0, MenuItemId.ActionMagic, IsMenuMagicEnabled(), () =>
             {
                 ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature.Data, CreatureInfoType.SelectMagic);
                 gameAction.GetCallback().OnCallback(pack);
@@ -57,21 +49,21 @@ namespace WindingTale.Core.Components.ActionStates
             });
 
             // Attack
-            this.SetMenu(1, MenuItemId.ActionAttack, () =>
+            this.SetMenu(1, MenuItemId.ActionAttack, IsMenuAttackEnabled(), () =>
             {
                 SelectAttackTargetState attackState = new SelectAttackTargetState(gameAction, this.Creature);
                 return StateOperationResult.Push(attackState);
             });
 
             // Item
-            this.SetMenu(2, MenuItemId.ActionItems, () =>
+            this.SetMenu(2, MenuItemId.ActionItems, IsMenuItemEnabled(), () =>
             {
-                MenuItemState itemState = new MenuItemState(gameAction, this.Position);
+                MenuItemState itemState = new MenuItemState(gameAction, this.CreatureId, this.Central);
                 return StateOperationResult.Push(itemState);
             });
 
             // Rest
-            this.SetMenu(1, MenuItemId.ActionRest, () =>
+            this.SetMenu(3, MenuItemId.ActionRest, true, () =>
             {
                 // Check Treasure
                 if (this.Creature.Position == FDPosition.Invalid())
@@ -84,20 +76,6 @@ namespace WindingTale.Core.Components.ActionStates
                 return StateOperationResult.Clear();
             });
 
-
-        }
-
-        public override void OnEnter()
-        {
-            // Show Action Menu
-            bool[] enabled = new bool[4] { false, true, true, true };
-            ShowMenuPack pack = new ShowMenuPack(MenuId.ActionMenu, enabled, this.Position);
-            gameAction.GetCallback().OnCallback(pack);
-        }
-
-        public override void OnExit()
-        {
-            // Close Action Menu
         }
 
         public override StateOperationResult OnSelectIndex(int index)
@@ -116,6 +94,26 @@ namespace WindingTale.Core.Components.ActionStates
                     return null;
             }
         }
+
+        private bool IsMenuAttackEnabled()
+        {
+            // Check if there is enemy in the attack range 
+            return false;
+        }
+
+        private bool IsMenuMagicEnabled()
+        {
+            return this.Creature.Data.CanSpellMagic();
+        }
+
+        private bool IsMenuItemEnabled()
+        {
+            return this.Creature.Data.Items.Count > 0;
+        }
+
+
+
+        #region Callback Index Methods
 
         private StateOperationResult OnMagicSelected(int index)
         {
@@ -222,5 +220,7 @@ namespace WindingTale.Core.Components.ActionStates
             gameAction.DoCreatureRest(this.CreatureId);
             return StateOperationResult.Clear();
         }
+
+        #endregion
     }
 }

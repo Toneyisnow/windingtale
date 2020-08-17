@@ -186,12 +186,17 @@ namespace WindingTale.Core.Components
             return this.Items != null && this.Items.Count >= 8;
         }
 
-        public void RemoveItemAt(int index)
+        public void RemoveItemAt(int itemIndex)
         {
 
         }
 
         public void AddItem(int itemId)
+        {
+
+        }
+
+        public void EquipItemAt(int itemIndex)
         {
 
         }
