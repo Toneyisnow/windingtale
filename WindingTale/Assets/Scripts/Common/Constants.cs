@@ -32,13 +32,13 @@ namespace WindingTale.Common
         SystemSettings = 212,
         SystemRestAll = 213,
 
-        SettingsMusic = 220,
-        SettingsFight = 221,
-        SettingsSound = 222,
+        SettingsSound = 220,
+        SettingsMusic = 221,
+        SettingsFight = 222,
         SettingsInfo = 223,
 
-        RecordInfo = 230,
-        RecordSave = 231,
+        RecordSave = 230,
+        RecordInfo = 231,
         RecordLoad = 232,
         RecordQuit = 233,
     }
