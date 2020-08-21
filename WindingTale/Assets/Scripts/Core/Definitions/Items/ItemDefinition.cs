@@ -19,28 +19,35 @@ namespace WindingTale.Core.Definitions
 
         public int ItemId
         {
-            get; set;
+            get; protected set;
+        }
+
+        public int Price
+        {
+            get; protected set;
+        }
+
+        public int SellPrice
+        {
+            get; protected set;
         }
 
         public ItemType Type
         {
-            get; set;
+            get; protected set;
         }
 
-        public static ItemDefinition ReadFromFile(ResourceDataFile dataFile)
+        /// <summary>
+        /// This should be a localized string
+        /// </summary>
+        public string Name
         {
-            return null;
+            get; protected set;
         }
 
-        public bool IsEquipment()
-        {
-            return false;
-        }
+        public abstract bool IsEquipment();
 
-        public bool IsUsable()
-        {
-            return false;
-        }
+        public abstract bool IsUsable();
 
     }
 }

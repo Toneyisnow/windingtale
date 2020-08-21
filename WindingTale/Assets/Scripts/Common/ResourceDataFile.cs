@@ -17,6 +17,7 @@ namespace WindingTale.Common
 
             string textContent = text.text;
             textContent = textContent.Replace("\r\n", " ");
+            textContent = textContent.Replace("\t", " ");
 
             if (textContent == null)
             {
@@ -44,6 +45,12 @@ namespace WindingTale.Common
                 return -1;
             }
         }
+
+        public bool ReadBoolean()
+        {
+            return (this.ReadInt() == 1);
+        }
+
     }
 
 }

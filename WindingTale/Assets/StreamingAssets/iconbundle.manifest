@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3933924946
+CRC: 3839480540
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0782682dc967fe7aa3f754466e5229f8
+    Hash: 529bc5feed2d86ac787f5638909ccb7c
   TypeTreeHash:
     serializedVersion: 2
     Hash: ae2cf77de671e115b4e55d2b65767202
@@ -30,14 +30,17 @@ Assets:
 - Assets/Resources/Icons/002/Icon_002_02.obj
 - Assets/Resources/Icons/003/Icon_003_01.obj
 - Assets/Resources/Icons/004/Icon_004_03.obj
+- Assets/Resources/Icons/001/Icon_001_03.obj
 - Assets/Resources/Icons/702/Icon_702_02.obj
 - Assets/Resources/Icons/701/Icon_701_03.obj
 - Assets/Resources/Icons/702/Icon_702_01.obj
 - Assets/Resources/Icons/701/Icon_701_02.obj
+- Assets/Resources/Icons/001/Icon_001_02.obj
 - Assets/Resources/Icons/004/Icon_004_01.obj
 - Assets/Resources/Icons/005/Icon_005_01.obj
 - Assets/Resources/Icons/005/Icon_005_03.obj
 - Assets/Resources/Icons/004/Icon_004_02.obj
+- Assets/Resources/Icons/001/Icon_001_01.obj
 - Assets/Resources/Icons/002/Icon_002_01.obj
 - Assets/Resources/Icons/002/Icon_002_03.obj
 - Assets/Resources/Icons/702/Icon_702_03.obj

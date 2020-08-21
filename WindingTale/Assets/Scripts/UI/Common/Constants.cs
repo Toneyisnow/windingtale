@@ -6,7 +6,8 @@ namespace WindingTale.UI.Common
 {
     public class Constants
     {
-        public static readonly int TICK_PER_FRAME = 8;
+        /// public static readonly int TICK_PER_FRAME = 8;
+        public static readonly int TICK_PER_FRAME = 15;
 
 
         public enum CursorType

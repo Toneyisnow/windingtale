@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Definitions.Items;
 
 namespace WindingTale.Core.Definitions
 {
@@ -79,14 +80,41 @@ namespace WindingTale.Core.Definitions
         {
             itemDefinitions = new Dictionary<int, ItemDefinition>();
             ResourceDataFile fileReader = new ResourceDataFile(@"Data/Item");
-            int itemCount = fileReader.ReadInt();
 
-            for (int i = 0; i < itemCount; i++)
+            int usableItemCount = fileReader.ReadInt();
+            for (int i = 0; i < usableItemCount; i++)
             {
-                ItemDefinition def = ItemDefinition.ReadFromFile(fileReader);
+                ConsumableItemDefinition def = ConsumableItemDefinition.ReadFromFile(fileReader);
                 itemDefinitions[def.ItemId] = def;
             }
 
+            int attackItemCount = fileReader.ReadInt();
+            for (int i = 0; i < attackItemCount; i++)
+            {
+                AttackItemDefinition def = AttackItemDefinition.ReadFromFile(fileReader);
+                itemDefinitions[def.ItemId] = def;
+            }
+
+            int defendItemCount = fileReader.ReadInt();
+            for (int i = 0; i < defendItemCount; i++)
+            {
+                DefendItemDefinition def = DefendItemDefinition.ReadFromFile(fileReader);
+                itemDefinitions[def.ItemId] = def;
+            }
+
+            int specialItemCount = fileReader.ReadInt();
+            for (int i = 0; i < specialItemCount; i++)
+            {
+                SpecialItemDefinition def = SpecialItemDefinition.ReadFromFile(fileReader);
+                itemDefinitions[def.ItemId] = def;
+            }
+
+            int moneyItemCount = fileReader.ReadInt();
+            for (int i = 0; i < moneyItemCount; i++)
+            {
+                MoneyItemDefinition def = MoneyItemDefinition.ReadFromFile(fileReader);
+                itemDefinitions[def.ItemId] = def;
+            }
         }
 
         private void LoadMagicDefinitions()
