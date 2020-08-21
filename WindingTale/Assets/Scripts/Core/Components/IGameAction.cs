@@ -73,7 +73,7 @@ namespace WindingTale.Core.Components
     /// </summary>
     public interface IGameAction : IGameInformative
     {
-        public IGameCallback GetCallback();
+        IGameCallback GetCallback();
 
 
         #region Game Internal Actions

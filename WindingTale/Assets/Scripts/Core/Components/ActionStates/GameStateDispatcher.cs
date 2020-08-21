@@ -120,9 +120,6 @@ namespace WindingTale.Core.Components.ActionStates
                     currentState = actionStateStack.Peek();
                     currentState.OnEnter();
                     break;
-                case StateOperationResult.ResultType.Delegate:
-                    currentState.on
-                    break;
                 default:
                     break;
             }
