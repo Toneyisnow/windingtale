@@ -8,8 +8,6 @@ using WindingTale.Core.Definitions.Items;
 
 namespace WindingTale.Core.Definitions
 {
-
-
     public class DefinitionStore
     {
         private static DefinitionStore instance = null;
@@ -21,6 +19,11 @@ namespace WindingTale.Core.Definitions
         private Dictionary<int, MagicDefinition> magicDefinitions = null;
 
         private Dictionary<int, ItemDefinition> itemDefinitions = null;
+
+        private Dictionary<int, LevelUpDefinition> levelUpDefinitions = null;
+
+        private Dictionary<int, LevelUpMagicDefinition> levelUpMagicDefinitions = null;
+
 
         private DefinitionStore()
         {
@@ -43,10 +46,11 @@ namespace WindingTale.Core.Definitions
         private void LoadAll()
         {
             LoadCreatureDefinitions();
-
             LoadItemDefinitions();
-
             LoadMagicDefinitions();
+            LoadLevelUpDefinitions();
+            LoadLevelUpMagicDefinitions();
+
         }
 
         private void LoadCreatureDefinitions()
@@ -127,6 +131,32 @@ namespace WindingTale.Core.Definitions
             {
                 MagicDefinition def = MagicDefinition.ReadFromFile(fileReader);
                 magicDefinitions[def.MagicId] = def;
+            }
+        }
+
+        private void LoadLevelUpDefinitions()
+        {
+            levelUpDefinitions = new Dictionary<int, LevelUpDefinition>();
+
+            ResourceDataFile fileReader = new ResourceDataFile(@"Data/LevelUp");
+            int levelUpCount = fileReader.ReadInt();
+
+            for (int i = 0; i < levelUpCount; i++)
+            {
+                LevelUpDefinition def = LevelUpDefinition.ReadFromFile(fileReader);
+                levelUpDefinitions[def.DefinitionId] = def;
+            }
+        }
+
+        private void LoadLevelUpMagicDefinitions()
+        {
+            levelUpMagicDefinitions = new Dictionary<int, LevelUpMagicDefinition>();
+            ResourceDataFile fileReader = new ResourceDataFile(@"Data/LevelUpMagic");
+            
+            LevelUpMagicDefinition def = null;
+            while ((def = LevelUpMagicDefinition.ReadFromFile(fileReader)) != null)
+            {
+                levelUpMagicDefinitions[def.Key] = def;
             }
         }
 

@@ -149,10 +149,11 @@
     <Compile Include="Assets\Scripts\Core\Definitions\Items\MoneyItemDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\SpecialItemDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\LeveledCreatureDefinition.cs" />
+    <Compile Include="Assets\Scripts\Core\Definitions\LevelUpMagicDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\MagicDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\OccupationDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ShopDefinition.cs" />
+    <Compile Include="Assets\Scripts\Core\Definitions\TransferDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\ObjectModels\FDCreature.cs" />
     <Compile Include="Assets\Scripts\Core\ObjectModels\FDMenu.cs" />
     <Compile Include="Assets\Scripts\UI\Common\Constants.cs" />
@@ -242,6 +243,7 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_25.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_11.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_2.txt" />
+    <None Include="Assets\Resources\Data\Transfer.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_7.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_8.txt" />
@@ -276,16 +278,18 @@
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
-    <None Include="Assets\Resources\Data\Levelup.txt" />
+    <None Include="Assets\Resources\Data\LevelUp.txt" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_31.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\Resources\Data\MandatoryFriend.txt" />
     <None Include="Assets\SmartLocalization\Workspace\Data\SmartCultureInfoData\SmartCultureInfo.xml" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_13.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_3.txt" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\Resources\Data\LeveledCreature.txt" />
+    <None Include="Assets\Resources\Data\Shop.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_10.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_26.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_22.txt" />
@@ -299,8 +303,10 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_27.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_28.txt" />
+    <None Include="Assets\Resources\Data\LevelUpMagic.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Bangers - OFL.txt" />
+    <None Include="Assets\Resources\Data\Occupation.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_14.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

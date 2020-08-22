@@ -51,6 +51,17 @@ namespace WindingTale.Common
             return (this.ReadInt() == 1);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public FDSpan ReadSpan()
+        {
+            int min = this.ReadInt();
+            int max = this.ReadInt();
+
+            return new FDSpan(min, max);
+        }
     }
 
 }
