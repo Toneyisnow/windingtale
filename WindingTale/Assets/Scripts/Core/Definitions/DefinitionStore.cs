@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Mime;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Definitions.Items;
@@ -23,6 +24,10 @@ namespace WindingTale.Core.Definitions
         private Dictionary<int, LevelUpDefinition> levelUpDefinitions = null;
 
         private Dictionary<int, LevelUpMagicDefinition> levelUpMagicDefinitions = null;
+
+        private Dictionary<int, TransfersDefinition> transfersDefinitions = null;
+
+        private Dictionary<int, ShopDefinition> shopDefinitions = null;
 
 
         private DefinitionStore()
@@ -50,7 +55,8 @@ namespace WindingTale.Core.Definitions
             LoadMagicDefinitions();
             LoadLevelUpDefinitions();
             LoadLevelUpMagicDefinitions();
-
+            LoadTransfersDefinitions();
+            LoadShopDefinitions();
         }
 
         private void LoadCreatureDefinitions()
@@ -160,6 +166,31 @@ namespace WindingTale.Core.Definitions
             }
         }
 
+        private void LoadTransfersDefinitions()
+        {
+            transfersDefinitions = new Dictionary<int, TransfersDefinition>();
+            ResourceDataFile fileReader = new ResourceDataFile(@"Data/Transfer");
+
+            int count = fileReader.ReadInt();
+            for(int i = 0; i < count; i++)
+            {
+                TransfersDefinition def = TransfersDefinition.ReadFromFile(fileReader);
+                transfersDefinitions[def.DefinitionId] = def;
+            }
+        }
+
+        private void LoadShopDefinitions()
+        {
+            shopDefinitions = new Dictionary<int, ShopDefinition>();
+            ResourceDataFile fileReader = new ResourceDataFile(@"Data/Shop");
+
+            ShopDefinition def = null;
+            while((def = ShopDefinition.ReadFromFile(fileReader)) != null)
+            {
+                shopDefinitions[def.Key] = def;
+            }
+        }
+
         /// <summary>
         /// Load two files: chapter_N.dat for json, chapter_N_data.dat for plain text
         /// </summary>
@@ -201,12 +232,60 @@ namespace WindingTale.Core.Definitions
 
         public MagicDefinition GetMagicDefinition(int magicId)
         {
+            if (this.magicDefinitions.ContainsKey(magicId))
+            {
+                return this.magicDefinitions[magicId];
+            }
             return null;
         }
 
         public ItemDefinition GetItemDefinition(int itemId)
         {
+            if (this.itemDefinitions.ContainsKey(itemId))
+            {
+                return this.itemDefinitions[itemId];
+            }
             return null;
         }
+
+        public LevelUpDefinition GetLevelUpDefinition(int definitionId)
+        {
+            if (this.levelUpDefinitions.ContainsKey(definitionId))
+            {
+                return this.levelUpDefinitions[definitionId];
+            }
+            return null;
+        }
+
+        public LevelUpMagicDefinition GetLevelUpMagicDefinition(int definitionId, int level)
+        {
+            int key = LevelUpMagicDefinition.DefinitionKey(definitionId, level);
+            if (this.levelUpMagicDefinitions.ContainsKey(key))
+            {
+                return this.levelUpMagicDefinitions[key];
+            }
+            return null;
+        }
+
+        public TransfersDefinition GetTransfersDefinition(int definitionId)
+        {
+            if (this.transfersDefinitions.ContainsKey(definitionId))
+            {
+                return this.transfersDefinitions[definitionId];
+            }
+            return null;
+        }
+
+        public ShopDefinition GetShopDefinition(int chapterId, ShopType shopType)
+        {
+            int key = ShopDefinition.DefinitionKey(chapterId, shopType);
+            if (this.shopDefinitions.ContainsKey(key))
+            {
+                return this.shopDefinitions[key];
+            }
+            return null;
+        }
+
+
     }
 }

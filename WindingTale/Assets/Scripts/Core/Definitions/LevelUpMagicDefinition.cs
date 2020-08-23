@@ -10,9 +10,9 @@ namespace WindingTale.Core.Definitions
     /// </summary>
     public class LevelUpMagicDefinition
     {
-        public static int DefinitionKey(int cDefinitionId, int level)
+        public static int DefinitionKey(int definitionId, int level)
         {
-            return cDefinitionId * 100 + level;
+            return definitionId * 100 + level;
         }
 
         public LevelUpMagicDefinition()
