@@ -51,17 +51,12 @@ namespace WindingTale.UI.MapObjects
         {
             this.gameInterface = gameInterface;
             this.CreatureId = creatureId;
-            //// Material defaultMaterial = Resources.Load<Material>(@"common-mat");
 
             this.AnimateState = AnimateStates.Idle;
 
-            //// icon1 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_01", animationIdStr), this.transform);
-            //// icon2 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_02", animationIdStr), this.transform);
-            //// icon3 = GameObjectExtension.CreateFromObj(string.Format(@"Icons/{0}/Icon_{0}_03", animationIdStr), this.transform);
-
-            icon1 = GameObjectExtension.LoadCreatureIcon(animationId, 1, this.transform);
-            icon2 = GameObjectExtension.LoadCreatureIcon(animationId, 2, this.transform);
-            icon3 = GameObjectExtension.LoadCreatureIcon(animationId, 3, this.transform);
+            icon1 = AssetManager.Instance().InstantiateIconGO(this.transform, animationId, 1);
+            icon2 = AssetManager.Instance().InstantiateIconGO(this.transform, animationId, 2);
+            icon3 = AssetManager.Instance().InstantiateIconGO(this.transform, animationId, 3);
 
             var box = this.gameObject.AddComponent<BoxCollider>();
             box.size = new Vector3(2.0f, 2.0f, 2.0f);

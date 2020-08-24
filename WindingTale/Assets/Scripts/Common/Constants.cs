@@ -42,4 +42,5 @@ namespace WindingTale.Common
         RecordLoad = 232,
         RecordQuit = 233,
     }
+
 }

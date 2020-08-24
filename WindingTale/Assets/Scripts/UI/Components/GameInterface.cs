@@ -13,6 +13,7 @@ using WindingTale.UI.MapObjects;
 using WindingTale.Common;
 using System;
 using SmartLocalization;
+using WindingTale.UI.Common;
 
 namespace WindingTale.UI.Components
 {
@@ -33,10 +34,8 @@ namespace WindingTale.UI.Components
 
         private Transform fieldMapRoot = null;
 
-
         private GameObject gameCursor = null;
 
-        private Material defaultMaterial = null;
 
 
         // Start is called before the first frame update
@@ -49,7 +48,6 @@ namespace WindingTale.UI.Components
             ChapterRecord record = ChapterRecord.NewGame();
             gameManager.StartGame(record);
 
-            defaultMaterial = Resources.Load<Material>(@"common-mat");
             RenderFieldMap(record.ChapterId);
 
             globalVariables = Global.Instance();
@@ -59,8 +57,11 @@ namespace WindingTale.UI.Components
 
             
             fieldObjectsRoot = this.transform.Find("FieldObjects");
-
             InitializeObjects();
+
+            //var menu = GameObjectExtension.LoadMenu(MenuItemId.ActionAttack, 1, this.transform);
+            //menu.transform.localPosition = FieldTransform.GetGroundPixelPosition(FDPosition.At(10, 10));
+
         }
 
         // Update is called once per frame
@@ -100,7 +101,8 @@ namespace WindingTale.UI.Components
         {
             // Draw map on UI
             GameField field = gameManager.GetField();
-            
+            Material defaultMaterial = Resources.Load<Material>(@"common-mat");
+
             fieldMapRoot = this.transform.Find("FieldMap");
             string mappingData = File.ReadAllText(@"D:\GitRoot\toneyisnow\windingtale\Resources\Remastered\Shapes\ShapePanel1\shape-mapping-1.json");
             ShapeMappings mappings = JsonConvert.DeserializeObject<ShapeMappings>(mappingData);
@@ -122,31 +124,48 @@ namespace WindingTale.UI.Components
                     }
 
                     Int32.TryParse(voxIndexStr, out int voxIndex);
-                    GameObject shapePrefab = AssetManager.Instance().LoadShapePrefab(chapterId, voxIndex);
-                    if (shapePrefab == null)
+
+                    GameObject shapeGO = AssetManager.Instance().InstantiateShapeGO(this.transform, chapterId, voxIndex);
+                    if (shapeGO == null)
                     {
                         missingShapes.Add(shapeIndex);
                         continue;
                     }
-                    
-                    var renderer = shapePrefab.GetComponentInChildren<MeshRenderer>();
-                    renderer.sharedMaterial = defaultMaterial;
+
+                    shapeGO.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+                    shapeGO.transform.localPosition = FieldTransform.GetShapePixelPosition(x, y);
+                    shapeGO.transform.localRotation = new Quaternion(0f, 1.57f, 1.57f, 0f);
+
+                    //var renderer = shapePrefab.GetComponentInChildren<MeshRenderer>();
+                    //renderer.sharedMaterial = defaultMaterial;
 
                     // Note the the FlameDragon is counting matrix from 1, not 0
-                    GameObject go = FieldTransform.CreateShapeObject(shapePrefab, fieldMapRoot, x + 1, y + 1);
+                    // GameObject go = FieldTransform.CreateShapeObject(shapePrefab, fieldMapRoot, x + 1, y + 1);
                 }
             }
         }
 
-        public void PlaceCreature(int creatureId, int animationid, FDPosition position)
+        public void PlaceCreature(int creatureId, int animationId, FDPosition position)
         {
-            GameObject creatureObj = GameObject.Instantiate(creaturePrefab);
+            GameObject creatureObj = new GameObject();
             creatureObj.name = string.Format(@"creature_{0}", creatureId);
             creatureObj.transform.parent = fieldObjectsRoot;
             creatureObj.transform.localPosition = FieldTransform.GetCreaturePixelPosition(position);
 
-            var creatureCom = creatureObj.GetComponent<UICreature>();
-            creatureCom.Initialize(this, creatureId, animationid);
+            var creatureCom = creatureObj.AddComponent<UICreature>();
+            creatureCom.Initialize(this, creatureId, animationId);
+
+        }
+
+        public void PlaceMenu(MenuId menuId, FDPosition position)
+        {
+            GameObject obj = new GameObject();
+            obj.name = string.Format(@"menu_{0}", menuId.GetHashCode());
+            obj.transform.parent = fieldObjectsRoot;
+            obj.transform.localPosition = FieldTransform.GetGroundPixelPosition(position);
+
+            var menuItem = obj.AddComponent<UIMenuItem>();
+            // menuItem.Initialize(this, creatureId, animationId);
 
         }
 

@@ -14,11 +14,10 @@ namespace WindingTale.UI.MapObjects
         private GameObject cursorRange1 = null;
         private GameObject cursorRange2 = null;
 
-
-
+        
         public void Initialize(IGameInterface gameInterface)
         {
-            cursorDefault = GameObjectExtension.LoadCursor(CursorType.Default, this.transform);
+            cursorDefault = AssetManager.Instance().InstantiateCursorGO(this.transform, CursorType.Default);
             //cursorRange0 = GameObjectExtension.LoadCursor(CursorType.Range0, this.transform);
             //cursorRange1 = GameObjectExtension.LoadCursor(CursorType.Range1, this.transform);
             //cursorRange2 = GameObjectExtension.LoadCursor(CursorType.Range2, this.transform);

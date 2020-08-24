@@ -11,6 +11,7 @@ namespace WindingTale.UI.FieldMap
         {
             Ground = 1,
             Creature = 2,
+            GroundObject = 3,
         }
 
 
@@ -44,6 +45,11 @@ namespace WindingTale.UI.FieldMap
             return GetObjectPixelPosition(FieldObjectLayer.Creature, position.X, position.Y);
         }
 
+        public static Vector3 GetGroundPixelPosition(FDPosition position)
+        {
+            return GetObjectPixelPosition(FieldObjectLayer.Ground, position.X, position.Y);
+        }
+
         public static FDPosition GetObjectUnitPosition(Vector3 vector3)
         {
             int posX = (int)((vector3.x + FloatPrecision - 1.2f) / 2.4f);
@@ -51,15 +57,5 @@ namespace WindingTale.UI.FieldMap
             return FDPosition.At(posX, posY);
         }
 
-        public static GameObject CreateShapeObject(GameObject shapePrefab, Transform parent, int x, int y)
-        {
-            GameObject go = GameObject.Instantiate(shapePrefab);
-            go.transform.parent = parent;
-            go.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-            go.transform.localPosition = GetShapePixelPosition(x, y);
-            go.transform.localRotation = new Quaternion(0f, 1.57f, 1.57f, 0f);
-
-            return go;
-        }
     }
 }
