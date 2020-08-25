@@ -140,7 +140,7 @@ namespace WindingTale.UI.Components
             GameObject obj = GameObject.Instantiate(prefab);
             obj.transform.parent = parent;
 
-            obj.transform.localPosition = new Vector3(0, 0, 0);
+            obj.transform.localPosition = new Vector3(-1.2f, 0, -0.8f);
             obj.transform.localRotation = Quaternion.Euler(270, 90, 90);
             obj.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.UI.Components;
+using WindingTale.UI.FieldMap;
 using static WindingTale.UI.Common.Constants;
 
 namespace WindingTale.UI.MapObjects
@@ -13,22 +14,98 @@ namespace WindingTale.UI.MapObjects
         private GameObject menuFrame2 = null;
         private GameObject menuDisabled = null;
 
-        private static Material defaultMaterial = Resources.Load<Material>(@"common-mat");
+        private FDPosition position = null;
 
+        private bool isEnabled = false;
+        private bool isSelected = false;
 
-        public void Initialize(IGameInterface gameInterface, MenuItemId menuItemId)
+        private int tick = 0;
+        private int tickCount = 80;
+
+        private MenuItemId menuItemId;
+        private IGameInterface gameInterface = null;
+
+        public void Initialize(IGameInterface gameInterface, MenuItemId menuItemId, FDPosition position, bool enabled, bool selected)
         {
-            this.gameObject.name = string.Format(@"menu_{0}", menuItemId.GetHashCode());
+            this.gameInterface = gameInterface;
+            
+            this.gameObject.name = string.Format(@"menuitem_{0}", menuItemId.GetHashCode());
+            this.gameObject.transform.localPosition = FieldTransform.GetGroundPixelPosition(position);
 
-            menuFrame1 = AssetManager.Instance().InstantiateMenuItemGO(this.transform, menuItemId, 1);
-            /// menuFrame2 = AssetManager.Instance().InstantiateMenuItem(this.transform, menuItemId, 2);
-            /// menuDisabled = AssetManager.Instance().InstantiateMenuItem(this.transform, menuItemId, 3);
+            this.isEnabled = enabled;
+            this.isSelected = selected;
+            this.position = position;
 
+            this.menuItemId = menuItemId;
+
+            
             var box = this.gameObject.AddComponent<BoxCollider>();
             box.size = new Vector3(2.0f, 2.0f, 2.0f);
             box.center = new Vector3(0f, 1f, 0f);
         }
 
+        public UIMenuItem[] RelatedMenuItems
+        {
+            private get; set;
+        }
 
+        void Start()
+        {
+            if (isEnabled)
+            {
+                menuFrame1 = AssetManager.Instance().InstantiateMenuItemGO(this.transform, menuItemId, 1);
+                menuFrame2 = AssetManager.Instance().InstantiateMenuItemGO(this.transform, menuItemId, 2);
+            }
+            else
+            {
+                menuDisabled = AssetManager.Instance().InstantiateMenuItemGO(this.transform, menuItemId, 3);
+            }
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            // Animation for the available menu
+            if (this.isEnabled && this.isSelected)
+            {
+                this.tick = (this.tick + 1) % this.tickCount;
+                if (this.tick == 0)
+                {
+                    menuFrame1.SetActive(true);
+                    menuFrame2.SetActive(false);
+                }
+                else if (this.tick == this.tickCount / 2)
+                {
+                    menuFrame2.SetActive(true);
+                    menuFrame1.SetActive(false);
+                }
+            }
+        }
+
+        public void SetSelected(bool value)
+        {
+            this.isSelected = value;
+        }
+
+        protected override void OnTouched()
+        {
+            if (!this.isEnabled)
+            {
+                return;
+            }
+
+            if (!this.isSelected)
+            {
+                foreach(UIMenuItem menuItem in RelatedMenuItems)
+                {
+                    menuItem.SetSelected(false);
+                }
+
+                this.isSelected = true;
+            }
+
+            // Do the actual work
+            // gameInterface.TouchPosition(this.position);
+        }
     }
 }

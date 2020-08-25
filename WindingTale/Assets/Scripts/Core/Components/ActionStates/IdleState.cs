@@ -49,9 +49,9 @@ namespace WindingTale.Core.Components.ActionStates
                 ShowCreatureInfoPack pack = new ShowCreatureInfoPack(creature.Data.Clone(), CreatureInfoType.View);
                 var gameCallback = gameAction.GetCallback();
                 gameCallback.OnCallback(pack);
-            }
 
-            return null;
+                return new StateOperationResult(StateOperationResult.ResultType.None);
+            }
         }
 
         public override StateOperationResult OnSelectIndex(int index)

@@ -24,6 +24,8 @@ namespace WindingTale.Core.Components.Packs
 
         public ShowMenuPack(MenuItemId[] menuItems, bool[] enabled, FDPosition position)
         {
+            this.Type = PackType.ShowMenu;
+
             this.MenuItems = menuItems;
             this.Enabled = enabled;
             this.Position = position;

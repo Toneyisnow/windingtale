@@ -36,7 +36,7 @@ namespace WindingTale.UI.Components
 
         private GameObject gameCursor = null;
 
-
+        private List<GameObject> cancellableObjects = null;
 
         // Start is called before the first frame update
         void Start()
@@ -51,17 +51,12 @@ namespace WindingTale.UI.Components
             RenderFieldMap(record.ChapterId);
 
             globalVariables = Global.Instance();
-            // Add creature
-            //// FDCreature creature = new FDCreature(2, new CreatureDefinition() { DefinitionId = 2 }, FDPosition.At(1, 2));
-            //// PlaceCreature(creature);
-
             
             fieldObjectsRoot = this.transform.Find("FieldObjects");
             InitializeObjects();
 
-            //var menu = GameObjectExtension.LoadMenu(MenuItemId.ActionAttack, 1, this.transform);
-            //menu.transform.localPosition = FieldTransform.GetGroundPixelPosition(FDPosition.At(10, 10));
-
+            cancellableObjects = new List<GameObject>();
+            ///PlaceMenu(MenuId.ActionMenu, FDPosition.At(3, 3));
         }
 
         // Update is called once per frame
@@ -125,6 +120,12 @@ namespace WindingTale.UI.Components
 
                     Int32.TryParse(voxIndexStr, out int voxIndex);
 
+                    GameObject shapeObject = new GameObject();
+                    shapeObject.name = string.Format(@"shape_{0}_{1}", x + 1, y + 1);
+                    UIShape shapeCom = shapeObject.AddComponent<UIShape>();
+                    shapeCom.Initialize(this, fieldMapRoot, chapterId, voxIndex, FDPosition.At(x + 1, y + 1));
+
+                    /*
                     GameObject shapeGO = AssetManager.Instance().InstantiateShapeGO(this.transform, chapterId, voxIndex);
                     if (shapeGO == null)
                     {
@@ -132,9 +133,13 @@ namespace WindingTale.UI.Components
                         continue;
                     }
 
-                    shapeGO.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-                    shapeGO.transform.localPosition = FieldTransform.GetShapePixelPosition(x, y);
-                    shapeGO.transform.localRotation = new Quaternion(0f, 1.57f, 1.57f, 0f);
+                    shapeGO.transform.parent = fieldMapRoot;
+                    shapeGO.transform.localPosition = FieldTransform.GetShapePixelPosition(x + 1, y + 1);
+
+                    var box = shapeGO.AddComponent<BoxCollider>();
+                    box.size = new Vector3(2.0f, 0.5f, 2.0f);
+                    box.center = new Vector3(0f, 1f, 0f);
+                    */
 
                     //var renderer = shapePrefab.GetComponentInChildren<MeshRenderer>();
                     //renderer.sharedMaterial = defaultMaterial;
@@ -145,7 +150,7 @@ namespace WindingTale.UI.Components
             }
         }
 
-        public void PlaceCreature(int creatureId, int animationId, FDPosition position)
+        public UICreature PlaceCreature(int creatureId, int animationId, FDPosition position)
         {
             GameObject creatureObj = new GameObject();
             creatureObj.name = string.Format(@"creature_{0}", creatureId);
@@ -155,18 +160,30 @@ namespace WindingTale.UI.Components
             var creatureCom = creatureObj.AddComponent<UICreature>();
             creatureCom.Initialize(this, creatureId, animationId);
 
+            return creatureCom;
         }
 
-        public void PlaceMenu(MenuId menuId, FDPosition position)
+        public UIMenuItem PlaceMenu(MenuItemId menuItemId, FDPosition position, bool enabled, bool selected)
         {
             GameObject obj = new GameObject();
-            obj.name = string.Format(@"menu_{0}", menuId.GetHashCode());
             obj.transform.parent = fieldObjectsRoot;
-            obj.transform.localPosition = FieldTransform.GetGroundPixelPosition(position);
 
             var menuItem = obj.AddComponent<UIMenuItem>();
-            // menuItem.Initialize(this, creatureId, animationId);
+            menuItem.Initialize(this, menuItemId, position, enabled, selected);
 
+            cancellableObjects.Add(obj);
+
+            return menuItem;
+        }
+
+        public void ClearCancellableObjects()
+        {
+            foreach(GameObject obj in cancellableObjects)
+            {
+                GameObject.Destroy(obj);
+            }
+
+            cancellableObjects.Clear();
         }
 
         public void TouchCreature(int creatureId)
@@ -186,6 +203,11 @@ namespace WindingTale.UI.Components
             }
         }
 
+        public void TouchPosition(FDPosition position)
+        {
+            // Do the actuall game event
+            gameManager.HandleOperation(position);
+        }
 
         public void OnCallback(PackBase pack)
         {

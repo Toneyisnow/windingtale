@@ -29,6 +29,12 @@ namespace WindingTale.UI.Components.Activities
                 case PackBase.PackType.Batch:
                     return BuildBatchActivity(pack as BatchPack);
 
+                case PackBase.PackType.ShowMenu:
+                    return BuildShowMenuActivity(pack as ShowMenuPack);
+
+                case PackBase.PackType.CloseMenu:
+                    return BuildCloseMenuActivity(pack as CloseMenuPack);
+                
                 default:
                     break;
             }
@@ -94,6 +100,19 @@ namespace WindingTale.UI.Components.Activities
             return batch;
         }
 
+        private static ActivityBase BuildShowMenuActivity(ShowMenuPack pack)
+        {
+            ShowMenuActivity activity = new ShowMenuActivity(pack);
+            return activity;
+        }
+
+        private static ActivityBase BuildCloseMenuActivity(CloseMenuPack pack)
+        {
+            CallbackActivity activity = new CallbackActivity(
+                    (callback) => { callback.ClearCancellableObjects(); });
+
+            return activity;
+        }
     }
 
 }
