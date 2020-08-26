@@ -81,7 +81,7 @@ namespace WindingTale.Core.Components.ActionStates
         {
             for(int index = 0; index < 4; index++)
             {
-                if (this.MenuItemEnabled[index] && this.MenuItemPositions[index] == position)
+                if (this.MenuItemEnabled[index] && this.MenuItemPositions[index].AreSame(position))
                 {
                     // Clicked on menu
                     return this.MenuActions[index]();

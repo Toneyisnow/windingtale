@@ -29,10 +29,10 @@ namespace WindingTale.Core.Components.ActionStates
 
         public override void OnEnter()
         {
-            // Calculcate the moving scopes
+            // Calculcate the moving scopes and save it in cache
             if (moveRange == null)
             {
-                MoveRangeFinder finder = new MoveRangeFinder(gameAction);
+                MoveRangeFinder finder = new MoveRangeFinder(gameAction, this.creature);
                 moveRange = finder.CalculateMoveRange();
             }
 

@@ -186,6 +186,23 @@ namespace WindingTale.UI.Components
             cancellableObjects.Clear();
         }
 
+        public void PlaceIndicators(FDRange range)
+        {
+            ClearCancellableObjects();
+
+            foreach(FDPosition pos in range.Positions)
+            {
+                // Put indicator on the position
+                GameObject obj = new GameObject();
+                obj.transform.parent = fieldObjectsRoot;
+
+                UIIndicator indicator = obj.AddComponent<UIIndicator>();
+                indicator.Initialize(this, pos);
+
+                cancellableObjects.Add(obj);
+            }
+        }
+
         public void TouchCreature(int creatureId)
         {
             UICreature creature = GetUICreature(creatureId);

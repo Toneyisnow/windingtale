@@ -26,5 +26,7 @@ namespace WindingTale.UI.Components
         UIMenuItem PlaceMenu(MenuItemId menuItem, FDPosition position, bool enabled, bool selected);
 
         void ClearCancellableObjects();
+
+        void PlaceIndicators(FDRange range);
     }
 }

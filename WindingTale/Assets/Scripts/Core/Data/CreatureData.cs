@@ -33,6 +33,13 @@ namespace WindingTale.Core.Components
             return data;
         }
 
+        public CreatureData()
+        {
+            this.Items = new List<int>();
+            this.Magics = new List<int>();
+            this.Effects = new List<int>();
+        }
+
         public CreatureData Clone()
         {
             CreatureData data = new CreatureData();

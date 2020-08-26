@@ -21,6 +21,7 @@ namespace WindingTale.UI.Components
         private Dictionary<int, AssetBundle> shapeAssetBundles = null;
 
         private static Material defaultMaterial = Resources.Load<Material>(@"common-mat");
+        private static Material transparentMaterial = Resources.Load<Material>(@"common-transparent");
 
 
         public static AssetManager Instance()
@@ -146,6 +147,28 @@ namespace WindingTale.UI.Components
 
             var renderer = obj.GetComponentInChildren<MeshRenderer>();
             renderer.sharedMaterial = defaultMaterial;
+            var clr = renderer.sharedMaterial.color;
+            renderer.sharedMaterial.color = new Color(clr.r, clr.g, clr.b, 1.0f);
+
+            return obj;
+        }
+
+        public GameObject InstantiateIndicatorGO(Transform parent)
+        {
+            GameObject prefab = LoadPrefabResource(@"Others/BlockIndicator");
+            if (prefab == null)
+            {
+                return null;
+            }
+
+            GameObject obj = GameObject.Instantiate(prefab);
+            obj.transform.parent = parent;
+            obj.transform.localPosition = new Vector3(-1.2f, 0, -0.8f);
+            //// obj.transform.localRotation = Quaternion.Euler(270, 90, 90);
+            //// obj.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+
+            var renderer = obj.GetComponentInChildren<MeshRenderer>();
+            renderer.sharedMaterial = transparentMaterial;
             var clr = renderer.sharedMaterial.color;
             renderer.sharedMaterial.color = new Color(clr.r, clr.g, clr.b, 1.0f);
 

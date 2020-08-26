@@ -102,10 +102,11 @@ namespace WindingTale.UI.MapObjects
                 }
 
                 this.isSelected = true;
+                return;
             }
 
             // Do the actual work
-            // gameInterface.TouchPosition(this.position);
+            gameInterface.TouchPosition(this.position);
         }
     }
 }

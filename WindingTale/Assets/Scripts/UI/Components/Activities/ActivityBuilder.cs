@@ -33,8 +33,11 @@ namespace WindingTale.UI.Components.Activities
                     return BuildShowMenuActivity(pack as ShowMenuPack);
 
                 case PackBase.PackType.CloseMenu:
-                    return BuildCloseMenuActivity(pack as CloseMenuPack);
-                
+                    return new CallbackActivity(
+                        (callback) => { callback.ClearCancellableObjects(); });
+
+                case PackBase.PackType.ShowRange:
+                    return BuildShowRangeActivity(pack as ShowRangePack);
                 default:
                     break;
             }
@@ -102,17 +105,26 @@ namespace WindingTale.UI.Components.Activities
 
         private static ActivityBase BuildShowMenuActivity(ShowMenuPack pack)
         {
+            if (pack == null)
+            {
+                throw new ArgumentNullException("pack");
+            }
+
             ShowMenuActivity activity = new ShowMenuActivity(pack);
             return activity;
         }
 
-        private static ActivityBase BuildCloseMenuActivity(CloseMenuPack pack)
+        private static ActivityBase BuildShowRangeActivity(ShowRangePack pack)
         {
+            if (pack == null)
+            {
+                throw new ArgumentNullException("pack");
+            }
+
             CallbackActivity activity = new CallbackActivity(
-                    (callback) => { callback.ClearCancellableObjects(); });
+                    (gameInterface) => { gameInterface.PlaceIndicators(pack.Range); });
 
             return activity;
         }
     }
-
 }

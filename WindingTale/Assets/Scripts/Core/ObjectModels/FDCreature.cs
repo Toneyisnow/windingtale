@@ -105,7 +105,8 @@ namespace WindingTale.Core.ObjectModels
         /// <returns></returns>
         public bool IsActionable()
         {
-            return this.Faction == CreatureFaction.Friend && !hasActioned && !this.Data.Effects.Contains(0);
+            return this.Faction == CreatureFaction.Friend && !hasActioned 
+                && this.Data.Effects != null && !this.Data.Effects.Contains(0);
         }
         public void SetMoveTo(FDPosition position)
         {

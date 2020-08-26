@@ -14,6 +14,7 @@ namespace WindingTale.Core.Components.Packs
 
         public ShowRangePack(FDRange range)
         {
+            this.Type = PackType.ShowRange;
             this.Range = range;
         }
     }
