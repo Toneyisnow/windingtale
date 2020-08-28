@@ -15,7 +15,8 @@ namespace WindingTale.Core.Components.Packs
 
         public RefreshCreaturePack(FDCreature creature)
         {
-            this.Creature = creature;
+            this.Type = PackType.RefreshCreature;
+            this.Creature = creature.Clone();
         }
     }
 }

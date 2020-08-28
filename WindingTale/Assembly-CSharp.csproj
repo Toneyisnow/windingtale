@@ -180,6 +180,7 @@
     <Compile Include="Assets\Scripts\UI\MapObjects\UIMenuItem.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UIObject.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UIShape.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\GameFieldScene\CameraNavigation.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\ApplicationExtensions.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\ILocalizedAssetLoader.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageDataHandler.cs" />

@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Definitions;
+using WindingTale.Core.Definitions.Items;
 
 namespace WindingTale.Core.Components
 {
@@ -26,10 +27,28 @@ namespace WindingTale.Core.Components
             data.Mv = definition.InitialMv;
             data.Ex = definition.InitialEx;
 
-            data.Items = new List<int>();
-            data.Magics = new List<int>();
-            data.Effects = new List<int>();
+            data.Items = definition.Items;
+            data.Magics = definition.Magics;
 
+            // Get Equiped items
+            data.AttackItemIndex = -1;
+            data.DefendItemIndex = -1;
+            for (int i = 0; i < data.Items.Count; i++)
+            {
+                int itemId = data.Items[i];
+                ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
+                if (item != null && item is AttackItemDefinition)
+                {
+                    data.AttackItemIndex = i;
+                }
+                if (item != null && item is DefendItemDefinition)
+                {
+                    data.DefendItemIndex = i;
+                }
+            }
+
+            data.Effects = new List<int>();
+            
             return data;
         }
 
@@ -38,6 +57,9 @@ namespace WindingTale.Core.Components
             this.Items = new List<int>();
             this.Magics = new List<int>();
             this.Effects = new List<int>();
+
+            this.AttackItemIndex = -1;
+            this.DefendItemIndex = -1;
         }
 
         public CreatureData Clone()
@@ -62,8 +84,12 @@ namespace WindingTale.Core.Components
             data.Magics = Shared.CloneList<int>(this.Magics);
             data.Effects = Shared.CloneList<int>(this.Effects);
 
+            data.AttackItemIndex = this.AttackItemIndex;
+            data.DefendItemIndex = this.DefendItemIndex;
+
             return data;
         }
+
         public int CreatureId
         {
             get; set;
@@ -72,6 +98,16 @@ namespace WindingTale.Core.Components
         public int DefinitionId
         {
             get; set;
+        }
+
+        public int AttackItemIndex
+        {
+            get; private set;
+        }
+
+        public int DefendItemIndex
+        {
+            get; private set;
         }
 
         public int Level
@@ -205,6 +241,24 @@ namespace WindingTale.Core.Components
 
         public void EquipItemAt(int itemIndex)
         {
+            int itemId = this.Items[itemIndex];
+            ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
+
+            if (!item.IsEquipment())
+            {
+                return;
+            }
+
+            if (item is AttackItemDefinition)
+            {
+                // Attack Item
+                this.AttackItemIndex = itemIndex;
+            }
+            else if (item is DefendItemDefinition)
+            {
+                // Defend Item
+                this.DefendItemIndex = itemIndex;
+            }
 
         }
 
@@ -212,6 +266,11 @@ namespace WindingTale.Core.Components
         {
             // If the current creature is not having "Forbidden" effect
             return this.Magics != null && this.Magics.Count > 0 && !this.Effects.Contains(1);
+        }
+
+        public bool CanAttack()
+        {
+            return this.AttackItemIndex >= 0;
         }
 
         public void AddMagic(int magicId)

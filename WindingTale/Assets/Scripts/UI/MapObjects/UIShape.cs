@@ -46,14 +46,14 @@ namespace WindingTale.UI.MapObjects
             shapeGO.transform.localPosition = new Vector3(0, 0, 0);
 
             var box = this.gameObject.AddComponent<BoxCollider>();
-            box.size = new Vector3(2.0f, 0.5f, 2.0f);
+            box.size = new Vector3(2.4f, 0.1f, 2.4f);
             box.center = new Vector3(1.2f, 2.4f, 1.2f);
 
         }
 
         protected override void OnTouched()
         {
-            Debug.LogFormat("UIShape Clicked: {0},{1}", position.X, position.Y);
+            Debug.LogFormat("UIShape Touched: {0},{1}", position.X, position.Y);
             gameInterface.TouchShape(this.position);
         }
     }

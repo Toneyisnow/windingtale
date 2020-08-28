@@ -23,7 +23,6 @@ namespace WindingTale.UI.MapObjects
         {
             if (Input.GetMouseButtonDown(0))
             {
-                Debug.LogFormat(@"Clicked!");
                 this.OnTouched();
             }
         }

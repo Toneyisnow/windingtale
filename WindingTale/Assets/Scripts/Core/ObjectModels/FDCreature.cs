@@ -61,16 +61,16 @@ namespace WindingTale.Core.ObjectModels
             this.Data.CreatureId = creatureId;
         }
 
-        public FDCreature(int creatureId, CreatureFaction faction, CreatureDefinition creatureDefinition, FDPosition position)
+        public FDCreature(int creatureId, CreatureFaction faction, CreatureDefinition definition, FDPosition position)
         {
             this.Faction = faction;
 
             this.Data = new CreatureData();
-            this.Data.CreatureId = creatureId;
-            this.Data.DefinitionId = creatureDefinition.DefinitionId;
+            this.Data = CreatureData.FromDefinition(creatureId, definition);
 
-            this.Definition = creatureDefinition;
+            this.Definition = definition;
             this.Position = position;
+            this.PreMovePosition = position;
         }
 
         public bool HasMoved()
@@ -131,6 +131,7 @@ namespace WindingTale.Core.ObjectModels
             another.Definition = this.Definition;
             another.Faction = this.Faction;
             another.Position = this.Position;
+            another.PreMovePosition = this.PreMovePosition;
 
             another.Data = this.Data.Clone();
 

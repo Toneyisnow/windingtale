@@ -76,6 +76,7 @@ namespace WindingTale.UI.MapObjects
         }
         protected override void OnTouched()
         {
+            Debug.Log("Creature Touched.");
             gameInterface.TouchCreature(this.CreatureId);
 
         }

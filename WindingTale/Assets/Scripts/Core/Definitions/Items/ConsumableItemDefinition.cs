@@ -17,7 +17,7 @@ namespace WindingTale.Core.Definitions.Items
         public static ConsumableItemDefinition ReadFromFile(ResourceDataFile fileReader)
         {
             ConsumableItemDefinition def = new ConsumableItemDefinition();
-            def.Type = ItemType.Consumable;
+
             def.ItemId = fileReader.ReadInt();
             def.Price = fileReader.ReadInt();
             def.SellPrice = fileReader.ReadInt();

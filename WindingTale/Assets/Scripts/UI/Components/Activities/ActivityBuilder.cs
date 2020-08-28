@@ -23,6 +23,9 @@ namespace WindingTale.UI.Components.Activities
                 case PackBase.PackType.MoveCreature:
                     return BuildMoveCreatureActivity(pack as CreatureMovePack);
 
+                case PackBase.PackType.RefreshCreature:
+                    return BuildRefreshCreatureActivity(pack as RefreshCreaturePack);
+
                 case PackBase.PackType.Talk:
                     return BuildTalkActivity(pack as TalkPack);
 
@@ -74,6 +77,19 @@ namespace WindingTale.UI.Components.Activities
             return moveCreature;
         }
 
+        private static ActivityBase BuildRefreshCreatureActivity(RefreshCreaturePack pack)
+        {
+            if (pack == null)
+            {
+                throw new ArgumentNullException("RefreshCreaturePack");
+            }
+
+            CallbackActivity activity = new CallbackActivity(
+                    (gameInterface) => { gameInterface.RefreshCreature(pack.Creature); });
+
+            return activity;
+        }
+
         private static ActivityBase BuildTalkActivity(TalkPack pack)
         {
             if (pack == null)
@@ -83,7 +99,6 @@ namespace WindingTale.UI.Components.Activities
 
             TalkActivity activity = new TalkActivity(pack.CreatureId, pack.Conversationid);
             return activity;
-
         }
 
         private static ActivityBase BuildBatchActivity(BatchPack pack)

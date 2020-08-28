@@ -97,8 +97,9 @@ namespace WindingTale.Core.Components.ActionStates
 
         private bool IsMenuAttackEnabled()
         {
-            // Check if there is enemy in the attack range 
-            return false;
+            bool canAttack = this.Creature.Data.CanAttack();
+            FDCreature target = gameAction.GetPreferredAttackTargetInRange(this.Creature.CreatureId);
+            return canAttack && (target != null);
         }
 
         private bool IsMenuMagicEnabled()

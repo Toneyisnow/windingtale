@@ -66,6 +66,13 @@ namespace WindingTale.Core.Components
 
         List<FDCreature> GetAdjacentFriends(int creatureId);
 
+        /// <summary>
+        /// Provide a suggested target for attack in the range
+        /// </summary>
+        /// <param name="creatureId"></param>
+        /// <returns></returns>
+        FDCreature GetPreferredAttackTargetInRange(int creatureId);
+
     }
 
     /// <summary>

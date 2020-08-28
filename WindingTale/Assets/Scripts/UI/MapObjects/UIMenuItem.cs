@@ -40,8 +40,8 @@ namespace WindingTale.UI.MapObjects
 
             
             var box = this.gameObject.AddComponent<BoxCollider>();
-            box.size = new Vector3(2.0f, 0.3f, 2.0f);
-            box.center = new Vector3(0f, 1f, 0f);
+            box.size = new Vector3(2.4f, 0.2f, 2.4f);
+            box.center = new Vector3(0f, 0.2f, 0f);
         }
 
         public UIMenuItem[] RelatedMenuItems
@@ -89,6 +89,8 @@ namespace WindingTale.UI.MapObjects
 
         protected override void OnTouched()
         {
+            Debug.Log("UIMenuItem Touched.");
+
             if (!this.isEnabled)
             {
                 return;
@@ -106,7 +108,7 @@ namespace WindingTale.UI.MapObjects
             }
 
             // Do the actual work
-            gameInterface.TouchShape(this.position);
+            gameInterface.TouchMenu(this.position);
         }
     }
 }

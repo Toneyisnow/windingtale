@@ -18,7 +18,7 @@ namespace WindingTale.UI.MapObjects
             this.gameInterface = gameInterface;
 
             this.gameObject.name = "indicator";
-            this.gameObject.transform.localPosition = FieldTransform.GetGroundPixelPosition(position);
+            this.gameObject.transform.localPosition = FieldTransform.GetObjectPixelPosition(FieldTransform.FieldObjectLayer.Ground, position.X, position.Y);
 
         }
 
@@ -29,6 +29,12 @@ namespace WindingTale.UI.MapObjects
             var renderer = indicatorGO.GetComponentInChildren<MeshRenderer>();
             var clr = renderer.material.color;
             renderer.material.color = new Color(clr.r, clr.g, clr.b, 0.3f);
+
+        }
+
+        protected override void OnTouched()
+        {
+            Debug.Log("UIIndicator Touched.");
 
         }
     }

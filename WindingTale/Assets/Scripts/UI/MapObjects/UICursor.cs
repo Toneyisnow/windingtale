@@ -28,14 +28,14 @@ namespace WindingTale.UI.MapObjects
             //cursorRange0.SetActive(false);
 
             var box = this.gameObject.AddComponent<BoxCollider>();
-            box.size = new Vector3(2.0f, 0.3f, 2.0f);
-            box.center = new Vector3(0f, 1f, 0f);
+            box.size = new Vector3(2.4f, 0.2f, 2.4f);
+            box.center = new Vector3(0f, 0f, 0f);
         }
 
         protected override void OnTouched()
         {
+            Debug.Log("Cursor Touched.");
             gameInterface.TouchCursor();
-
         }
     }
 }

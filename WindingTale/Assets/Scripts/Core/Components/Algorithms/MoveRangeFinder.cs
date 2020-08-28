@@ -23,9 +23,9 @@ namespace WindingTale.Core.Components.Algorithms
             FDPosition central = this.creature.Position;
             FDMoveRange range = new FDMoveRange(central);
 
-            for(int k = 1; k < 5; k++)
+            for(int k = 1; k <= 5; k++)
             {
-                for(int t= 0; t < k; t++)
+                for(int t= 0; t <= k; t++)
                 {
                     int posX = central.X + t;
                     int posY = central.Y + (k - t);

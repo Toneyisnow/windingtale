@@ -227,6 +227,12 @@ namespace WindingTale.UI.Components
             gameCursor.transform.localPosition = FieldTransform.GetObjectPixelPosition(FieldTransform.FieldObjectLayer.Ground, position.X, position.Y);
         }
 
+        public void TouchMenu(FDPosition position)
+        {
+            // Do the actuall game event
+            gameManager.HandleOperation(position);
+        }
+
         public void TouchCursor()
         {
             FDPosition cursorPosition = FieldTransform.GetObjectUnitPosition(gameCursor.transform.localPosition);
@@ -254,6 +260,26 @@ namespace WindingTale.UI.Components
             }
 
             return null;
+        }
+
+        public void RefreshCreature(FDCreature creature)
+        {
+            if (creature == null)
+            {
+                throw new ArgumentNullException("creature");
+            }
+
+            UICreature uICreature = GetUICreature(creature.CreatureId);
+            if (uICreature == null)
+            {
+                Debug.LogError("Cannot find creature on UI: creatureId = " + creature.CreatureId);
+            }
+
+            // Update position
+            uICreature.transform.localPosition = FieldTransform.GetCreaturePixelPosition(creature.Position);
+
+
+            // Update status
         }
 
         #endregion

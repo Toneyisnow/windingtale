@@ -23,7 +23,15 @@ namespace WindingTale.Core.Components.Algorithms
         /// <returns></returns>
         public FDRange FindRange(FDCreature creature)
         {
-            return null;
+            FDPosition pos = creature.Position;
+
+            FDRange range = new FDRange(pos);
+            range.AddPosition(FDPosition.At(pos.X + 1, pos.Y));
+            range.AddPosition(FDPosition.At(pos.X, pos.Y + 1));
+            range.AddPosition(FDPosition.At(pos.X - 1, pos.Y));
+            range.AddPosition(FDPosition.At(pos.X, pos.Y - 1));
+
+            return range;
         }
     }
 }

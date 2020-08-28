@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components.ActionStates;
+using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Components.Events;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.Definitions;
@@ -62,10 +63,9 @@ namespace WindingTale.Core.Components
 
             InitializeChapter(record.ChapterId);
 
-            turnId = 1;
-            turnPhase = CreatureFaction.Friend;
+            turnId = 0;
 
-            eventManager.NotifyTurnEvents();
+            StartNewTurnPhase();
         }
 
         public void LoadGame(BattleRecord battleRecord)
@@ -114,7 +114,7 @@ namespace WindingTale.Core.Components
         }
 
 
-        #region Information
+        #region Informative
 
         public int TurnId()
         {
@@ -181,6 +181,26 @@ namespace WindingTale.Core.Components
         {
             return null;
         }
+
+        public FDCreature GetPreferredAttackTargetInRange(int creatureId)
+        {
+            FDCreature creature = this.GetCreature(creatureId);
+            AttackRangeFinder finder = new AttackRangeFinder(this);
+            FDRange range = finder.FindRange(creature);
+
+            // Get a preferred target in range
+            foreach(FDPosition position in range.Positions)
+            {
+                FDCreature target = this.GetCreatureAt(position);
+                if (target != null && target.Faction == CreatureFaction.Enemy)
+                {
+                    return target;
+                }
+            }
+
+            return null;
+        }
+
 
         #endregion
 
@@ -492,9 +512,46 @@ namespace WindingTale.Core.Components
         private void StartNewTurnPhase()
         {
             // Turn Id and Phase ++
+            if (turnId == 0)
+            {
+                turnId = 1;
+                turnPhase = CreatureFaction.Friend;
+            }
+            else
+            {
+                if (turnPhase == CreatureFaction.Friend)
+                {
+                    turnPhase = CreatureFaction.Npc;
+                }
+                else if (turnPhase == CreatureFaction.Npc)
+                {
+                    turnPhase = CreatureFaction.Enemy;
+                }
+                else if (turnPhase == CreatureFaction.Enemy)
+                {
+                    turnId++;
+                    turnPhase = CreatureFaction.Friend;
+                }
+            }
 
             // Notify turn events
+            eventManager.NotifyTurnEvents();
 
+            // Reset Creature status
+            foreach(FDCreature creature in this.Friends)
+            {
+                creature.OnTurnStart();
+            }
+
+            foreach (FDCreature creature in this.Enemies)
+            {
+                creature.OnTurnStart();
+            }
+
+            foreach (FDCreature creature in this.Npcs)
+            {
+                creature.OnTurnStart();
+            }
 
             // Show turn icon
 

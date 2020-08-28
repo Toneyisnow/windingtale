@@ -8,6 +8,9 @@ namespace WindingTale.Core.Definitions
 
     public abstract class ItemDefinition
     {
+        /// <summary>
+        /// This is not used now, just using "is" operation
+        /// </summary>
         public enum ItemType
         {
             Attack = 1,
@@ -28,11 +31,6 @@ namespace WindingTale.Core.Definitions
         }
 
         public int SellPrice
-        {
-            get; protected set;
-        }
-
-        public ItemType Type
         {
             get; protected set;
         }
