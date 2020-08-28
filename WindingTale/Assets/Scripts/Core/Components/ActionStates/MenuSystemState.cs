@@ -16,16 +16,19 @@ namespace WindingTale.Core.Components.ActionStates
                 return StateOperationResult.None();
             });
 
+            // Record
             this.SetMenu(1, MenuItemId.SystemRecord, true, () =>
             {
                 return StateOperationResult.None();
             });
 
+            // Settings
             this.SetMenu(2, MenuItemId.SystemSettings, true, () =>
             {
                 return StateOperationResult.None();
             });
 
+            // Rest All
             this.SetMenu(3, MenuItemId.SystemRestAll, true, () =>
             {
                 return StateOperationResult.None();

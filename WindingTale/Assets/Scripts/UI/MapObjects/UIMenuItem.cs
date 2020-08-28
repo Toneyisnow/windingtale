@@ -40,7 +40,7 @@ namespace WindingTale.UI.MapObjects
 
             
             var box = this.gameObject.AddComponent<BoxCollider>();
-            box.size = new Vector3(2.0f, 2.0f, 2.0f);
+            box.size = new Vector3(2.0f, 0.3f, 2.0f);
             box.center = new Vector3(0f, 1f, 0f);
         }
 
@@ -106,7 +106,7 @@ namespace WindingTale.UI.MapObjects
             }
 
             // Do the actual work
-            gameInterface.TouchPosition(this.position);
+            gameInterface.TouchShape(this.position);
         }
     }
 }

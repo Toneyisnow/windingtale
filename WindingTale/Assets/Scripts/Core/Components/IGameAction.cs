@@ -104,6 +104,12 @@ namespace WindingTale.Core.Components
 
         void GameOver();
 
+        void LoadGame(BattleRecord battleRecord);
+
+        bool CanSaveGame();
+
+        void SaveGame();
+
         #endregion
 
         #region Do Actions

@@ -38,6 +38,11 @@ namespace WindingTale.UI.Components.Activities
 
                 case PackBase.PackType.ShowRange:
                     return BuildShowRangeActivity(pack as ShowRangePack);
+
+                case PackBase.PackType.ClearRange:
+                    return new CallbackActivity(
+                        (callback) => { callback.ClearCancellableObjects(); });
+
                 default:
                     break;
             }

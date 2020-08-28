@@ -18,14 +18,14 @@ namespace WindingTale.Core.Components.ActionStates
         public override void OnEnter()
         {
             // Nothing
+            base.OnEnter();
         }
 
         public override void OnExit()
         {
             // Nothing
+            base.OnExit();
         }
-
-
 
         public override StateOperationResult OnSelectPosition(FDPosition position)
         {

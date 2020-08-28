@@ -2,29 +2,95 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Components.Packs;
 
 namespace WindingTale.Core.Components.ActionStates
 {
     public class MenuRecordState : MenuState
     {
+        public enum SubRecordState
+        {
+            SaveGame = 1,
+            LoadGame = 2,
+        }
+
+        private SubRecordState subState;
+
+
         public MenuRecordState(IGameAction gameAction, FDPosition position) : base(gameAction, position)
         {
+            // Save Game
+            this.SetMenu(0, MenuItemId.RecordSave, gameAction.CanSaveGame(), () =>
+            {
+                PromptPack prompt = new PromptPack();
+                gameAction.GetCallback().OnCallback(prompt);
+
+                gameAction.SaveGame();
+
+                return StateOperationResult.None();
+            });
+
+            // Game Info
+            this.SetMenu(1, MenuItemId.RecordInfo, true, () =>
+            {
+                return StateOperationResult.None();
+            });
+
+            // Load Game
+            this.SetMenu(2, MenuItemId.RecordLoad, true, () =>
+            {
+                return StateOperationResult.None();
+            });
+
+            // Quit Game
+            this.SetMenu(3, MenuItemId.RecordQuit, true, () =>
+            {
+                return StateOperationResult.None();
+            });
+
 
         }
 
-        public override void OnEnter()
+        public override StateOperationResult OnSelectIndex(int index)
         {
-            throw new System.NotImplementedException();
+            switch (this.subState)
+            {
+                case SubRecordState.LoadGame:
+                    return OnLoadGameConfirmed(index);
+                case SubRecordState.SaveGame:
+                    return OnSaveGameConfirmed(index);
+                default:
+                    return null;
+            }
         }
 
-        public override void OnExit()
+        private StateOperationResult OnLoadGameConfirmed(int index)
         {
-            throw new System.NotImplementedException();
+            if (index == 1)
+            {
+                // Load Game
+                // gameAction.LoadGame();
+                return StateOperationResult.Clear();
+            }
+            else
+            {
+                return StateOperationResult.None();
+            }
         }
 
-        public override StateOperationResult OnSelectPosition(FDPosition position)
+        private StateOperationResult OnSaveGameConfirmed(int index)
         {
-            throw new System.NotImplementedException();
+            if (index == 1)
+            {
+                // Save Game
+                gameAction.SaveGame();
+                return StateOperationResult.Clear();
+            }
+            else
+            {
+                return StateOperationResult.None();
+            }
         }
+
     }
 }

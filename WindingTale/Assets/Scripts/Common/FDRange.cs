@@ -25,7 +25,7 @@ namespace WindingTale.Common
             this.CentralPosition = pos;
         }
 
-        public void AddPosition(FDPosition position)
+        public virtual void AddPosition(FDPosition position)
         {
             if (this.positions == null)
             {

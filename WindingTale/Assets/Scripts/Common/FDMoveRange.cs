@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -37,6 +38,10 @@ namespace WindingTale.Common
             directionedScope[position] = lastPosition;
         }
 
+        public override void AddPosition(FDPosition position)
+        {
+            throw new NotImplementedException("Should not call AddPosition(arg1) in FDMoveRange, use the one with two arguments.");
+        }
         /// <summary>
         /// Generate the moving path for that position
         /// </summary>
@@ -49,7 +54,7 @@ namespace WindingTale.Common
 
         public override bool Contains(FDPosition position)
         {
-            if (directionedScope== null)
+            if (directionedScope == null)
             {
                 return false;
             }

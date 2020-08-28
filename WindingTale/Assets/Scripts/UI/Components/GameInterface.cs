@@ -220,10 +220,19 @@ namespace WindingTale.UI.Components
             }
         }
 
-        public void TouchPosition(FDPosition position)
+        public void TouchShape(FDPosition position)
         {
+            // Move the cursor position to the current position
+            FDPosition cursorPosition = FieldTransform.GetObjectUnitPosition(gameCursor.transform.localPosition);
+            gameCursor.transform.localPosition = FieldTransform.GetObjectPixelPosition(FieldTransform.FieldObjectLayer.Ground, position.X, position.Y);
+        }
+
+        public void TouchCursor()
+        {
+            FDPosition cursorPosition = FieldTransform.GetObjectUnitPosition(gameCursor.transform.localPosition);
+            
             // Do the actuall game event
-            gameManager.HandleOperation(position);
+            gameManager.HandleOperation(cursorPosition);
         }
 
         public void OnCallback(PackBase pack)

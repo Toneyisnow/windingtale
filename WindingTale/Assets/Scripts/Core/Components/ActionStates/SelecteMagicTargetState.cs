@@ -30,12 +30,12 @@ namespace WindingTale.Core.Components.ActionStates
 
         public override void OnEnter()
         {
-            Debug.Log("SelecteMagicTargetState: OnEnter.");
+            base.OnEnter();
         }
 
         public override void OnExit()
         {
-            Debug.Log("SelecteMagicTargetState: OnExit.");
+            base.OnExit();
         }
 
         public override StateOperationResult OnSelectPosition(FDPosition position)

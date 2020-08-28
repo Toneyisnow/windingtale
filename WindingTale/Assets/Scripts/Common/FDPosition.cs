@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
 namespace WindingTale.Common
 {
-    public class FDPosition
+    public class FDPosition : IEquatable<FDPosition>
     {
         public int X
         {
@@ -41,6 +42,11 @@ namespace WindingTale.Common
         public static FDPosition Invalid()
         {
             return new FDPosition(-1, -1);
+        }
+
+        public bool Equals(FDPosition other)
+        {
+            return this.AreSame(other);
         }
     }
 

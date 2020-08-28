@@ -25,6 +25,11 @@ namespace WindingTale.UI.MapObjects
         void Start()
         {
             indicatorGO = AssetManager.Instance().InstantiateIndicatorGO(this.transform);
+
+            var renderer = indicatorGO.GetComponentInChildren<MeshRenderer>();
+            var clr = renderer.material.color;
+            renderer.material.color = new Color(clr.r, clr.g, clr.b, 0.3f);
+
         }
     }
 }

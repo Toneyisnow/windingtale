@@ -18,17 +18,17 @@ namespace WindingTale.Core.Components.ActionStates
 
         public override void OnEnter()
         {
-            throw new System.NotImplementedException();
+            base.OnEnter();
         }
 
         public override void OnExit()
         {
-            throw new System.NotImplementedException();
+            base.OnExit();
         }
 
         public override StateOperationResult OnSelectPosition(FDPosition position)
         {
-            throw new System.NotImplementedException();
+            return StateOperationResult.None();
         }
     }
 }

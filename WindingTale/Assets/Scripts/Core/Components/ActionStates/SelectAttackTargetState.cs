@@ -28,6 +28,8 @@ namespace WindingTale.Core.Components.ActionStates
 
         public override void OnEnter()
         {
+            base.OnEnter();
+
             if (this.AttackRange == null)
             {
                 AttackRangeFinder rangeFinder = new AttackRangeFinder(this.gameAction);

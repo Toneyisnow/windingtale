@@ -16,9 +16,15 @@ namespace WindingTale.Core.Components.ActionStates
             this.gameAction = action;
         }
 
-        public abstract void OnEnter();
+        public virtual void OnEnter()
+        {
+            Debug.LogFormat("OnEnter State: {0}", this.GetType().Name);
+        }
 
-        public abstract void OnExit();
+        public virtual void OnExit()
+        {
+            Debug.LogFormat("OnExit State: {0}", this.GetType().Name);
+        }
 
         #region State Operations
 

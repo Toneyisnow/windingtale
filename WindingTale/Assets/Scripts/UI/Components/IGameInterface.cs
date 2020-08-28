@@ -21,7 +21,9 @@ namespace WindingTale.UI.Components
 
         void TouchCreature(int creatureId);
 
-        void TouchPosition(FDPosition position);
+        void TouchShape(FDPosition position);
+
+        void TouchCursor();
 
         UIMenuItem PlaceMenu(MenuItemId menuItem, FDPosition position, bool enabled, bool selected);
 

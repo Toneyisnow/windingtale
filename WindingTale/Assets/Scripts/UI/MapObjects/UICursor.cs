@@ -14,9 +14,12 @@ namespace WindingTale.UI.MapObjects
         private GameObject cursorRange1 = null;
         private GameObject cursorRange2 = null;
 
+        private IGameInterface gameInterface = null;
         
         public void Initialize(IGameInterface gameInterface)
         {
+            this.gameInterface = gameInterface;
+
             cursorDefault = AssetManager.Instance().InstantiateCursorGO(this.transform, CursorType.Default);
             //cursorRange0 = GameObjectExtension.LoadCursor(CursorType.Range0, this.transform);
             //cursorRange1 = GameObjectExtension.LoadCursor(CursorType.Range1, this.transform);
@@ -25,8 +28,14 @@ namespace WindingTale.UI.MapObjects
             //cursorRange0.SetActive(false);
 
             var box = this.gameObject.AddComponent<BoxCollider>();
-            box.size = new Vector3(2.0f, 2.0f, 2.0f);
+            box.size = new Vector3(2.0f, 0.3f, 2.0f);
             box.center = new Vector3(0f, 1f, 0f);
+        }
+
+        protected override void OnTouched()
+        {
+            gameInterface.TouchCursor();
+
         }
     }
 }

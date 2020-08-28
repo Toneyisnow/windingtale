@@ -53,6 +53,8 @@ namespace WindingTale.Core.Components.ActionStates
 
         public override void OnEnter()
         {
+            base.OnEnter();
+
             // Show Action Menu
             ShowMenuPack pack = new ShowMenuPack(this.MenuItemIds, this.MenuItemEnabled, this.Central);
             SendPack(pack);
@@ -60,6 +62,8 @@ namespace WindingTale.Core.Components.ActionStates
 
         public override void OnExit()
         {
+            base.OnExit();
+
             // Close Action Menu
             CloseMenuPack pack = new CloseMenuPack();
             SendPack(pack);

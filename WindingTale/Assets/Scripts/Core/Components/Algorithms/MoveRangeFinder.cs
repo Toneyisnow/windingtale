@@ -29,19 +29,19 @@ namespace WindingTale.Core.Components.Algorithms
                 {
                     int posX = central.X + t;
                     int posY = central.Y + (k - t);
-                    range.AddPosition(FDPosition.At(posX, posY));
+                    range.AddPosition(FDPosition.At(posX, posY), central);
 
                     posX = central.X - t;
                     posY = central.Y + (k - t);
-                    range.AddPosition(FDPosition.At(posX, posY));
+                    range.AddPosition(FDPosition.At(posX, posY), central);
 
                     posX = central.X + t;
                     posY = central.Y - (k - t);
-                    range.AddPosition(FDPosition.At(posX, posY));
+                    range.AddPosition(FDPosition.At(posX, posY), central);
 
                     posX = central.X - t;
                     posY = central.Y - (k - t);
-                    range.AddPosition(FDPosition.At(posX, posY));
+                    range.AddPosition(FDPosition.At(posX, posY), central);
                 }
             }
             

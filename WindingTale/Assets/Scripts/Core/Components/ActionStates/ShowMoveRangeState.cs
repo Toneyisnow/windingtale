@@ -29,6 +29,8 @@ namespace WindingTale.Core.Components.ActionStates
 
         public override void OnEnter()
         {
+            base.OnEnter();
+
             // Calculcate the moving scopes and save it in cache
             if (moveRange == null)
             {
@@ -47,9 +49,10 @@ namespace WindingTale.Core.Components.ActionStates
 
         public override void OnExit()
         {
+            base.OnExit();
+
             // Clear move range on UI
-            var gameCallback = gameAction.GetCallback();
-            gameCallback.OnCallback(new ClearRangePack());
+            SendPack(new ClearRangePack());
         }
 
         public override StateOperationResult OnSelectPosition(FDPosition position)
@@ -57,6 +60,9 @@ namespace WindingTale.Core.Components.ActionStates
             // If position is in range
             if (moveRange.Contains(position))
             {
+                ClearRangePack clear = new ClearRangePack();
+                SendPack(clear);
+
                 FDMovePath movePath = moveRange.GetPath(position);
                 gameAction.CreatureWalk(new SingleWalkAction(creature.CreatureId, movePath));
 

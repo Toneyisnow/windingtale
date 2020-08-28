@@ -54,7 +54,7 @@ namespace WindingTale.UI.MapObjects
         protected override void OnTouched()
         {
             Debug.LogFormat("UIShape Clicked: {0},{1}", position.X, position.Y);
-            gameInterface.TouchPosition(this.position);
+            gameInterface.TouchShape(this.position);
         }
     }
 }

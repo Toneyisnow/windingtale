@@ -73,9 +73,14 @@ namespace WindingTale.Core.Components
 
         }
 
-        public BattleRecord SaveGame()
+        public bool CanSaveGame()
         {
-            return null;
+            return false;
+        }
+
+        public void SaveGame()
+        {
+            
         }
 
         public GameStateDispatcher GetDispatcher()
