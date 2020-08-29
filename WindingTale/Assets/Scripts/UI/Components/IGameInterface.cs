@@ -34,5 +34,11 @@ namespace WindingTale.UI.Components
         void ClearCancellableObjects();
 
         void PlaceIndicators(FDRange range);
+
+        void ShowCreatureDialog(FDCreature creature);
+
+        void ShowMessageDialog(int animationId, string content);
+
+        void ShowPromptyDialog(int animationId, string content);
     }
 }

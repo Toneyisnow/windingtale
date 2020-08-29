@@ -172,6 +172,10 @@
     <Compile Include="Assets\Scripts\UI\Components\AssetManager.cs" />
     <Compile Include="Assets\Scripts\UI\Components\GameInterface.cs" />
     <Compile Include="Assets\Scripts\UI\Components\IGameInterface.cs" />
+    <Compile Include="Assets\Scripts\UI\Dialogs\CanvasDialog.cs" />
+    <Compile Include="Assets\Scripts\UI\Dialogs\CreatureDialog.cs" />
+    <Compile Include="Assets\Scripts\UI\Dialogs\MessageDialog.cs" />
+    <Compile Include="Assets\Scripts\UI\Dialogs\PromptDialog.cs" />
     <Compile Include="Assets\Scripts\UI\FieldMap\FieldTransform.cs" />
     <Compile Include="Assets\Scripts\UI\FieldMap\ShapeMappings.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UICreature.cs" />

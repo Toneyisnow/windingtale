@@ -7,12 +7,11 @@ namespace WindingTale.Core.Components.Packs
 {
     public enum CreatureInfoType
     {
-        View = 1,
-        SelectEquipItem = 2,
-        SelectUseItem = 3,
-        SelectAllItem = 4,
-        SelectMagic = 5,
-        
+        SelectEquipItem = 1,
+        SelectUseItem = 2,
+        SelectAllItem = 3,
+        SelectMagic = 4,
+        View = 5,
     }
 
     public class ShowCreatureInfoPack : PackBase

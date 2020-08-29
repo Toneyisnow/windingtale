@@ -22,14 +22,14 @@ namespace WindingTale.UI.Components
     {
         public int ChapterId = 0;
 
+        public Canvas GameCanvs = null;
+
         private IGameHandler gameManager = null;
 
         private GameActivityManager activityManager = null;
 
         private Global globalVariables = null;
         
-        public GameObject creaturePrefab = null;
-
         private Transform fieldObjectsRoot = null;
 
         private Transform fieldMapRoot = null;
@@ -37,6 +37,8 @@ namespace WindingTale.UI.Components
         private GameObject gameCursor = null;
 
         private List<GameObject> cancellableObjects = null;
+
+        private GameObject currentDialog = null;
 
         // Start is called before the first frame update
         void Start()
@@ -57,6 +59,9 @@ namespace WindingTale.UI.Components
 
             cancellableObjects = new List<GameObject>();
             ///PlaceMenu(MenuId.ActionMenu, FDPosition.At(3, 3));
+
+            ShowCreatureDialog(null);
+
         }
 
         // Update is called once per frame
@@ -280,6 +285,32 @@ namespace WindingTale.UI.Components
 
 
             // Update status
+        }
+
+        public void ShowCreatureDialog(FDCreature creature)
+        {
+            // Canvas
+            if (currentDialog != null)
+            {
+                Destroy(currentDialog);
+            }
+
+            currentDialog = new GameObject();
+            currentDialog.transform.parent = this.GameCanvs.transform;
+            CreatureDialog creatureDialog = currentDialog.AddComponent<CreatureDialog>();
+            creatureDialog.Initialize(currentDialog, creature, CreatureDialog.ShowType.SelectAllItem);
+
+
+        }
+
+        public void ShowMessageDialog(int animationId, string content)
+        {
+
+        }
+
+        public void ShowPromptyDialog(int animationId, string content)
+        {
+
         }
 
         #endregion
