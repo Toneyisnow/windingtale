@@ -296,9 +296,8 @@ namespace WindingTale.UI.Components
             }
 
             currentDialog = new GameObject();
-            currentDialog.transform.parent = this.GameCanvs.transform;
             CreatureDialog creatureDialog = currentDialog.AddComponent<CreatureDialog>();
-            creatureDialog.Initialize(currentDialog, creature, CreatureDialog.ShowType.SelectAllItem);
+            creatureDialog.Initialize(this.GameCanvs, creature, CreatureDialog.ShowType.SelectAllItem);
 
 
         }

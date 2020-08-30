@@ -1,0 +1,72 @@
+ManifestFileVersion: 0
+CRC: 3154649800
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 68796a05f220ab2f6fb0c8dca6f92024
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 6a3eba316372b2f69b09604b127ff833
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/Others/Shop_MoneyBar.obj
+- Assets/Resources/Others/CreatureDato.obj
+- Assets/Resources/Others/Cursor_3.obj
+- Assets/Resources/Others/Status_EnhancedAp.obj
+- Assets/Resources/Others/Status_Frozen.obj
+- Assets/Resources/Others/Status_Poisoned.obj
+- Assets/Resources/Others/MessageBox.obj
+- Assets/Resources/Others/Shop_Buy_0.obj
+- Assets/Resources/Others/IconUsable_1.obj
+- Assets/Resources/Others/Shop_Trans_0.obj
+- Assets/Resources/Others/BlockIndicator.obj
+- Assets/Resources/Others/Shop_Sell_0.obj
+- Assets/Resources/Others/SideBar.obj
+- Assets/Resources/Others/Cursor_2.obj
+- Assets/Resources/Others/Cursor_1.obj
+- Assets/Resources/Others/Shop_Info_0.obj
+- Assets/Resources/Others/GameOver.obj
+- Assets/Resources/Others/Shop_Give_0.obj
+- Assets/Resources/Others/Shop_Equip_0.obj
+- Assets/Resources/Others/CreatureDetailMp.obj
+- Assets/Resources/Others/Status_Prohibited.obj
+- Assets/Resources/Others/IconDefend_1.obj
+- Assets/Resources/Others/Cursor_4.obj
+- Assets/Resources/Others/Shop_Save_0.obj
+- Assets/Resources/Others/Shop_Load_0.obj
+- Assets/Resources/Others/CreatureInfo.obj
+- Assets/Resources/Others/Shop_Revive_0.obj
+- Assets/Resources/Others/Status_EnhancedDp.obj
+- Assets/Resources/Others/IconAttack_0.obj
+- Assets/Resources/Others/CreatureDetail.obj
+- Assets/Resources/Others/ConfirmButtonNo.obj
+- Assets/Resources/Others/TurnInfo.obj
+- Assets/Resources/Others/ConfirmButtonYes.obj
+- Assets/Resources/Others/IconAttack_1.obj
+- Assets/Resources/Others/IconDefend_0.obj
+- Assets/Resources/Others/Status_EnhancedDx.obj
+- Assets/Resources/Others/CreatureInfoHp.obj
+- Assets/Resources/Others/ContainerBase.obj
+- Assets/Resources/Others/VillageLabel.obj
+- Assets/Resources/Others/CreatureDetailHp.obj
+- Assets/Resources/Others/Shop_Exit_0.obj
+- Assets/Resources/Others/Cursor.obj
+- Assets/Resources/Others/CreatureInfoMp.obj
+Dependencies: []
