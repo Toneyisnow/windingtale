@@ -36,7 +36,7 @@ namespace WindingTale.UI.Dialogs
             if (action != null)
             {
                 Clickable clickable = control.AddComponent<Clickable>();
-                clickable.Initialize(action);
+                clickable.Initialize(() => { action(); } );
             }
 
             return control;

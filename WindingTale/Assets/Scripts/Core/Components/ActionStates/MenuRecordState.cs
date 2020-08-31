@@ -22,10 +22,9 @@ namespace WindingTale.Core.Components.ActionStates
             // Save Game
             this.SetMenu(0, MenuItemId.RecordSave, gameAction.CanSaveGame(), () =>
             {
-                PromptPack prompt = new PromptPack();
-                gameAction.GetCallback().OnCallback(prompt);
-
-                gameAction.SaveGame();
+                PromptPack prompt = new PromptPack(0, "");
+                SendPack(prompt);
+                this.subState = SubRecordState.SaveGame;
 
                 return StateOperationResult.None();
             });
@@ -39,6 +38,10 @@ namespace WindingTale.Core.Components.ActionStates
             // Load Game
             this.SetMenu(2, MenuItemId.RecordLoad, true, () =>
             {
+                PromptPack prompt = new PromptPack(0, "");
+                SendPack(prompt);
+                this.subState = SubRecordState.LoadGame;
+
                 return StateOperationResult.None();
             });
 
@@ -68,6 +71,8 @@ namespace WindingTale.Core.Components.ActionStates
         {
             if (index == 1)
             {
+                Debug.Log("Loading Game...");
+                
                 // Load Game
                 // gameAction.LoadGame();
                 return StateOperationResult.Clear();
@@ -82,6 +87,8 @@ namespace WindingTale.Core.Components.ActionStates
         {
             if (index == 1)
             {
+                Debug.Log("Saving Game...");
+
                 // Save Game
                 gameAction.SaveGame();
                 return StateOperationResult.Clear();

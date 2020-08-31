@@ -14,6 +14,7 @@ using WindingTale.Common;
 using System;
 using SmartLocalization;
 using WindingTale.UI.Common;
+using WindingTale.UI.Dialogs;
 
 namespace WindingTale.UI.Components
 {
@@ -60,7 +61,7 @@ namespace WindingTale.UI.Components
             cancellableObjects = new List<GameObject>();
             ///PlaceMenu(MenuId.ActionMenu, FDPosition.At(3, 3));
 
-            ShowCreatureDialog(null);
+            // ShowMessageDialog(1, "This is test");
 
         }
 
@@ -293,22 +294,45 @@ namespace WindingTale.UI.Components
             if (currentDialog != null)
             {
                 Destroy(currentDialog);
+                currentDialog = null;
             }
 
             currentDialog = new GameObject();
             CreatureDialog creatureDialog = currentDialog.AddComponent<CreatureDialog>();
-            creatureDialog.Initialize(this.GameCanvs, creature, CreatureDialog.ShowType.SelectAllItem);
+            creatureDialog.Initialize(this.GameCanvs, creature, CreatureDialog.ShowType.SelectAllItem,
+                (index) => { this.OnDialogCallback(index); });
 
 
         }
 
         public void ShowMessageDialog(int animationId, string content)
         {
+            // Canvas
+            if (currentDialog != null)
+            {
+                Destroy(currentDialog);
+                currentDialog = null;
+            }
+
+            currentDialog = new GameObject();
+            MessageDialog dialog = currentDialog.AddComponent<MessageDialog>();
+            dialog.Initialize(this.GameCanvs, animationId, content,
+                (index) => { this.OnDialogCallback(index); } );
 
         }
 
         public void ShowPromptyDialog(int animationId, string content)
         {
+            // Canvas
+            if (currentDialog != null)
+            {
+                Destroy(currentDialog);
+            }
+
+            currentDialog = new GameObject();
+            PromptDialog dialog = currentDialog.AddComponent<PromptDialog>();
+            dialog.Initialize(this.GameCanvs, animationId, content,
+                (index) => { this.OnDialogCallback(index); });
 
         }
 
@@ -329,6 +353,18 @@ namespace WindingTale.UI.Components
 
         }
 
+        private void OnDialogCallback(int index)
+        {
+            Debug.Log(@"GameInterface: OnDialogCallback: " + index);
+
+            if (currentDialog != null)
+            {
+                Destroy(currentDialog);
+                currentDialog = null;
+            }
+
+            gameManager.HandleOperation(index);
+        }
 
         #endregion
 

@@ -162,7 +162,7 @@ namespace WindingTale.Core.Components.ActionStates
                 {
                     // Confirm to exchange it
                     subState = SubActionState.ConfirmExchangeTreature;
-                    PromptPack prompt = new PromptPack();
+                    PromptPack prompt = new PromptPack(this.Creature.Definition.AnimationId, "");
                     SendPack(prompt);
 
                     return StateOperationResult.None();

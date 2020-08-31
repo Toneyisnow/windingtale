@@ -29,6 +29,9 @@ namespace WindingTale.UI.Components.Activities
                 case PackBase.PackType.Talk:
                     return BuildTalkActivity(pack as TalkPack);
 
+                case PackBase.PackType.Prompt:
+                    return BuildPromptActivity(pack as PromptPack);
+
                 case PackBase.PackType.Batch:
                     return BuildBatchActivity(pack as BatchPack);
 
@@ -98,6 +101,21 @@ namespace WindingTale.UI.Components.Activities
             }
 
             TalkActivity activity = new TalkActivity(pack.CreatureId, pack.Conversationid);
+            return activity;
+        }
+
+        private static ActivityBase BuildPromptActivity(PromptPack pack)
+        {
+            if (pack == null)
+            {
+                throw new ArgumentNullException("pack");
+            }
+
+            CallbackActivity activity = new CallbackActivity((gameInterface) =>
+            {
+                gameInterface.ShowPromptyDialog(pack.AnimationId, pack.Content);
+            });
+
             return activity;
         }
 

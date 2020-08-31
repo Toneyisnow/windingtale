@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.ObjectModels;
@@ -23,9 +24,13 @@ namespace WindingTale.UI.Dialogs
 
         private ShowType showType = ShowType.ViewItem;
 
-        public void Initialize(Canvas canvas, FDCreature creature, ShowType showType)
+        private Action<int> OnCallback = null;
+
+        public void Initialize(Canvas canvas, FDCreature creature, ShowType showType, Action<int> callback = null)
         {
             base.Initialize(canvas);
+
+            this.OnCallback = callback;
             this.gameObject.name = "CreatureDialog";
 
             this.transform.localPosition = new Vector3(0, 0, 0);
@@ -41,7 +46,7 @@ namespace WindingTale.UI.Dialogs
             GameObject dato = AddControl(@"Others/CreatureDato", this.transform, new Vector3(-352, 202, 0), new Vector3(30, 1, 30));
             GameObject detail = AddControl(@"Others/CreatureDetail", this.transform, new Vector3(144, 202, 0), new Vector3(30, 1, 30));
             GameObject container = AddControl(@"Others/ContainerBase", this.transform, new Vector3(-5, -126, 0), new Vector3(37, 1, 37),
-                () => { Debug.Log("Clicked Container."); });
+                () => { Debug.Log("Clicked Container."); OnCallback(1); });
 
             AddControl(@"Others/ConfirmButtonYes", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
             AddControl(@"Others/ConfirmButtonNo", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
