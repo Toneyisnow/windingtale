@@ -42,7 +42,7 @@ namespace WindingTale.Core.Components.ActionStates
             this.SetMenu(0, MenuItemId.ActionMagic, IsMenuMagicEnabled(), () =>
             {
                 ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature.Data, CreatureInfoType.SelectMagic);
-                gameAction.GetCallback().OnCallback(pack);
+                gameAction.GetCallback().OnHandlePack(pack);
 
                 subState = SubActionState.SelectMagic;
                 return StateOperationResult.None();

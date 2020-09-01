@@ -7,7 +7,7 @@ using WindingTale.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
 
-namespace WindingTale.Core.Components
+namespace WindingTale.Core.Components.Data
 {
     public class CreatureData
     {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.Components.Data;
 using WindingTale.Core.ObjectModels;
 
 namespace WindingTale.Core.Components.Packs

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Components.Data;
 using WindingTale.Core.Components.Packs;
 
 namespace WindingTale.Core.Components.ActionStates
@@ -12,6 +13,7 @@ namespace WindingTale.Core.Components.ActionStates
         {
             SaveGame = 1,
             LoadGame = 2,
+            QuitGame = 3,
         }
 
         private SubRecordState subState;
@@ -32,6 +34,11 @@ namespace WindingTale.Core.Components.ActionStates
             // Game Info
             this.SetMenu(1, MenuItemId.RecordInfo, true, () =>
             {
+                int turnId = gameAction.TurnId();
+                int chapterId = gameAction.ChapterId();
+                ShowBriefPack pack = new ShowBriefPack();
+                SendPack(pack);
+
                 return StateOperationResult.None();
             });
 
@@ -48,6 +55,10 @@ namespace WindingTale.Core.Components.ActionStates
             // Quit Game
             this.SetMenu(3, MenuItemId.RecordQuit, true, () =>
             {
+                PromptPack prompt = new PromptPack(0, "");
+                SendPack(prompt);
+                this.subState = SubRecordState.QuitGame;
+
                 return StateOperationResult.None();
             });
 
@@ -62,6 +73,8 @@ namespace WindingTale.Core.Components.ActionStates
                     return OnLoadGameConfirmed(index);
                 case SubRecordState.SaveGame:
                     return OnSaveGameConfirmed(index);
+                case SubRecordState.QuitGame:
+                    return OnQuitGameConfirmed(index);
                 default:
                     return null;
             }
@@ -99,5 +112,21 @@ namespace WindingTale.Core.Components.ActionStates
             }
         }
 
+        private StateOperationResult OnQuitGameConfirmed(int index)
+        {
+            if (index == 1)
+            {
+                Debug.Log("Quiting Game...");
+
+                // Quit Game
+                SendPack(new SystemPack(SystemPack.Command.Quit));
+
+                return StateOperationResult.Clear();
+            }
+            else
+            {
+                return StateOperationResult.None();
+            }
+        }
     }
 }

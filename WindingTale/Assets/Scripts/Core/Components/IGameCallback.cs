@@ -12,6 +12,8 @@ namespace WindingTale.Core.Components
         /// The Handler send a pack back to Interface
         /// </summary>
         /// <param name="pack"></param>
-        void OnCallback(PackBase pack);
+        void OnHandlePack(PackBase pack);
+
+
     }
 }

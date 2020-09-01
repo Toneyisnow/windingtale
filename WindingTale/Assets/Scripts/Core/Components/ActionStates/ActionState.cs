@@ -39,7 +39,7 @@ namespace WindingTale.Core.Components.ActionStates
         {
             if (this.gameAction != null && this.gameAction.GetCallback() != null)
             {
-                this.gameAction.GetCallback().OnCallback(pack);
+                this.gameAction.GetCallback().OnHandlePack(pack);
             }
 
         }

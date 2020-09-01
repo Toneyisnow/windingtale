@@ -15,6 +15,7 @@ using System;
 using SmartLocalization;
 using WindingTale.UI.Common;
 using WindingTale.UI.Dialogs;
+using WindingTale.Core.Components.Data;
 
 namespace WindingTale.UI.Components
 {
@@ -247,7 +248,7 @@ namespace WindingTale.UI.Components
             gameManager.HandleOperation(cursorPosition);
         }
 
-        public void OnCallback(PackBase pack)
+        public void OnHandlePack(PackBase pack)
         {
             activityManager.PushPack(pack);
         }

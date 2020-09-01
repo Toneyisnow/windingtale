@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace WindingTale.Core.Components
+namespace WindingTale.Core.Components.Data
 {
     public class BattleRecord
     {

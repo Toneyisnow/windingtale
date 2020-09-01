@@ -132,9 +132,11 @@
     <Compile Include="Assets\Scripts\Core\Components\Packs\PromptPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\RefreshCreaturePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\SequencedPack.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\ShowBriefPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ShowCreatureInfoPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ShowMenuPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ShowRangePack.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\SystemPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\TalkPack.cs" />
     <Compile Include="Assets\Scripts\Core\Data\BattleRecord.cs" />
     <Compile Include="Assets\Scripts\Core\Data\ChapterRecord.cs" />

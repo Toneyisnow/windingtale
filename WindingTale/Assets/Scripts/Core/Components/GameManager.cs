@@ -5,6 +5,7 @@ using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components.ActionStates;
 using WindingTale.Core.Components.Algorithms;
+using WindingTale.Core.Components.Data;
 using WindingTale.Core.Components.Events;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.Definitions;
@@ -24,10 +25,7 @@ namespace WindingTale.Core.Components
 
         private GameEventManager eventManager = null;
 
-        public int ChapterId
-        {
-            get; private set;
-        }
+        private int chapterId;
 
         private int turnId = 0;
         private CreatureFaction turnPhase = CreatureFaction.Friend;
@@ -100,7 +98,7 @@ namespace WindingTale.Core.Components
 
         private void InitializeChapter(int chapterId)
         {
-            this.ChapterId = chapterId;
+            this.chapterId = chapterId;
             // Load Field Map
             ChapterDefinition chapter = DefinitionStore.Instance.LoadChapter(chapterId);
             gameField = new GameField(chapter);
@@ -120,6 +118,12 @@ namespace WindingTale.Core.Components
         {
             return this.turnId;
         }
+
+        public int ChapterId()
+        {
+            return this.chapterId;
+        }
+
 
         public CreatureFaction TurnPhase()
         {
@@ -231,7 +235,7 @@ namespace WindingTale.Core.Components
             }
 
             ComposeCreaturePack pack = new ComposeCreaturePack(creatureId, creatureDef.AnimationId, position);
-            gameCallback.OnCallback(pack);
+            gameCallback.OnHandlePack(pack);
         }
 
         public void DisposeCreature(int creatureId, bool disposeFromUI = true)
@@ -264,7 +268,7 @@ namespace WindingTale.Core.Components
                 if (disposeFromUI)
                 {
                     DisposeCreaturePack pack = new DisposeCreaturePack(creature);
-                    gameCallback.OnCallback(pack);
+                    gameCallback.OnHandlePack(pack);
                 }
             }
             else
@@ -314,7 +318,7 @@ namespace WindingTale.Core.Components
             if (walkActions.Count == 1)
             {
                 var movePack = HandleWalkAction(walkActions[0]);
-                gameCallback.OnCallback(movePack);
+                gameCallback.OnHandlePack(movePack);
             }
             else
             {
@@ -327,14 +331,14 @@ namespace WindingTale.Core.Components
                         batch.Add(movePack);
                     }
                 }
-                gameCallback.OnCallback(batch);
+                gameCallback.OnHandlePack(batch);
             }
         }
 
         public void CreatureWalk(SingleWalkAction walkAction)
         {
             var movePack = HandleWalkAction(walkAction);
-            gameCallback.OnCallback(movePack);
+            gameCallback.OnHandlePack(movePack);
         }
 
         /// <summary>
@@ -348,9 +352,9 @@ namespace WindingTale.Core.Components
         {
             for(int i = startIndex; i <= endIndex; i++)
             {
-                string conversationId = string.Format(@"Conversation_{0}_{1}_{2}", this.ChapterId, sequenceId, i);
+                string conversationId = string.Format(@"Conversation_{0}_{1}_{2}", this.ChapterId(), sequenceId, i);
                 TalkPack pack = new TalkPack(conversationId);
-                gameCallback.OnCallback(pack);
+                gameCallback.OnHandlePack(pack);
             }
 
             

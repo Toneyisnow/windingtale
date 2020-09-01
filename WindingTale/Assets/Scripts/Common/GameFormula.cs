@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Components;
+using WindingTale.Core.Components.Data;
 
 namespace WindingTale.Common
 {

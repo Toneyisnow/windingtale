@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components;
+using WindingTale.Core.Components.Data;
 using WindingTale.Core.Definitions;
 
 namespace WindingTale.Core.ObjectModels

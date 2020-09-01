@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Components.Data;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.ObjectModels;
 
@@ -53,6 +54,8 @@ namespace WindingTale.Core.Components
     public interface IGameInformative
     {
         int TurnId();
+
+        int ChapterId();
 
         CreatureFaction TurnPhase();
 
