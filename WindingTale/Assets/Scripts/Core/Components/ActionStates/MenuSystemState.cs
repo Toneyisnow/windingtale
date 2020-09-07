@@ -9,6 +9,12 @@ namespace WindingTale.Core.Components.ActionStates
 {
     public class MenuSystemState : MenuState
     {
+        public enum SubState
+        {
+            ConfirmRestAll = 1,
+        }
+
+        private SubState subState = 0;
 
         public MenuSystemState(IGameAction gameAction, FDPosition central) : base(gameAction, central)
         {
@@ -38,15 +44,37 @@ namespace WindingTale.Core.Components.ActionStates
             // Rest All
             this.SetMenu(3, MenuItemId.SystemRestAll, true, () =>
             {
+                subState = SubState.ConfirmRestAll;
+
+                PromptPack pack = new PromptPack(1, "Are you sure to rest all?");
+                SendPack(pack);
+                
                 return StateOperationResult.None();
             });
-
-
         }
 
         public override StateOperationResult OnSelectIndex(int index)
         {
-            return StateOperationResult.Clear();
+            switch(subState)
+            {
+                case SubState.ConfirmRestAll:
+                    return OnConfrimRestAll(index);
+                default:
+                    break;
+            }
+
+            return StateOperationResult.None();
+        }
+
+        private StateOperationResult OnConfrimRestAll(int index)
+        {
+            if (index == 1)
+            {
+                gameAction.DoCreatureAllRest();
+                return StateOperationResult.Clear();
+            }
+
+            return StateOperationResult.None();
         }
     }
 }

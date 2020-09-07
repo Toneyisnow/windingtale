@@ -29,6 +29,57 @@ namespace WindingTale.Core.Definitions
         {
             get; set;
         }
+
+        public int MoveCost
+        {
+            get
+            {
+                switch(this.Type)
+                {
+                    case ShapeType.Plain: return 1;
+                    case ShapeType.Blocked: return -1;
+                    case ShapeType.Forest: return 1;
+                    case ShapeType.BlackForest: return 1;
+                    case ShapeType.Marsh: return 3;
+                    case ShapeType.Gap: return -1;
+                    default:return -1;
+                }
+            }
+        }
+
+        public int MoveCostForKnight
+        {
+            get
+            {
+                switch (this.Type)
+                {
+                    case ShapeType.Plain: return 1;
+                    case ShapeType.Blocked: return -1;
+                    case ShapeType.Forest: return 2;
+                    case ShapeType.BlackForest: return 2;
+                    case ShapeType.Marsh: return 2;
+                    case ShapeType.Gap: return -1;
+                    default: return -1;
+                }
+            }
+        }
+        public bool CanFly
+        {
+            get
+            {
+                switch (this.Type)
+                {
+                    case ShapeType.Plain: return true;
+                    case ShapeType.Blocked: return true;
+                    case ShapeType.Forest: return true;
+                    case ShapeType.BlackForest: return true;
+                    case ShapeType.Marsh: return true;
+                    case ShapeType.Gap: return false;
+                    default: return true;
+                }
+            }
+        }
+
     }
 
     public enum TreasureType

@@ -186,6 +186,7 @@ namespace WindingTale.Core.Components
             return null;
         }
 
+
         public FDCreature GetPreferredAttackTargetInRange(int creatureId)
         {
             FDCreature creature = this.GetCreature(creatureId);
@@ -450,9 +451,35 @@ namespace WindingTale.Core.Components
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void DoCreatureAllRest()
         {
+            foreach (FDCreature creature in this.Friends)
+            {
+                if (creature.HasActioned)
+                {
+                    continue;
+                }
 
+                if (creature.Data.Hp < creature.Data.HpMax)
+                {
+                    // Recover HP and do animation
+                    creature.Data.Hp = CreatureCalculator.GetRestRecoveredHp(creature.Data.Hp, creature.Data.HpMax);
+                    CreatureAnimationPack pack = new CreatureAnimationPack(creature, CreatureAnimationPack.AnimationType.Rest);
+                    gameCallback.OnHandlePack(pack);
+                }
+
+                // Set creature status
+                creature.HasActioned = true;
+                gameCallback.OnHandlePack(new RefreshCreaturePack(creature));
+            }
+
+            // Do startNewTurn
+            StartNewTurnPhase();
+            StartNewTurnPhase();
+            StartNewTurnPhase();
         }
 
 

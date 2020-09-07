@@ -2,7 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.Components.Data;
 using WindingTale.Core.Components.Packs;
+using WindingTale.Core.ObjectModels;
+using WindingTale.UI.Dialogs;
 
 namespace WindingTale.UI.Components.Activities
 {
@@ -25,6 +28,9 @@ namespace WindingTale.UI.Components.Activities
 
                 case PackBase.PackType.RefreshCreature:
                     return BuildRefreshCreatureActivity(pack as RefreshCreaturePack);
+
+                case PackBase.PackType.ShowCreatureInfo:
+                    return BuildShowCreatureInfoActivity(pack as ShowCreatureInfoPack);
 
                 case PackBase.PackType.Talk:
                     return BuildTalkActivity(pack as TalkPack);
@@ -161,6 +167,33 @@ namespace WindingTale.UI.Components.Activities
 
             CallbackActivity activity = new CallbackActivity(
                     (gameInterface) => { gameInterface.PlaceIndicators(pack.Range); });
+
+            return activity;
+        }
+
+        private static ActivityBase BuildShowCreatureInfoActivity(ShowCreatureInfoPack pack)
+        {
+            if (pack == null)
+            {
+                throw new ArgumentNullException("pack");
+            }
+
+            FDCreature creature = pack.Creature;
+
+            CallbackActivity activity = new CallbackActivity(
+                    (gameInterface) => { gameInterface.ShowCreatureDialog(pack.Creature, CreatureDialog.ShowType.ViewItem); });
+
+            if (creature.Data.HasMagic())
+            {
+                SequenceActivity sequenceActivity = new SequenceActivity();
+                sequenceActivity.Add(activity);
+
+                CallbackActivity activity2 = new CallbackActivity(
+                    (gameInterface) => { gameInterface.ShowCreatureDialog(pack.Creature, CreatureDialog.ShowType.ViewMagic); });
+
+                sequenceActivity.Add(activity2);
+                return sequenceActivity;
+            }
 
             return activity;
         }

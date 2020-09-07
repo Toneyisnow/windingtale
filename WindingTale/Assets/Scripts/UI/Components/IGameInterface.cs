@@ -4,6 +4,7 @@ using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components;
 using WindingTale.Core.ObjectModels;
+using WindingTale.UI.Dialogs;
 using WindingTale.UI.MapObjects;
 
 namespace WindingTale.UI.Components
@@ -35,7 +36,7 @@ namespace WindingTale.UI.Components
 
         void PlaceIndicators(FDRange range);
 
-        void ShowCreatureDialog(FDCreature creature);
+        void ShowCreatureDialog(FDCreature creature, CreatureDialog.ShowType showType);
 
         void ShowMessageDialog(int animationId, string content);
 

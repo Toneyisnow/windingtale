@@ -172,7 +172,7 @@ namespace WindingTale.Core.Components.Data
         {
             get
             {
-                return GameFormula.CalculateAp(this);
+                return GameFormula.CalculateDp(this);
             }
         }
 
@@ -180,7 +180,7 @@ namespace WindingTale.Core.Components.Data
         {
             get
             {
-                return GameFormula.CalculateAp(this);
+                return GameFormula.CalculateDx(this);
             }
         }
 
@@ -188,7 +188,7 @@ namespace WindingTale.Core.Components.Data
         {
             get
             {
-                return GameFormula.CalculateAp(this);
+                return this.Mv;
             }
         }
 
@@ -196,7 +196,7 @@ namespace WindingTale.Core.Components.Data
         {
             get
             {
-                return GameFormula.CalculateAp(this);
+                return GameFormula.CalculateEx(this);
             }
         }
 
@@ -265,7 +265,12 @@ namespace WindingTale.Core.Components.Data
         public bool CanSpellMagic()
         {
             // If the current creature is not having "Forbidden" effect
-            return this.Magics != null && this.Magics.Count > 0 && !this.Effects.Contains(1);
+            return this.HasMagic() && !this.Effects.Contains(1);
+        }
+
+        public bool HasMagic()
+        {
+            return this.Magics != null && this.Magics.Count > 0;
         }
 
         public bool CanAttack()

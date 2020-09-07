@@ -46,7 +46,7 @@ namespace WindingTale.Core.Components.ActionStates
             else
             {
                 // Show creature information
-                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(creature.Data.Clone(), CreatureInfoType.View);
+                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(creature.Clone(), CreatureInfoType.View);
                 var gameCallback = gameAction.GetCallback();
                 gameCallback.OnHandlePack(pack);
 

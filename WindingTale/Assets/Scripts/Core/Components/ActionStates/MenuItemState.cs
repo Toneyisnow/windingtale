@@ -37,7 +37,7 @@ namespace WindingTale.Core.Components.ActionStates
             // Exchange
             this.SetMenu(0, MenuItemId.ItemExchange, IsMenuExchangeEnabled(), () =>
             {
-                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature.Data, CreatureInfoType.SelectAllItem);
+                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature, CreatureInfoType.SelectAllItem);
                 SendPack(pack);
 
                 subState = SubActionState.SelectExchangeItem;
@@ -47,7 +47,7 @@ namespace WindingTale.Core.Components.ActionStates
             // Use
             this.SetMenu(1, MenuItemId.ItemUse, IsMenuUseEnabled(), () =>
             {
-                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature.Data, CreatureInfoType.SelectUseItem);
+                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature, CreatureInfoType.SelectUseItem);
                 SendPack(pack);
 
                 subState = SubActionState.SelectExchangeItem;
@@ -57,7 +57,7 @@ namespace WindingTale.Core.Components.ActionStates
             // Equip
             this.SetMenu(2, MenuItemId.ItemUse, IsMenuEquipEnabled(), () =>
             {
-                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature.Data, CreatureInfoType.SelectEquipItem);
+                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature, CreatureInfoType.SelectEquipItem);
                 SendPack(pack);
 
                 subState = SubActionState.SelectEquipItem;
@@ -67,7 +67,7 @@ namespace WindingTale.Core.Components.ActionStates
             // Discard
             this.SetMenu(3, MenuItemId.ItemDiscard, IsMenuDiscardEnabled(), () =>
             {
-                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature.Data, CreatureInfoType.SelectEquipItem);
+                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature, CreatureInfoType.SelectEquipItem);
                 SendPack(pack);
 
                 subState = SubActionState.SelectDiscardItem;
@@ -136,7 +136,7 @@ namespace WindingTale.Core.Components.ActionStates
             this.Creature.Data.EquipItemAt(index);
 
             // Reopen the item dialog
-            ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature.Data, CreatureInfoType.SelectEquipItem);
+            ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature, CreatureInfoType.SelectEquipItem);
             SendPack(pack);
 
             subState = SubActionState.SelectEquipItem;

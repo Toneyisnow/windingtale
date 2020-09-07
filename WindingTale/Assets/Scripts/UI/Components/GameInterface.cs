@@ -71,7 +71,8 @@ namespace WindingTale.UI.Components
         {
             globalVariables.Tick();
 
-            if (activityManager != null)
+            // Call the update only if there is no dialog
+            if (activityManager != null && currentDialog == null)
             {
                 activityManager.Update();
             }
@@ -289,7 +290,7 @@ namespace WindingTale.UI.Components
             // Update status
         }
 
-        public void ShowCreatureDialog(FDCreature creature)
+        public void ShowCreatureDialog(FDCreature creature, CreatureDialog.ShowType showType)
         {
             // Canvas
             if (currentDialog != null)
@@ -300,7 +301,7 @@ namespace WindingTale.UI.Components
 
             currentDialog = new GameObject();
             CreatureDialog creatureDialog = currentDialog.AddComponent<CreatureDialog>();
-            creatureDialog.Initialize(this.GameCanvs, creature, CreatureDialog.ShowType.SelectAllItem,
+            creatureDialog.Initialize(this.GameCanvs, creature, showType,
                 (index) => { this.OnDialogCallback(index); });
 
 
