@@ -102,6 +102,7 @@
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ShowMoveRangeState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\StateOperationResult.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\AttackRangeFinder.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Algorithms\CreatureCalculator.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\MagicRangeFilder.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\MoveRangeFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\Chapters\EventChapter1.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Assets\Scripts\Core\Components\Packs\ClearRangePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\CloseMenuPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ComposeCreaturePack.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureAnimationPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureMovePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\DisposeCreaturePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\IdlePack.cs" />

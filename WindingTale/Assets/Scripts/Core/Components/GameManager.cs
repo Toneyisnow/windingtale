@@ -399,27 +399,45 @@ namespace WindingTale.Core.Components
 
         public void DoCreatureAttack(int creatureId, FDPosition targetPosition)
         {
-
+            FDCreature creature = this.GetCreature(creatureId);
+            PostCreatureAction(creature);
         }
 
         public void DoCreatureSpellMagic(int creatureId, int magicId, FDPosition targetPosition, FDPosition transportPosition = null)
         {
-
+            FDCreature creature = this.GetCreature(creatureId);
+            PostCreatureAction(creature);
         }
 
         public void DoCreatureUseItem(int creatureId, int itemIndex)
         {
-
+            FDCreature creature = this.GetCreature(creatureId);
+            PostCreatureAction(creature);
         }
 
         public void DoCreatureExchangeItem(int creatureId, int itemIndex, int targetCreatureId)
         {
-
+            FDCreature creature = this.GetCreature(creatureId);
+            PostCreatureAction(creature);
         }
 
         public void DoCreatureRest(int creatureId)
         {
+            FDCreature creature = this.GetCreature(creatureId);
+            if (creature == null)
+            {
+                return;
+            }
 
+            if (!creature.HasMoved() && creature.Data.Hp < creature.Data.HpMax)
+            {
+                // Recover HP and do animation
+                creature.Data.Hp = CreatureCalculator.GetRestRecoveredHp(creature.Data.Hp, creature.Data.HpMax);
+                CreatureAnimationPack pack = new CreatureAnimationPack(creature, CreatureAnimationPack.AnimationType.Rest);
+                gameCallback.OnHandlePack(pack);
+            }
+
+            PostCreatureAction(creature);
         }
 
         /// <summary>
@@ -506,8 +524,12 @@ namespace WindingTale.Core.Components
         }
 
 
-        private void PostCreatureAction()
+        private void PostCreatureAction(FDCreature creature)
         {
+            // Set creature status
+            creature.HasActioned = true;
+            gameCallback.OnHandlePack(new RefreshCreaturePack(creature));
+
             // Check all creatures are taken actions, and do startNewTurn
 
             // StartNewTurnPhase();

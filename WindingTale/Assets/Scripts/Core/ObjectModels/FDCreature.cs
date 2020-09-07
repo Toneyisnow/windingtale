@@ -14,8 +14,6 @@ namespace WindingTale.Core.ObjectModels
     public class FDCreature
     {
 
-        private bool hasActioned = false;
-
         public CreatureFaction Faction
         {
             get; private set;
@@ -79,9 +77,9 @@ namespace WindingTale.Core.ObjectModels
             return this.PreMovePosition.AreSame(this.Position);
         }
 
-        public bool HasActioned()
+        public bool HasActioned
         {
-            return hasActioned;
+            get; set;
         }
 
         public bool HasEquipItem()
@@ -106,7 +104,7 @@ namespace WindingTale.Core.ObjectModels
         /// <returns></returns>
         public bool IsActionable()
         {
-            return this.Faction == CreatureFaction.Friend && !hasActioned 
+            return this.Faction == CreatureFaction.Friend && !this.HasActioned 
                 && this.Data.Effects != null && !this.Data.Effects.Contains(0);
         }
         public void SetMoveTo(FDPosition position)
@@ -121,7 +119,7 @@ namespace WindingTale.Core.ObjectModels
 
         public void OnTurnStart()
         {
-            this.hasActioned = false;
+            this.HasActioned = false;
             this.PreMovePosition = this.Position;
         }
 
@@ -133,6 +131,7 @@ namespace WindingTale.Core.ObjectModels
             another.Faction = this.Faction;
             another.Position = this.Position;
             another.PreMovePosition = this.PreMovePosition;
+            another.HasActioned = this.HasActioned;
 
             another.Data = this.Data.Clone();
 
