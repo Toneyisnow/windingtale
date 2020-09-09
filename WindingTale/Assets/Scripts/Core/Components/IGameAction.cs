@@ -69,6 +69,8 @@ namespace WindingTale.Core.Components
 
         List<FDCreature> GetAdjacentFriends(int creatureId);
 
+        List<FDCreature> GetCreatureInRange(FDRange range, CreatureFaction faction);
+
         /// <summary>
         /// Provide a suggested target for attack in the range
         /// </summary>
@@ -132,9 +134,9 @@ namespace WindingTale.Core.Components
 
         void DoCreatureSpellMagic(int creatureId, int magicId, FDPosition targetPosition, FDPosition transportPosition = null);
 
-        void DoCreatureUseItem(int creatureId, int itemIndex);
+        void DoCreatureUseItem(int creatureId, int itemIndex, int targetCreatureId);
 
-        void DoCreatureExchangeItem(int creatureId, int itemIndex, int targetCreatureId);
+        void DoCreatureExchangeItem(int creatureId, int itemIndex, int targetCreatureId, int exchangeItemIndex = -1);
 
         void DoCreatureRest(int creatureId);
 

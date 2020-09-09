@@ -23,6 +23,14 @@ namespace WindingTale.Common
             return this.X == other.X && this.Y == other.Y;
         }
 
+        public bool IsNextTo(FDPosition other)
+        {
+            return (other.X == this.X + 1 && other.Y == this.Y)
+                || (other.X == this.X - 1 && other.Y == this.Y)
+                || (other.X == this.X && other.Y == this.Y + 1)
+                || (other.X == this.X && other.Y == this.Y - 1);
+        }
+
         public FDPosition(int x, int y)
         {
             this.X = x;
@@ -47,6 +55,17 @@ namespace WindingTale.Common
         public bool Equals(FDPosition other)
         {
             return this.AreSame(other);
+        }
+
+        public FDPosition[] GetAdjacentPositions()
+        {
+            return new FDPosition[4]
+            {
+                FDPosition.At(this.X - 1, this.Y),
+                FDPosition.At(this.X, this.Y - 1),
+                FDPosition.At(this.X + 1, this.Y),
+                FDPosition.At(this.X, this.Y + 1)
+            };
         }
     }
 

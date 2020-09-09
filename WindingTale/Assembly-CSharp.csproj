@@ -103,7 +103,7 @@
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\StateOperationResult.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\AttackRangeFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\CreatureCalculator.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Algorithms\MagicRangeFilder.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Algorithms\DirectRangeFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\MoveRangeFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\Chapters\EventChapter1.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\Chapters\EventChapter2.cs" />

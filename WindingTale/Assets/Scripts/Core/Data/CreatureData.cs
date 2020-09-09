@@ -234,9 +234,29 @@ namespace WindingTale.Core.Components.Data
 
         }
 
+        public int GetItemAt(int itemIndex)
+        {
+            if (this.Items != null || itemIndex < 0 || itemIndex >= this.Items.Count)
+            {
+                return -1;
+            }
+
+            return this.Items[itemIndex];
+        }
+
         public void AddItem(int itemId)
         {
 
+        }
+
+        public bool HasItem()
+        {
+            return this.Items != null && this.Items.Count > 0;
+        }
+
+        public bool HasItem(int itemId)
+        {
+            return this.HasItem() && this.Items.Contains(itemId);
         }
 
         public void EquipItemAt(int itemIndex)
@@ -260,6 +280,16 @@ namespace WindingTale.Core.Components.Data
                 this.DefendItemIndex = itemIndex;
             }
 
+        }
+
+        public int GetMagicAt(int magicIndex)
+        {
+            if (this.Magics != null || magicIndex < 0 || magicIndex >= this.Magics.Count)
+            {
+                return -1;
+            }
+
+            return this.Magics[magicIndex];
         }
 
         public bool CanSpellMagic()

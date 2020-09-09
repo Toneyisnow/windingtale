@@ -30,10 +30,25 @@ namespace WindingTale.Core.Components
         private int turnId = 0;
         private CreatureFaction turnPhase = CreatureFaction.Friend;
 
-        private List<FDCreature> Friends = null;
-        private List<FDCreature> Enemies = null;
-        private List<FDCreature> Npcs = null;
-        private List<FDCreature> Deads = null;
+        public List<FDCreature> Friends
+        {
+            get; private set;
+        }
+
+        public List<FDCreature> Enemies
+        {
+            get; private set;
+        }
+
+        public List<FDCreature> Npcs
+        {
+            get; private set;
+        }
+
+        public List<FDCreature> Deads
+        {
+            get; private set;
+        }
 
         private IGameCallback gameCallback = null;
 
@@ -183,9 +198,57 @@ namespace WindingTale.Core.Components
 
         public List<FDCreature> GetAdjacentFriends(int creatureId)
         {
-            return null;
+            List<FDCreature> result = new List<FDCreature>();
+            FDCreature creature = this.GetCreature(creatureId);
+            if (creature == null)
+            {
+                return result;
+            }
+
+            foreach (FDPosition direction in creature.Position.GetAdjacentPositions())
+            {
+                FDCreature candidate = this.GetCreatureAt(direction);
+                if (candidate == null)
+                {
+                    continue;
+                }
+
+                if (!creature.IsOppositeFaction(candidate))
+                {
+                    result.Add(candidate);
+                }
+            }
+
+            return result;
         }
 
+        public List<FDCreature> GetCreatureInRange(FDRange range, CreatureFaction faction)
+        {
+            List<FDCreature> candidates = null;
+            switch(faction)
+            {
+                case CreatureFaction.Friend:
+                    candidates = this.Friends;
+                    break;
+                case CreatureFaction.Npc:
+                    candidates = this.Npcs;
+                    break;
+                case CreatureFaction.Enemy:
+                    candidates = this.Enemies;
+                    break;
+            }
+
+            List<FDCreature> result = new List<FDCreature>();
+            foreach(FDCreature candidate in candidates)
+            {
+                if (range.Contains(candidate.Position))
+                {
+                    result.Add(candidate);
+                }
+            }
+
+            return result;
+        }
 
         public FDCreature GetPreferredAttackTargetInRange(int creatureId)
         {
@@ -410,13 +473,13 @@ namespace WindingTale.Core.Components
             PostCreatureAction(creature);
         }
 
-        public void DoCreatureUseItem(int creatureId, int itemIndex)
+        public void DoCreatureUseItem(int creatureId, int itemIndex, int targetCreatureId)
         {
             FDCreature creature = this.GetCreature(creatureId);
             PostCreatureAction(creature);
         }
 
-        public void DoCreatureExchangeItem(int creatureId, int itemIndex, int targetCreatureId)
+        public void DoCreatureExchangeItem(int creatureId, int itemIndex, int targetCreatureId, int exchangeItemIndex = -1)
         {
             FDCreature creature = this.GetCreature(creatureId);
             PostCreatureAction(creature);

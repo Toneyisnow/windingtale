@@ -98,6 +98,12 @@ namespace WindingTale.Core.ObjectModels
             });
         }
 
+        public bool IsOppositeFaction(FDCreature other)
+        {
+            return ((this.Faction == CreatureFaction.Friend || this.Faction == CreatureFaction.Npc) && other.Faction == CreatureFaction.Enemy)
+                || ((other.Faction == CreatureFaction.Friend || other.Faction == CreatureFaction.Npc) && this.Faction == CreatureFaction.Enemy);
+        }
+
         /// <summary>
         /// 
         /// </summary>

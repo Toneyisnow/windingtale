@@ -14,6 +14,7 @@ namespace WindingTale.Core.Components.ActionStates
             None,
             SelectExchangeItem,
             SelectEquipItem,
+            SelectUseItem,
             SelectDiscardItem,
         }
 
@@ -67,7 +68,7 @@ namespace WindingTale.Core.Components.ActionStates
             // Discard
             this.SetMenu(3, MenuItemId.ItemDiscard, IsMenuDiscardEnabled(), () =>
             {
-                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature, CreatureInfoType.SelectEquipItem);
+                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature, CreatureInfoType.SelectAllItem);
                 SendPack(pack);
 
                 subState = SubActionState.SelectDiscardItem;
@@ -77,12 +78,20 @@ namespace WindingTale.Core.Components.ActionStates
 
         public override StateOperationResult OnSelectIndex(int index)
         {
-            switch(this.subState)
+            if (index < 0)
+            {
+                // Cancel
+                return StateOperationResult.None();
+            }
+
+            switch (this.subState)
             {
                 case SubActionState.SelectExchangeItem:
                     return OnSelectedExchangeItem(index);
                 case SubActionState.SelectEquipItem:
                     return OnSelectedEquipItem(index);
+                case SubActionState.SelectUseItem:
+                    return OnSelectedUseItem(index);
                 case SubActionState.SelectDiscardItem:
                     return OnSelectedDiscardItem(index);
                 default:
@@ -104,7 +113,7 @@ namespace WindingTale.Core.Components.ActionStates
 
         private bool IsMenuUseEnabled()
         {
-            return (this.Creature.Data.Items.Count == 0);
+            return this.Creature.Data.HasItem();
         }
 
         private bool IsMenuEquipEnabled()
@@ -114,9 +123,8 @@ namespace WindingTale.Core.Components.ActionStates
 
         private bool IsMenuDiscardEnabled()
         {
-            return (this.Creature.Data.Items.Count > 0);
+            return this.Creature.Data.HasItem();
         }
-
 
         private StateOperationResult OnSelectedExchangeItem(int index)
         {
@@ -125,6 +133,20 @@ namespace WindingTale.Core.Components.ActionStates
             return StateOperationResult.Push(exchangeTargetState);
         }
 
+        private StateOperationResult OnSelectedUseItem(int index)
+        {
+            int itemId = this.Creature.Data.GetItemAt(index);
+            if (itemId < 0)
+            {
+                // Item not found, should not reach here
+                return StateOperationResult.Clear();
+            }
+
+            // Selete Target Friend
+            SelectItemUseTargetState exchangeTargetState = new SelectItemUseTargetState(gameAction, this.CreatureId, index);
+            return StateOperationResult.Push(exchangeTargetState);
+        }
+        
         private StateOperationResult OnSelectedEquipItem(int index)
         {
             if (index < 0)

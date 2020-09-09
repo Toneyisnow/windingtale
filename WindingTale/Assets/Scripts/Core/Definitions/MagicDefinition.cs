@@ -49,11 +49,17 @@ namespace WindingTale.Core.Definitions
             get; private set;
         }
 
+        /// <summary>
+        /// Scope is the impacted area for the magic
+        /// </summary>
         public int EffectScope
         {
             get; private set;
         }
 
+        /// <summary>
+        /// Range is the area that allows to spell the magic
+        /// </summary>
         public int EffectRange
         {
             get; private set;
@@ -102,8 +108,8 @@ namespace WindingTale.Core.Definitions
             }
 
             def.HittingRate = dataFile.ReadInt();
-            def.EffectScope = dataFile.ReadInt();
             def.EffectRange = dataFile.ReadInt();
+            def.EffectScope = dataFile.ReadInt();
             
             def.MpCost = dataFile.ReadInt();
             def.AllowAfterMove = dataFile.ReadBoolean();

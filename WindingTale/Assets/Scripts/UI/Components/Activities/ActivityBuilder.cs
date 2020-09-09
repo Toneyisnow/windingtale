@@ -180,10 +180,33 @@ namespace WindingTale.UI.Components.Activities
 
             FDCreature creature = pack.Creature;
 
-            CallbackActivity activity = new CallbackActivity(
-                    (gameInterface) => { gameInterface.ShowCreatureDialog(pack.Creature, CreatureDialog.ShowType.ViewItem); });
+            CreatureDialog.ShowType showType = CreatureDialog.ShowType.SelectAllItem;
+            switch(pack.InfoType)
+            {
+                case CreatureInfoType.SelectAllItem:
+                    showType = CreatureDialog.ShowType.SelectAllItem;
+                    break;
+                case CreatureInfoType.SelectEquipItem:
+                    showType = CreatureDialog.ShowType.SelectEquipItem;
+                    break;
+                case CreatureInfoType.SelectUseItem:
+                    showType = CreatureDialog.ShowType.SelectUseItem;
+                    break;
+                case CreatureInfoType.SelectMagic:
+                    showType = CreatureDialog.ShowType.SelectMagic;
+                    break;
+                case CreatureInfoType.View:
+                    showType = CreatureDialog.ShowType.ViewItem;
+                    break;
+                default:
+                    showType = CreatureDialog.ShowType.SelectAllItem;
+                    break;
+            }
 
-            if (creature.Data.HasMagic())
+            CallbackActivity activity = new CallbackActivity(
+                    (gameInterface) => { gameInterface.ShowCreatureDialog(pack.Creature, showType); });
+
+            if (pack.InfoType == CreatureInfoType.View && creature.Data.HasMagic())
             {
                 SequenceActivity sequenceActivity = new SequenceActivity();
                 sequenceActivity.Add(activity);

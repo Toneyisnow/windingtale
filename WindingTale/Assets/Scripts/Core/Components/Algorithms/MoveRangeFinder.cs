@@ -73,21 +73,13 @@ namespace WindingTale.Core.Components.Algorithms
             }
 
             // If this is ZOC, stop the move
-            if (!position.AreSame(this.creature.Position) && HasAdjacentEnemy(position, creature.Faction))
+            if (!position.AreSame(this.creature.Position) && HasAdjacentEnemy(position))
             {
                 return;
             }
 
-            FDPosition[] directions = new FDPosition[4]
-            {
-                FDPosition.At(position.X - 1, position.Y),
-                FDPosition.At(position.X, position.Y - 1),
-                FDPosition.At(position.X + 1, position.Y),
-                FDPosition.At(position.X, position.Y + 1)
-            };
-
             int leftPoint = leftMovePoint - moveCost;
-            foreach (FDPosition direction in directions)
+            foreach (FDPosition direction in position.GetAdjacentPositions())
             {
                 if (direction.X < 0 || direction.X >= gameField.Width
                     || direction.Y < 0 || direction.Y >= gameField.Height)
@@ -150,17 +142,9 @@ namespace WindingTale.Core.Components.Algorithms
             return moveCost;
         }
 
-        private bool HasAdjacentEnemy(FDPosition position, CreatureFaction faction)
+        private bool HasAdjacentEnemy(FDPosition position)
         {
-            FDPosition[] directions = new FDPosition[4]
-            {
-                FDPosition.At(position.X - 1, position.Y),
-                FDPosition.At(position.X, position.Y - 1),
-                FDPosition.At(position.X + 1, position.Y),
-                FDPosition.At(position.X, position.Y + 1)
-            };
-
-            foreach (FDPosition direction in directions)
+            foreach (FDPosition direction in position.GetAdjacentPositions())
             {
                 FDCreature c = gameAction.GetCreatureAt(direction);
                 if (c == null)
@@ -168,14 +152,7 @@ namespace WindingTale.Core.Components.Algorithms
                     continue;
                 }
 
-                if ((faction == CreatureFaction.Friend || faction == CreatureFaction.Npc)
-                    && c.Faction == CreatureFaction.Enemy)
-                {
-                    return true;
-                }
-
-                if ((c.Faction == CreatureFaction.Friend || c.Faction == CreatureFaction.Npc)
-                    && faction == CreatureFaction.Enemy)
+                if (this.creature.IsOppositeFaction(c))
                 {
                     return true;
                 }
