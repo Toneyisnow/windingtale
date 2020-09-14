@@ -86,7 +86,8 @@ namespace WindingTale.Core.Components.ActionStates
                 }
                 else
                 {
-                    gameAction.DoCreatureSpellMagic(this.Creature.CreatureId, this.Magic.MagicId, )
+                    gameAction.DoCreatureSpellMagic(this.Creature.CreatureId, this.Magic.MagicId, position);
+                    return StateOperationResult.Clear();
                 }
             }
             else

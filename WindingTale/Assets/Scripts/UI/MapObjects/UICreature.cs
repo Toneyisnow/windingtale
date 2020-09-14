@@ -67,11 +67,11 @@ namespace WindingTale.UI.MapObjects
         {
             if (this.AnimateState == AnimateStates.Idle)
             {
-                UpdateAnimation(WindingTale.UI.Common.Constants.TICK_PER_FRAME * 4);
+                UpdateAnimation(Constants.TICK_PER_FRAME * 4);
             }
             else
             {
-                UpdateAnimation(WindingTale.UI.Common.Constants.TICK_PER_FRAME);
+                UpdateAnimation(Constants.TICK_PER_FRAME);
             }
         }
         protected override void OnTouched()
@@ -161,6 +161,22 @@ namespace WindingTale.UI.MapObjects
         public void SetPixelPosition(Vector3 vector3)
         {
             this.transform.localPosition = vector3;
+        }
+
+        public void SetHasActioned(bool hasActioned)
+        {
+            if (hasActioned)
+            {
+                icon1.GetComponentInChildren<MeshRenderer>().material = AssetManager.MaterialGrey;
+                icon2.GetComponentInChildren<MeshRenderer>().material = AssetManager.MaterialGrey;
+                icon3.GetComponentInChildren<MeshRenderer>().material = AssetManager.MaterialGrey;
+            }
+            else
+            {
+                icon1.GetComponentInChildren<MeshRenderer>().material = AssetManager.MaterialDefault;
+                icon2.GetComponentInChildren<MeshRenderer>().material = AssetManager.MaterialDefault;
+                icon3.GetComponentInChildren<MeshRenderer>().material = AssetManager.MaterialDefault;
+            }
         }
     }
 }

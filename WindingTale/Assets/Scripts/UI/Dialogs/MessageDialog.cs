@@ -17,7 +17,7 @@ namespace WindingTale.UI.Dialogs
             this.transform.localPosition = new Vector3(0, 0, 0);
             this.transform.localScale = new Vector3(1f, 1f, 1f);
 
-            GameObject messageBox = AddControl(@"Others/MessageBox", this.transform, new Vector3(-5, -126, 0), new Vector3(37, 1, 37),
+            GameObject messageBox = AddSubDialog(@"Others/MessageBox", this.transform, new Vector3(-5, -126, 0), new Vector3(37, 1, 37),
                 () => { Debug.Log("Clicked MessageDialog."); callback(1); });
 
         }

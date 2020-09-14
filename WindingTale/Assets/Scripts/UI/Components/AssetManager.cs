@@ -16,12 +16,11 @@ namespace WindingTale.UI.Components
 
         private Dictionary<string, AssetBundle> assetBundles = null;
 
-        private AssetBundle iconAssetBundle = null;
+        public static readonly Material MaterialDefault = Resources.Load<Material>(@"material-default");
 
-        private Dictionary<int, AssetBundle> shapeAssetBundles = null;
+        public static readonly Material MaterialTransparent = Resources.Load<Material>(@"material-transparent");
 
-        private static Material defaultMaterial = Resources.Load<Material>(@"common-mat");
-        private static Material transparentMaterial = Resources.Load<Material>(@"common-transparent");
+        public static readonly Material MaterialGrey = Resources.Load<Material>(@"material-grey");
 
 
         public static AssetManager Instance()
@@ -38,7 +37,6 @@ namespace WindingTale.UI.Components
 
         private AssetManager()
         {
-            shapeAssetBundles = new Dictionary<int, AssetBundle>();
             assetBundles = new Dictionary<string, AssetBundle>();
         }
 
@@ -85,7 +83,7 @@ namespace WindingTale.UI.Components
             obj.transform.localRotation = new Quaternion(0, 0, 0, 0);
 
             var renderer = obj.GetComponentInChildren<MeshRenderer>();
-            renderer.sharedMaterial = defaultMaterial;
+            renderer.sharedMaterial = MaterialDefault;
             var clr = renderer.sharedMaterial.color;
             renderer.sharedMaterial.color = new Color(clr.r, clr.g, clr.b, 1.0f);
 
@@ -105,7 +103,7 @@ namespace WindingTale.UI.Components
             obj.transform.localRotation = new Quaternion(0, 0, 0, 0);
 
             var renderer = obj.GetComponentInChildren<MeshRenderer>();
-            renderer.sharedMaterial = defaultMaterial;
+            renderer.sharedMaterial = MaterialDefault;
             var clr = renderer.sharedMaterial.color;
             renderer.sharedMaterial.color = new Color(clr.r, clr.g, clr.b, 1.0f);
 
@@ -120,7 +118,7 @@ namespace WindingTale.UI.Components
             GameObject obj = GameObject.Instantiate(prefab);
 
             var renderer = obj.GetComponentInChildren<MeshRenderer>();
-            renderer.sharedMaterial = defaultMaterial;
+            renderer.sharedMaterial = MaterialDefault;
 
             obj.transform.parent = parent;
             obj.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
@@ -146,7 +144,7 @@ namespace WindingTale.UI.Components
             obj.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
             var renderer = obj.GetComponentInChildren<MeshRenderer>();
-            renderer.sharedMaterial = defaultMaterial;
+            renderer.sharedMaterial = MaterialDefault;
             var clr = renderer.sharedMaterial.color;
             renderer.sharedMaterial.color = new Color(clr.r, clr.g, clr.b, 1.0f);
 
@@ -168,7 +166,7 @@ namespace WindingTale.UI.Components
             //// obj.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
             var renderer = obj.GetComponentInChildren<MeshRenderer>();
-            renderer.sharedMaterial = transparentMaterial;
+            renderer.sharedMaterial = MaterialTransparent;
             var clr = renderer.sharedMaterial.color;
             renderer.sharedMaterial.color = new Color(clr.r, clr.g, clr.b, 1.0f);
 

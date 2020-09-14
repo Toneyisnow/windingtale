@@ -43,13 +43,13 @@ namespace WindingTale.UI.Dialogs
         // Start is called before the first frame update
         void Start()
         {
-            GameObject dato = AddControl(@"Others/CreatureDato", this.transform, new Vector3(-352, 202, 0), new Vector3(30, 1, 30));
-            GameObject detail = AddControl(@"Others/CreatureDetail", this.transform, new Vector3(144, 202, 0), new Vector3(30, 1, 30));
-            GameObject container = AddControl(@"Others/ContainerBase", this.transform, new Vector3(-5, -126, 0), new Vector3(37, 1, 37),
+            GameObject dato = AddSubDialog(@"Others/CreatureDato", this.transform, new Vector3(-352, 202, 0), new Vector3(30, 1, 30));
+            GameObject detail = AddSubDialog(@"Others/CreatureDetail", this.transform, new Vector3(144, 202, 0), new Vector3(30, 1, 30));
+            GameObject container = AddSubDialog(@"Others/ContainerBase", this.transform, new Vector3(-5, -126, 0), new Vector3(37, 1, 37),
                 () => { Debug.Log("Clicked Container."); OnCallback(1); });
 
-            AddControl(@"Others/ConfirmButtonYes", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
-            AddControl(@"Others/ConfirmButtonNo", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
+            AddSubDialog(@"Others/ConfirmButtonYes", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
+            AddSubDialog(@"Others/ConfirmButtonNo", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
 
 
         }

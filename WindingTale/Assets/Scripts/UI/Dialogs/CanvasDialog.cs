@@ -14,7 +14,7 @@ namespace WindingTale.UI.Dialogs
             this.transform.parent = canvas.transform;
         }
 
-        protected GameObject AddControl(string resourceName, Transform parent, Vector3 position, Vector3 scale, Action action = null)
+        protected GameObject AddSubDialog(string resourceName, Transform parent, Vector3 position, Vector3 scale, Action action = null)
         {
             GameObject prefab = Resources.Load<GameObject>(resourceName);
             GameObject control = GameObject.Instantiate(prefab);
@@ -37,6 +37,34 @@ namespace WindingTale.UI.Dialogs
             {
                 Clickable clickable = control.AddComponent<Clickable>();
                 clickable.Initialize(() => { action(); } );
+            }
+
+            return control;
+        }
+
+        protected GameObject AddControl(string resourceName, Transform subDialog, Vector3 position, Vector3 scale, Action action = null)
+        {
+            GameObject prefab = Resources.Load<GameObject>(resourceName);
+            GameObject control = GameObject.Instantiate(prefab);
+            control.transform.parent = subDialog;
+            control.layer = 5; //UI
+
+            GameObject defaultObject = control.transform.Find(@"default").gameObject;
+            defaultObject.layer = 5;
+            control.transform.localPosition = position;
+            control.transform.localScale = scale;
+            control.transform.localRotation = Quaternion.Euler(0, 0, 0);
+
+            Renderer renderer = defaultObject.GetComponent<Renderer>();
+            BoxCollider collider = control.AddComponent<BoxCollider>();
+
+            // float scaleFactor = 0.15f * scale.x;
+            // collider.size = new Vector3((float)(renderer.bounds.size.x / scaleFactor), 1, (float)(renderer.bounds.size.y / scaleFactor));
+
+            if (action != null)
+            {
+                Clickable clickable = control.AddComponent<Clickable>();
+                clickable.Initialize(() => { action(); });
             }
 
             return control;

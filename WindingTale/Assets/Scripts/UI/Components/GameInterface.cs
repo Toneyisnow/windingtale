@@ -277,17 +277,18 @@ namespace WindingTale.UI.Components
                 throw new ArgumentNullException("creature");
             }
 
-            UICreature uICreature = GetUICreature(creature.CreatureId);
-            if (uICreature == null)
+            UICreature uiCreature = GetUICreature(creature.CreatureId);
+            if (uiCreature == null)
             {
                 Debug.LogError("Cannot find creature on UI: creatureId = " + creature.CreatureId);
             }
 
             // Update position
-            uICreature.transform.localPosition = FieldTransform.GetCreaturePixelPosition(creature.Position);
+            uiCreature.transform.localPosition = FieldTransform.GetCreaturePixelPosition(creature.Position);
 
 
             // Update status
+            uiCreature.SetHasActioned(creature.HasActioned);
         }
 
         public void ShowCreatureDialog(FDCreature creature, CreatureDialog.ShowType showType)
