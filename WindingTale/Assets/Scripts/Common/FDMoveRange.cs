@@ -49,7 +49,29 @@ namespace WindingTale.Common
         /// <returns></returns>
         public FDMovePath GetPath(FDPosition position)
         {
-            return FDMovePath.Create(position);
+            if (!directionedScope.ContainsKey(position))
+            {
+                return null;
+            }
+
+            FDMovePath path = new FDMovePath();
+            FDPosition current = position;
+            FDPosition next = directionedScope[current];
+            int lastDirection = -1;
+            while(next != null)
+            {
+                int direction = next.IsNextToDirection(current);
+                if (lastDirection < 0 || direction != lastDirection)
+                {
+                    path.InsertToHead(current);
+                }
+
+                lastDirection = direction;
+                current = next;
+                next = directionedScope[current];
+            }
+
+            return path;
         }
 
         public override bool Contains(FDPosition position)

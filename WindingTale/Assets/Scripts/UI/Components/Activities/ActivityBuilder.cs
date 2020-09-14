@@ -29,6 +29,9 @@ namespace WindingTale.UI.Components.Activities
                 case PackBase.PackType.RefreshCreature:
                     return BuildRefreshCreatureActivity(pack as RefreshCreaturePack);
 
+                case PackBase.PackType.RefreshAllCreatures:
+                    return BuildRefreshAllCreaturesActivity(pack as RefreshAllCreaturesPack);
+
                 case PackBase.PackType.ShowCreatureInfo:
                     return BuildShowCreatureInfoActivity(pack as ShowCreatureInfoPack);
 
@@ -95,6 +98,19 @@ namespace WindingTale.UI.Components.Activities
 
             CallbackActivity activity = new CallbackActivity(
                     (gameInterface) => { gameInterface.RefreshCreature(pack.Creature); });
+
+            return activity;
+        }
+
+        private static ActivityBase BuildRefreshAllCreaturesActivity(RefreshAllCreaturesPack pack)
+        {
+            if (pack == null)
+            {
+                throw new ArgumentNullException("RefreshCreaturePack");
+            }
+
+            CallbackActivity activity = new CallbackActivity(
+                    (gameInterface) => { gameInterface.RefreshAllCreatures(); });
 
             return activity;
         }

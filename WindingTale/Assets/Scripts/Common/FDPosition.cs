@@ -31,6 +31,31 @@ namespace WindingTale.Common
                 || (other.X == this.X && other.Y == this.Y - 1);
         }
 
+        public int IsNextToDirection(FDPosition other)
+        {
+            if(other.X == this.X + 1 && other.Y == this.Y)
+            {
+                return 1;
+            }
+
+            if (other.X == this.X - 1 && other.Y == this.Y)
+            {
+                return 2;
+            }
+
+            if (other.X == this.X && other.Y == this.Y + 1)
+            {
+                return 3;
+            }
+
+            if (other.X == this.X && other.Y == this.Y - 1)
+            {
+                return 4;
+            }
+
+            return -1;
+        }
+
         public FDPosition(int x, int y)
         {
             this.X = x;

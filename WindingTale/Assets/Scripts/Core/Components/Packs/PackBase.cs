@@ -12,6 +12,7 @@ namespace WindingTale.Core.Components.Packs
             MoveCreature = 10,
             RefreshCreature = 11,
             ShowCreatureInfo = 12,
+            RefreshAllCreatures = 13,
 
             ShowRange = 20,
             ShowMenu = 21,

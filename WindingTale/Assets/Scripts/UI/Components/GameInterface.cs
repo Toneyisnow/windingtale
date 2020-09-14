@@ -291,6 +291,20 @@ namespace WindingTale.UI.Components
             uiCreature.SetHasActioned(creature.HasActioned);
         }
 
+        public void RefreshAllCreatures()
+        {
+            foreach(GameObject creatureObj in this.fieldObjectsRoot.gameObject.FindChildrenByName("creature_"))
+            {
+                UICreature creatureCom = creatureObj.GetComponent<UICreature>();
+                if (creatureCom == null)
+                {
+                    continue;
+                }
+
+                creatureCom.SetHasActioned(false);
+            }
+        }
+
         public void ShowCreatureDialog(FDCreature creature, CreatureDialog.ShowType showType)
         {
             // Canvas

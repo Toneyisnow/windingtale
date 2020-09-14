@@ -602,7 +602,10 @@ namespace WindingTale.Core.Components
                 return null;
             }
 
-            creature.SetMoveTo(walkAction.MovePath.Desitination);
+            if (walkAction.MovePath.Desitination != null)
+            {
+                creature.SetMoveTo(walkAction.MovePath.Desitination);
+            }
 
             if (walkAction.DelayUnits > 0)
             {
@@ -668,6 +671,10 @@ namespace WindingTale.Core.Components
             {
                 creature.OnTurnStart();
             }
+
+
+            // Update UICreature on UI
+            gameCallback.OnHandlePack(new RefreshAllCreaturesPack());
 
             // Show turn icon
 

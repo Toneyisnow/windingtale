@@ -64,5 +64,10 @@ namespace WindingTale.Common
             this.Vertexes.Add(position);
         }
 
+        public void InsertToHead(FDPosition position)
+        {
+            this.Vertexes.Insert(0, position);
+        }
+
     }
 }
