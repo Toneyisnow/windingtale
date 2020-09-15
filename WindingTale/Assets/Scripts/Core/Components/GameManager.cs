@@ -616,7 +616,6 @@ namespace WindingTale.Core.Components
             return movePack;
         }
 
-
         private void PostCreatureAction(FDCreature creature)
         {
             // Set creature status
@@ -625,7 +624,34 @@ namespace WindingTale.Core.Components
 
             // Check all creatures are taken actions, and do startNewTurn
 
-            // StartNewTurnPhase();
+            List<FDCreature> creatureList = null;
+            if (this.turnPhase == CreatureFaction.Friend)
+            {
+                creatureList = this.Friends;
+            }
+            else if (this.turnPhase == CreatureFaction.Enemy)
+            {
+                creatureList = this.Enemies;
+            }
+            else if (this.turnPhase == CreatureFaction.Npc)
+            {
+                creatureList = this.Npcs;
+            }
+
+            bool hasAllActioned = true;
+            foreach(FDCreature c in creatureList)
+            {
+                if (!c.HasActioned)
+                {
+                    hasAllActioned = false;
+                    break;
+                }
+            }
+
+            if (hasAllActioned)
+            {
+                StartNewTurnPhase();
+            }
         }
 
         private void StartNewTurnPhase()

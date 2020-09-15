@@ -81,8 +81,8 @@ namespace WindingTale.Core.Components.Algorithms
             int leftPoint = leftMovePoint - moveCost;
             foreach (FDPosition direction in position.GetAdjacentPositions())
             {
-                if (direction.X < 0 || direction.X >= gameField.Width
-                    || direction.Y < 0 || direction.Y >= gameField.Height)
+                if (direction.X <= 0 || direction.X > gameField.Width
+                    || direction.Y <= 0 || direction.Y > gameField.Height)
                 {
                     continue;
                 }
@@ -159,37 +159,6 @@ namespace WindingTale.Core.Components.Algorithms
             }
 
             return false;
-        }
-
-
-        public FDMoveRange CalculateMoveRangeSample()
-        {
-            FDPosition central = this.creature.Position;
-            FDMoveRange range = new FDMoveRange(central);
-
-            for(int k = 1; k <= 5; k++)
-            {
-                for(int t= 0; t <= k; t++)
-                {
-                    int posX = central.X + t;
-                    int posY = central.Y + (k - t);
-                    range.AddPosition(FDPosition.At(posX, posY), central);
-
-                    posX = central.X - t;
-                    posY = central.Y + (k - t);
-                    range.AddPosition(FDPosition.At(posX, posY), central);
-
-                    posX = central.X + t;
-                    posY = central.Y - (k - t);
-                    range.AddPosition(FDPosition.At(posX, posY), central);
-
-                    posX = central.X - t;
-                    posY = central.Y - (k - t);
-                    range.AddPosition(FDPosition.At(posX, posY), central);
-                }
-            }
-            
-            return range;
         }
     }
 }

@@ -31,9 +31,15 @@ namespace WindingTale.Core.Components
             get; private set;
         }
 
+        /// <summary>
+        /// The posX and poY starts from 1.
+        /// </summary>
+        /// <param name="posX">Starts from 1.</param>
+        /// <param name="posY">Starts from 1.</param>
+        /// <returns></returns>
         public ShapeDefinition GetShapeAt(int posX, int posY)
         {
-            int shapeIndex = this.Map[posX, posY];
+            int shapeIndex = this.Map[posX - 1, posY - 1];
             if (this.Shapes.ContainsKey(shapeIndex))
             {
                 return this.Shapes[shapeIndex];

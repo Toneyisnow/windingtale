@@ -52,7 +52,7 @@ namespace FigAniTool2
 
         private void button3_Click(object sender, EventArgs e)
         {
-            ExportFieldMapData();
+            ExportDatoData();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -228,6 +228,25 @@ namespace FigAniTool2
 
                 string mapString = JsonConvert.SerializeObject(map, Formatting.Indented);
                 File.WriteAllText(string.Format(@"D:\Temp\FDII\Chapter_{0}.txt", m + 1), mapString);
+            }
+        }
+
+        private void ExportDatoData()
+        {
+            // Reading Palette
+            FDPalette palette = new FDPalette(@".\color");
+
+            DatoDataFile datoData = new DatoDataFile(@".\DATO.DAT");
+            datoData.LoadData();
+
+            for (int index = 0; index < datoData.DatoImages.Count; index++)
+            {
+                for (int f = 0; f < 4; f++)
+                {
+                    FDImage image = datoData.DatoImages[index][f];
+                    ImageDataExporter exporter = new ImageDataExporter(image.GenerateBitmap(palette));
+                    exporter.ExportToPng(string.Format(@"D:\Temp\FDII\Dato_{0}_{1}.png", index, f));
+                }
             }
         }
 

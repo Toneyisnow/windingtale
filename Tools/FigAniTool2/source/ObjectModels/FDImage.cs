@@ -96,9 +96,68 @@ namespace FigAniTool2.ObjectModels
             return image;
         }
 
+        public static FDImage ReadPlainFromBinary(BinaryReader reader, int width = 0, int height = 0)
+        {
+            if (width == 0 || height == 0)
+            {
+                width = reader.ReadInt16();
+                height = reader.ReadInt16();
+            }
+
+            FDImage image = new FDImage(width, height);
+
+            // Start reading frame image
+            while (!image.IsCompleted)
+            {
+                byte cbyte = reader.ReadByte();
+
+                if ((cbyte & 0xC0) == 0xC0) // Skip N 
+                {
+                    int count = cbyte - 0xC0 + 1;
+                    for (int i = 0; i < count; i++)
+                    {
+                        image.WriteData(0);  // write empty data
+                    }
+                }
+                else if ((cbyte & 0x80) == 0x80)
+                {
+                    int count = cbyte - 0x80 + 1;
+                    for (int i = 0; i < count; i++)
+                    {
+                        byte colorIndex = reader.ReadByte();
+                        image.WriteData(colorIndex);
+                    }
+                }
+                else if ((cbyte & 0x40) == 0x40)
+                {
+                    int count = cbyte - 0x40 + 1;
+                    byte colorIndex = reader.ReadByte();
+                    for (int i = 0; i < count; i++)
+                    {
+                        image.WriteData(0);
+                        image.WriteData(colorIndex);  // write plain data from palette
+                    }
+                }
+                else
+                {
+                    int count = cbyte + 1;
+                    byte colorIndex = reader.ReadByte();
+                    for (int i = 0; i < count; i++)
+                    {
+                        image.WriteData(colorIndex);  // write plain data from palette
+                    }
+                }
+            }
+
+            return image;
+        }
+
         public void WriteData(byte colorIndex)
         {
-            this.rawData[this.dataIndex++] = colorIndex;
+            if (dataIndex < Width * Height)
+            {
+                this.rawData[this.dataIndex++] = colorIndex;
+            }
         }
 
         public bool IsCompleted
