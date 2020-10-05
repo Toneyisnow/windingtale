@@ -304,6 +304,7 @@
     <None Include="Assets\Resources\Data\Shop.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_10.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_26.txt" />
+    <None Include="Assets\Resources\Fonts\CharactersList.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_22.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\Resources\Data\Magic.txt" />

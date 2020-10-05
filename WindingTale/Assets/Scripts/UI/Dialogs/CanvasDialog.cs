@@ -1,4 +1,5 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 using WindingTale.UI.Common;
 
@@ -68,6 +69,27 @@ namespace WindingTale.UI.Dialogs
             }
 
             return control;
+        }
+
+        protected GameObject AddText(string textString, Transform subDialog, Vector3 position, Vector3 scale)
+        {
+
+            GameObject textPro = new GameObject();
+            textPro.transform.parent = subDialog;
+            textPro.layer = 5; //UI
+            textPro.transform.localPosition = position;
+            textPro.transform.localScale = scale;
+
+            TextMeshPro textComp = textPro.AddComponent<TextMeshPro>();
+            textComp.text = textString;
+
+            Material material = Resources.Load<Material>("Fonts/FontsCommon");
+            TMP_FontAsset fontAssetA = Resources.Load<TMP_FontAsset>("Fonts/FontsCommon");
+            textComp.font = fontAssetA;
+            textComp.fontSharedMaterial = material;
+
+
+            return textPro;
         }
     }
 }
