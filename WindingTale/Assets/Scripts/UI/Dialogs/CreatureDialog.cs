@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Common;
 using WindingTale.Core.ObjectModels;
 
 namespace WindingTale.UI.Dialogs
@@ -19,7 +20,6 @@ namespace WindingTale.UI.Dialogs
             ViewMagic = 6,
         }
 
-
         private FDCreature creature = null;
 
         private ShowType showType = ShowType.ViewItem;
@@ -28,6 +28,11 @@ namespace WindingTale.UI.Dialogs
 
         public void Initialize(Canvas canvas, FDCreature creature, ShowType showType, Action<int> callback = null)
         {
+            if (creature == null)
+            {
+                throw new ArgumentNullException("creature");
+            }
+
             base.Initialize(canvas);
 
             this.OnCallback = callback;
@@ -48,38 +53,109 @@ namespace WindingTale.UI.Dialogs
             GameObject container = AddSubDialog(@"Others/ContainerBase", this.transform, new Vector3(-5, -126, 0), new Vector3(37, 1, 37),
                 () => { Debug.Log("Clicked Container."); OnCallback(1); });
 
-            AddSubDialog(@"Others/ConfirmButtonYes", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
-            AddSubDialog(@"Others/ConfirmButtonNo", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
+            // AddSubDialog(@"Others/ConfirmButtonYes", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
+            // AddSubDialog(@"Others/ConfirmButtonNo", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
 
+            AddToDetails(detail);
+
+            if (showType == ShowType.SelectMagic || showType == ShowType.ViewMagic)
+            {
+                AddMagicsToContainer(container);
+            }
+            else
+            {
+                AddItemsToContainer(container);
+            }
+        }
+
+        void AddToDetails(GameObject detail)
+        {
             // LV
-            AddText("01", detail.transform, new Vector3(1.52f, 2, -1.17f), new Vector3(0.3f, 0.3f, 1));
+            int level = creature.Data.Level;
+            AddText(StringUtils.Digit2(level), detail.transform, new Vector3(1.52f, 2, -1.17f), new Vector3(0.3f, 0.3f, 1));
             // EX
-            AddText("99", detail.transform, new Vector3(1.52f, 2, -0.12f), new Vector3(0.3f, 0.3f, 1));
+            int ex = creature.Data.Ex;
+            AddText(StringUtils.Digit2(ex), detail.transform, new Vector3(1.52f, 2, -0.12f), new Vector3(0.3f, 0.3f, 1));
             // MV
-            AddText("04", detail.transform, new Vector3(1.52f, 2, 1.02f), new Vector3(0.3f, 0.3f, 1));
+            int mv = creature.Data.CalculatedMv;
+            AddText(StringUtils.Digit2(mv), detail.transform, new Vector3(1.52f, 2, 1.02f), new Vector3(0.3f, 0.3f, 1));
             // AP
-            AddText("99", detail.transform, new Vector3(1.52f, 2, 2.22f), new Vector3(0.3f, 0.3f, 1));
+            int ap = creature.Data.CalculatedAp;
+            AddText(StringUtils.Digit2(ap), detail.transform, new Vector3(1.52f, 2, 2.22f), new Vector3(0.3f, 0.3f, 1));
             // DP
-            AddText("99", detail.transform, new Vector3(1.52f, 2, 3.36f), new Vector3(0.3f, 0.3f, 1));
-            
+            int dp = creature.Data.CalculatedDp;
+            AddText(StringUtils.Digit2(dp), detail.transform, new Vector3(1.52f, 2, 3.36f), new Vector3(0.3f, 0.3f, 1));
+
             // DX
-            AddText("04", detail.transform, new Vector3(5.63f, 2, 1.02f), new Vector3(0.3f, 0.3f, 1));
+            int dx = creature.Data.CalculatedDx;
+            AddText(StringUtils.Digit2(dx), detail.transform, new Vector3(5.63f, 2, 1.02f), new Vector3(0.3f, 0.3f, 1));
             // HIT
-            AddText("99", detail.transform, new Vector3(5.63f, 2, 2.22f), new Vector3(0.3f, 0.3f, 1));
+            int hit = creature.Data.CalculatedHit;
+            AddText(StringUtils.Digit2(hit), detail.transform, new Vector3(5.63f, 2, 2.22f), new Vector3(0.3f, 0.3f, 1));
             // EV
-            AddText("99", detail.transform, new Vector3(5.63f, 2, 3.36f), new Vector3(0.3f, 0.3f, 1));
+            int ev = creature.Data.CalculatedEv;
+            AddText(StringUtils.Digit2(ev), detail.transform, new Vector3(5.63f, 2, 3.36f), new Vector3(0.3f, 0.3f, 1));
 
             //HP
-            AddText("099", detail.transform, new Vector3(-9, 2, -0.5f), new Vector3(0.3f, 0.3f, 1));
+            int hp = creature.Data.Hp;
+            AddText(StringUtils.Digit3(hp), detail.transform, new Vector3(-9, 2, -0.5f), new Vector3(0.3f, 0.3f, 1));
             //HP MAX
-            AddText("999", detail.transform, new Vector3(-12f, 2, -0.5f), new Vector3(0.3f, 0.3f, 1));
+            int hpMax = creature.Data.HpMax;
+            AddText(StringUtils.Digit3(hpMax), detail.transform, new Vector3(-12f, 2, -0.5f), new Vector3(0.3f, 0.3f, 1));
             //MP
-            AddText("099", detail.transform, new Vector3(-9, 2, 1.5f), new Vector3(0.3f, 0.3f, 1));
+            int mp = creature.Data.Mp;
+            AddText(StringUtils.Digit3(mp), detail.transform, new Vector3(-9, 2, 1.5f), new Vector3(0.3f, 0.3f, 1));
             //MP MAX
-            AddText("999", detail.transform, new Vector3(-12f, 2, 1.5f), new Vector3(0.3f, 0.3f, 1));
+            int mpMax = creature.Data.MpMax;
+            AddText(StringUtils.Digit3(mpMax), detail.transform, new Vector3(-12f, 2, 1.5f), new Vector3(0.3f, 0.3f, 1));
 
             // LV
             // AddText("01", this.transform, new Vector3(200, 102, -5), new Vector3(8, 8, 1));
+
+        }
+
+        void AddItemsToContainer(GameObject container)
+        {
+            float zOrder = 2f;
+
+            float intervalX = -12f;
+            float intervalY = 1.7f;
+
+            float startX = 14.0f;
+            float startY = -2.55f;
+
+            float xOffsetIcon = -1.0f;
+            float xOffsetName = -3.0f;
+            float xOffsetAttr = -7.2f;
+            float xOffsetValue = -10f;
+
+            Vector3 scale = new Vector3(0.35f, 0.35f, 1);
+            for(int i =  0; i < creature.Data.Items.Count; i++)
+            {
+                int x = i / 4;
+                int y = i % 4;
+
+                float baseX = startX + intervalX * x;
+                float baseY = startY + intervalY * y;
+
+                // Icon
+                AddControl("Others/IconAttack_1", container.transform, new Vector3(baseX + xOffsetIcon, zOrder, baseY), new Vector3(1f, 1f, 1f));
+
+                // Name
+                AddText("炎龙剑", container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale);
+
+                // Attr
+                AddText("+AP", container.transform, new Vector3(baseX + xOffsetAttr, zOrder, baseY), scale);
+
+                // Value
+                int value = 15;
+                AddText(StringUtils.Digit3(value), container.transform, new Vector3(baseX + xOffsetValue, zOrder, baseY), scale);
+
+            }
+        }
+
+        void AddMagicsToContainer(GameObject container)
+        {
 
         }
 

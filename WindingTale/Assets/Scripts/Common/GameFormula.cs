@@ -23,9 +23,13 @@ namespace WindingTale.Common
             return creatureData.Ex;
         }
 
-        public static int CalculateEx(CreatureData creatureData)
+        public static int CalculateEv(CreatureData creatureData)
         {
-            return creatureData.Ex;
+            return creatureData.Ev;
+        }
+        public static int CalculateHit(CreatureData creatureData)
+        {
+            return creatureData.Hit;
         }
 
     }

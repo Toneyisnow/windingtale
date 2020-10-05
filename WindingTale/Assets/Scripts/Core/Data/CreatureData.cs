@@ -160,6 +160,16 @@ namespace WindingTale.Core.Components.Data
             get; set;
         }
 
+        public int Hit
+        {
+            get; set;
+        }
+
+        public int Ev
+        {
+            get; set;
+        }
+
         public int CalculatedAp
         {
             get
@@ -192,11 +202,19 @@ namespace WindingTale.Core.Components.Data
             }
         }
 
-        public int CalculatedEx
+        public int CalculatedEv
         {
             get
             {
-                return GameFormula.CalculateEx(this);
+                return GameFormula.CalculateEv(this);
+            }
+        }
+
+        public int CalculatedHit
+        {
+            get
+            {
+                return GameFormula.CalculateHit(this);
             }
         }
 
