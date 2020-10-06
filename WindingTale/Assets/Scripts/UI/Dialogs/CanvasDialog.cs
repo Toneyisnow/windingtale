@@ -59,8 +59,11 @@ namespace WindingTale.UI.Dialogs
             Renderer renderer = defaultObject.GetComponent<Renderer>();
             BoxCollider collider = control.AddComponent<BoxCollider>();
 
-            // float scaleFactor = 0.15f * scale.x;
-            // collider.size = new Vector3((float)(renderer.bounds.size.x / scaleFactor), 1, (float)(renderer.bounds.size.y / scaleFactor));
+            //float scaleFactor = 1.8f;
+            //collider.size = new Vector3((float)(renderer.bounds.size.x / scaleFactor), 1, (float)(renderer.bounds.size.y / scaleFactor));
+            collider.size = new Vector3(2f, 1, 2f);
+
+
 
             if (action != null)
             {

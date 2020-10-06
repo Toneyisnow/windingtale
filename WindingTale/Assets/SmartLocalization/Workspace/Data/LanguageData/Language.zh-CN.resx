@@ -116,10 +116,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-	<data name="talk1" xml:space="preserve">
-		<value>我们是海岸警报对的</value>
+	<data name="CREATURE_001" xml:space="preserve">
+		<value>索尔</value>
 	</data>
-	<data name="talk2" xml:space="preserve">
-		<value>你们好</value>
+	<data name="CREATURE_002" xml:space="preserve">
+		<value>优妮</value>
+	</data>
+	<data name="CREATURE_003" xml:space="preserve">
+		<value>亚雷斯</value>
+	</data>
+	<data name="CREATURE_004" xml:space="preserve">
+		<value>盖亚</value>
+	</data>
+	<data name="CREATURE_701" xml:space="preserve">
+		<value>盗贼</value>
+	</data>
+	<data name="CREATURE_702" xml:space="preserve">
+		<value>盗贼头目</value>
+	</data>
+	<data name="CREATURE_703" xml:space="preserve">
+		<value>士兵</value>
 	</data>
 </root>

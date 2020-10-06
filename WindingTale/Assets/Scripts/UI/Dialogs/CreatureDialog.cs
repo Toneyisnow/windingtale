@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.Scripts.UI.Common;
+using SmartLocalization;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,6 +30,8 @@ namespace WindingTale.UI.Dialogs
 
         public void Initialize(Canvas canvas, FDCreature creature, ShowType showType, Action<int> callback = null)
         {
+            LocalizedStrings.SetLanguage("zh-CN");
+            
             if (creature == null)
             {
                 throw new ArgumentNullException("creature");
@@ -51,7 +55,7 @@ namespace WindingTale.UI.Dialogs
             GameObject dato = AddSubDialog(@"Others/CreatureDato", this.transform, new Vector3(-352, 202, 0), new Vector3(30, 1, 30));
             GameObject detail = AddSubDialog(@"Others/CreatureDetail", this.transform, new Vector3(144, 202, 0), new Vector3(30, 1, 30));
             GameObject container = AddSubDialog(@"Others/ContainerBase", this.transform, new Vector3(-5, -126, 0), new Vector3(37, 1, 37),
-                () => { Debug.Log("Clicked Container."); OnCallback(1); });
+                () => { Debug.Log("Clicked Container."); /*OnCallback(1);*/ });
 
             // AddSubDialog(@"Others/ConfirmButtonYes", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
             // AddSubDialog(@"Others/ConfirmButtonNo", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
@@ -124,10 +128,10 @@ namespace WindingTale.UI.Dialogs
             float startX = 14.0f;
             float startY = -2.55f;
 
-            float xOffsetIcon = -1.0f;
-            float xOffsetName = -3.0f;
-            float xOffsetAttr = -7.2f;
-            float xOffsetValue = -10f;
+            float xOffsetIcon = -3.2f;
+            float xOffsetName = -8.5f;
+            float xOffsetAttr = -12.5f;
+            float xOffsetValue = -15.2f;
 
             Vector3 scale = new Vector3(0.35f, 0.35f, 1);
             for(int i =  0; i < creature.Data.Items.Count; i++)
@@ -139,10 +143,13 @@ namespace WindingTale.UI.Dialogs
                 float baseY = startY + intervalY * y;
 
                 // Icon
-                AddControl("Others/IconAttack_1", container.transform, new Vector3(baseX + xOffsetIcon, zOrder, baseY), new Vector3(1f, 1f, 1f));
+                int val = i;
+                AddControl("Others/IconAttack_1", container.transform, new Vector3(baseX + xOffsetIcon, zOrder, baseY), new Vector3(1f, 1f, 1f),
+                    () => { Debug.Log("Clicked at control: " + val); OnCallback(val); });
 
+                string name = LocalizedStrings.GetCreatureName(creature.Definition.AnimationId);
                 // Name
-                AddText("炎龙剑", container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale);
+                AddText(name, container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale);
 
                 // Attr
                 AddText("+AP", container.transform, new Vector3(baseX + xOffsetAttr, zOrder, baseY), scale);

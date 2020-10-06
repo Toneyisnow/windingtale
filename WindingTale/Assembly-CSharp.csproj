@@ -165,6 +165,7 @@
     <Compile Include="Assets\Scripts\UI\Common\Constants.cs" />
     <Compile Include="Assets\Scripts\UI\Common\GameObjectExtension.cs" />
     <Compile Include="Assets\Scripts\UI\Common\Global.cs" />
+    <Compile Include="Assets\Scripts\UI\Common\LocalizedStrings.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBase.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBuilder.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\BatchActivity.cs" />

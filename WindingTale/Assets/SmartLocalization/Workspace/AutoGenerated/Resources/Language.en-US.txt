@@ -116,10 +116,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-	<data name="talk1" xml:space="preserve">
+	<data name="CREATURE_001" xml:space="preserve">
 		<value>Good morning</value>
 	</data>
-	<data name="talk2" xml:space="preserve">
+	<data name="CREATURE_002" xml:space="preserve">
 		<value>Hellow</value>
+	</data>
+	<data name="CREATURE_003" xml:space="preserve">
+		<value />
+	</data>
+	<data name="CREATURE_004" xml:space="preserve">
+		<value />
+	</data>
+	<data name="CREATURE_701" xml:space="preserve">
+		<value />
+	</data>
+	<data name="CREATURE_702" xml:space="preserve">
+		<value />
+	</data>
+	<data name="CREATURE_703" xml:space="preserve">
+		<value />
 	</data>
 </root>
