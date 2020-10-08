@@ -50,30 +50,37 @@ namespace WindingTale.UI.Dialogs
             this.showType = showType;
         }
 
-        private bool CanEdit()
+        private bool CanEdit
         {
-            return showType.GetHashCode() >= 1 && showType.GetHashCode() <= 4;
+            get
+            {
+                return showType.GetHashCode() >= 1 && showType.GetHashCode() <= 4;
+            }
         }
 
-        private bool IsItemDialog()
+        private bool IsItemDialog
         {
-            return !(showType == ShowType.SelectMagic || showType == ShowType.ViewMagic);
+            get
+            {
+                return !(showType == ShowType.SelectMagic || showType == ShowType.ViewMagic);
+            }
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            GameObject dato = AddSubDialog(@"Others/CreatureDato", this.transform, new Vector3(-352, 202, 0), new Vector3(30, 1, 30));
-            GameObject detail = AddSubDialog(@"Others/CreatureDetail", this.transform, new Vector3(144, 202, 0), new Vector3(30, 1, 30));
-            GameObject container = AddSubDialog(@"Others/ContainerBase", this.transform, new Vector3(-5, -126, 0), new Vector3(37, 1, 37),
-                () => { Debug.Log("Clicked Container."); /*OnCallback(1);*/ });
+            GameObject dato = AddSubDialog(@"Others/CreatureDato", this.transform, new Vector3(-352, 202, 0), new Vector3(30, 1, 30),
+                () => { OnClickedContainer(); });
+            GameObject detail = AddSubDialog(@"Others/CreatureDetail", this.transform, new Vector3(144, 202, 0), new Vector3(30, 1, 30),
+                () => { OnClickedContainer(); });
+            GameObject container = AddSubDialog(@"Others/ContainerBase", this.transform, new Vector3(-5, -126, 0), new Vector3(37, 1, 37));
 
             // AddSubDialog(@"Others/ConfirmButtonYes", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
             // AddSubDialog(@"Others/ConfirmButtonNo", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
 
             AddToDetails(detail);
 
-            if (IsItemDialog())
+            if (IsItemDialog)
             {
                 AddItemsToContainer(container);
             }
@@ -85,6 +92,18 @@ namespace WindingTale.UI.Dialogs
 
         void AddToDetails(GameObject detail)
         {
+            // Name
+            string name = LocalizedStrings.GetCreatureName(creature.Definition.AnimationId);
+            AddText(FontAssets.AssetName.Creature, name, detail.transform, new Vector3(7, 2, -3), new Vector3(0.3f, 0.3f, 1));
+
+            // Race
+            string race = LocalizedStrings.GetRaceName(creature.Definition.Race);
+            AddText(race, detail.transform, new Vector3(-3, 2, -3), new Vector3(0.3f, 0.3f, 1));
+
+            // Occupation
+            string occupation = LocalizedStrings.GetOccupationName(creature.Definition.Occupation);
+            AddText(occupation, detail.transform, new Vector3(-8, 2, -3), new Vector3(0.3f, 0.3f, 1));
+
             // LV
             int level = creature.Data.Level;
             AddText(StringUtils.Digit2(level), detail.transform, new Vector3(1.52f, 2, -1.17f), new Vector3(0.3f, 0.3f, 1));
@@ -164,13 +183,13 @@ namespace WindingTale.UI.Dialogs
                 // Icon
                 int val = i;
                 AddControl("Others/IconAttack_1", container.transform, new Vector3(baseX + xOffsetIcon, zOrder, baseY), new Vector3(1f, 1f, 1f),
-                    () => { Debug.Log("Clicked at control: " + val); OnCallback(val); });
+                    () => { this.OnSelectClicked(val); });
 
                 string name = LocalizedStrings.GetItemName(itemId);
 
 
                 // Name
-                AddText(name, container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale);
+                AddText(FontAssets.AssetName.Item, name, container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale);
 
                 // Attr
                 AddText("+AP", container.transform, new Vector3(baseX + xOffsetAttr, zOrder, baseY), scale);
@@ -184,13 +203,65 @@ namespace WindingTale.UI.Dialogs
 
         void AddMagicsToContainer(GameObject container)
         {
+            float zOrder = 2f;
 
+            float intervalX = -8f;
+            float intervalY = 1.7f;
+
+            float startX = 9.0f;
+            float startY = -2.55f;
+
+            float xOffsetName = -0.5f;
+            float xOffsetCost = -4f;
+
+            Vector3 scale = new Vector3(0.35f, 0.35f, 1);
+            for (int i = 0; i < creature.Data.Magics.Count; i++)
+            {
+                int magicId = creature.Data.Magics[i];
+                MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
+
+                if (magic == null)
+                {
+                    continue;
+                }
+
+                int x = i / 4;
+                int y = i % 4;
+
+                float baseX = startX + intervalX * x;
+                float baseY = startY + intervalY * y;
+
+                // Name
+                int val = i;
+                string name = LocalizedStrings.GetMagicName(magicId);
+                AddText(FontAssets.AssetName.Magic, name, container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale,
+                    () => { this.OnSelectClicked(val); });
+
+                // Cost
+                AddText("-MP " + StringUtils.Digit3(magic.MpCost), container.transform, new Vector3(baseX + xOffsetCost, zOrder, baseY), scale);
+
+            }
         }
 
         // Update is called once per frame
         void Update()
         {
 
+        }
+
+        void OnSelectClicked(int index)
+        {
+            if (CanEdit)
+            {
+                Debug.Log("Clicked on index: " + index);
+                OnCallback(index);
+            }
+        }
+
+        void OnClickedContainer()
+        {
+            Debug.Log("Clicked on container. ");
+            OnCallback(-1);
         }
     }
 }

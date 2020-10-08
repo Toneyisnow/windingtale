@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.UI.Common;
+using System;
 using TMPro;
 using UnityEngine;
 using WindingTale.UI.Common;
@@ -57,16 +58,15 @@ namespace WindingTale.UI.Dialogs
             control.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
             Renderer renderer = defaultObject.GetComponent<Renderer>();
-            BoxCollider collider = control.AddComponent<BoxCollider>();
-
-            //float scaleFactor = 1.8f;
-            //collider.size = new Vector3((float)(renderer.bounds.size.x / scaleFactor), 1, (float)(renderer.bounds.size.y / scaleFactor));
-            collider.size = new Vector3(2f, 1, 2f);
-
-
 
             if (action != null)
             {
+                BoxCollider collider = control.AddComponent<BoxCollider>();
+
+                //float scaleFactor = 1.8f;
+                //collider.size = new Vector3((float)(renderer.bounds.size.x / scaleFactor), 1, (float)(renderer.bounds.size.y / scaleFactor));
+                collider.size = new Vector3(2f, 1, 2f);
+
                 Clickable clickable = control.AddComponent<Clickable>();
                 clickable.Initialize(() => { action(); });
             }
@@ -74,26 +74,45 @@ namespace WindingTale.UI.Dialogs
             return control;
         }
 
-        protected GameObject AddText(string textString, Transform subDialog, Vector3 position, Vector3 scale)
+        protected GameObject AddText(FontAssets.AssetName fontAssetName, string textString, Transform subDialog, Vector3 position, Vector3 scale, Action action = null)
         {
+            GameObject textObj = FontAssets.ComposeTextMeshObject(fontAssetName, textString);
+            IntialText(textObj, subDialog, position, scale, action);
 
-            GameObject textPro = new GameObject();
-            textPro.transform.parent = subDialog;
-            textPro.layer = 5; //UI
-            textPro.transform.localPosition = position;
-            textPro.transform.localScale = scale;
+            return textObj;
+        }
 
-            TextMeshPro textComp = textPro.AddComponent<TextMeshPro>();
-            textComp.text = textString;
+        protected GameObject AddText(int chapterId, string textString, Transform subDialog, Vector3 position, Vector3 scale, Action action = null)
+        {
+            GameObject textObj = FontAssets.ComposeTextMeshObjectForChapter(chapterId, textString);
+            IntialText(textObj, subDialog, position, scale, action);
 
-            ///Material material = Resources.Load<Material>("Fonts/FontAssets/FZB_Item");
-            ///textComp.fontSharedMaterial = material;
-            
-            TMP_FontAsset fontAssetA = Resources.Load<TMP_FontAsset>("Fonts/FontAssets/FZB_Item");
-            textComp.font = fontAssetA;
-            
+            return textObj;
+        }
 
-            return textPro;
+        protected GameObject AddText(string textString, Transform subDialog, Vector3 position, Vector3 scale, Action action = null)
+        {
+            return AddText(FontAssets.AssetName.Common, textString, subDialog, position, scale, action);
+        }
+
+        protected void IntialText(GameObject textObj, Transform subDialog, Vector3 position, Vector3 scale, Action action = null)
+        {
+            textObj.transform.parent = subDialog;
+            textObj.layer = 5; //UI
+            textObj.transform.localPosition = position;
+            textObj.transform.localScale = scale;
+
+            if (action != null)
+            {
+                BoxCollider collider = textObj.AddComponent<BoxCollider>();
+
+                //float scaleFactor = 1.8f;
+                //collider.size = new Vector3((float)(renderer.bounds.size.x / scaleFactor), 1, (float)(renderer.bounds.size.y / scaleFactor));
+                collider.size = new Vector3(2f, 1, 2f);
+
+                Clickable clickable = textObj.AddComponent<Clickable>();
+                clickable.Initialize(() => { action(); });
+            }
         }
     }
 }

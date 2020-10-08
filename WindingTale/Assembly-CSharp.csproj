@@ -163,6 +163,7 @@
     <Compile Include="Assets\Scripts\Core\ObjectModels\FDMenu.cs" />
     <Compile Include="Assets\Scripts\UI\Common\Clickable.cs" />
     <Compile Include="Assets\Scripts\UI\Common\Constants.cs" />
+    <Compile Include="Assets\Scripts\UI\Common\FontAssets.cs" />
     <Compile Include="Assets\Scripts\UI\Common\GameObjectExtension.cs" />
     <Compile Include="Assets\Scripts\UI\Common\Global.cs" />
     <Compile Include="Assets\Scripts\UI\Common\LocalizedStrings.cs" />
@@ -547,7 +548,7 @@
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Library/PackageCache/com.unity.nuget.newtonsoft-json@2.0.0/Runtime/Newtonsoft.Json.dll</HintPath>
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
@@ -916,16 +917,6 @@
       <Name>Unity.Timeline.Editor</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="UnityEditor.CacheServer.csproj">
-      <Project>{31B24855-69B4-208C-01E9-EC820D6B87B4}</Project>
-      <Name>UnityEditor.CacheServer</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="Unity.ScriptableBuildPipeline.Editor.csproj">
-      <Project>{B0D02745-5B13-C4D8-7B43-5B22B3AF1A80}</Project>
-      <Name>Unity.ScriptableBuildPipeline.Editor</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="Unity.VSCode.Editor.csproj">
       <Project>{432D4414-47EB-5948-BB33-38054B9CC184}</Project>
       <Name>Unity.VSCode.Editor</Name>
@@ -934,11 +925,6 @@
     <ProjectReference Include="Unity.TextMeshPro.Editor.csproj">
       <Project>{5F4F5D69-D046-385E-194D-B50C09A838DE}</Project>
       <Name>Unity.TextMeshPro.Editor</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="Unity.ResourceManager.csproj">
-      <Project>{4BF670CD-1FD9-2189-9E80-94CB61CB6704}</Project>
-      <Name>Unity.ResourceManager</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="UnityEngine.UI.csproj">
@@ -951,11 +937,6 @@
       <Name>Unity.Timeline</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="Unity.Addressables.Editor.csproj">
-      <Project>{2FD5041C-2A1E-60C6-0F20-482951336095}</Project>
-      <Name>Unity.Addressables.Editor</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="Unity.CollabProxy.Editor.csproj">
       <Project>{71428B1C-3DDE-10B7-22D7-13D34AFD350F}</Project>
       <Name>Unity.CollabProxy.Editor</Name>
@@ -966,29 +947,9 @@
       <Name>Unity.Rider.Editor</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="Unity.Localization.csproj">
-      <Project>{28604BD8-B58E-5095-7D12-DAD958942EAD}</Project>
-      <Name>Unity.Localization</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="Unity.Addressables.csproj">
-      <Project>{B0D6EDAC-74DD-01E7-A749-5DC7CFF72797}</Project>
-      <Name>Unity.Addressables</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="Unity.ScriptableBuildPipeline.csproj">
-      <Project>{25C54E40-5594-2982-A078-ADB980151616}</Project>
-      <Name>Unity.ScriptableBuildPipeline</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="Unity.TextMeshPro.csproj">
       <Project>{372810D5-9E41-98B1-C491-068AED43EDC7}</Project>
       <Name>Unity.TextMeshPro</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="Unity.Localization.Editor.csproj">
-      <Project>{5E71B0F5-0C36-E00F-47F6-E7D3AAF2710F}</Project>
-      <Name>Unity.Localization.Editor</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
