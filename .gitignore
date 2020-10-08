@@ -8,3 +8,7 @@ WindingTale/Packages
 WindingTale/bin
 WindingTale/obj
 *.meta
+*.suo
+Tools/TinyTools/bin/
+Tools/TinyTools/obj/
+WindingTale/Assets/AddressableAssetsData/

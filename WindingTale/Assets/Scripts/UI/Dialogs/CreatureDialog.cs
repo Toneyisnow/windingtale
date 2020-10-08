@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Definitions;
 using WindingTale.Core.ObjectModels;
 
 namespace WindingTale.UI.Dialogs
@@ -49,6 +50,16 @@ namespace WindingTale.UI.Dialogs
             this.showType = showType;
         }
 
+        private bool CanEdit()
+        {
+            return showType.GetHashCode() >= 1 && showType.GetHashCode() <= 4;
+        }
+
+        private bool IsItemDialog()
+        {
+            return !(showType == ShowType.SelectMagic || showType == ShowType.ViewMagic);
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -62,13 +73,13 @@ namespace WindingTale.UI.Dialogs
 
             AddToDetails(detail);
 
-            if (showType == ShowType.SelectMagic || showType == ShowType.ViewMagic)
+            if (IsItemDialog())
             {
-                AddMagicsToContainer(container);
+                AddItemsToContainer(container);
             }
             else
             {
-                AddItemsToContainer(container);
+                AddMagicsToContainer(container);
             }
         }
 
@@ -136,6 +147,14 @@ namespace WindingTale.UI.Dialogs
             Vector3 scale = new Vector3(0.35f, 0.35f, 1);
             for(int i =  0; i < creature.Data.Items.Count; i++)
             {
+                int itemId = creature.Data.Items[i];
+                ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
+
+                if (item == null)
+                {
+                    continue;
+                }
+
                 int x = i / 4;
                 int y = i % 4;
 
@@ -147,7 +166,9 @@ namespace WindingTale.UI.Dialogs
                 AddControl("Others/IconAttack_1", container.transform, new Vector3(baseX + xOffsetIcon, zOrder, baseY), new Vector3(1f, 1f, 1f),
                     () => { Debug.Log("Clicked at control: " + val); OnCallback(val); });
 
-                string name = LocalizedStrings.GetCreatureName(creature.Definition.AnimationId);
+                string name = LocalizedStrings.GetItemName(itemId);
+
+
                 // Name
                 AddText(name, container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale);
 

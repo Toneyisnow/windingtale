@@ -86,11 +86,12 @@ namespace WindingTale.UI.Dialogs
             TextMeshPro textComp = textPro.AddComponent<TextMeshPro>();
             textComp.text = textString;
 
-            Material material = Resources.Load<Material>("Fonts/FontsCommon");
-            TMP_FontAsset fontAssetA = Resources.Load<TMP_FontAsset>("Fonts/FontsCommon");
+            ///Material material = Resources.Load<Material>("Fonts/FontAssets/FZB_Item");
+            ///textComp.fontSharedMaterial = material;
+            
+            TMP_FontAsset fontAssetA = Resources.Load<TMP_FontAsset>("Fonts/FontAssets/FZB_Item");
             textComp.font = fontAssetA;
-            textComp.fontSharedMaterial = material;
-
+            
 
             return textPro;
         }
