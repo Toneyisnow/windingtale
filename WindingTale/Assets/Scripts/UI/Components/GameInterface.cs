@@ -24,7 +24,7 @@ namespace WindingTale.UI.Components
     {
         public int ChapterId = 0;
 
-        public Canvas GameCanvs = null;
+        public Canvas GameCanvas = null;
 
         private IGameHandler gameManager = null;
 
@@ -316,7 +316,7 @@ namespace WindingTale.UI.Components
 
             currentDialog = new GameObject();
             CreatureDialog creatureDialog = currentDialog.AddComponent<CreatureDialog>();
-            creatureDialog.Initialize(this.GameCanvs, creature, showType,
+            creatureDialog.Initialize(this.GameCanvas, creature, showType,
                 (index) => { this.OnDialogCallback(index); });
 
 
@@ -333,12 +333,12 @@ namespace WindingTale.UI.Components
 
             currentDialog = new GameObject();
             MessageDialog dialog = currentDialog.AddComponent<MessageDialog>();
-            dialog.Initialize(this.GameCanvs, animationId, content,
+            dialog.Initialize(this.GameCanvas, animationId, content,
                 (index) => { this.OnDialogCallback(index); } );
 
         }
 
-        public void ShowPromptyDialog(int animationId, string content)
+        public void ShowPromptDialog(int animationId, string content)
         {
             // Canvas
             if (currentDialog != null)
@@ -348,7 +348,7 @@ namespace WindingTale.UI.Components
 
             currentDialog = new GameObject();
             PromptDialog dialog = currentDialog.AddComponent<PromptDialog>();
-            dialog.Initialize(this.GameCanvs, animationId, content,
+            dialog.Initialize(this.GameCanvas, animationId, content,
                 (index) => { this.OnDialogCallback(index); });
 
         }

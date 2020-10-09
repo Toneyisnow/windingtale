@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Common;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Components;
@@ -12,7 +13,12 @@ namespace WindingTale.UI.Components.Activities
             get; private set;
         }
 
-        public string ConversationId
+        public ConversationId ConversationId
+        {
+            get; private set;
+        }
+
+        public MessageId MessageId
         {
             get; private set;
         }
@@ -22,12 +28,16 @@ namespace WindingTale.UI.Components.Activities
 
         }
 
-        public TalkActivity(int creatureId, string conversationid)
+        public TalkActivity(ConversationId cId)
         {
-            this.CreatureId = creatureId;
-            this.ConversationId = conversationid;
+            this.ConversationId = cId;
         }
 
+        public TalkActivity(int creatureId, MessageId mId)
+        {
+            this.CreatureId = creatureId;
+            this.MessageId = mId;
+        }
 
         public override void Start(IGameInterface gameInterface)
         {

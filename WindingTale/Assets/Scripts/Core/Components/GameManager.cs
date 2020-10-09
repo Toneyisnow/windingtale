@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Common;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -269,6 +270,10 @@ namespace WindingTale.Core.Components
             return null;
         }
 
+        public ItemDefinition GetTreatureAt(FDPosition position)
+        {
+            return null;
+        }
 
         #endregion
 
@@ -416,7 +421,7 @@ namespace WindingTale.Core.Components
         {
             for(int i = startIndex; i <= endIndex; i++)
             {
-                string conversationId = string.Format(@"Conversation_{0}_{1}_{2}", this.ChapterId(), sequenceId, i);
+                ConversationId conversationId = ConversationId.Create(this.ChapterId(), sequenceId, i);
                 TalkPack pack = new TalkPack(conversationId);
                 gameCallback.OnHandlePack(pack);
             }
@@ -505,11 +510,21 @@ namespace WindingTale.Core.Components
         }
 
         /// <summary>
-        /// To pick up the treature at the current position. The ItemIndex is the exchanged item if item list is full.
+        /// To pick up the treature at the current position.
         /// </summary>
         /// <param name="creatureId"></param>
         /// <param name="itemIndex"></param>
-        public void PickTreasure(int creatureId, int itemIndex = -1)
+        public void PickTreasure(FDPosition position)
+        {
+
+        }
+
+        /// <summary>
+        /// To update the treasure box
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="itemId"></param>
+        public void UpdateTreasure(FDPosition position, int itemId)
         {
 
         }

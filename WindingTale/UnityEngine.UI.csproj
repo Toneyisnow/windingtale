@@ -347,6 +347,9 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="CsvHelper">
       <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/SmartLocalization/Scripts/Editor/ThirdParty/CSVHelper/CsvHelper.dll</HintPath>
     </Reference>
@@ -367,9 +370,6 @@
     </Reference>
     <Reference Include="NPOI.OpenXmlFormats">
       <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/SmartLocalization/Scripts/Editor/ThirdParty/NPOI/NPOI.OpenXmlFormats.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>

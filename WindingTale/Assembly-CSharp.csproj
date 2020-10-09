@@ -76,12 +76,14 @@
     <Compile Include="Assets\Scripts\AI\Delegates\AIStandByDelegate.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AITreasureDelegate.cs" />
     <Compile Include="Assets\Scripts\Common\Constants.cs" />
+    <Compile Include="Assets\Scripts\Common\ConversationId.cs" />
     <Compile Include="Assets\Scripts\Common\FDMovePath.cs" />
     <Compile Include="Assets\Scripts\Common\FDMoveRange.cs" />
     <Compile Include="Assets\Scripts\Common\FDPosition.cs" />
     <Compile Include="Assets\Scripts\Common\FDRange.cs" />
     <Compile Include="Assets\Scripts\Common\FDSpan.cs" />
     <Compile Include="Assets\Scripts\Common\GameFormula.cs" />
+    <Compile Include="Assets\Scripts\Common\MessageId.cs" />
     <Compile Include="Assets\Scripts\Common\ResourceDataFile.cs" />
     <Compile Include="Assets\Scripts\Common\ResourceJsonFile.cs" />
     <Compile Include="Assets\Scripts\Common\Shared.cs" />

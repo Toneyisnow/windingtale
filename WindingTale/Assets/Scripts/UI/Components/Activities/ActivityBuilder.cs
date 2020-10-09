@@ -122,7 +122,16 @@ namespace WindingTale.UI.Components.Activities
                 throw new ArgumentNullException("pack");
             }
 
-            TalkActivity activity = new TalkActivity(pack.CreatureId, pack.Conversationid);
+            TalkActivity activity;
+            if (pack.ConversationId != null)
+            {
+                activity = new TalkActivity(pack.ConversationId);
+            }
+            else
+            {
+                activity = new TalkActivity(pack.CreatureId, pack.MessageId);
+            }
+
             return activity;
         }
 
@@ -135,7 +144,7 @@ namespace WindingTale.UI.Components.Activities
 
             CallbackActivity activity = new CallbackActivity((gameInterface) =>
             {
-                gameInterface.ShowPromptyDialog(pack.AnimationId, pack.Content);
+                gameInterface.ShowPromptDialog(pack.AnimationId, pack.Content);
             });
 
             return activity;

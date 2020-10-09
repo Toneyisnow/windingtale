@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Common;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,6 +31,7 @@ namespace WindingTale.Core.Components.ActionStates
             get; private set;
         }
 
+        private ItemDefinition treasureItem = null;
         private SubActionState subState = SubActionState.SelectMagic;
 
         public MenuActionState(IGameAction gameAction, int creatureId, FDPosition position)
@@ -66,7 +68,8 @@ namespace WindingTale.Core.Components.ActionStates
             this.SetMenu(3, MenuItemId.ActionRest, true, () =>
             {
                 // Check Treasure
-                if (this.Creature.Position == FDPosition.Invalid())
+                treasureItem = gameAction.GetTreatureAt(this.Creature.Position);
+                if (treasureItem != null)
                 {
                     subState = SubActionState.ConfirmPickTreasure;
                     return StateOperationResult.None();
@@ -146,15 +149,23 @@ namespace WindingTale.Core.Components.ActionStates
 
         private StateOperationResult OnPickTreasureConfirmed(int index)
         {
+            if (treasureItem == null)
+            {
+                return StateOperationResult.Clear();
+            }
+
             if (index == 1)
             {
-                TalkPack pack = new TalkPack("");
+                // Get the treasure Id
+                
+                TalkPack pack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 3, iParam1:treasureItem.ItemId));
                 SendPack(pack);
 
                 if (!this.Creature.Data.IsItemsFull())
                 {
                     // Pick up it
-                    gameAction.PickTreasure(this.CreatureId);
+                    this.Creature.Data.Items.Add(treasureItem.ItemId);
+                    gameAction.PickTreasure(this.Creature.Position);
                     gameAction.DoCreatureRest(this.CreatureId);
                     return StateOperationResult.Clear();
                 }
@@ -162,7 +173,9 @@ namespace WindingTale.Core.Components.ActionStates
                 {
                     // Confirm to exchange it
                     subState = SubActionState.ConfirmExchangeTreature;
-                    PromptPack prompt = new PromptPack(this.Creature.Definition.AnimationId, "");
+                    ////PromptPack prompt = new PromptPack(this.Creature.Definition.AnimationId, "");
+                    ////SendPack(prompt);
+                    TalkPack prompt = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Confirm, 7));
                     SendPack(prompt);
 
                     return StateOperationResult.None();
@@ -171,7 +184,7 @@ namespace WindingTale.Core.Components.ActionStates
             else
             {
                 // Then discard it
-                TalkPack pack = new TalkPack("");
+                TalkPack pack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 2));
                 SendPack(pack);
 
                 gameAction.DoCreatureRest(this.CreatureId);
@@ -184,7 +197,7 @@ namespace WindingTale.Core.Components.ActionStates
             if (index == 0)
             {
                 // Put it back
-                TalkPack talkPack = new TalkPack("");
+                TalkPack talkPack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 7));
                 SendPack(talkPack);
 
                 gameAction.DoCreatureRest(this.CreatureId);
@@ -204,18 +217,24 @@ namespace WindingTale.Core.Components.ActionStates
             if (index < 0)
             {
                 // Cancelled, put it back
-                TalkPack talkPack = new TalkPack("");
+                TalkPack talkPack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 7));
                 SendPack(talkPack);
             }
             else
             {
                 // Picked up xxx, put back xxxx
-                TalkPack talkPack = new TalkPack("");
-                SendPack(talkPack);
+                if (index >= 0 && index < this.Creature.Data.Items.Count)
+                {
+                    int exchangeItemId = this.Creature.Data.Items[index];
+                    TalkPack talkPack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 6, iParam1: treasureItem.ItemId, iParam2: exchangeItemId));
+                    SendPack(talkPack);
 
-                int itemId = 0;
-                this.Creature.Data.RemoveItemAt(index);
-                this.Creature.Data.AddItem(itemId);
+                    this.Creature.Data.RemoveItemAt(index);
+                    this.Creature.Data.AddItem(treasureItem.ItemId);
+
+                    // Add that item back to the treasure
+                    gameAction.UpdateTreature(this.Creature.Position, exchangeItemId);
+                }
             }
 
             gameAction.DoCreatureRest(this.CreatureId);

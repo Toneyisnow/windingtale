@@ -97,7 +97,7 @@ namespace WindingTale.UI.Dialogs
 
         protected void IntialText(GameObject textObj, Transform subDialog, Vector3 position, Vector3 scale, Action action = null)
         {
-            textObj.transform.parent = subDialog;
+            textObj.transform.SetParent(subDialog);
             textObj.layer = 5; //UI
             textObj.transform.localPosition = position;
             textObj.transform.localScale = scale;

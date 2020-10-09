@@ -325,6 +325,9 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="CsvHelper">
       <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/SmartLocalization/Scripts/Editor/ThirdParty/CSVHelper/CsvHelper.dll</HintPath>
     </Reference>
@@ -345,9 +348,6 @@
     </Reference>
     <Reference Include="NPOI.OpenXmlFormats">
       <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/SmartLocalization/Scripts/Editor/ThirdParty/NPOI/NPOI.OpenXmlFormats.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>D:/GitRoot/toneyisnow/windingtale/WindingTale/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
@@ -742,11 +742,6 @@
     <ProjectReference Include="Unity.TextMeshPro.Editor.csproj">
       <Project>{5F4F5D69-D046-385E-194D-B50C09A838DE}</Project>
       <Name>Unity.TextMeshPro.Editor</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="Unity.ResourceManager.csproj">
-      <Project>{4BF670CD-1FD9-2189-9E80-94CB61CB6704}</Project>
-      <Name>Unity.ResourceManager</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="UnityEngine.UI.csproj">

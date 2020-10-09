@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Common;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,15 +12,27 @@ namespace WindingTale.Core.Components.Packs
             get; private set;
         }
 
-        public string Conversationid
+        public ConversationId ConversationId
         {
             get; private set;
         }
 
-        public TalkPack(string convId)
+        public MessageId MessageId
+        {
+            get; private set;
+        }
+
+        public TalkPack(ConversationId convId)
         {
             this.Type = PackType.Talk;
-            this.Conversationid = convId;
+            this.ConversationId = convId;
+        }
+
+        public TalkPack(int creatureId, MessageId mId)
+        {
+            this.Type = PackType.Talk;
+            this.CreatureId = creatureId;
+            this.MessageId = mId;
         }
 
     }

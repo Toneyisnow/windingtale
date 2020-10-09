@@ -8,6 +8,10 @@ namespace WindingTale.UI.Scenes.GameFieldScene
     public class CameraNavigation : MonoBehaviour
     {
         public float speed = 2;
+     
+        private static readonly float YMax = 70f;
+        private static readonly float YMin = 5f;
+
         private Vector3 dragOrigin;
         private Vector3 elevateOrigin;
 
@@ -26,7 +30,10 @@ namespace WindingTale.UI.Scenes.GameFieldScene
                 return;
             }
 
-            if (!Input.GetMouseButton(0)) return;
+            if (!Input.GetMouseButton(0))
+            {
+                return;
+            }
 
             Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - dragOrigin);
             Vector3 move = new Vector3(-pos.x * speed, 0, -pos.y * speed);
@@ -42,10 +49,24 @@ namespace WindingTale.UI.Scenes.GameFieldScene
                 return;
             }
 
-            if (!Input.GetMouseButton(1)) return;
+            if (!Input.GetMouseButton(1))
+            {
+                return;
+            }
 
             Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - elevateOrigin);
-            Vector3 move = new Vector3(-pos.x * speed, -pos.y * speed, 0);
+
+            float speedY = -pos.y * speed;
+            if (transform.localPosition.y > YMax && speedY > 0)
+            {
+                speedY = 0;
+            }
+            if (transform.localPosition.y <YMin && speedY < 0)
+            {
+                speedY = 0;
+            }
+
+            Vector3 move = new Vector3(-pos.x * speed, speedY, 0);
 
             transform.Translate(move, Space.World);
         }

@@ -17,7 +17,7 @@ namespace WindingTale.UI.Components.Activities
 
         public override void Start(IGameInterface gameInterface)
         {
-            gameInterface.ShowPromptyDialog(pack.AnimationId, pack.Content);
+            gameInterface.ShowPromptDialog(pack.AnimationId, pack.Content);
             this.HasFinished = true;
         }
 

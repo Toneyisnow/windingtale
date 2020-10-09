@@ -42,6 +42,6 @@ namespace WindingTale.UI.Components
 
         void ShowMessageDialog(int animationId, string content);
 
-        void ShowPromptyDialog(int animationId, string content);
+        void ShowPromptDialog(int animationId, string content);
     }
 }

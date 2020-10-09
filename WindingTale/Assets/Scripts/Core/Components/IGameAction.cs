@@ -78,6 +78,8 @@ namespace WindingTale.Core.Components
         /// <returns></returns>
         FDCreature GetPreferredAttackTargetInRange(int creatureId);
 
+        ItemDefinition GetTreatureAt(FDPosition position);
+
     }
 
     /// <summary>
@@ -140,7 +142,9 @@ namespace WindingTale.Core.Components
 
         void DoCreatureRest(int creatureId);
 
-        void PickTreasure(int creatureId, int itemIndex = -1);
+        void PickTreasure(FDPosition position);
+
+        void UpdateTreature(FDPosition position, int itemId);
 
         void DoCreatureAllRest();
 
