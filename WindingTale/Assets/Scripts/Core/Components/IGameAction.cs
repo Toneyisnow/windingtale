@@ -144,7 +144,7 @@ namespace WindingTale.Core.Components
 
         void PickTreasure(FDPosition position);
 
-        void UpdateTreature(FDPosition position, int itemId);
+        void UpdateTreasure(FDPosition position, int itemId);
 
         void DoCreatureAllRest();
 

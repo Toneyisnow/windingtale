@@ -24,16 +24,6 @@ namespace Assets.Scripts.Common
             get; private set;
         }
 
-        public string StringParam1
-        {
-            get; private set;
-        }
-
-        public string StringParam2
-        {
-            get; private set;
-        }
-
         public int IntParam1
         {
             get; private set;
@@ -44,16 +34,20 @@ namespace Assets.Scripts.Common
             get; private set;
         }
 
-        public static MessageId Create(MessageTypes type, int key, string sParam1 = "", string sParam2 = "", int iParam1 = 0, int iParam2 = 0)
+        public int IntParam3
+        {
+            get; private set;
+        }
+
+        public static MessageId Create(MessageTypes type, int key, int iParam1 = 0, int iParam2 = 0, int iParam3 = 0)
         {
             MessageId result = new MessageId();
 
             result.MessageType = type;
             result.MessageKey = key;
-            result.StringParam1 = sParam1;
-            result.StringParam2 = sParam2;
             result.IntParam1 = iParam1;
             result.IntParam2 = iParam2;
+            result.IntParam3 = iParam3;
 
             return result;
         }

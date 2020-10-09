@@ -156,9 +156,7 @@ namespace WindingTale.Core.Components.ActionStates
 
             if (index == 1)
             {
-                // Get the treasure Id
-                
-                TalkPack pack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 3, iParam1:treasureItem.ItemId));
+                TalkPack pack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 3, treasureItem.ItemId));
                 SendPack(pack);
 
                 if (!this.Creature.Data.IsItemsFull())
@@ -226,7 +224,7 @@ namespace WindingTale.Core.Components.ActionStates
                 if (index >= 0 && index < this.Creature.Data.Items.Count)
                 {
                     int exchangeItemId = this.Creature.Data.Items[index];
-                    TalkPack talkPack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 6, iParam1: treasureItem.ItemId, iParam2: exchangeItemId));
+                    TalkPack talkPack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 6, treasureItem.ItemId, exchangeItemId));
                     SendPack(talkPack);
 
                     this.Creature.Data.RemoveItemAt(index);

@@ -16,6 +16,8 @@ using SmartLocalization;
 using WindingTale.UI.Common;
 using WindingTale.UI.Dialogs;
 using WindingTale.Core.Components.Data;
+using Assets.Scripts.Common;
+using Assets.Scripts.UI.Common;
 
 namespace WindingTale.UI.Components
 {
@@ -319,10 +321,9 @@ namespace WindingTale.UI.Components
             creatureDialog.Initialize(this.GameCanvas, creature, showType,
                 (index) => { this.OnDialogCallback(index); });
 
-
         }
 
-        public void ShowMessageDialog(int animationId, string content)
+        public void ShowConversationInDialog(ConversationId conversation)
         {
             // Canvas
             if (currentDialog != null)
@@ -333,7 +334,7 @@ namespace WindingTale.UI.Components
 
             currentDialog = new GameObject();
             MessageDialog dialog = currentDialog.AddComponent<MessageDialog>();
-            dialog.Initialize(this.GameCanvas, animationId, content,
+            dialog.Initialize(this.GameCanvas, conversation,
                 (index) => { this.OnDialogCallback(index); } );
 
         }
