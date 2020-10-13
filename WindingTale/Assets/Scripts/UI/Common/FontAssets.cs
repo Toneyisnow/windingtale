@@ -11,23 +11,14 @@ namespace Assets.Scripts.UI.Common
 {
     public class FontAssets
     {
-        public enum AssetName
-        {
-            Common,
-            Creature,
-            Item,
-            Magic,
-            Message
-        }
-
-        public static GameObject ComposeTextMeshObject(AssetName asset, string textString)
+        public static GameObject ComposeTextMeshObject(string textString)
         {
             GameObject textPro = new GameObject();
 
             TextMeshPro textComp = textPro.AddComponent<TextMeshPro>();
             textComp.text = textString;
 
-            TMP_FontAsset fontAssetA = Resources.Load<TMP_FontAsset>("Fonts/FontAssets/FZB_" + asset.ToString());
+            TMP_FontAsset fontAssetA = Resources.Load<TMP_FontAsset>("Fonts/FontAssets/FZB_Common");
             textComp.font = fontAssetA;
 
             return textPro;

@@ -71,6 +71,12 @@ namespace WindingTale.UI.Components
         // Update is called once per frame
         void Update()
         {
+            // If dialog is showing, stop Update
+            if (currentDialog != null)
+            {
+                return;
+            }
+
             globalVariables.Tick();
 
             // Call the update only if there is no dialog
@@ -323,7 +329,34 @@ namespace WindingTale.UI.Components
 
         }
 
-        public void ShowConversationInDialog(ConversationId conversation)
+        public void ShowConversationDialog(ConversationId conversation)
+        {
+            // Canvas
+            if (currentDialog != null)
+            {
+                Destroy(currentDialog);
+                currentDialog = null;
+            }
+
+            // Locate the creature with creatureId
+            int creatureId = LocalizedStrings.GetConversationCreatureId(conversation);
+            FDCreature creature = gameManager.GetCreature(creatureId);
+            string message = LocalizedStrings.GetConversationString(conversation);
+
+            int creatureAniId = 0;
+            if (creature != null)
+            {
+                creatureAniId = creature.Definition.AnimationId;
+            }
+
+            currentDialog = new GameObject();
+            MessageDialog dialog = currentDialog.AddComponent<MessageDialog>();
+            dialog.Initialize(this.GameCanvas, creatureAniId, conversation,
+                (index) => { this.OnDialogCallback(index); } );
+
+        }
+
+        public void ShowMessageDialog(int animationId, MessageId message)
         {
             // Canvas
             if (currentDialog != null)
@@ -334,22 +367,7 @@ namespace WindingTale.UI.Components
 
             currentDialog = new GameObject();
             MessageDialog dialog = currentDialog.AddComponent<MessageDialog>();
-            dialog.Initialize(this.GameCanvas, conversation,
-                (index) => { this.OnDialogCallback(index); } );
-
-        }
-
-        public void ShowPromptDialog(int animationId, string content)
-        {
-            // Canvas
-            if (currentDialog != null)
-            {
-                Destroy(currentDialog);
-            }
-
-            currentDialog = new GameObject();
-            PromptDialog dialog = currentDialog.AddComponent<PromptDialog>();
-            dialog.Initialize(this.GameCanvas, animationId, content,
+            dialog.Initialize(this.GameCanvas, animationId, message,
                 (index) => { this.OnDialogCallback(index); });
 
         }

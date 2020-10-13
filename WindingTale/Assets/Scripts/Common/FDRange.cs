@@ -32,7 +32,10 @@ namespace WindingTale.Common
                 this.positions = new List<FDPosition>();
             }
 
-            this.positions.Add(position);
+            if (!Contains(position))
+            {
+                this.positions.Add(position);
+            }
         }
 
         public virtual bool Contains(FDPosition position)

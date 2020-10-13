@@ -107,15 +107,13 @@ namespace WindingTale.Core.Components.ActionStates
 
         private bool IsMenuMagicEnabled()
         {
-            return this.Creature.Data.CanSpellMagic();
+            return this.Creature.Data.CanSpellMagic() && (!this.Creature.HasMoved() || this.Creature.Data.HasAfterMoveMagic());
         }
 
         private bool IsMenuItemEnabled()
         {
             return this.Creature.Data.Items.Count > 0;
         }
-
-
 
         #region Callback Index Methods
 
@@ -156,7 +154,7 @@ namespace WindingTale.Core.Components.ActionStates
 
             if (index == 1)
             {
-                TalkPack pack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 3, treasureItem.ItemId));
+                TalkPack pack = new TalkPack(this.Creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 3, treasureItem.ItemId));
                 SendPack(pack);
 
                 if (!this.Creature.Data.IsItemsFull())
@@ -173,7 +171,7 @@ namespace WindingTale.Core.Components.ActionStates
                     subState = SubActionState.ConfirmExchangeTreature;
                     ////PromptPack prompt = new PromptPack(this.Creature.Definition.AnimationId, "");
                     ////SendPack(prompt);
-                    TalkPack prompt = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Confirm, 7));
+                    TalkPack prompt = new TalkPack(this.Creature.Clone(), MessageId.Create(MessageId.MessageTypes.Confirm, 7));
                     SendPack(prompt);
 
                     return StateOperationResult.None();
@@ -182,7 +180,7 @@ namespace WindingTale.Core.Components.ActionStates
             else
             {
                 // Then discard it
-                TalkPack pack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 2));
+                TalkPack pack = new TalkPack(this.Creature, MessageId.Create(MessageId.MessageTypes.Message, 2));
                 SendPack(pack);
 
                 gameAction.DoCreatureRest(this.CreatureId);
@@ -195,7 +193,7 @@ namespace WindingTale.Core.Components.ActionStates
             if (index == 0)
             {
                 // Put it back
-                TalkPack talkPack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 7));
+                TalkPack talkPack = new TalkPack(this.Creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 7));
                 SendPack(talkPack);
 
                 gameAction.DoCreatureRest(this.CreatureId);
@@ -215,7 +213,7 @@ namespace WindingTale.Core.Components.ActionStates
             if (index < 0)
             {
                 // Cancelled, put it back
-                TalkPack talkPack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 7));
+                TalkPack talkPack = new TalkPack(this.Creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 7));
                 SendPack(talkPack);
             }
             else
@@ -224,14 +222,14 @@ namespace WindingTale.Core.Components.ActionStates
                 if (index >= 0 && index < this.Creature.Data.Items.Count)
                 {
                     int exchangeItemId = this.Creature.Data.Items[index];
-                    TalkPack talkPack = new TalkPack(this.CreatureId, MessageId.Create(MessageId.MessageTypes.Message, 6, treasureItem.ItemId, exchangeItemId));
+                    TalkPack talkPack = new TalkPack(this.Creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 6, treasureItem.ItemId, exchangeItemId));
                     SendPack(talkPack);
 
                     this.Creature.Data.RemoveItemAt(index);
                     this.Creature.Data.AddItem(treasureItem.ItemId);
 
                     // Add that item back to the treasure
-                    gameAction.UpdateTreature(this.Creature.Position, exchangeItemId);
+                    gameAction.UpdateTreasure(this.Creature.Position, exchangeItemId);
                 }
             }
 

@@ -74,14 +74,6 @@ namespace WindingTale.UI.Dialogs
             return control;
         }
 
-        protected GameObject AddText(FontAssets.AssetName fontAssetName, string textString, Transform subDialog, Vector3 position, Vector3 scale, Action action = null)
-        {
-            GameObject textObj = FontAssets.ComposeTextMeshObject(fontAssetName, textString);
-            IntialText(textObj, subDialog, position, scale, action);
-
-            return textObj;
-        }
-
         protected GameObject AddText(int chapterId, string textString, Transform subDialog, Vector3 position, Vector3 scale, Action action = null)
         {
             GameObject textObj = FontAssets.ComposeTextMeshObjectForChapter(chapterId, textString);
@@ -92,7 +84,10 @@ namespace WindingTale.UI.Dialogs
 
         protected GameObject AddText(string textString, Transform subDialog, Vector3 position, Vector3 scale, Action action = null)
         {
-            return AddText(FontAssets.AssetName.Common, textString, subDialog, position, scale, action);
+            GameObject textObj = FontAssets.ComposeTextMeshObject(textString);
+            IntialText(textObj, subDialog, position, scale, action);
+
+            return textObj;
         }
 
         protected void IntialText(GameObject textObj, Transform subDialog, Vector3 position, Vector3 scale, Action action = null)

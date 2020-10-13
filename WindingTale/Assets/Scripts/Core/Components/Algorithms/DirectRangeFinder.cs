@@ -59,7 +59,7 @@ namespace WindingTale.Core.Components.Algorithms
 
         public void AddValidPosition(FDRange range, FDPosition pos)
         {
-            if (pos.X < 0 || pos.X >= gameField.Width || pos.Y < 0 || pos.Y >= gameField.Height)
+            if (pos.X <= 0 || pos.X > gameField.Width || pos.Y <= 0 || pos.Y > gameField.Height)
             {
                 return;
             }

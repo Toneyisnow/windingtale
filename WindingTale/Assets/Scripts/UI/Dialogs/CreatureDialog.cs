@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.UI.Common;
+using Assets.Scripts.UI.Dialogs;
 using SmartLocalization;
 using System;
 using System.Collections;
@@ -69,7 +70,7 @@ namespace WindingTale.UI.Dialogs
         // Start is called before the first frame update
         void Start()
         {
-            GameObject dato = AddSubDialog(@"Others/CreatureDato", this.transform, new Vector3(-352, 202, 0), new Vector3(30, 1, 30),
+            GameObject datoBase = AddSubDialog(@"Others/CreatureDato", this.transform, new Vector3(-352, 202, 0), new Vector3(30, 1, 30),
                 () => { OnClickedContainer(); });
             GameObject detail = AddSubDialog(@"Others/CreatureDetail", this.transform, new Vector3(144, 202, 0), new Vector3(30, 1, 30),
                 () => { OnClickedContainer(); });
@@ -78,6 +79,12 @@ namespace WindingTale.UI.Dialogs
             // AddSubDialog(@"Others/ConfirmButtonYes", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
             // AddSubDialog(@"Others/ConfirmButtonNo", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
 
+            // Add Dato to dato
+            GameObject dato = new GameObject();
+            dato.transform.SetParent(datoBase.transform);
+            var datoControl = dato.AddComponent<DatoControl>();
+            datoControl.Initialize(creature.Definition.AnimationId, false);
+            
             AddToDetails(detail);
 
             if (IsItemDialog)
@@ -94,7 +101,7 @@ namespace WindingTale.UI.Dialogs
         {
             // Name
             string name = LocalizedStrings.GetCreatureName(creature.Definition.AnimationId);
-            AddText(FontAssets.AssetName.Creature, name, detail.transform, new Vector3(7, 2, -3), new Vector3(0.3f, 0.3f, 1));
+            AddText(name, detail.transform, new Vector3(7, 2, -3), new Vector3(0.3f, 0.3f, 1));
 
             // Race
             string race = LocalizedStrings.GetRaceName(creature.Definition.Race);
@@ -189,7 +196,7 @@ namespace WindingTale.UI.Dialogs
 
 
                 // Name
-                AddText(FontAssets.AssetName.Item, name, container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale);
+                AddText(name, container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale);
 
                 // Attr
                 AddText("+AP", container.transform, new Vector3(baseX + xOffsetAttr, zOrder, baseY), scale);
@@ -234,7 +241,7 @@ namespace WindingTale.UI.Dialogs
                 // Name
                 int val = i;
                 string name = LocalizedStrings.GetMagicName(magicId);
-                AddText(FontAssets.AssetName.Magic, name, container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale,
+                AddText(name, container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale,
                     () => { this.OnSelectClicked(val); });
 
                 // Cost

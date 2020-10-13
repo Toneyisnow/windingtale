@@ -16,11 +16,11 @@ namespace WindingTale.UI.Components
 
         private Dictionary<string, AssetBundle> assetBundles = null;
 
-        public static readonly Material MaterialDefault = Resources.Load<Material>(@"material-default");
+        public static readonly Material MaterialDefault = Resources.Load<Material>(@"Materials/material-default");
 
-        public static readonly Material MaterialTransparent = Resources.Load<Material>(@"material-transparent");
+        public static readonly Material MaterialTransparent = Resources.Load<Material>(@"Materials/material-transparent");
 
-        public static readonly Material MaterialGrey = Resources.Load<Material>(@"material-grey");
+        public static readonly Material MaterialGrey = Resources.Load<Material>(@"Materials/material-grey");
 
 
         public static AssetManager Instance()

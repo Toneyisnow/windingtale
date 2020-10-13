@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.ObjectModels;
 
 namespace WindingTale.Core.Components.Packs
 {
     public class TalkPack : PackBase
     {
-        public int CreatureId
+        public FDCreature Creature
         {
             get; private set;
         }
@@ -28,10 +29,10 @@ namespace WindingTale.Core.Components.Packs
             this.ConversationId = convId;
         }
 
-        public TalkPack(int creatureId, MessageId mId)
+        public TalkPack(FDCreature creature, MessageId mId)
         {
             this.Type = PackType.Talk;
-            this.CreatureId = creatureId;
+            this.Creature = creature;
             this.MessageId = mId;
         }
 

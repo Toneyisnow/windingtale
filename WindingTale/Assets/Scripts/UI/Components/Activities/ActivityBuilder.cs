@@ -129,7 +129,7 @@ namespace WindingTale.UI.Components.Activities
             }
             else
             {
-                activity = new TalkActivity(pack.CreatureId, pack.MessageId);
+                activity = new TalkActivity(pack.Creature, pack.MessageId);
             }
 
             return activity;
@@ -144,7 +144,7 @@ namespace WindingTale.UI.Components.Activities
 
             CallbackActivity activity = new CallbackActivity((gameInterface) =>
             {
-                gameInterface.ShowPromptDialog(pack.AnimationId, pack.Content);
+                /// gameInterface.ShowPromptDialog(pack.AnimationId, pack.Content);
             });
 
             return activity;

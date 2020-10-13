@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Components;
+using WindingTale.Core.ObjectModels;
 
 namespace WindingTale.UI.Components.Activities
 {
     public class TalkActivity : ActivityBase
     {
-        public int CreatureId
+        public FDCreature Creature
         {
             get; private set;
         }
@@ -33,15 +34,25 @@ namespace WindingTale.UI.Components.Activities
             this.ConversationId = cId;
         }
 
-        public TalkActivity(int creatureId, MessageId mId)
+        public TalkActivity(FDCreature creature, MessageId mId)
         {
-            this.CreatureId = creatureId;
+            this.Creature = creature;
             this.MessageId = mId;
         }
 
         public override void Start(IGameInterface gameInterface)
         {
             // Cursor move to the current talking creature, and show talk dialog
+
+            if (this.ConversationId != null)
+            {
+                gameInterface.ShowConversationDialog(this.ConversationId);
+            }
+            else if (this.MessageId != null)
+            {
+                gameInterface.ShowMessageDialog(this.Creature.Definition.AnimationId, this.MessageId);
+            }
+
 
             this.HasFinished = true;
         }

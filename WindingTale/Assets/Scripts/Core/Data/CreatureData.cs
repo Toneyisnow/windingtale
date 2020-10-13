@@ -321,6 +321,25 @@ namespace WindingTale.Core.Components.Data
             return this.Magics != null && this.Magics.Count > 0;
         }
 
+        public bool HasAfterMoveMagic()
+        {
+            if(!HasMagic())
+            {
+                return false;
+            }
+            
+            foreach(int magicId in this.Magics)
+            {
+                MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
+                if (magic.AllowAfterMove)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public bool CanAttack()
         {
             return this.AttackItemIndex >= 0;

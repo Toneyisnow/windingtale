@@ -3,12 +3,6 @@
   <version>0</version>
   <CultureInfos>
     <CultureInfo>
-      <languageCode>en-US</languageCode>
-      <englishName>English (United States)</englishName>
-      <nativeName>English (United States)</nativeName>
-      <isRightToLeft>false</isRightToLeft>
-    </CultureInfo>
-    <CultureInfo>
       <languageCode>zh-CN</languageCode>
       <englishName>Chinese (Simplified)</englishName>
       <nativeName>中文 (中国)</nativeName>

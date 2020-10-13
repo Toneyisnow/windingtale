@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Common;
 using Assets.Scripts.UI.Common;
+using Assets.Scripts.UI.Dialogs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,8 +21,6 @@ namespace WindingTale.UI.Dialogs
 
         private int chapterId = -1;
 
-        private FontAssets.AssetName fontAssetName;
-
         public void Initialize(Canvas canvas, int animationId, MessageId message, Action<int> callback = null)
         {
             base.Initialize(canvas);
@@ -36,13 +35,13 @@ namespace WindingTale.UI.Dialogs
             this.transform.localScale = new Vector3(1f, 1f, 1f);
         }
 
-        public void Initialize(Canvas canvas, ConversationId conversation, Action<int> callback = null)
+        public void Initialize(Canvas canvas, int animationId, ConversationId conversation, Action<int> callback = null)
         {
             base.Initialize(canvas);
             this.gameObject.name = "MessageDialog";
 
             this.chapterId = conversation.ChapterId;
-            this.creatureAniId = LocalizedStrings.GetConversationCreatureId(conversation);
+            this.creatureAniId = animationId;
             this.localizedMessage = LocalizedStrings.GetConversationString(conversation);
 
             this.onClickCallback = callback;
@@ -57,16 +56,27 @@ namespace WindingTale.UI.Dialogs
             GameObject messageBox = AddSubDialog(@"Others/MessageBox", this.transform, new Vector3(-5, -126, 0), new Vector3(37, 1, 37),
                 () => { this.OnClicked(1); });
 
+            // Add Dato to dato
+            GameObject dato = new GameObject();
+            dato.transform.SetParent(messageBox.transform);
+            var datoControl = dato.AddComponent<DatoControl>();
+            datoControl.Initialize(this.creatureAniId, true);
+            dato.transform.localPosition = new Vector3(9f, 1, 0);
+            dato.transform.localScale = new Vector3(8f, 8f, 1);
+
+
+            Vector3 textPosition = new Vector3(1.3f, 1, -2f);
+            Vector3 textScale = new Vector3(0.4f, 0.4f, 1);
+            GameObject textObject;
             if (chapterId >= 0)
             {
-                GameObject textAsset = FontAssets.ComposeTextMeshObjectForChapter(chapterId, localizedMessage);
+                textObject = AddText(chapterId, localizedMessage, messageBox.transform, textPosition, textScale);
             }
             else
             {
-                GameObject textAsset = FontAssets.ComposeTextMeshObject(FontAssets.AssetName.Common, localizedMessage);
+                textObject = AddText(localizedMessage, messageBox.transform, textPosition, textScale);
             }
 
-            
         }
 
         // Update is called once per frame

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Common;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
@@ -40,8 +41,9 @@ namespace WindingTale.UI.Components
 
         void ShowCreatureDialog(FDCreature creature, CreatureDialog.ShowType showType);
 
-        void ShowMessageDialog(int animationId, string content);
+        void ShowConversationDialog(ConversationId conversation);
 
-        void ShowPromptDialog(int animationId, string content);
+        void ShowMessageDialog(int animationId, MessageId message);
+
     }
 }
