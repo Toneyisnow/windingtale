@@ -153,5 +153,21 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        public Dictionary<string, int> ConversationIds
+        {
+            get; private set;
+        }
+
+        public void ReadConversationIdsFromFile(ResourceDataFile dataFile)
+        {
+            this.ConversationIds = new Dictionary<string, int>();
+            string key;
+            while ((key = dataFile.ReadString()) != string.Empty)
+            {
+                int value = dataFile.ReadInt();
+                this.ConversationIds[key] = value;
+            }
+        }
+
     }
 }

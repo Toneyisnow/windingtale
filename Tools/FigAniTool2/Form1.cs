@@ -52,7 +52,8 @@ namespace FigAniTool2
 
         private void button3_Click(object sender, EventArgs e)
         {
-            ExportDatoData();
+            // ExportDatoData();
+            ExportFieldMapData();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -227,7 +228,8 @@ namespace FigAniTool2
                 }
 
                 string mapString = JsonConvert.SerializeObject(map, Formatting.Indented);
-                File.WriteAllText(string.Format(@"D:\Temp\FDII\Chapter_{0}.txt", m + 1), mapString);
+                int mm = m + 1;
+                File.WriteAllText(string.Format(@"D:\Temp\FDII\Chapter_{0}.txt", (mm  < 10 ? "0" + mm.ToString() : mm.ToString())), mapString);
             }
         }
 

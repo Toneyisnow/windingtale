@@ -23,9 +23,10 @@ namespace WindingTale.Core.Components.Packs
             get; private set;
         }
 
-        public TalkPack(ConversationId convId)
+        public TalkPack(FDCreature creature, ConversationId convId)
         {
             this.Type = PackType.Talk;
+            this.Creature = creature;
             this.ConversationId = convId;
         }
 

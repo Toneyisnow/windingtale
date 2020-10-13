@@ -29,8 +29,9 @@ namespace WindingTale.UI.Components.Activities
 
         }
 
-        public TalkActivity(ConversationId cId)
+        public TalkActivity(FDCreature creature, ConversationId cId)
         {
+            this.Creature = creature;
             this.ConversationId = cId;
         }
 
@@ -46,13 +47,12 @@ namespace WindingTale.UI.Components.Activities
 
             if (this.ConversationId != null)
             {
-                gameInterface.ShowConversationDialog(this.ConversationId);
+                gameInterface.ShowConversationDialog(this.Creature, this.ConversationId);
             }
             else if (this.MessageId != null)
             {
-                gameInterface.ShowMessageDialog(this.Creature.Definition.AnimationId, this.MessageId);
+                gameInterface.ShowMessageDialog(this.Creature, this.MessageId);
             }
-
 
             this.HasFinished = true;
         }

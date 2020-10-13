@@ -329,7 +329,7 @@ namespace WindingTale.UI.Components
 
         }
 
-        public void ShowConversationDialog(ConversationId conversation)
+        public void ShowConversationDialog(FDCreature creature, ConversationId conversation)
         {
             // Canvas
             if (currentDialog != null)
@@ -338,25 +338,18 @@ namespace WindingTale.UI.Components
                 currentDialog = null;
             }
 
-            // Locate the creature with creatureId
-            int creatureId = LocalizedStrings.GetConversationCreatureId(conversation);
-            FDCreature creature = gameManager.GetCreature(creatureId);
+            // Move the map to corresponding location
+
+            // Show dialog
             string message = LocalizedStrings.GetConversationString(conversation);
-
-            int creatureAniId = 0;
-            if (creature != null)
-            {
-                creatureAniId = creature.Definition.AnimationId;
-            }
-
             currentDialog = new GameObject();
             MessageDialog dialog = currentDialog.AddComponent<MessageDialog>();
-            dialog.Initialize(this.GameCanvas, creatureAniId, conversation,
+            dialog.Initialize(this.GameCanvas, creature.Definition.AnimationId, conversation,
                 (index) => { this.OnDialogCallback(index); } );
 
         }
 
-        public void ShowMessageDialog(int animationId, MessageId message)
+        public void ShowMessageDialog(FDCreature creature, MessageId message)
         {
             // Canvas
             if (currentDialog != null)
@@ -365,9 +358,12 @@ namespace WindingTale.UI.Components
                 currentDialog = null;
             }
 
+            // Move the map to corresponding location
+
+            // Show dialog
             currentDialog = new GameObject();
             MessageDialog dialog = currentDialog.AddComponent<MessageDialog>();
-            dialog.Initialize(this.GameCanvas, animationId, message,
+            dialog.Initialize(this.GameCanvas, creature.Definition.AnimationId, message,
                 (index) => { this.OnDialogCallback(index); });
 
         }

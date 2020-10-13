@@ -29,6 +29,8 @@ namespace WindingTale.Core.Definitions
 
         private Dictionary<int, ShopDefinition> shopDefinitions = null;
 
+        private Dictionary<int, ChapterDefinition> chapterDefinitions = null;
+
 
         private DefinitionStore()
         {
@@ -198,12 +200,27 @@ namespace WindingTale.Core.Definitions
         /// <returns></returns>
         public ChapterDefinition LoadChapter(int chapterId)
         {
-            ChapterDefinition chapter = ResourceJsonFile.Load<ChapterDefinition>(string.Format(@"Data/Chapters/Chapter_{0}", chapterId));
+            if (chapterDefinitions == null)
+            {
+                chapterDefinitions = new Dictionary<int, ChapterDefinition>();
+            }
+
+            if (chapterDefinitions.ContainsKey(chapterId))
+            {
+                return chapterDefinitions[chapterId];
+            }
+
+            // Load Chapter
+            ChapterDefinition chapter = ResourceJsonFile.Load<ChapterDefinition>(string.Format(@"Data/Chapters/Chapter_{0}", StringUtils.Digit2(chapterId)));
             chapter.ChapterId = chapterId;
+
+            // Load Chapter ConversationId
+            ResourceDataFile conversationIdFile = new ResourceDataFile(string.Format(@"Data/Chapters/Chapter_{0}_ConversationId", StringUtils.Digit2(chapterId)));
+            chapter.ReadConversationIdsFromFile(conversationIdFile);
 
             // Load Chapter Creatures
             creatureChapterDefinitions = new Dictionary<int, CreatureDefinition>();
-            ResourceDataFile fileReader2 = new ResourceDataFile(string.Format(@"Data/Chapters/Chapter_{0}_Creature", chapterId));
+            ResourceDataFile fileReader2 = new ResourceDataFile(string.Format(@"Data/Chapters/Chapter_{0}_Creature", StringUtils.Digit2(chapterId)));
             int cCount = fileReader2.ReadInt();
 
             for (int i = 0; i < cCount; i++)
@@ -212,6 +229,7 @@ namespace WindingTale.Core.Definitions
                 creatureChapterDefinitions[def.DefinitionId] = def;
             }
 
+            chapterDefinitions[chapterId] = chapter;
             return chapter;
         }
 

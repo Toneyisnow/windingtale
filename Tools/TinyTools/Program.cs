@@ -11,7 +11,7 @@ namespace TinyTools
         static void Main(string[] args)
         {
             LocalizationStringGenerator generator = new LocalizationStringGenerator();
-            generator.Generate();
+            generator.GenerateChapterCreatureIds();
 
 
             Console.WriteLine("Press any key...");

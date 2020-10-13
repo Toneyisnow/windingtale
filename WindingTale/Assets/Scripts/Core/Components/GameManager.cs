@@ -28,6 +28,8 @@ namespace WindingTale.Core.Components
 
         private int chapterId;
 
+        private ChapterDefinition chapterDefinition = null;
+
         private int turnId = 0;
         private CreatureFaction turnPhase = CreatureFaction.Friend;
 
@@ -116,8 +118,8 @@ namespace WindingTale.Core.Components
         {
             this.chapterId = chapterId;
             // Load Field Map
-            ChapterDefinition chapter = DefinitionStore.Instance.LoadChapter(chapterId);
-            gameField = new GameField(chapter);
+            chapterDefinition = DefinitionStore.Instance.LoadChapter(chapterId);
+            gameField = new GameField(chapterDefinition);
 
             // Load Events
             EventLoader eventLoader = EventLoaderFactory.GetEventLoader(chapterId, eventManager);
@@ -419,11 +421,18 @@ namespace WindingTale.Core.Components
         /// <param name="endIndex"></param>
         public void ShowTalk(int sequenceId, int startIndex, int endIndex)
         {
-            for(int i = startIndex; i <= endIndex; i++)
+            
+            for (int i = startIndex; i <= endIndex; i++)
             {
                 ConversationId conversationId = ConversationId.Create(this.ChapterId(), sequenceId, i);
-                TalkPack pack = new TalkPack(conversationId);
-                gameCallback.OnHandlePack(pack);
+                string key = conversationId.GetKeyForId();
+                if (chapterDefinition.ConversationIds.ContainsKey(key))
+                {
+                    int creatureId = chapterDefinition.ConversationIds[key];
+                    FDCreature creature = this.GetCreature(creatureId);
+                    TalkPack pack = new TalkPack(creature.Clone(), conversationId);
+                    gameCallback.OnHandlePack(pack);
+                }
             }
 
             

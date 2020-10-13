@@ -125,7 +125,7 @@ namespace WindingTale.UI.Components.Activities
             TalkActivity activity;
             if (pack.ConversationId != null)
             {
-                activity = new TalkActivity(pack.ConversationId);
+                activity = new TalkActivity(pack.Creature, pack.ConversationId);
             }
             else
             {

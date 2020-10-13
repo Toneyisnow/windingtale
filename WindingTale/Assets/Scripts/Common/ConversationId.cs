@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WindingTale.Common;
 
 namespace Assets.Scripts.Common
 {
@@ -33,5 +34,13 @@ namespace Assets.Scripts.Common
 
             return conversation;
         }
+
+        public string GetKeyForId()
+        {
+            string key = string.Format(@"Chapter_{0}-{0}-{1}-{2}-Id",
+                StringUtils.Digit2(this.ChapterId), StringUtils.Digit2(this.SequenceId), StringUtils.Digit3(this.Index));
+            return key;
+        }
+
     }
 }

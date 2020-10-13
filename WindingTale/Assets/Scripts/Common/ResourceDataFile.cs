@@ -28,15 +28,26 @@ namespace WindingTale.Common
             index = 0;
         }
 
-        public int ReadInt()
+        public string ReadString()
         {
             if (index >= splittedText.Length)
+            {
+                return string.Empty;
+            }
+
+            return splittedText[index++];
+        }
+
+        public int ReadInt()
+        {
+            string str = ReadString();
+            if (string.IsNullOrEmpty(str))
             {
                 return -1;
             }
 
             int result = 0;
-            if(Int32.TryParse(splittedText[index++], out result))
+            if(Int32.TryParse(str, out result))
             {
                 return result;
             }

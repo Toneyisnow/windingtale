@@ -64,7 +64,6 @@ namespace WindingTale.UI.Dialogs
             dato.transform.localPosition = new Vector3(9f, 1, 0);
             dato.transform.localScale = new Vector3(8f, 8f, 1);
 
-
             Vector3 textPosition = new Vector3(1.3f, 1, -2f);
             Vector3 textScale = new Vector3(0.4f, 0.4f, 1);
             GameObject textObject;
