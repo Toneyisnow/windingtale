@@ -490,6 +490,11 @@ namespace WindingTale.Core.Components
         public void DoCreatureUseItem(int creatureId, int itemIndex, int targetCreatureId)
         {
             FDCreature creature = this.GetCreature(creatureId);
+            FDCreature targetCreature = this.GetCreature(targetCreatureId);
+            ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemIndex);
+            
+
+
             PostCreatureAction(creature);
         }
 

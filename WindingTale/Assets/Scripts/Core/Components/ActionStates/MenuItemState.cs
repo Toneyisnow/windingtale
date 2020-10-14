@@ -51,12 +51,12 @@ namespace WindingTale.Core.Components.ActionStates
                 ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature, CreatureInfoType.SelectUseItem);
                 SendPack(pack);
 
-                subState = SubActionState.SelectExchangeItem;
+                subState = SubActionState.SelectUseItem;
                 return StateOperationResult.None();
             });
 
             // Equip
-            this.SetMenu(2, MenuItemId.ItemUse, IsMenuEquipEnabled(), () =>
+            this.SetMenu(2, MenuItemId.ItemEquip, IsMenuEquipEnabled(), () =>
             {
                 ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature, CreatureInfoType.SelectEquipItem);
                 SendPack(pack);
@@ -128,6 +128,11 @@ namespace WindingTale.Core.Components.ActionStates
 
         private StateOperationResult OnSelectedExchangeItem(int index)
         {
+            if (index < 0)
+            {
+                return StateOperationResult.Pop();
+            }
+
             // Selete Target Friend
             SelectItemExchangeTargetState exchangeTargetState = new SelectItemExchangeTargetState(gameAction, this.CreatureId, index);
             return StateOperationResult.Push(exchangeTargetState);
@@ -143,8 +148,8 @@ namespace WindingTale.Core.Components.ActionStates
             }
 
             // Selete Target Friend
-            SelectItemUseTargetState exchangeTargetState = new SelectItemUseTargetState(gameAction, this.CreatureId, index);
-            return StateOperationResult.Push(exchangeTargetState);
+            SelectItemUseTargetState selectTargetState = new SelectItemUseTargetState(gameAction, this.CreatureId, index);
+            return StateOperationResult.Push(selectTargetState);
         }
         
         private StateOperationResult OnSelectedEquipItem(int index)

@@ -97,6 +97,14 @@ namespace WindingTale.UI.Dialogs
             textObj.transform.localPosition = position;
             textObj.transform.localScale = scale;
 
+            TextMeshProUGUI container = textObj.GetComponent<TextMeshProUGUI>();
+            //// container.bounds.size = new Vector3(50, 5, 1);
+
+            RectTransform container2 = textObj.GetComponent<RectTransform>();
+            //// container2.
+
+            // container = 120;
+
             if (action != null)
             {
                 BoxCollider collider = textObj.AddComponent<BoxCollider>();

@@ -79,7 +79,7 @@ namespace WindingTale.Core.Definitions.Items
 
         public override bool IsUsable()
         {
-            throw new System.NotImplementedException();
+            return false;
         }
     }
 }

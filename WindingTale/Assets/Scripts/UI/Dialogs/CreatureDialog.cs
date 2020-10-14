@@ -258,11 +258,44 @@ namespace WindingTale.UI.Dialogs
 
         void OnSelectClicked(int index)
         {
-            if (CanEdit)
+            if (!CanEdit)
             {
-                Debug.Log("Clicked on index: " + index);
+                return;
+            }
+            
+            Debug.Log("Clicked on index: " + index);
+
+            if(showType == ShowType.SelectAllItem)
+            {
                 OnCallback(index);
             }
+            else if (showType == ShowType.SelectEquipItem)
+            {
+                int itemId = this.creature.Data.Items[index];
+                ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
+                if (item.IsEquipment())
+                {
+                    OnCallback(index);
+                }
+            }
+            else if (showType == ShowType.SelectUseItem)
+            {
+                int itemId = this.creature.Data.Items[index];
+                ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
+                if (item.IsUsable())
+                {
+                    OnCallback(index);
+                }
+            }
+            else if (showType == ShowType.SelectMagic)
+            {
+                int magicId = this.creature.Data.Magics[index];
+                MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
+                OnCallback(index);
+            }
+
+
+
         }
 
         void OnClickedContainer()

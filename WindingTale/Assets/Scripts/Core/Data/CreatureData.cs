@@ -254,7 +254,7 @@ namespace WindingTale.Core.Components.Data
 
         public int GetItemAt(int itemIndex)
         {
-            if (this.Items != null || itemIndex < 0 || itemIndex >= this.Items.Count)
+            if (this.Items == null || itemIndex < 0 || itemIndex >= this.Items.Count)
             {
                 return -1;
             }

@@ -74,7 +74,7 @@ namespace WindingTale.Core.ObjectModels
 
         public bool HasMoved()
         {
-            return this.PreMovePosition.AreSame(this.Position);
+            return !this.PreMovePosition.AreSame(this.Position);
         }
 
         public bool HasActioned

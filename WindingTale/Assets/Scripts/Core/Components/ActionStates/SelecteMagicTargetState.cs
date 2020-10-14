@@ -75,7 +75,7 @@ namespace WindingTale.Core.Components.ActionStates
 
             if (this.magicRange.Contains(position))
             {
-                DirectRangeFinder rangeFinder = new DirectRangeFinder(gameAction.GetField(), this.Creature.Position, this.Magic.EffectScope);
+                DirectRangeFinder rangeFinder = new DirectRangeFinder(gameAction.GetField(), position, this.Magic.EffectScope);
                 FDRange magicScope = rangeFinder.CalculateRange();
 
                 List<FDCreature> targets = gameAction.GetCreatureInRange(magicScope, CreatureFaction.Enemy);

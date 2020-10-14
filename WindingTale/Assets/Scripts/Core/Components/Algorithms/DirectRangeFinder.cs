@@ -13,14 +13,16 @@ namespace WindingTale.Core.Components.Algorithms
         private GameField gameField = null;
         private FDPosition central = null;
 
-        private int rangeLength = 0;
+        private int outterLength = 0;
+        private int innerLength = 0;
 
-        public DirectRangeFinder(GameField gameField, FDPosition position, int length)
+        public DirectRangeFinder(GameField gameField, FDPosition position, int outterLength, int innerLength = 0)
         {
             this.gameField = gameField;
-
             this.central = position;
-            this.rangeLength = length;
+
+            this.outterLength = outterLength;
+            this.innerLength = innerLength;
         }
 
         /// <summary>
@@ -32,7 +34,7 @@ namespace WindingTale.Core.Components.Algorithms
             FDRange range = new FDRange(central);
 
             range.AddPosition(central);
-            for (int k = 1; k <= this.rangeLength; k++)
+            for (int k = this.innerLength; k <= this.outterLength; k++)
             {
                 for (int t = 0; t <= k; t++)
                 {

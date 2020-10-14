@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.ObjectModels;
 
@@ -38,6 +39,8 @@ namespace WindingTale.Core.Components.ActionStates
 
         private SubState subState = 0;
 
+        private FDRange range = null;
+
         /// <summary>
         /// 
         /// </summary>
@@ -53,19 +56,30 @@ namespace WindingTale.Core.Components.ActionStates
         public override void OnEnter()
         {
             base.OnEnter();
+
+            if (range == null)
+            {
+                DirectRangeFinder finder = new DirectRangeFinder(gameAction.GetField(), this.Creature.Position, 1, 1);
+                range = finder.CalculateRange();
+            }
+
+            ShowRangePack rangePack = new ShowRangePack(range);
+            SendPack(rangePack);
         }
 
         public override void OnExit()
         {
             base.OnExit();
+
+            ClearRangePack clear = new ClearRangePack();
+            SendPack(clear);
         }
 
         public override StateOperationResult OnSelectPosition(FDPosition position)
         {
-            // Selecte position must be next to current creature
-            if (!this.Creature.Position.IsNextTo(position))
+            if (range == null || !range.Contains(position))
             {
-                return StateOperationResult.None();
+                return StateOperationResult.Pop();
             }
 
             // No creature or not a friend/NPC

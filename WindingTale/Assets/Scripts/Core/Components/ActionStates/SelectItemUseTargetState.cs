@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Components.Algorithms;
+using WindingTale.Core.Components.Packs;
 using WindingTale.Core.ObjectModels;
 
 namespace WindingTale.Core.Components.ActionStates
 {
     public class SelectItemUseTargetState : ActionState
     {
-
         public FDCreature Creature
         {
             get; private set;
@@ -20,6 +21,11 @@ namespace WindingTale.Core.Components.ActionStates
         }
 
         public int SelectedItemIndex
+        {
+            get; private set;
+        }
+
+        public FDRange ItemRange
         {
             get; private set;
         }
@@ -39,19 +45,31 @@ namespace WindingTale.Core.Components.ActionStates
         public override void OnEnter()
         {
             base.OnEnter();
+
+            if (this.ItemRange == null)
+            {
+                DirectRangeFinder rangeFinder = new DirectRangeFinder(this.gameAction.GetField(), this.Creature.Position, 1);
+                this.ItemRange = rangeFinder.CalculateRange();
+            }
+
+            // Display the attack range on the UI.
+            ShowRangePack pack = new ShowRangePack(this.ItemRange);
+            SendPack(pack);
         }
 
         public override void OnExit()
         {
             base.OnExit();
+            ClearRangePack pack = new ClearRangePack();
+            SendPack(pack);
         }
 
         public override StateOperationResult OnSelectPosition(FDPosition position)
         {
-            // Selecte position must be next to current creature
-            if (!this.Creature.Position.IsNextTo(position))
+            // Selecte position must be included in the range
+            if (!this.ItemRange.Contains(position))
             {
-                return StateOperationResult.None();
+                return StateOperationResult.Pop();
             }
 
             // No creature or not a friend/NPC
