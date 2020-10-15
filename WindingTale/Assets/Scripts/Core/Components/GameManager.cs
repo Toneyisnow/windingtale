@@ -492,8 +492,8 @@ namespace WindingTale.Core.Components
             FDCreature creature = this.GetCreature(creatureId);
             FDCreature targetCreature = this.GetCreature(targetCreatureId);
             ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemIndex);
-            
 
+            creature.Data.RemoveItemAt(itemIndex);
 
             PostCreatureAction(creature);
         }
@@ -501,6 +501,20 @@ namespace WindingTale.Core.Components
         public void DoCreatureExchangeItem(int creatureId, int itemIndex, int targetCreatureId, int exchangeItemIndex = -1)
         {
             FDCreature creature = this.GetCreature(creatureId);
+            FDCreature targetCreature = this.GetCreature(targetCreatureId);
+
+            int itemId = creature.Data.GetItemAt(itemIndex);
+            creature.Data.RemoveItemAt(itemIndex);
+            
+            if (exchangeItemIndex >= 0)
+            {
+                int exchangeItemId = creature.Data.GetItemAt(exchangeItemIndex);
+                targetCreature.Data.RemoveItemAt(exchangeItemIndex);
+                creature.Data.AddItem(exchangeItemId);
+            }
+
+            targetCreature.Data.AddItem(itemId);
+
             PostCreatureAction(creature);
         }
 

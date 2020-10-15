@@ -249,7 +249,12 @@ namespace WindingTale.Core.Components.Data
 
         public void RemoveItemAt(int itemIndex)
         {
+            if (itemIndex < 0 || itemIndex >= this.Items.Count)
+            {
+                return;
+            }
 
+            this.Items.RemoveAt(itemIndex);
         }
 
         public int GetItemAt(int itemIndex)
@@ -264,7 +269,12 @@ namespace WindingTale.Core.Components.Data
 
         public void AddItem(int itemId)
         {
+            if(IsItemsFull())
+            {
+                return;
+            }
 
+            this.Items.Add(itemId);
         }
 
         public bool HasItem()

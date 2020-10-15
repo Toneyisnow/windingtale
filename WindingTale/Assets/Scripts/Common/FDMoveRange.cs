@@ -13,20 +13,28 @@ namespace WindingTale.Common
     {
         private Dictionary<FDPosition, FDPosition> directionedScope = null;
 
+        private List<FDPosition> skipPositions = null;
 
         public FDMoveRange(FDPosition central) : base(central)
         {
             directionedScope = new Dictionary<FDPosition, FDPosition>();
             directionedScope[this.CentralPosition] = null;
+
+            skipPositions = new List<FDPosition>();
         }
 
         public override List<FDPosition> Positions
         {
             get
             {
-                if(this.positions == null)
+                this.positions = directionedScope.Keys.ToList();
+
+                for(int pos = this.positions.Count - 1; pos >= 0; pos--)
                 {
-                    this.positions = directionedScope.Keys.ToList();
+                    if (skipPositions.Contains(this.positions[pos]))
+                    {
+                        this.positions.RemoveAt(pos);
+                    }
                 }
 
                 return this.positions;
@@ -36,6 +44,14 @@ namespace WindingTale.Common
         public void AddPosition(FDPosition position, FDPosition lastPosition)
         {
             directionedScope[position] = lastPosition;
+        }
+
+        public void AddSkipPosition(FDPosition position)
+        {
+            if (!skipPositions.Contains(position))
+            {
+                skipPositions.Add(position);
+            }
         }
 
         public override void AddPosition(FDPosition position)
@@ -49,7 +65,7 @@ namespace WindingTale.Common
         /// <returns></returns>
         public FDMovePath GetPath(FDPosition position)
         {
-            if (!directionedScope.ContainsKey(position))
+            if (!directionedScope.ContainsKey(position) || skipPositions.Contains(position))
             {
                 return null;
             }

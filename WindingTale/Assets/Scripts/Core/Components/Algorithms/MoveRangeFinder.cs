@@ -60,6 +60,27 @@ namespace WindingTale.Core.Components.Algorithms
                 WalkOnPosition(queueObject.Position, queueObject.LeftMovePoint, range);
             }
 
+            // Remove the friend creatures from range
+            List<FDCreature> creatureInRange = gameAction.GetCreatureInRange(range, creature.Faction);
+            if (creature.Faction == CreatureFaction.Friend)
+            {
+                creatureInRange.AddRange(gameAction.GetCreatureInRange(range, CreatureFaction.Npc));
+            }
+            else if (creature.Faction == CreatureFaction.Npc)
+            {
+                creatureInRange.AddRange(gameAction.GetCreatureInRange(range, CreatureFaction.Friend));
+            }
+
+            foreach (FDCreature c in creatureInRange)
+            {
+                if (c.CreatureId == creature.CreatureId)
+                {
+                    continue;
+                }
+
+                range.AddSkipPosition(c.Position);
+            }
+
             return range;
         }
 
@@ -94,7 +115,7 @@ namespace WindingTale.Core.Components.Algorithms
 
                 // If already occupied by creature
                 FDCreature existing = gameAction.GetCreatureAt(direction);
-                if (existing != null)
+                if (existing != null && existing.IsOppositeFaction(creature))
                 {
                     continue;
                 }
