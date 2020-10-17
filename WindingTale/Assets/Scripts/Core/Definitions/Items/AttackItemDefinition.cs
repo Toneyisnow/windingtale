@@ -32,7 +32,17 @@ namespace WindingTale.Core.Definitions.Items
             def.Dp = fileReader.ReadInt();
             def.Hit = fileReader.ReadInt();
 
-            def.Scope = fileReader.ReadInt();
+            int scope = fileReader.ReadInt();
+
+            if (scope <= 2)
+            {
+                def.AttackScope = new FDSpan(1, scope);
+            }
+            else
+            {
+                def.AttackScope = new FDSpan(2, scope);
+            }
+
             def.Ev = 0;     // Currently there is no weapon that ev > 0
 
             return def;
@@ -63,13 +73,9 @@ namespace WindingTale.Core.Definitions.Items
             get; private set;
         }
 
-        public int Scope
+        public FDSpan AttackScope
         {
             get; private set;
-        }
-        public FDRange GetAttackRange()
-        {
-            return null;
         }
 
         public override bool IsEquipment()

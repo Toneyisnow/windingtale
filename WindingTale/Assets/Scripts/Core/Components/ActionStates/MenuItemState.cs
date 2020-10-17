@@ -174,7 +174,7 @@ namespace WindingTale.Core.Components.ActionStates
         {
             // Discard the item
             this.Creature.Data.RemoveItemAt(index);
-            return StateOperationResult.Clear();
+            return StateOperationResult.None();
         }
 
 

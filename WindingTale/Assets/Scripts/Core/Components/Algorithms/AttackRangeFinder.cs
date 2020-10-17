@@ -6,7 +6,9 @@ using WindingTale.Core.ObjectModels;
 
 namespace WindingTale.Core.Components.Algorithms
 {
-   
+   /// <summary>
+   /// This is replaced by DirectRangeFinder
+   /// </summary>
     public class AttackRangeFinder
     {
         private IGameAction gameAction = null;

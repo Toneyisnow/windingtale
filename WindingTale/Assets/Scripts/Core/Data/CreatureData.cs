@@ -310,6 +310,32 @@ namespace WindingTale.Core.Components.Data
 
         }
 
+        public AttackItemDefinition GetAttackItem()
+        {
+            int itemId = this.GetItemAt(this.AttackItemIndex);
+
+            ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
+            if (item == null)
+            {
+                return null;
+            }
+
+            return item as AttackItemDefinition;
+        }
+
+        public DefendItemDefinition GetDefendItem()
+        {
+            int itemId = this.GetItemAt(this.DefendItemIndex);
+
+            ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
+            if (item == null)
+            {
+                return null;
+            }
+
+            return item as DefendItemDefinition;
+        }
+
         public int GetMagicAt(int magicIndex)
         {
             if (this.Magics != null || magicIndex < 0 || magicIndex >= this.Magics.Count)

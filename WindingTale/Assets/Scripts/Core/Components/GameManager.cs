@@ -10,6 +10,7 @@ using WindingTale.Core.Components.Data;
 using WindingTale.Core.Components.Events;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.Definitions;
+using WindingTale.Core.Definitions.Items;
 using WindingTale.Core.ObjectModels;
 using WindingTale.UI.Components;
 
@@ -256,8 +257,12 @@ namespace WindingTale.Core.Components
         public FDCreature GetPreferredAttackTargetInRange(int creatureId)
         {
             FDCreature creature = this.GetCreature(creatureId);
-            AttackRangeFinder finder = new AttackRangeFinder(this);
-            FDRange range = finder.FindRange(creature);
+
+            AttackItemDefinition attackItem = creature.Data.GetAttackItem();
+            FDSpan span = attackItem.AttackScope;
+
+            DirectRangeFinder finder = new DirectRangeFinder(this.gameField, creature.Position, span.Max, span.Min);
+            FDRange range = finder.CalculateRange();
 
             // Get a preferred target in range
             foreach(FDPosition position in range.Positions)
@@ -508,7 +513,7 @@ namespace WindingTale.Core.Components
             
             if (exchangeItemIndex >= 0)
             {
-                int exchangeItemId = creature.Data.GetItemAt(exchangeItemIndex);
+                int exchangeItemId = targetCreature.Data.GetItemAt(exchangeItemIndex);
                 targetCreature.Data.RemoveItemAt(exchangeItemIndex);
                 creature.Data.AddItem(exchangeItemId);
             }

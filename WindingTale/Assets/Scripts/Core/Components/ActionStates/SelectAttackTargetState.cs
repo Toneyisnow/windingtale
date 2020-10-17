@@ -4,6 +4,8 @@ using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Components.Packs;
+using WindingTale.Core.Definitions;
+using WindingTale.Core.Definitions.Items;
 using WindingTale.Core.ObjectModels;
 
 namespace WindingTale.Core.Components.ActionStates
@@ -32,8 +34,15 @@ namespace WindingTale.Core.Components.ActionStates
 
             if (this.AttackRange == null)
             {
-                AttackRangeFinder rangeFinder = new AttackRangeFinder(this.gameAction);
-                this.AttackRange = rangeFinder.FindRange(this.Creature);
+                AttackItemDefinition attackItem = this.Creature.Data.GetAttackItem();
+                if (attackItem == null)
+                {
+                    return;
+                }
+                
+                FDSpan span = attackItem.AttackScope;
+                DirectRangeFinder finder = new DirectRangeFinder(gameAction.GetField(), this.Creature.Position, span.Max, span.Min);
+                this.AttackRange = finder.CalculateRange();
             }
 
             // Display the attack range on the UI.
