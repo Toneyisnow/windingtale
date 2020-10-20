@@ -98,7 +98,7 @@ namespace WindingTale.Core.Components.ActionStates
             {
                 subState = SubState.SelectExchangeItem;
                 this.TargetCreature = targetCreature;
-                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(targetCreature, CreatureInfoType.SelectAllItem);
+                CreatureShowInfoPack pack = new CreatureShowInfoPack(targetCreature, CreatureInfoType.SelectAllItem);
                 SendPack(pack);
 
                 return StateOperationResult.None();

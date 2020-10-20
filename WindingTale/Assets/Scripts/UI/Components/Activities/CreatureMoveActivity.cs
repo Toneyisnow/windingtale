@@ -9,7 +9,7 @@ using WindingTale.UI.MapObjects;
 
 namespace WindingTale.UI.Components.Activities
 {
-    public class MoveCreatureActivity : ActivityBase
+    public class CreatureMoveActivity : ActivityBase
     {
         private float moveDeltaPerTick = 1.0f / WindingTale.UI.Common.Constants.TICK_PER_FRAME;
 
@@ -33,7 +33,7 @@ namespace WindingTale.UI.Components.Activities
             get; private set;
         }
 
-        public MoveCreatureActivity(int creaId, FDMovePath path)
+        public CreatureMoveActivity(int creaId, FDMovePath path)
         {
             this.CreatureId = creaId;
             this.MovePath = path;

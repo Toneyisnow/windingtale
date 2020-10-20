@@ -21,6 +21,8 @@ namespace WindingTale.Core.Definitions
 
         private Dictionary<int, ItemDefinition> itemDefinitions = null;
 
+        private Dictionary<int, OccupationDefinition> occupationDefinitions = null;
+
         private Dictionary<int, LevelUpDefinition> levelUpDefinitions = null;
 
         private Dictionary<int, LevelUpMagicDefinition> levelUpMagicDefinitions = null;
@@ -55,6 +57,7 @@ namespace WindingTale.Core.Definitions
             LoadCreatureDefinitions();
             LoadItemDefinitions();
             LoadMagicDefinitions();
+            LoadOccupationDefinitions();
             LoadLevelUpDefinitions();
             LoadLevelUpMagicDefinitions();
             LoadTransfersDefinitions();
@@ -139,6 +142,19 @@ namespace WindingTale.Core.Definitions
             {
                 MagicDefinition def = MagicDefinition.ReadFromFile(fileReader);
                 magicDefinitions[def.MagicId] = def;
+            }
+        }
+
+        private void LoadOccupationDefinitions()
+        {
+            occupationDefinitions = new Dictionary<int, OccupationDefinition>();
+            ResourceDataFile fileReader = new ResourceDataFile(@"Data/Occupation");
+            int count = fileReader.ReadInt();
+
+            for (int i = 0; i < count; i++)
+            {
+                OccupationDefinition def = OccupationDefinition.ReadFromFile(fileReader);
+                occupationDefinitions[def.OccupationId] = def;
             }
         }
 
@@ -262,6 +278,15 @@ namespace WindingTale.Core.Definitions
             if (this.itemDefinitions.ContainsKey(itemId))
             {
                 return this.itemDefinitions[itemId];
+            }
+            return null;
+        }
+
+        public OccupationDefinition GetOccupationDefinition(int occupationId)
+        {
+            if (this.occupationDefinitions.ContainsKey(occupationId))
+            {
+                return this.occupationDefinitions[occupationId];
             }
             return null;
         }

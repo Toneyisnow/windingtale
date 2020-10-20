@@ -58,6 +58,9 @@ namespace WindingTale.Core.ObjectModels
         {
             this.Data = new CreatureData();
             this.Data.CreatureId = creatureId;
+
+            this.Data.LastGainedExperience = 0;
+            this.Data.AIType = CreatureData.AITypes.AIType_Aggressive;
         }
 
         public FDCreature(int creatureId, CreatureFaction faction, CreatureDefinition definition, FDPosition position)
@@ -70,6 +73,17 @@ namespace WindingTale.Core.ObjectModels
             this.Definition = definition;
             this.Position = position;
             this.PreMovePosition = position;
+
+            this.Data.LastGainedExperience = 0;
+
+            if (this.Definition.Occupation == 154 || this.Definition.Occupation == 155 || this.Definition.DefinitionId == 747)
+            {
+                this.Data.AIType = CreatureData.AITypes.AIType_Defensive;
+            }
+            else
+            {
+                this.Data.AIType = CreatureData.AITypes.AIType_Aggressive;
+            }
         }
 
         public bool HasMoved()
@@ -113,11 +127,13 @@ namespace WindingTale.Core.ObjectModels
             return this.Faction == CreatureFaction.Friend && !this.HasActioned 
                 && this.Data.Effects != null && !this.Data.Effects.Contains(0);
         }
+
         public void SetMoveTo(FDPosition position)
         {
             this.PreMovePosition = this.Position;
             this.Position = position;
         }
+
         public void ResetPosition()
         {
             this.Position = this.PreMovePosition;
@@ -129,6 +145,28 @@ namespace WindingTale.Core.ObjectModels
             this.PreMovePosition = this.Position;
         }
 
+        public LevelUpInfo UpdateExpAndLevelUp()
+        {
+            if (this.Data.Level >= this.Definition.GetMaxLevel())
+            {
+                return null;
+            }
+
+            this.Data.Exp += this.Data.LastGainedExperience;
+            this.Data.LastGainedExperience = 0;
+
+            if(this.Data.Exp >= 100)
+            {
+                return this.Data.LevelUp();
+            }
+
+            return null;
+        }
+
+        public bool IsFrozen()
+        {
+            return this.Data.Effects.Contains(CreatureData.CreatureEffects.Frozen);
+        }
 
         public FDCreature Clone()
         {
@@ -143,6 +181,5 @@ namespace WindingTale.Core.ObjectModels
 
             return another;
         }
-
     }
 }

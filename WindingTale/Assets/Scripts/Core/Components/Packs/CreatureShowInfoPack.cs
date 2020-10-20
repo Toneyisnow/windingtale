@@ -15,7 +15,7 @@ namespace WindingTale.Core.Components.Packs
         View = 5,
     }
 
-    public class ShowCreatureInfoPack : PackBase
+    public class CreatureShowInfoPack : PackBase
     {
         public FDCreature Creature
         {
@@ -27,9 +27,9 @@ namespace WindingTale.Core.Components.Packs
             get; private set;
         }
 
-        public ShowCreatureInfoPack(FDCreature creature, CreatureInfoType type)
+        public CreatureShowInfoPack(FDCreature creature, CreatureInfoType type)
         {
-            this.Type = PackType.ShowCreatureInfo;
+            this.Type = PackType.CreatureShowInfo;
             this.Creature = creature;
             this.InfoType = type;
         }

@@ -73,6 +73,21 @@ namespace WindingTale.Core.Definitions.Items
             get; private set;
         }
 
+        public int GetPoisonRate()
+        {
+            if(this.ItemId == 214 || this.ItemId == 247)
+            {
+                return 10;
+            }
+
+            if (this.ItemId == 215)
+            {
+                return 10;
+            }
+
+            return 0;
+        }
+
         public FDSpan AttackScope
         {
             get; private set;

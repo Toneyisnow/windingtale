@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.AI;
+using WindingTale.AI.Delegates;
 using WindingTale.Common;
 using WindingTale.Core.Components.ActionStates;
 using WindingTale.Core.Components.Algorithms;
@@ -30,6 +32,12 @@ namespace WindingTale.Core.Components
         private int chapterId;
 
         private ChapterDefinition chapterDefinition = null;
+
+        private AIHandler enemyAIHandler = null;
+
+        private AIHandler npcAIHandler = null;
+
+
 
         private int turnId = 0;
         private CreatureFaction turnPhase = CreatureFaction.Friend;
@@ -69,6 +77,9 @@ namespace WindingTale.Core.Components
             eventManager = new GameEventManager(this);
 
             dispatcher = new GameStateDispatcher(this);
+
+            enemyAIHandler = new AIHandler(this, CreatureFaction.Enemy);
+            npcAIHandler = new AIHandler(this, CreatureFaction.Npc);
         }
 
         public void StartGame(ChapterRecord record)
@@ -98,6 +109,21 @@ namespace WindingTale.Core.Components
         public void SaveGame()
         {
             
+        }
+        
+        public List<FDCreature> GetAllFriends()
+        {
+            return this.Friends;
+        }
+
+        public List<FDCreature> GetAllEnemies()
+        {
+            return this.Enemies;
+        }
+
+        public List<FDCreature> GetAllNpcs()
+        {
+            return this.Npcs;
         }
 
         public GameStateDispatcher GetDispatcher()
@@ -310,7 +336,7 @@ namespace WindingTale.Core.Components
                     break;
             }
 
-            ComposeCreaturePack pack = new ComposeCreaturePack(creatureId, creatureDef.AnimationId, position);
+            CreatureComposePack pack = new CreatureComposePack(creatureId, creatureDef.AnimationId, position);
             gameCallback.OnHandlePack(pack);
         }
 
@@ -324,6 +350,7 @@ namespace WindingTale.Core.Components
                     if (this.Friends[i].CreatureId == creatureId)
                     {
                         this.Friends.RemoveAt(i);
+                        break;
                     }
                 }
                 for (int i = 0; i < this.Enemies.Count; i++)
@@ -331,6 +358,7 @@ namespace WindingTale.Core.Components
                     if (this.Enemies[i].CreatureId == creatureId)
                     {
                         this.Enemies.RemoveAt(i);
+                        break;
                     }
                 }
                 for (int i = 0; i < this.Npcs.Count; i++)
@@ -338,12 +366,13 @@ namespace WindingTale.Core.Components
                     if (this.Npcs[i].CreatureId == creatureId)
                     {
                         this.Npcs.RemoveAt(i);
+                        break;
                     }
                 }
 
                 if (disposeFromUI)
                 {
-                    DisposeCreaturePack pack = new DisposeCreaturePack(creature);
+                    CreatureDisposePack pack = new CreatureDisposePack(creatureId);
                     gameCallback.OnHandlePack(pack);
                 }
             }
@@ -466,6 +495,18 @@ namespace WindingTale.Core.Components
             dispatcher.OnSelectIndex(index);
         }
 
+        public void NotifyAI()
+        {
+            if (this.turnPhase == CreatureFaction.Enemy)
+            {
+                enemyAIHandler.IsNotified();
+            }
+            else if (this.turnPhase == CreatureFaction.Npc)
+            {
+                npcAIHandler.IsNotified();
+            }
+        }
+
         #endregion
 
         #region Do Operations
@@ -483,6 +524,27 @@ namespace WindingTale.Core.Components
         public void DoCreatureAttack(int creatureId, FDPosition targetPosition)
         {
             FDCreature creature = this.GetCreature(creatureId);
+            if (creature== null)
+            {
+                throw new ArgumentNullException("creature");
+            }
+
+            FDCreature target = this.GetCreatureAt(targetPosition);
+            if (target == null)
+            {
+                throw new ArgumentNullException("target");
+            }
+
+            FightingInformation fighting = DamageFormula.DealWithAttack(creature, target, gameField, true);
+            
+            CreatureDeadPack dead = new CreatureDeadPack(target.CreatureId);
+            gameCallback.OnHandlePack(dead);
+
+            // Talk about experience
+            MessageId mId = MessageId.Create(MessageId.MessageTypes.Message, 5, 33);
+            TalkPack talk = new TalkPack(creature, mId);
+            gameCallback.OnHandlePack(talk);
+
             PostCreatureAction(creature);
         }
 
@@ -534,7 +596,7 @@ namespace WindingTale.Core.Components
             if (!creature.HasMoved() && creature.Data.Hp < creature.Data.HpMax)
             {
                 // Recover HP and do animation
-                creature.Data.Hp = CreatureCalculator.GetRestRecoveredHp(creature.Data.Hp, creature.Data.HpMax);
+                creature.Data.Hp = CreatureFormula.GetRestRecoveredHp(creature.Data.Hp, creature.Data.HpMax);
                 CreatureAnimationPack pack = new CreatureAnimationPack(creature, CreatureAnimationPack.AnimationType.Rest);
                 gameCallback.OnHandlePack(pack);
             }
@@ -577,19 +639,17 @@ namespace WindingTale.Core.Components
                 if (creature.Data.Hp < creature.Data.HpMax)
                 {
                     // Recover HP and do animation
-                    creature.Data.Hp = CreatureCalculator.GetRestRecoveredHp(creature.Data.Hp, creature.Data.HpMax);
+                    creature.Data.Hp = CreatureFormula.GetRestRecoveredHp(creature.Data.Hp, creature.Data.HpMax);
                     CreatureAnimationPack pack = new CreatureAnimationPack(creature, CreatureAnimationPack.AnimationType.Rest);
                     gameCallback.OnHandlePack(pack);
                 }
 
                 // Set creature status
                 creature.HasActioned = true;
-                gameCallback.OnHandlePack(new RefreshCreaturePack(creature));
+                gameCallback.OnHandlePack(new CreatureRefreshPack(creature));
             }
 
             // Do startNewTurn
-            StartNewTurnPhase();
-            StartNewTurnPhase();
             StartNewTurnPhase();
         }
 
@@ -668,7 +728,7 @@ namespace WindingTale.Core.Components
         {
             // Set creature status
             creature.HasActioned = true;
-            gameCallback.OnHandlePack(new RefreshCreaturePack(creature));
+            gameCallback.OnHandlePack(new CreatureRefreshPack(creature));
 
             // Check all creatures are taken actions, and do startNewTurn
 
@@ -714,7 +774,14 @@ namespace WindingTale.Core.Components
             {
                 if (turnPhase == CreatureFaction.Friend)
                 {
-                    turnPhase = CreatureFaction.Npc;
+                    if(this.Npcs.Count > 0)
+                    {
+                        turnPhase = CreatureFaction.Npc;
+                    }
+                    else
+                    {
+                        turnPhase = CreatureFaction.Enemy;
+                    }
                 }
                 else if (turnPhase == CreatureFaction.Npc)
                 {
@@ -746,12 +813,16 @@ namespace WindingTale.Core.Components
                 creature.OnTurnStart();
             }
 
-
             // Update UICreature on UI
-            gameCallback.OnHandlePack(new RefreshAllCreaturesPack());
+            gameCallback.OnHandlePack(new CreatureRefreshAllPack());
+
+            // AI Call
 
             // Show turn icon
-
+            if (this.turnPhase == CreatureFaction.Friend)
+            {
+            
+            }
         }
 
         #endregion

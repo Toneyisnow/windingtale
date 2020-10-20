@@ -40,7 +40,7 @@ namespace WindingTale.Core.Components.ActionStates
 
             // If the creature has moved, reset the creature position
             this.creature.ResetPosition();
-            RefreshCreaturePack reset = new RefreshCreaturePack(this.creature.Clone());
+            CreatureRefreshPack reset = new CreatureRefreshPack(this.creature.Clone());
             SendPack(reset);
 
             ShowRangePack showRange = new ShowRangePack(moveRange);

@@ -56,7 +56,7 @@ namespace WindingTale.Core.Components.Events
             List<SingleWalkAction> walks3 = new List<SingleWalkAction>();
             walks3.Add(new SingleWalkAction(15, FDMovePath.Create(FDPosition.At(7, 2))));
             walks3.Add(new SingleWalkAction(16, FDMovePath.Create(FDPosition.At(2, 5))));
-            walks3.Add(new SingleWalkAction(17, FDMovePath.Create(FDPosition.At(3, 3))));
+            walks3.Add(new SingleWalkAction(17, FDMovePath.Create(FDPosition.At(5, 3))));
             walks3.Add(new SingleWalkAction(18, FDMovePath.Create(FDPosition.At(3, 3))));
             game.CreatureWalks(walks3);
 

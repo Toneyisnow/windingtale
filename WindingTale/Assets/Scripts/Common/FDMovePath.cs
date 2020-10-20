@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace WindingTale.Common
 {
+    /// <summary>
+    /// A point list to indicate move path. The start point is not included.
+    /// </summary>
     public class FDMovePath
     {
         public List<FDPosition> Vertexes

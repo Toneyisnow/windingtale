@@ -6,7 +6,7 @@ using WindingTale.Core.ObjectModels;
 
 namespace WindingTale.Core.Components.Packs
 {
-    public class ComposeCreaturePack : PackBase
+    public class CreatureComposePack : PackBase
     {
         public int CreatureId
         {
@@ -23,9 +23,9 @@ namespace WindingTale.Core.Components.Packs
             get; private set;
         }
 
-        public ComposeCreaturePack(int creatureId, int animationId, FDPosition position)
+        public CreatureComposePack(int creatureId, int animationId, FDPosition position)
         {
-            this.Type = PackType.ComposeCreature;
+            this.Type = PackType.CreatureCompose;
             this.CreatureId = creatureId;
             this.AnimationId = animationId;
             this.Position = position;

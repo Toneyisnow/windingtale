@@ -31,6 +31,11 @@ namespace Assets.Scripts.UI.Common
             TextMeshPro textComp = textPro.AddComponent<TextMeshPro>();
             textComp.text = textString;
 
+            //// textComp.fontSize = 20;
+            textComp.overflowMode = TextOverflowModes.ScrollRect;
+            textComp.enableWordWrapping = false;
+
+
             TMP_FontAsset fontAssetA = Resources.Load<TMP_FontAsset>("Fonts/FontAssets/FZB_Chapter-" + StringUtils.Digit2(chapterId));
             textComp.font = fontAssetA;
 

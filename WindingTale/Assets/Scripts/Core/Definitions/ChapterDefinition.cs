@@ -80,6 +80,39 @@ namespace WindingTale.Core.Definitions
             }
         }
 
+        public int AdjustedAp
+        {
+            get
+            {
+                switch (this.Type)
+                {
+                    case ShapeType.Plain: return 5;
+                    case ShapeType.Blocked: return 0;
+                    case ShapeType.Forest: return -5;
+                    case ShapeType.BlackForest: return -5;
+                    case ShapeType.Marsh: return -5;
+                    case ShapeType.Gap: return -5;
+                    default: return 0;
+                }
+            }
+        }
+
+        public int AdjustedDp
+        {
+            get
+            {
+                switch (this.Type)
+                {
+                    case ShapeType.Plain: return 0;
+                    case ShapeType.Blocked: return 0;
+                    case ShapeType.Forest: return 10;
+                    case ShapeType.BlackForest: return 10;
+                    case ShapeType.Marsh: return -5;
+                    case ShapeType.Gap: return 0;
+                    default: return 0;
+                }
+            }
+        }
     }
 
     public enum TreasureType

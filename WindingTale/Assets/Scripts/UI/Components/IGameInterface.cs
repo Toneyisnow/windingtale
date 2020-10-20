@@ -25,6 +25,8 @@ namespace WindingTale.UI.Components
 
         void RefreshAllCreatures();
 
+        void DisposeCreature(int creatureId);
+
         void TouchCreature(int creatureId);
 
         void TouchShape(FDPosition position);

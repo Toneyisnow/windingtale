@@ -43,7 +43,7 @@ namespace WindingTale.Core.Components.ActionStates
             // Magic
             this.SetMenu(0, MenuItemId.ActionMagic, IsMenuMagicEnabled(), () =>
             {
-                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature, CreatureInfoType.SelectMagic);
+                CreatureShowInfoPack pack = new CreatureShowInfoPack(this.Creature, CreatureInfoType.SelectMagic);
                 gameAction.GetCallback().OnHandlePack(pack);
 
                 subState = SubActionState.SelectMagic;
@@ -138,7 +138,7 @@ namespace WindingTale.Core.Components.ActionStates
             else
             {
                 // Go back to open magic info
-                ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature, CreatureInfoType.SelectMagic);
+                CreatureShowInfoPack pack = new CreatureShowInfoPack(this.Creature, CreatureInfoType.SelectMagic);
                 SendPack(pack);
 
                 return StateOperationResult.None();
@@ -201,7 +201,7 @@ namespace WindingTale.Core.Components.ActionStates
             }
 
             subState = SubActionState.ConfirmExchangeSelecting;
-            ShowCreatureInfoPack pack = new ShowCreatureInfoPack(this.Creature, CreatureInfoType.SelectAllItem);
+            CreatureShowInfoPack pack = new CreatureShowInfoPack(this.Creature, CreatureInfoType.SelectAllItem);
             SendPack(pack);
 
             return StateOperationResult.None();

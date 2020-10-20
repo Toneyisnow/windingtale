@@ -1,21 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.Components;
+using WindingTale.Core.ObjectModels;
 
-namespace WindingTale.AI
+namespace WindingTale.AI.Delegates
 {
     public class AIStandByDelegate : AIDelegate
     {
-        // Start is called before the first frame update
-        void Start()
+        public AIStandByDelegate(IGameAction gameAction, FDCreature c) : base(gameAction, c)
         {
 
         }
 
-        // Update is called once per frame
-        void Update()
+        public override void TakeAction()
         {
 
         }
+
     }
 }

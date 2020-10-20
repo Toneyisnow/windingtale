@@ -44,6 +44,11 @@ namespace WindingTale.UI.Components
 
         private GameObject currentDialog = null;
 
+        public bool IsAIMode
+        {
+            get; private set;
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -175,8 +180,15 @@ namespace WindingTale.UI.Components
 
             var creatureCom = creatureObj.AddComponent<UICreature>();
             creatureCom.Initialize(this, creatureId, animationId);
+            //// creatureCom.SetAnimateState(UICreature.AnimateStates.Dying);
 
             return creatureCom;
+        }
+
+        public void DisposeCreature(int creatureId)
+        {
+            UICreature creature = GetUICreature(creatureId);
+            Destroy(creature.gameObject);
         }
 
         public UIMenuItem PlaceMenu(MenuItemId menuItemId, FDPosition position, bool enabled, bool selected)
@@ -365,7 +377,6 @@ namespace WindingTale.UI.Components
             MessageDialog dialog = currentDialog.AddComponent<MessageDialog>();
             dialog.Initialize(this.GameCanvas, creature.Definition.AnimationId, message,
                 (index) => { this.OnDialogCallback(index); });
-
         }
 
         #endregion

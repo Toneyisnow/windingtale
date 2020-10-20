@@ -251,6 +251,11 @@ namespace WindingTale.Core.Definitions
             return (Occupation == 133 || Occupation == 132);
         }
 
+        public bool IsMagical()
+        {
+            return this.Magics.Count > 0;
+        }
+
         public int GetMaxLevel()
         {
             if (Race == 7)

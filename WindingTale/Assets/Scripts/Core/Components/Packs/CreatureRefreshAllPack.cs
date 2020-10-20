@@ -5,12 +5,12 @@ using UnityEngine;
 namespace WindingTale.Core.Components.Packs
 {
 
-    public class RefreshAllCreaturesPack : PackBase
+    public class CreatureRefreshAllPack : PackBase
     {
 
-        public RefreshAllCreaturesPack()
+        public CreatureRefreshAllPack()
         {
-            this.Type = PackType.RefreshAllCreatures;
+            this.Type = PackType.CreatureRefreshAll;
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace WindingTale.Core.Components.Algorithms
 {
-    public class CreatureCalculator
+    public class CreatureFormula
     {
         public static int GetRestRecoveredHp(int hp, int hpMax)
         {

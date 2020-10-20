@@ -6,6 +6,7 @@ using WindingTale.Common;
 using WindingTale.UI.Common;
 using WindingTale.UI.FieldMap;
 using WindingTale.UI.Components;
+using System;
 
 namespace WindingTale.UI.MapObjects
 {
@@ -18,11 +19,16 @@ namespace WindingTale.UI.MapObjects
             WalkRight,
             WalkUp,
             WalkDown,
+            Dying,
+            // Disposed,
         }
 
         private GameObject icon1 = null;
         private GameObject icon2 = null;
         private GameObject icon3 = null;
+
+        private float dyingStartTimestamp = 0;
+        private float dyingDuration = 1.8f;
 
         public int CreatureId
         {
@@ -65,7 +71,15 @@ namespace WindingTale.UI.MapObjects
 
         void Update()
         {
-            if (this.AnimateState == AnimateStates.Idle)
+            if (this.AnimateState == AnimateStates.Dying)
+            {
+                UpdateDyingAnimation(Constants.TICK_PER_FRAME);
+            }
+            //else if (this.AnimateState == AnimateStates.Disposed)
+            //{
+                // Do nothing, waiting for GameInterface to remove it
+            //}
+            else if (this.AnimateState == AnimateStates.Idle)
             {
                 UpdateAnimation(Constants.TICK_PER_FRAME * 4);
             }
@@ -89,6 +103,13 @@ namespace WindingTale.UI.MapObjects
                 case AnimateStates.Idle:
                     this.transform.localRotation = new Quaternion(0, 1.0f, 0, 0);
                     break;
+                case AnimateStates.Dying:
+                    this.transform.localRotation = new Quaternion(0, 1.0f, 0, 0);
+                    dyingStartTimestamp = Time.time;
+                    icon1.SetActive(false);
+                    icon2.SetActive(true);
+                    icon3.SetActive(false);
+                    break;
                 case AnimateStates.WalkLeft:
                     this.transform.localRotation = new Quaternion(0, -0.7f, 0, 0.7f);
                     break;
@@ -108,7 +129,7 @@ namespace WindingTale.UI.MapObjects
             this.AnimateState = state;
         }
 
-        void UpdateAnimation(int speedFrames)
+        private void UpdateAnimation(int speedFrames)
         {
             if (icon1 == null || icon2 == null || icon3 == null)
             {
@@ -146,6 +167,20 @@ namespace WindingTale.UI.MapObjects
                 icon2.SetActive(true);
                 icon3.SetActive(false);
             }
+        }
+
+        private void UpdateDyingAnimation(int speedFrames)
+        {
+            float nowTime = Time.time;
+            if (nowTime > dyingStartTimestamp + dyingDuration)
+            {
+                // this.AnimateState = AnimateStates.Disposed;
+                Destroy(this.gameObject);
+                return;
+            }
+
+            float rotateY = 90 + (nowTime - dyingStartTimestamp) * speedFrames * 80;
+            icon2.transform.localRotation = Quaternion.Euler(0, rotateY, 0);
         }
 
         public FDPosition GetCurrentPosition()

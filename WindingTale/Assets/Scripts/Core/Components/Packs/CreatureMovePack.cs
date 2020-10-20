@@ -19,7 +19,7 @@ namespace WindingTale.Core.Components.Packs
 
         public CreatureMovePack(int creatureId, FDMovePath movePath)
         {
-            this.Type = PackType.MoveCreature;
+            this.Type = PackType.CreatureMove;
             this.CreatureId = creatureId;
             this.MovePath = movePath;
         }

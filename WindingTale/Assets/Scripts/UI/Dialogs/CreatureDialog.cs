@@ -115,7 +115,7 @@ namespace WindingTale.UI.Dialogs
             int level = creature.Data.Level;
             AddText(StringUtils.Digit2(level), detail.transform, new Vector3(1.52f, 2, -1.17f), new Vector3(0.3f, 0.3f, 1));
             // EX
-            int ex = creature.Data.Ex;
+            int ex = creature.Data.Exp;
             AddText(StringUtils.Digit2(ex), detail.transform, new Vector3(1.52f, 2, -0.12f), new Vector3(0.3f, 0.3f, 1));
             // MV
             int mv = creature.Data.CalculatedMv;

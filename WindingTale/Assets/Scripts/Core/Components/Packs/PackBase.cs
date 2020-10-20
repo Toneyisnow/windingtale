@@ -8,11 +8,13 @@ namespace WindingTale.Core.Components.Packs
     {
         public enum PackType
         {
-            ComposeCreature = 1,
-            MoveCreature = 10,
-            RefreshCreature = 11,
-            ShowCreatureInfo = 12,
-            RefreshAllCreatures = 13,
+            CreatureCompose = 1,
+            CreatureMove = 10,
+            CreatureRefresh = 11,
+            CreatureShowInfo = 12,
+            CreatureRefreshAll = 13,
+            CreatureDead = 14,
+            CreatureDispose = 15,
 
             ShowRange = 20,
             ShowMenu = 21,

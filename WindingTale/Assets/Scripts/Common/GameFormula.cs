@@ -20,7 +20,7 @@ namespace WindingTale.Common
 
         public static int CalculateDx(CreatureData creatureData)
         {
-            return creatureData.Ex;
+            return creatureData.Exp;
         }
 
         public static int CalculateEv(CreatureData creatureData)

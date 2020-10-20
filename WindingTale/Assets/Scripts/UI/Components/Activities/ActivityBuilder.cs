@@ -20,25 +20,31 @@ namespace WindingTale.UI.Components.Activities
 
             switch (pack.Type)
             {
-                case PackBase.PackType.ComposeCreature:
-                    return BuildComposeCreatureActivity(pack as ComposeCreaturePack);
+                case PackBase.PackType.CreatureCompose:
+                    return BuildComposeCreatureActivity(pack as CreatureComposePack);
 
-                case PackBase.PackType.MoveCreature:
+                case PackBase.PackType.CreatureMove:
                     return BuildMoveCreatureActivity(pack as CreatureMovePack);
 
-                case PackBase.PackType.RefreshCreature:
-                    return BuildRefreshCreatureActivity(pack as RefreshCreaturePack);
+                case PackBase.PackType.CreatureRefresh:
+                    return BuildRefreshCreatureActivity(pack as CreatureRefreshPack);
 
-                case PackBase.PackType.RefreshAllCreatures:
-                    return BuildRefreshAllCreaturesActivity(pack as RefreshAllCreaturesPack);
+                case PackBase.PackType.CreatureDead:
+                    return BuildCreatureDeadActivity(pack as CreatureDeadPack);
 
-                case PackBase.PackType.ShowCreatureInfo:
-                    return BuildShowCreatureInfoActivity(pack as ShowCreatureInfoPack);
+                case PackBase.PackType.CreatureDispose:
+                    return BuildCreatureDisposeActivity(pack as CreatureDisposePack);
+
+                case PackBase.PackType.CreatureRefreshAll:
+                    return BuildRefreshAllCreaturesActivity(pack as CreatureRefreshAllPack);
+
+                case PackBase.PackType.CreatureShowInfo:
+                    return BuildShowCreatureInfoActivity(pack as CreatureShowInfoPack);
 
                 case PackBase.PackType.Talk:
                     return BuildTalkActivity(pack as TalkPack);
 
-                case PackBase.PackType.Prompt:
+                 case PackBase.PackType.Prompt:
                     return BuildPromptActivity(pack as PromptPack);
 
                 case PackBase.PackType.Batch:
@@ -65,7 +71,7 @@ namespace WindingTale.UI.Components.Activities
             return null;
         }
 
-        private static ActivityBase BuildComposeCreatureActivity(ComposeCreaturePack pack)
+        private static ActivityBase BuildComposeCreatureActivity(CreatureComposePack pack)
         {
             if (pack == null)
             {
@@ -85,11 +91,11 @@ namespace WindingTale.UI.Components.Activities
                 throw new ArgumentNullException("CreatureMovePack");
             }
 
-            MoveCreatureActivity moveCreature = new MoveCreatureActivity(pack.CreatureId, pack.MovePath);
+            CreatureMoveActivity moveCreature = new CreatureMoveActivity(pack.CreatureId, pack.MovePath);
             return moveCreature;
         }
 
-        private static ActivityBase BuildRefreshCreatureActivity(RefreshCreaturePack pack)
+        private static ActivityBase BuildRefreshCreatureActivity(CreatureRefreshPack pack)
         {
             if (pack == null)
             {
@@ -102,7 +108,31 @@ namespace WindingTale.UI.Components.Activities
             return activity;
         }
 
-        private static ActivityBase BuildRefreshAllCreaturesActivity(RefreshAllCreaturesPack pack)
+        private static ActivityBase BuildCreatureDeadActivity(CreatureDeadPack pack)
+        {
+            if (pack == null)
+            {
+                throw new ArgumentNullException("CreatureDeadPack");
+            }
+
+            CreatureDeadActivity activity = new CreatureDeadActivity(pack.CreatureIds);
+            return activity;
+        }
+
+        private static ActivityBase BuildCreatureDisposeActivity(CreatureDisposePack pack)
+        {
+            if (pack == null)
+            {
+                throw new ArgumentNullException("CreatureDeadPack");
+            }
+
+            CallbackActivity activity = new CallbackActivity(
+                    (gameInterface) => { gameInterface.DisposeCreature(pack.CreatureId); });
+
+            return activity;
+        }
+
+        private static ActivityBase BuildRefreshAllCreaturesActivity(CreatureRefreshAllPack pack)
         {
             if (pack == null)
             {
@@ -196,7 +226,7 @@ namespace WindingTale.UI.Components.Activities
             return activity;
         }
 
-        private static ActivityBase BuildShowCreatureInfoActivity(ShowCreatureInfoPack pack)
+        private static ActivityBase BuildShowCreatureInfoActivity(CreatureShowInfoPack pack)
         {
             if (pack == null)
             {

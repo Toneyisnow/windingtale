@@ -89,8 +89,7 @@
     <Compile Include="Assets\Scripts\Core\Components\Packs\TalkPack.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizationSystem\SmartCultureInfo.cs" />
     <Compile Include="Assets\Scripts\Common\GameFormula.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\ComposeCreaturePack.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Algorithms\AttackRangeFinder.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureComposePack.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpDefinition.cs" />
     <Compile Include="Assets\Scripts\UI\Common\GameObjectExtension.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\SystemPack.cs" />
@@ -103,13 +102,12 @@
     <Compile Include="Assets\Scripts\UI\Components\Activities\BatchActivity.cs" />
     <Compile Include="Assets\Scripts\Common\StringUtils.cs" />
     <Compile Include="Assets\Scripts\Common\FDMovePath.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\DisposeCreaturePack.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureDisposePack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuItemState.cs" />
     <Compile Include="Assets\Scripts\UI\FieldMap\FieldTransform.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\EventCondition.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UIIndicator.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\CreatureDeadCondition.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\RefreshAllCreaturesPack.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TransferDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ShowMenuPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\IGameCallback.cs" />
@@ -123,7 +121,7 @@
     <Compile Include="Assets\Scripts\Common\Shared.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\DefendItemDefinition.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\SequenceActivity.cs" />
-    <Compile Include="Assets\Scripts\UI\Components\Activities\MoveCreatureActivity.cs" />
+    <Compile Include="Assets\Scripts\UI\Components\Activities\CreatureMoveActivity.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\PluralForms.cs" />
     <Compile Include="Assets\Scripts\UI\Common\Global.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\NGUI\SL_NGUISpriteName.cs" />
@@ -141,7 +139,7 @@
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuRecordState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\SequencedPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\PackBase.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\RefreshCreaturePack.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureRefreshPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ClearRangePack.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UIShape.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ShowMoveRangeState.cs" />
@@ -194,9 +192,8 @@
     <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\TurnEventCondition.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBase.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedSprite.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Algorithms\CreatureCalculator.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Algorithms\CreatureFormula.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDefensiveDelegate.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Packs\ShowCreatureInfoPack.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\ShowRangeActivity.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\CreatureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\TriggeredEventCondition.cs" />
@@ -209,6 +206,17 @@
     <Compile Include="Assets\Scripts\AI\Delegates\AIStandByDelegate.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageDataHandler.cs" />
     <Compile Include="Assets\Scripts\UI\Components\AssetManager.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureRefreshAllPack.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureShowInfoPack.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureDeadPack.cs" />
+    <Compile Include="Assets\Scripts\UI\Components\Activities\CreatureDeadActivity.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Algorithms\DamageFormula.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Algorithms\AttackInformation.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Algorithms\FightingInformation.cs" />
+    <Compile Include="Assets\Scripts\Common\FDRandom.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Algorithms\MagicalInformation.cs" />
+    <Compile Include="Assets\Scripts\Common\LevelUpInfo.cs" />
+    <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

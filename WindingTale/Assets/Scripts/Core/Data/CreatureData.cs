@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -11,6 +12,26 @@ namespace WindingTale.Core.Components.Data
 {
     public class CreatureData
     {
+        public enum CreatureEffects
+        {
+            EnhancedAp = 1,
+            EnhancedDp = 2,
+            Forbidden = 3,
+            Frozen = 4,
+            Poisoned = 5,
+        }
+
+        public enum AITypes
+        {
+            AIType_Aggressive = 0,
+            AIType_Defensive = 1,
+            AIType_Guard = 2,
+            AIType_Escape = 3,
+            AIType_StandBy = 4,
+            AIType_Treasure = 5,
+            AIType_UnNoticable = 6,
+        }
+
         public static CreatureData FromDefinition(int creatureId, CreatureDefinition definition)
         {
             CreatureData data = new CreatureData();
@@ -25,7 +46,7 @@ namespace WindingTale.Core.Components.Data
             data.Dp = definition.InitialDp;
             data.Dx = definition.InitialDx;
             data.Mv = definition.InitialMv;
-            data.Ex = definition.InitialEx;
+            data.Exp = definition.InitialEx;
 
             data.Items = definition.Items;
             data.Magics = definition.Magics;
@@ -47,7 +68,7 @@ namespace WindingTale.Core.Components.Data
                 }
             }
 
-            data.Effects = new List<int>();
+            data.Effects = new List<CreatureEffects>();
             
             return data;
         }
@@ -56,7 +77,7 @@ namespace WindingTale.Core.Components.Data
         {
             this.Items = new List<int>();
             this.Magics = new List<int>();
-            this.Effects = new List<int>();
+            this.Effects = new List<CreatureEffects>();
 
             this.AttackItemIndex = -1;
             this.DefendItemIndex = -1;
@@ -78,14 +99,17 @@ namespace WindingTale.Core.Components.Data
             data.Dp = this.Dp;
             data.Dx = this.Dx;
             data.Mv = this.Mv;
-            data.Ex = this.Ex;
+            data.Exp = this.Exp;
 
             data.Items = Shared.CloneList<int>(this.Items);
             data.Magics = Shared.CloneList<int>(this.Magics);
-            data.Effects = Shared.CloneList<int>(this.Effects);
+            data.Effects = Shared.CloneList<CreatureEffects>(this.Effects);
 
             data.AttackItemIndex = this.AttackItemIndex;
             data.DefendItemIndex = this.DefendItemIndex;
+
+            data.LastGainedExperience = this.LastGainedExperience;
+            data.AIType = this.AIType;
 
             return data;
         }
@@ -155,7 +179,7 @@ namespace WindingTale.Core.Components.Data
             get; set;
         }
 
-        public int Ex
+        public int Exp
         {
             get; set;
         }
@@ -166,6 +190,19 @@ namespace WindingTale.Core.Components.Data
         }
 
         public int Ev
+        {
+            get; set;
+        }
+
+        public int LastGainedExperience
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Only valid when the creature is enemy or Npc
+        /// </summary>
+        public AITypes AIType
         {
             get; set;
         }
@@ -229,7 +266,7 @@ namespace WindingTale.Core.Components.Data
             get; private set;
         }
 
-        public List<int> Effects
+        public List<CreatureEffects> Effects
         {
             get; private set;
         }
@@ -310,6 +347,28 @@ namespace WindingTale.Core.Components.Data
 
         }
 
+        public void UpdateHp(int deltaHp)
+        {
+            this.Hp += deltaHp;
+
+            this.Hp = Math.Max(this.Hp, 0);
+            this.Hp = Math.Min(this.Hp, this.HpMax);
+        }
+
+        public void UpdateMp(int deltaMp)
+        {
+            this.Mp += deltaMp;
+
+            this.Mp = Math.Max(this.Mp, 0);
+            this.Mp = Math.Min(this.Mp, this.MpMax);
+        }
+
+        public void SetLastGainedExperience(int exp)
+        {
+            LastGainedExperience = (exp > 99) ? 99 : exp;
+        }
+
+        
         public AttackItemDefinition GetAttackItem()
         {
             int itemId = this.GetItemAt(this.AttackItemIndex);
@@ -349,7 +408,7 @@ namespace WindingTale.Core.Components.Data
         public bool CanSpellMagic()
         {
             // If the current creature is not having "Forbidden" effect
-            return this.HasMagic() && !this.Effects.Contains(1);
+            return this.HasMagic() && !this.Effects.Contains(CreatureEffects.Forbidden);
         }
 
         public bool HasMagic()
@@ -383,7 +442,30 @@ namespace WindingTale.Core.Components.Data
 
         public void AddMagic(int magicId)
         {
+            if(this.Magics == null)
+            {
+                this.Magics = new List<int>();
+            }
 
+            if (!this.Magics.Contains(magicId))
+            {
+                this.Magics.Add(magicId);
+            }
+        }
+
+        public void SetEffect(CreatureEffects effect)
+        {
+            if (this.Effects == null)
+            {
+                this.Effects = new List<CreatureEffects>();
+            }
+
+            this.Effects.Add(effect);
+        }
+
+        public LevelUpInfo LevelUp()
+        {
+            return null;
         }
     }
 }

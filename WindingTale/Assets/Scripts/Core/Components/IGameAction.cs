@@ -67,6 +67,12 @@ namespace WindingTale.Core.Components
 
         FDCreature GetCreatureAt(FDPosition position);
 
+        List<FDCreature> GetAllFriends();
+
+        List<FDCreature> GetAllEnemies();
+
+        List<FDCreature> GetAllNpcs();
+
         List<FDCreature> GetAdjacentFriends(int creatureId);
 
         List<FDCreature> GetCreatureInRange(FDRange range, CreatureFaction faction);
@@ -182,6 +188,8 @@ namespace WindingTale.Core.Components
 
         void HandleOperation(int index);
 
+
+        void NotifyAI();
     }
 
 
