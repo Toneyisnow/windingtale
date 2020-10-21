@@ -29,7 +29,7 @@ namespace WindingTale.Core.Components.Data
             AIType_Escape = 3,
             AIType_StandBy = 4,
             AIType_Treasure = 5,
-            AIType_UnNoticable = 6,
+            AIType_UnNoticable = 6,     // This one is special, that is set on AI target objects
         }
 
         public static CreatureData FromDefinition(int creatureId, CreatureDefinition definition)

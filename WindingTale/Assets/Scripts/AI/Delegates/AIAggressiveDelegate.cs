@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components;
+using WindingTale.Core.Components.Algorithms;
+using WindingTale.Core.Definitions;
+using WindingTale.Core.Definitions.Items;
 using WindingTale.Core.ObjectModels;
 
 namespace WindingTale.AI.Delegates
@@ -16,16 +19,37 @@ namespace WindingTale.AI.Delegates
 
         public override void TakeAction()
         {
-            FDPosition pos = this.Creature.Position;
-            FDPosition path1 = FDPosition.At(pos.X + 3, pos.Y);
-            FDPosition target = FDPosition.At(pos.X + 3, pos.Y + 2);
+            if (this.NeedAndCanRecover())
+            {
+                this.GameAction.DoCreatureRest(this.Creature.CreatureId);
+                return;
+            }
 
-            FDMovePath movePath = FDMovePath.Create(path1, target);
+            // Get target 
+            FDCreature target = this.LookForAggressiveTarget();
 
+            // According to the target, find the nearest position within the Move scope, and get the path to that position
+            FDMovePath movePath = this.DecidePositionAndPath(target.Position);
+
+            // Do the walk
             this.GameAction.CreatureWalk(new SingleWalkAction(this.Creature.CreatureId, movePath));
+
+            FDPosition destination = movePath.Desitination ?? this.Creature.Position;
+
+            AttackItemDefinition item = this.Creature.Data.GetAttackItem();
+            if (item != null)
+            {
+                FDSpan span = item.AttackScope;
+                DirectRangeFinder finder = new DirectRangeFinder(this.GameAction.GetField(), destination, span.Max, span.Min);
+                FDRange range = finder.CalculateRange();
+                if (range.Contains(target.Position))
+                {
+                    // If in attack range, attack the target
+                    this.GameAction.DoCreatureAttack(this.Creature.CreatureId, target.Position);
+                }
+            }
 
             this.GameAction.DoCreatureRest(this.Creature.CreatureId);
         }
-
     }
 }

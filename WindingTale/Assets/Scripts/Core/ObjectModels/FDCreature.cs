@@ -168,6 +168,20 @@ namespace WindingTale.Core.ObjectModels
             return this.Data.Effects.Contains(CreatureData.CreatureEffects.Frozen);
         }
 
+        public bool IsAbleToAttack(FDCreature target)
+        {
+            if (target == null)
+            {
+                return false;
+            }
+
+            return this.Data.CanAttack()
+                && this.Data.CalculatedAp > target.Data.CalculatedDp
+                && target.Data.AIType != CreatureData.AITypes.AIType_UnNoticable;
+
+
+        }
+
         public FDCreature Clone()
         {
             FDCreature another = new FDCreature(this.CreatureId);

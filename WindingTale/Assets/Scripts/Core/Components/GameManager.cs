@@ -303,6 +303,21 @@ namespace WindingTale.Core.Components
             return null;
         }
 
+        public List<FDCreature> GetOppositeCreatures(FDCreature creature)
+        {
+            if (creature.Faction == CreatureFaction.Enemy)
+            {
+                List<FDCreature> result = new List<FDCreature>();
+                result.AddRange(this.Friends);
+                result.AddRange(this.Npcs);
+                return result;
+            }
+            else
+            {
+                return this.Enemies;
+            }
+        }
+
         public ItemDefinition GetTreatureAt(FDPosition position)
         {
             return null;
@@ -340,7 +355,7 @@ namespace WindingTale.Core.Components
             gameCallback.OnHandlePack(pack);
         }
 
-        public void DisposeCreature(int creatureId, bool disposeFromUI = true)
+        public void DisposeCreature(int creatureId, bool disposeFromUI = true, bool playDeadAnimation = false)
         {
             FDCreature creature = GetCreature(creatureId);
             if (creature != null)
@@ -372,8 +387,16 @@ namespace WindingTale.Core.Components
 
                 if (disposeFromUI)
                 {
-                    CreatureDisposePack pack = new CreatureDisposePack(creatureId);
-                    gameCallback.OnHandlePack(pack);
+                    if (playDeadAnimation)
+                    {
+                        CreatureDeadPack dead = new CreatureDeadPack(creatureId);
+                        gameCallback.OnHandlePack(dead);
+                    }
+                    else
+                    {
+                        CreatureDisposePack pack = new CreatureDisposePack(creatureId);
+                        gameCallback.OnHandlePack(pack);
+                    }
                 }
             }
             else
@@ -536,14 +559,17 @@ namespace WindingTale.Core.Components
             }
 
             FightingInformation fighting = DamageFormula.DealWithAttack(creature, target, gameField, true);
-            
-            CreatureDeadPack dead = new CreatureDeadPack(target.CreatureId);
-            gameCallback.OnHandlePack(dead);
 
-            // Talk about experience
-            MessageId mId = MessageId.Create(MessageId.MessageTypes.Message, 5, 33);
-            TalkPack talk = new TalkPack(creature, mId);
-            gameCallback.OnHandlePack(talk);
+            // Remove dead creature
+            this.DisposeCreature(target.CreatureId, true, true);
+
+            if (creature.Faction == CreatureFaction.Friend)
+            {
+                // Talk about experience
+                MessageId mId = MessageId.Create(MessageId.MessageTypes.Message, 5, 33);
+                TalkPack talk = new TalkPack(creature, mId);
+                gameCallback.OnHandlePack(talk);
+            }
 
             PostCreatureAction(creature);
         }

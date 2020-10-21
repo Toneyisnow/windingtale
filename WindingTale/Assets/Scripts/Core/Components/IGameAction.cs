@@ -73,6 +73,8 @@ namespace WindingTale.Core.Components
 
         List<FDCreature> GetAllNpcs();
 
+        List<FDCreature> GetOppositeCreatures(FDCreature creature);
+
         List<FDCreature> GetAdjacentFriends(int creatureId);
 
         List<FDCreature> GetCreatureInRange(FDRange range, CreatureFaction faction);
@@ -100,7 +102,7 @@ namespace WindingTale.Core.Components
 
         void ComposeCreature(CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItem = 0);
 
-        void DisposeCreature(int creatureId, bool disposeFromUI = true);
+        void DisposeCreature(int creatureId, bool disposeFromUI = true, bool playDeadAnimation = false);
 
         void SwitchCreature(int creatureId, CreatureFaction faction);
 

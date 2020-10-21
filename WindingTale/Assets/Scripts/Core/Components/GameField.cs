@@ -48,6 +48,11 @@ namespace WindingTale.Core.Components
             return null;
         }
 
+        public ShapeDefinition GetShapeAt(FDPosition position)
+        {
+            return GetShapeAt(position.X, position.Y);
+        }
+
         public List<TreasureDefinition> Treasures
         {
             get; set;

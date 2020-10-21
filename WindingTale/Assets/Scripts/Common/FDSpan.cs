@@ -22,5 +22,10 @@ namespace WindingTale.Common
             this.Min = min;
             this.Max = max;
         }
+
+        public bool ContainsValue(int val)
+        {
+            return val >= Min && val <= Max;
+        }
     }
 }

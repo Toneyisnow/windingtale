@@ -217,6 +217,7 @@
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\MagicalInformation.cs" />
     <Compile Include="Assets\Scripts\Common\LevelUpInfo.cs" />
     <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Algorithms\DistanceResolver.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

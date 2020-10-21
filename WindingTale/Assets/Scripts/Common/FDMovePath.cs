@@ -9,6 +9,11 @@ namespace WindingTale.Common
     /// </summary>
     public class FDMovePath
     {
+        public FDPosition StartPosition
+        {
+            get; private set;
+        }
+
         public List<FDPosition> Vertexes
         {
             get; private set;
@@ -27,8 +32,15 @@ namespace WindingTale.Common
             }
         }
 
+        public FDMovePath(FDPosition start)
+        {
+            this.StartPosition = start;
+            this.Vertexes = new List<FDPosition>();
+        }
+
         public FDMovePath()
         {
+            this.StartPosition = null;
             this.Vertexes = new List<FDPosition>();
         }
 

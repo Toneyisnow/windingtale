@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Common;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
@@ -11,7 +12,8 @@ namespace WindingTale.Core.Components.ActionStates
     {
         public enum SubState
         {
-            ConfirmRestAll = 1,
+            ConfirmMatching = 1,
+            ConfirmRestAll = 2,
         }
 
         private SubState subState = 0;
@@ -21,7 +23,10 @@ namespace WindingTale.Core.Components.ActionStates
             // Matching
             this.SetMenu(0, MenuItemId.SystemMatching, false, () =>
             {
-                PromptPack pack = new PromptPack(1, "Good morning");
+                subState = SubState.ConfirmMatching;
+                
+                MessageId message = MessageId.Create(MessageId.MessageTypes.Confirm, 1);
+                TalkPack pack = new TalkPack(null, message);
                 SendPack(pack);
 
                 return StateOperationResult.None();
@@ -46,7 +51,8 @@ namespace WindingTale.Core.Components.ActionStates
             {
                 subState = SubState.ConfirmRestAll;
 
-                PromptPack pack = new PromptPack(1, "Are you sure to rest all?");
+                MessageId message = MessageId.Create(MessageId.MessageTypes.Confirm, 1);
+                TalkPack pack = new TalkPack(null, message);
                 SendPack(pack);
                 
                 return StateOperationResult.None();

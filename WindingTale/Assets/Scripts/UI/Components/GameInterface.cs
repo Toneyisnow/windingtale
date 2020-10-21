@@ -301,6 +301,7 @@ namespace WindingTale.UI.Components
             if (uiCreature == null)
             {
                 Debug.LogError("Cannot find creature on UI: creatureId = " + creature.CreatureId);
+                return;
             }
 
             // Update position
@@ -375,7 +376,9 @@ namespace WindingTale.UI.Components
             // Show dialog
             currentDialog = new GameObject();
             MessageDialog dialog = currentDialog.AddComponent<MessageDialog>();
-            dialog.Initialize(this.GameCanvas, creature.Definition.AnimationId, message,
+
+            int animationId = (creature != null) ? creature.Definition.AnimationId : 0;
+            dialog.Initialize(this.GameCanvas, animationId, message,
                 (index) => { this.OnDialogCallback(index); });
         }
 
