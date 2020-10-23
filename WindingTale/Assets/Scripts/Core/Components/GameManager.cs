@@ -561,7 +561,14 @@ namespace WindingTale.Core.Components
             FightingInformation fighting = DamageFormula.DealWithAttack(creature, target, gameField, true);
 
             // Remove dead creature
-            this.DisposeCreature(target.CreatureId, true, true);
+            if (target.Data.Hp <= 0)
+            {
+                this.DisposeCreature(target.CreatureId, true, true);
+            }
+            if (creature.Data.Hp <= 0)
+            {
+                this.DisposeCreature(creature.CreatureId, true, true);
+            }
 
             if (creature.Faction == CreatureFaction.Friend)
             {

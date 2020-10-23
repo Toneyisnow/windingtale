@@ -184,16 +184,6 @@ namespace WindingTale.Core.Components.Data
             get; set;
         }
 
-        public int Hit
-        {
-            get; set;
-        }
-
-        public int Ev
-        {
-            get; set;
-        }
-
         public int LastGainedExperience
         {
             get; set;
@@ -220,14 +210,6 @@ namespace WindingTale.Core.Components.Data
             get
             {
                 return GameFormula.CalculateDp(this);
-            }
-        }
-
-        public int CalculatedDx
-        {
-            get
-            {
-                return GameFormula.CalculateDx(this);
             }
         }
 

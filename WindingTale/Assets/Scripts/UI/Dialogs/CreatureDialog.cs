@@ -128,7 +128,7 @@ namespace WindingTale.UI.Dialogs
             AddText(StringUtils.Digit2(dp), detail.transform, new Vector3(1.52f, 2, 3.36f), new Vector3(0.3f, 0.3f, 1));
 
             // DX
-            int dx = creature.Data.CalculatedDx;
+            int dx = creature.Data.Dx;
             AddText(StringUtils.Digit2(dx), detail.transform, new Vector3(5.63f, 2, 1.02f), new Vector3(0.3f, 0.3f, 1));
             // HIT
             int hit = creature.Data.CalculatedHit;
