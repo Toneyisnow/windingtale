@@ -108,6 +108,10 @@
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\IReorderableListAdaptor.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\CreateLanguageWindow.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\XLSExporter.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Editor\QT_PolyWorldTerrainEditor.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Editor\QT_ConvertMesh.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Editor\QT_CombineMeshes.cs" />
+    <Compile Include="Assets\Editor\CreateFightAnimators.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\README.txt" />
