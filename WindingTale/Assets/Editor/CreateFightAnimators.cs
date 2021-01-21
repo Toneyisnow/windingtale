@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Animations;
+using Assets.Editor;
 
 public class CreateFightAnimators : MonoBehaviour
 {
+
+    
     [MenuItem("Assets/Create Fight Animators")]
     static void CreateFightAnimator()
     {
         // Creates the controller
-        var controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath("Assets/Resources/Fights/001/auto001.controller");
-
-
+        var controller = AnimatorController.CreateAnimatorControllerAtPath("Assets/Resources/Fights/001/a001.controller");
 
         // Add parameters
         controller.AddParameter("actionState", AnimatorControllerParameterType.Int);
@@ -21,44 +22,40 @@ public class CreateFightAnimators : MonoBehaviour
         var rootStateMachine = controller.layers[0].stateMachine;
 
         // Add States
-        var stateIdle = rootStateMachine.AddState("idle");
-        var stateAttack = rootStateMachine.AddState("attack");
-        var stateSkill = rootStateMachine.AddState("skill");
-        var stateC2 = rootStateMachine.AddState("stateC2"); // don’t add an entry transition, should entry to state by default
+        var stateIdle = rootStateMachine.AddState("anim1");
+        var stateAttack = rootStateMachine.AddState("anim2");
 
+        // Add Motions
+        Motion idleMotion = Resources.Load<Motion>("Fights/001/anim1");
+        Motion attackMotion = Resources.Load<Motion>("Fights/001/anim2");
+        stateIdle.motion = idleMotion;
+        stateAttack.motion = attackMotion;
+
+        // Not needed for this
+        // rootStateMachine.AddEntryTransition(stateIdle);
 
         // Add Transitions
-        var exitTransition = stateIdle.AddExitTransition();
-        exitTransition.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 99, "actionState");
-        exitTransition.duration = 0;
+        var trans1 = stateIdle.AddTransition(stateAttack);
+        trans1.AddCondition(AnimatorConditionMode.Equals, 1, "actionState");
+        trans1.duration = 0;
 
-        var resetTransition = rootStateMachine.AddAnyStateTransition(stateAttack);
-        resetTransition.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 1, "actionState");
-        resetTransition.duration = 0;
-
+        var trans2 = stateAttack.AddTransition(stateIdle);
+        trans2.AddCondition(AnimatorConditionMode.Equals, 0, "actionState");
+        trans2.duration = 0;
 
         
-
-        AnimationClip clip = new AnimationClip();
-
-
-        clip.SetCurve("", typeof(Transform), "position.x", AnimationCurve.EaseInOut(0, 0, 2, 10));
-        clip.SetCurve("", typeof(Transform), "position.y", AnimationCurve.EaseInOut(0, 10, 2, 0));
-        clip.SetCurve("", typeof(Transform), "position.z", AnimationCurve.EaseInOut(0, 5, 2, 2));
-
-        AssetDatabase.CreateAsset(clip, "Assets/Resources/Fights/001/auto001.anim");
-
     }
 
-
+    
     [MenuItem("Assets/Create Fight Animation Clip")]
     static void CreateFlightAnimationClip()
     {
-        Sprite[] _sprites;
-
-        Sprite sprite = Resources.Load<Sprite>("Fights/001/act1/Fight-001-1-01");
-
-        AnimationClip animClip = new AnimationClip();
+        CreateAnimationClip(1, 4);
+        CreateAnimationClip(2, 10);
+    }
+    
+    private static void CreateAnimationClip(int type, int frameCount)
+    {
         // First you need to create e Editor Curve Binding
         EditorCurveBinding curveBinding = new EditorCurveBinding();
 
@@ -69,18 +66,22 @@ public class CreateFightAnimators : MonoBehaviour
         // This is the property name to change the sprite of a sprite renderer
         curveBinding.propertyName = "m_Sprite";
 
+        AnimationClip animClip = new AnimationClip();
+
         // An array to hold the object keyframes
-        ObjectReferenceKeyframe[] keyFrames = new ObjectReferenceKeyframe[10];
-        for (int i = 0; i < 1; i++)
+        ObjectReferenceKeyframe[] keyFrames = new ObjectReferenceKeyframe[frameCount];
+        for (int i = 0; i < frameCount; i++)
         {
+            Sprite sprite = Resources.Load<Sprite>(string.Format("Fights/001/Fight-001-{0}-{1}", type, StringUtils.Digit2(i + 1)));
+
             keyFrames[i] = new ObjectReferenceKeyframe();
             // set the time
-            keyFrames[i].time = i;
+            keyFrames[i].time = 0.15f * i;
             // set reference for the sprite you want
             keyFrames[i].value = sprite;
             Debug.LogWarning(sprite);
         }
         AnimationUtility.SetObjectReferenceCurve(animClip, curveBinding, keyFrames);
-        AssetDatabase.CreateAsset(animClip, "Assets/Resources/Fights/001/test2.anim");
+        AssetDatabase.CreateAsset(animClip, string.Format(@"Assets/Resources/Fights/001/anim{0}.anim", type));
     }
 }

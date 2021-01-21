@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityEngine.UI", "UnityEngine.UI.csproj", "{A199B544-6E37-41C0-30D2-A56A4F30CFD6}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityEngine.TestRunner", "UnityEngine.TestRunner.csproj", "{3D0A49E7-7F1E-04C4-BD41-38AE5808D2DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{D9176146-9110-062C-C27E-962CDA9312BC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityEngine.UI", "UnityEngine.UI.csproj", "{A199B544-6E37-41C0-30D2-A56A4F30CFD6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.TextMeshPro", "Unity.TextMeshPro.csproj", "{372810D5-9E41-98B1-C491-068AED43EDC7}"
 EndProject
@@ -35,6 +35,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A199B544-6E37-41C0-30D2-A56A4F30CFD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A199B544-6E37-41C0-30D2-A56A4F30CFD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A199B544-6E37-41C0-30D2-A56A4F30CFD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A199B544-6E37-41C0-30D2-A56A4F30CFD6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3D0A49E7-7F1E-04C4-BD41-38AE5808D2DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3D0A49E7-7F1E-04C4-BD41-38AE5808D2DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D0A49E7-7F1E-04C4-BD41-38AE5808D2DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -43,10 +47,6 @@ Global
 		{D9176146-9110-062C-C27E-962CDA9312BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9176146-9110-062C-C27E-962CDA9312BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9176146-9110-062C-C27E-962CDA9312BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A199B544-6E37-41C0-30D2-A56A4F30CFD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A199B544-6E37-41C0-30D2-A56A4F30CFD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A199B544-6E37-41C0-30D2-A56A4F30CFD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A199B544-6E37-41C0-30D2-A56A4F30CFD6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{372810D5-9E41-98B1-C491-068AED43EDC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{372810D5-9E41-98B1-C491-068AED43EDC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{372810D5-9E41-98B1-C491-068AED43EDC7}.Release|Any CPU.ActiveCfg = Release|Any CPU

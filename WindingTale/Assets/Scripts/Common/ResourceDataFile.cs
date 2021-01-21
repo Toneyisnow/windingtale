@@ -18,6 +18,7 @@ namespace WindingTale.Common
             string textContent = text.text;
             textContent = textContent.Replace("\r\n", " ");
             textContent = textContent.Replace("\t", " ");
+            textContent = textContent.Replace("\n", " ");
 
             if (textContent == null)
             {

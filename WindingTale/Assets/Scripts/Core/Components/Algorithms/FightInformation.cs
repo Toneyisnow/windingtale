@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WindingTale.Core.Components.Algorithms
 {
-    public class FightingInformation
+    public class FightInformation
     {
         public AttackInformation Attack1
         {
@@ -28,7 +28,7 @@ namespace WindingTale.Core.Components.Algorithms
             get; private set;
         }
 
-        public FightingInformation(AttackInformation attack1, AttackInformation attack2, AttackInformation back1, AttackInformation back2)
+        public FightInformation(AttackInformation attack1, AttackInformation attack2, AttackInformation back1, AttackInformation back2)
         {
             this.Attack1 = attack1;
             this.Attack2 = attack2;

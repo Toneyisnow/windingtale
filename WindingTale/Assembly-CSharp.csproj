@@ -86,7 +86,8 @@
     <Compile Include="Assets\Scripts\Common\FDMoveRange.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedImage.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageParser.cs" />
-    <Compile Include="Assets\Scripts\Core\Components\Algorithms\FightingInformation.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Algorithms\FightInformation.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\Utility Scripts\MeshCombineUtility.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\CreatureDyingCondition.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\TalkPack.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizationSystem\SmartCultureInfo.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Assets\Scripts\Core\ObjectModels\FDMenu.cs" />
     <Compile Include="Assets\Scripts\Core\Components\GameField.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\GameStateDispatcher.cs" />
+    <Compile Include="Assets\Low Poly Modular Terrain Pack\Bonus_Assets\Scripts\ModularTerrainCameraControl.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\Chapters\EventChapter1.cs" />
     <Compile Include="Assets\Scripts\Common\FDRandom.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuSettingsState.cs" />
@@ -149,10 +151,12 @@
     <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureShowInfoPack.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UIShape.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ShowMoveRangeState.cs" />
+    <Compile Include="Assets\Low Poly Modular Terrain Pack\Bonus_Assets\Scripts\ModularTerrainSunControl.cs" />
     <Compile Include="Assets\Scripts\Common\ConversationId.cs" />
     <Compile Include="Assets\Scripts\Common\MessageId.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedObject.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ShopDefinition.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_InteractContainer.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\DefinitionStore.cs" />
     <Compile Include="Assets\Scripts\Core\Components\GameManager.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
@@ -163,9 +167,10 @@
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedAudioSource.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\SelectItemUseTargetState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureDeadPack.cs" />
-    <Compile Include="Assets\Scripts\Core\Data\BattleRecord.cs" />
+    <Compile Include="Assets\Scripts\Core\Data\FieldRecord.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\ApplicationExtensions.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\StateOperationResult.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_PolyWorldTerrain.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\AttackItemDefinition.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\CreatureDeadActivity.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBuilder.cs" />
@@ -182,8 +187,10 @@
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\DirectRangeFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuActionState.cs" />
     <Compile Include="Assets\Scripts\Common\LevelUpInfo.cs" />
+    <Compile Include="Assets\Low Poly Modular Terrain Pack\Bonus_Assets\Scripts\ModularTerrainCloudsControl.cs" />
     <Compile Include="Assets\Scripts\Core\ObjectModels\FDCreature.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UIMenuItem.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\BattleScene.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\CloseMenuPack.cs" />
     <Compile Include="Assets\Scripts\UI\Components\IGameInterface.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\BatchPack.cs" />
@@ -200,6 +207,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpMagicDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\TurnEventCondition.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBase.cs" />
+    <Compile Include="Assets\Scripts\UI\Fights\FightAniEvent.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedSprite.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\CreatureFormula.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDefensiveDelegate.cs" />
@@ -210,23 +218,17 @@
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\MagicalInformation.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\SelecteMagicTargetState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\EventLoader.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_LightFlicker.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuSystemState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\IGameAction.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\MessageDialog.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\Utility Scripts\QT_MeshCombineUtility.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIStandByDelegate.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageDataHandler.cs" />
     <Compile Include="Assets\Scripts\UI\Components\AssetManager.cs" />
     <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
-    <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\Utility Scripts\MeshCombineUtility.cs" />
-    <Compile Include="Assets\Low Poly Modular Terrain Pack\Bonus_Assets\Scripts\ModularTerrainCameraControl.cs" />
-    <Compile Include="Assets\Low Poly Modular Terrain Pack\Bonus_Assets\Scripts\ModularTerrainSunControl.cs" />
-    <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_InteractContainer.cs" />
-    <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_PolyWorldTerrain.cs" />
-    <Compile Include="Assets\Low Poly Modular Terrain Pack\Bonus_Assets\Scripts\ModularTerrainCloudsControl.cs" />
-    <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_LightFlicker.cs" />
-    <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\Utility Scripts\QT_MeshCombineUtility.cs" />
-    <Compile Include="Assets\Scripts\UI\Fights\FightAniEvent.cs" />
+    <Compile Include="Assets\Scripts\Core\Definitions\FightAnimation.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

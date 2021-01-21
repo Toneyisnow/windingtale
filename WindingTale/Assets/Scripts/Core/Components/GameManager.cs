@@ -96,7 +96,7 @@ namespace WindingTale.Core.Components
             StartNewTurnPhase();
         }
 
-        public void LoadGame(BattleRecord battleRecord)
+        public void LoadGame(FieldRecord battleRecord)
         {
 
         }
@@ -558,7 +558,7 @@ namespace WindingTale.Core.Components
                 throw new ArgumentNullException("target");
             }
 
-            FightingInformation fighting = DamageFormula.DealWithAttack(creature, target, gameField, true);
+            FightInformation fighting = DamageFormula.DealWithAttack(creature, target, gameField, true);
 
             // Remove dead creature
             if (target.Data.Hp <= 0)

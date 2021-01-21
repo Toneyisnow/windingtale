@@ -18,7 +18,7 @@ namespace WindingTale.Core.Components.Algorithms
         private static int commonCriticalAttackRate = 5;
 
 
-        public static FightingInformation DealWithAttack(FDCreature subject, FDCreature target, GameField field, bool canFightBack)
+        public static FightInformation DealWithAttack(FDCreature subject, FDCreature target, GameField field, bool canFightBack)
         {
             AttackInformation attack1 = AttackFrom(subject, target, field);
             AttackInformation attack2 = null;
@@ -79,7 +79,7 @@ namespace WindingTale.Core.Components.Algorithms
                 // Gain Experience
             }
 
-            FightingInformation fighting = new FightingInformation(attack1, attack2, back1, back2);
+            FightInformation fighting = new FightInformation(attack1, attack2, back1, back2);
 
             return fighting;
         }

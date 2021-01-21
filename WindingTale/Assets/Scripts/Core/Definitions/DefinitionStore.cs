@@ -33,6 +33,7 @@ namespace WindingTale.Core.Definitions
 
         private Dictionary<int, ChapterDefinition> chapterDefinitions = null;
 
+        private Dictionary<int, FightAnimation> fightAnimations = null;
 
         private DefinitionStore()
         {
@@ -62,6 +63,8 @@ namespace WindingTale.Core.Definitions
             LoadLevelUpMagicDefinitions();
             LoadTransfersDefinitions();
             LoadShopDefinitions();
+
+            LoadFightAnimations();
         }
 
         private void LoadCreatureDefinitions()
@@ -209,6 +212,18 @@ namespace WindingTale.Core.Definitions
             }
         }
 
+        private void LoadFightAnimations()
+        {
+            fightAnimations = new Dictionary<int, FightAnimation>();
+            ResourceDataFile fileReader = new ResourceDataFile(@"Data/FightAnimation");
+
+            FightAnimation def = null;
+            while ((def = FightAnimation.ReadFromFile(fileReader)) != null)
+            {
+                fightAnimations[def.AnimationId] = def;
+            }
+        }
+
         /// <summary>
         /// Load two files: chapter_N.dat for json, chapter_N_data.dat for plain text
         /// </summary>
@@ -325,6 +340,15 @@ namespace WindingTale.Core.Definitions
             if (this.shopDefinitions.ContainsKey(key))
             {
                 return this.shopDefinitions[key];
+            }
+            return null;
+        }
+
+        public FightAnimation GetFightAnimation(int animationId)
+        {
+            if (this.fightAnimations.ContainsKey(animationId))
+            {
+                return this.fightAnimations[animationId];
             }
             return null;
         }

@@ -60,6 +60,7 @@
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\LocalizedObjectListAdaptor.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileOperations\LanguageHandlerEditor.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\LocalizedObjectMenuControl.cs" />
+    <Compile Include="Assets\Editor\CreateFightAnimators.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\Utility\LocalizedKeySelector.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\StringExtensions.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileOperations\LocalizationWorkspace.cs" />
@@ -83,10 +84,12 @@
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\CreateLanguageListAdaptor.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\LanguageExportWindow.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\CSVParser.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Editor\QT_PolyWorldTerrainEditor.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\Internal\GUIHelper.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\Translation\IAutomaticTranslator.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileOperations\CustomResxImporter.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\FileUtility.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Editor\QT_ConvertMesh.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\HOEditorUndoManager.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\Utility\SmartCultureInfoEx.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\ReorderableListFlags.cs" />
@@ -102,16 +105,14 @@
     <Compile Include="Assets\SmartLocalization\Scripts\NGUI\Editor\SL_NGUISpriteAtlasInspector.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\ReorderableListControl.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\CSVExporter.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Editor\QT_CombineMeshes.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\SettingsListAdaptor.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\Utility\LocalizationWindowUtility.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\SmartLocalizationWindow.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\IReorderableListAdaptor.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\CreateLanguageWindow.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\XLSExporter.cs" />
-    <Compile Include="Assets\Quantum Theory\Polyworld\Editor\QT_PolyWorldTerrainEditor.cs" />
-    <Compile Include="Assets\Quantum Theory\Polyworld\Editor\QT_ConvertMesh.cs" />
-    <Compile Include="Assets\Quantum Theory\Polyworld\Editor\QT_CombineMeshes.cs" />
-    <Compile Include="Assets\Editor\CreateFightAnimators.cs" />
+    <Compile Include="Assets\Editor\StringUtils.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\README.txt" />

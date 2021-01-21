@@ -55,6 +55,7 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="C:\Program Files\Unity\Hub\Editor\2020.1.8f1\Editor\Data\Resources\PackageManager\BuiltInPackages\com.unity.ugui\Runtime\UI\Core\Text.cs" />
     <Compile Include="C:\Program Files\Unity\Hub\Editor\2020.1.8f1\Editor\Data\Resources\PackageManager\BuiltInPackages\com.unity.ugui\Runtime\UI\Core\Layout\CanvasScaler.cs" />
     <Compile Include="C:\Program Files\Unity\Hub\Editor\2020.1.8f1\Editor\Data\Resources\PackageManager\BuiltInPackages\com.unity.ugui\Runtime\UI\Core\IMaskable.cs" />
     <Compile Include="C:\Program Files\Unity\Hub\Editor\2020.1.8f1\Editor\Data\Resources\PackageManager\BuiltInPackages\com.unity.ugui\Runtime\UI\Core\Utility\VertexHelper.cs" />
@@ -62,7 +63,6 @@
     <Compile Include="C:\Program Files\Unity\Hub\Editor\2020.1.8f1\Editor\Data\Resources\PackageManager\BuiltInPackages\com.unity.ugui\Runtime\EventSystem\MoveDirection.cs" />
     <Compile Include="C:\Program Files\Unity\Hub\Editor\2020.1.8f1\Editor\Data\Resources\PackageManager\BuiltInPackages\com.unity.ugui\Runtime\UI\Core\FontUpdateTracker.cs" />
     <Compile Include="C:\Program Files\Unity\Hub\Editor\2020.1.8f1\Editor\Data\Resources\PackageManager\BuiltInPackages\com.unity.ugui\Runtime\EventSystem\InputModules\BaseInputModule.cs" />
-    <Compile Include="C:\Program Files\Unity\Hub\Editor\2020.1.8f1\Editor\Data\Resources\PackageManager\BuiltInPackages\com.unity.ugui\Runtime\UI\Core\Text.cs" />
     <Compile Include="C:\Program Files\Unity\Hub\Editor\2020.1.8f1\Editor\Data\Resources\PackageManager\BuiltInPackages\com.unity.ugui\Runtime\UI\Core\Scrollbar.cs" />
     <Compile Include="C:\Program Files\Unity\Hub\Editor\2020.1.8f1\Editor\Data\Resources\PackageManager\BuiltInPackages\com.unity.ugui\Runtime\EventSystem\ExecuteEvents.cs" />
     <Compile Include="C:\Program Files\Unity\Hub\Editor\2020.1.8f1\Editor\Data\Resources\PackageManager\BuiltInPackages\com.unity.ugui\Runtime\UI\Core\VertexModifiers\PositionAsUV1.cs" />

@@ -126,7 +126,7 @@ namespace WindingTale.Core.Components
 
         void GameOver();
 
-        void LoadGame(BattleRecord battleRecord);
+        void LoadGame(FieldRecord battleRecord);
 
         bool CanSaveGame();
 

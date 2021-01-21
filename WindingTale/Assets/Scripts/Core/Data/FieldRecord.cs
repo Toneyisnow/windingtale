@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace WindingTale.Core.Components.Data
 {
-    public class BattleRecord
+    public class FieldRecord
     {
         private List<CreatureData> creatureDataList = null;
 
