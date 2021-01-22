@@ -207,7 +207,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpMagicDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\TurnEventCondition.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBase.cs" />
-    <Compile Include="Assets\Scripts\UI\Fights\FightAniEvent.cs" />
+    <Compile Include="Assets\Scripts\UI\Battle\FightAnimator.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedSprite.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\CreatureFormula.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDefensiveDelegate.cs" />
@@ -229,6 +229,7 @@
     <Compile Include="Assets\Scripts\UI\Components\AssetManager.cs" />
     <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\FightAnimation.cs" />
+    <Compile Include="Assets\Scripts\UI\Controls\CreatureInfoBar.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -326,6 +327,7 @@
      <None Include="Assets\Resources\Data\Chapters\Chapter_33.txt" />
      <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-00.txt" />
      <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-31.txt" />
+     <None Include="Assets\Resources\Data\Chapters\Chapter_18_Creature.txt" />
      <None Include="Assets\Resources\Data\Chapters\Chapter_21.txt" />
      <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-18.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />

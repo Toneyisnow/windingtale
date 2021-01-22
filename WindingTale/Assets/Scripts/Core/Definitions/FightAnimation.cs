@@ -29,6 +29,11 @@ namespace WindingTale.Core.Definitions
             get; private set;
         }
 
+        public int SkillFrameCount
+        {
+            get; private set;
+        }
+
         public Dictionary<int, int> AttackPercentageByFrame
         {
             get; private set;
