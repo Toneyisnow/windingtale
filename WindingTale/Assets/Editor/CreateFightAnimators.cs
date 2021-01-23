@@ -26,6 +26,7 @@ public class CreateFightAnimators : MonoBehaviour
             {
                 continue;
             }
+
             CreateAnimationClips(aniId);
             CreateAnimator(aniId);
         }
@@ -36,11 +37,13 @@ public class CreateFightAnimators : MonoBehaviour
         string idStr = StringUtils.Digit3(animationId);
 
         // Creates the controller
-        var controller = AnimatorController.CreateAnimatorControllerAtPath(string.Format(@"Assets/Resources/Fights/{0}/animator.controller", idStr));
+        var controller = AnimatorController.CreateAnimatorControllerAtPath(string.Format(@"Assets/Resources/Fights/{0}/animator{0}.controller", idStr));
 
         // Add parameters
         controller.AddParameter("actionState", AnimatorControllerParameterType.Int);
+        Debug.Log("Added paramter.");
 
+        
         // Add StateMachines
         var rootStateMachine = controller.layers[0].stateMachine;
 
@@ -49,16 +52,27 @@ public class CreateFightAnimators : MonoBehaviour
         var stateAttack = rootStateMachine.AddState("attack");
 
         // Add Motions
-        Motion idleMotion = Resources.Load<Motion>(string.Format(@"Fights/{0}/idle", idStr));
-        Motion attackMotion = Resources.Load<Motion>(string.Format(@"Fights/{0}/attack", idStr));
+        Motion idleMotion = Resources.Load<Motion>(string.Format(@"Fights/{0}/idle{0}", idStr));
+        Motion attackMotion = Resources.Load<Motion>(string.Format(@"Fights/{0}/attack{0}", idStr));
         
+        if (idleMotion == null)
+        {
+            Debug.Log("idleMotion is null for: " + idStr);
+            return;
+        }
+        if (attackMotion == null)
+        {
+            Debug.Log("attackMotion is null for: " + idStr);
+            return;
+        }
+
         stateIdle.motion = idleMotion;
         stateAttack.motion = attackMotion;
-        controller.AddMotion(idleMotion);
-        controller.AddMotion(attackMotion);
+        //controller.AddMotion(idleMotion);
+        //controller.AddMotion(attackMotion);
 
         // Not needed for this
-        // rootStateMachine.AddEntryTransition(stateIdle);
+        rootStateMachine.AddEntryTransition(stateIdle);
 
         // Add Transitions
         var trans1 = stateIdle.AddTransition(stateAttack);
@@ -68,7 +82,6 @@ public class CreateFightAnimators : MonoBehaviour
         var trans2 = stateAttack.AddTransition(stateIdle);
         trans2.AddCondition(AnimatorConditionMode.Equals, 0, "actionState");
         trans2.duration = 0;
-
     }
 
 
@@ -98,7 +111,6 @@ public class CreateFightAnimators : MonoBehaviour
         curveBinding.propertyName = "m_Sprite";
 
         AnimationClip animClip = new AnimationClip();
-        animClip.wrapMode = WrapMode.Loop;
 
         // An array to hold the object keyframes
         ObjectReferenceKeyframe[] keyFrames = new ObjectReferenceKeyframe[frameCount];
@@ -122,8 +134,10 @@ public class CreateFightAnimators : MonoBehaviour
 
             AnimationClipSettings settings = new AnimationClipSettings();
             settings.loopTime = true;
+            settings.startTime = 0;
+            settings.stopTime = animClip.length;
             AnimationUtility.SetAnimationClipSettings(animClip, settings);
         }
-        AssetDatabase.CreateAsset(animClip, string.Format(@"Assets/Resources/Fights/{0}/{1}.anim", StringUtils.Digit3(animationId), Enum.GetName(animationType.GetType(), animationType).ToLower()));
+        AssetDatabase.CreateAsset(animClip, string.Format(@"Assets/Resources/Fights/{0}/{1}{0}.anim", StringUtils.Digit3(animationId), Enum.GetName(animationType.GetType(), animationType).ToLower()));
     }
 }

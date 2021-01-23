@@ -41,10 +41,14 @@ namespace WindingTale.UI.Scenes
         // Start is called before the first frame update
         void Start()
         {
-            DefinitionStore.Instance.LoadChapter(18);
+            DefinitionStore.Instance.LoadChapter(5);
+            //DefinitionStore.Instance.LoadChapter(18);
 
-            FDCreature subject = new FDCreature(4, CreatureFaction.Friend, DefinitionStore.Instance.GetCreatureDefinition(4), FDPosition.At(0, 0));
-            FDCreature target = new FDCreature(11, CreatureFaction.Enemy, DefinitionStore.Instance.GetCreatureDefinition(51803), FDPosition.At(0, 0));
+            //CreatureDefinition def = DefinitionStore.Instance.GetCreatureDefinition(50508);
+
+            FDCreature subject = new FDCreature(4, CreatureFaction.Friend, DefinitionStore.Instance.GetCreatureDefinition(111), FDPosition.At(0, 0));
+            //// FDCreature target = new FDCreature(11, CreatureFaction.Enemy, DefinitionStore.Instance.GetCreatureDefinition(51803), FDPosition.At(0, 0));
+            FDCreature target = new FDCreature(11, CreatureFaction.Enemy, DefinitionStore.Instance.GetCreatureDefinition(50505), FDPosition.At(0, 0));
 
             AttackInformation a1 = new AttackInformation(100, 50, false);
             AttackInformation a2 = new AttackInformation(50, 20, false);
@@ -115,7 +119,7 @@ namespace WindingTale.UI.Scenes
             obj.AddComponent<SpriteRenderer>();
 
             Animator animator = obj.AddComponent<Animator>();
-            animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(string.Format(@"Fights/{0}/animator", StringUtils.Digit3(animationId)));
+            animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(string.Format(@"Fights/{0}/animator{0}", StringUtils.Digit3(animationId)));
 
             FightAnimator fightAnimator = obj.AddComponent<FightAnimator>();
             fightAnimator.Initialize(animationId);

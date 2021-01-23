@@ -48,7 +48,7 @@ namespace WindingTale.UI.Battle
 
         public void StartKnocked()
         {
-            SetActionState(ActionState.Knocked);
+            //// SetActionState(ActionState.Knocked);
         }
 
         public void OnAttackCompleteCallback(Action callback)
