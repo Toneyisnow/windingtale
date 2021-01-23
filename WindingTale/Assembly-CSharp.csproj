@@ -117,6 +117,7 @@
     <Compile Include="Assets\Scripts\AI\Delegates\AITreasureDelegate.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\DistanceResolver.cs" />
+    <Compile Include="Assets\Scripts\UI\Controls\CreatureInfoBar.cs" />
     <Compile Include="Assets\Scripts\Core\Data\CreatureData.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UIObject.cs" />
     <Compile Include="Assets\Scripts\Common\FDSpan.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Assets\Scripts\Core\Components\Packs\PackBase.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureRefreshPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\ClearRangePack.cs" />
+    <Compile Include="Assets\Scripts\Core\Definitions\FightAnimation.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureShowInfoPack.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UIShape.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ShowMoveRangeState.cs" />
@@ -190,7 +192,7 @@
     <Compile Include="Assets\Low Poly Modular Terrain Pack\Bonus_Assets\Scripts\ModularTerrainCloudsControl.cs" />
     <Compile Include="Assets\Scripts\Core\ObjectModels\FDCreature.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UIMenuItem.cs" />
-    <Compile Include="Assets\Scripts\UI\Scenes\BattleScene.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\Battle\BattleScene.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\CloseMenuPack.cs" />
     <Compile Include="Assets\Scripts\UI\Components\IGameInterface.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\BatchPack.cs" />
@@ -228,8 +230,6 @@
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageDataHandler.cs" />
     <Compile Include="Assets\Scripts\UI\Components\AssetManager.cs" />
     <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\FightAnimation.cs" />
-    <Compile Include="Assets\Scripts\UI\Controls\CreatureInfoBar.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\Data\Chapters\Chapter_07_Creature.txt" />

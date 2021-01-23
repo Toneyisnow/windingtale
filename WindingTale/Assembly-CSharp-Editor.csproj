@@ -109,10 +109,10 @@
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\SettingsListAdaptor.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\Utility\LocalizationWindowUtility.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\SmartLocalizationWindow.cs" />
+    <Compile Include="Assets\Editor\StringUtils.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\IReorderableListAdaptor.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\CreateLanguageWindow.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\FileSystem\XLSExporter.cs" />
-    <Compile Include="Assets\Editor\StringUtils.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\README.txt" />

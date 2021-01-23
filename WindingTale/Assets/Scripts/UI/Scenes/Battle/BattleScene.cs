@@ -6,7 +6,7 @@ using WindingTale.Core.ObjectModels;
 using WindingTale.UI.Battle;
 using WindingTale.UI.Controls;
 
-namespace WindingTale.UI.Scenes
+namespace WindingTale.UI.Scenes.Battle
 {
     public class BattleScene : MonoBehaviour
     {
@@ -41,19 +41,28 @@ namespace WindingTale.UI.Scenes
         // Start is called before the first frame update
         void Start()
         {
-            DefinitionStore.Instance.LoadChapter(5);
+            DefinitionStore.Instance.LoadChapter(25);
             //DefinitionStore.Instance.LoadChapter(18);
 
             //CreatureDefinition def = DefinitionStore.Instance.GetCreatureDefinition(50508);
 
-            FDCreature subject = new FDCreature(4, CreatureFaction.Friend, DefinitionStore.Instance.GetCreatureDefinition(111), FDPosition.At(0, 0));
-            //// FDCreature target = new FDCreature(11, CreatureFaction.Enemy, DefinitionStore.Instance.GetCreatureDefinition(51803), FDPosition.At(0, 0));
-            FDCreature target = new FDCreature(11, CreatureFaction.Enemy, DefinitionStore.Instance.GetCreatureDefinition(50505), FDPosition.At(0, 0));
+            FDCreature subject = new FDCreature(4, CreatureFaction.Friend, DefinitionStore.Instance.GetCreatureDefinition(15), FDPosition.At(0, 0));
+            FDCreature target = new FDCreature(11, CreatureFaction.Enemy, DefinitionStore.Instance.GetCreatureDefinition(52502), FDPosition.At(0, 0));
 
-            AttackInformation a1 = new AttackInformation(100, 50, false);
-            AttackInformation a2 = new AttackInformation(50, 20, false);
-            AttackInformation b1 = new AttackInformation(100, 50, false);
-            AttackInformation b2 = new AttackInformation(50, 20, false);
+            int hp1 = target.Data.HpMax;
+            int hp2 = hp1 / 2;
+            int hp3 = hp2 / 2;
+
+            int hp4 = subject.Data.HpMax;
+            int hp5 = hp4 / 2;
+            int hp6 = hp5 / 2;
+
+            Debug.Log(string.Format(@"hp1: {0}, hp2: {1}, hp3: {2}", hp1, hp2, hp3));
+
+            AttackInformation a1 = new AttackInformation(hp1, hp2, false);
+            AttackInformation a2 = new AttackInformation(hp2, hp3, false);
+            AttackInformation b1 = new AttackInformation(hp4, hp5, false);
+            AttackInformation b2 = new AttackInformation(hp5, hp6, false);
 
             FightInformation fightInfo = new FightInformation(a1, a2, b1, b2);
 
@@ -100,6 +109,10 @@ namespace WindingTale.UI.Scenes
 
             subjectAnimator = CreateFightObject(subjectAniId, subjectTransform);
             targetAnimator = CreateFightObject(targetAniId, targetTransform);
+
+            subjectInfoBar = CreateCreatureInfoBar(subject, subjectBarTransform);
+            targetInfoBar = CreateCreatureInfoBar(target, targetBarTransform);
+
         }
 
         // Update is called once per frame
@@ -136,6 +149,22 @@ namespace WindingTale.UI.Scenes
             return fightAnimator;
         }
 
+        private CreatureInfoBar CreateCreatureInfoBar(FDCreature creature, Transform placeHolder)
+        {
+            GameObject creatureInfoBarPrefab = Resources.Load<GameObject>("Prefabs/CreatureInfo");
+
+            GameObject obj = GameObject.Instantiate(creatureInfoBarPrefab);
+            obj.transform.parent = placeHolder;
+            obj.transform.localPosition = Vector3.zero;
+            // obj.transform.localScale = new Vector3(15, 15, 15);
+            obj.transform.localScale = new Vector3(1, 1, 1);
+            obj.transform.localEulerAngles = new Vector3(0, 0, 0);
+
+            CreatureInfoBar infoBar = obj.GetComponent<CreatureInfoBar>();
+            infoBar.Initialize(creature);
+
+            return infoBar;
+        }
 
         private void OnAttackHitting(int percentage)
         {
@@ -255,7 +284,7 @@ namespace WindingTale.UI.Scenes
 
         private int CalculatePercentage(AttackInformation info, int percentage)
         {
-            return info.HpAfter + (info.HpBefore - info.HpAfter) * percentage / 100;
+            return info.HpBefore - (info.HpBefore - info.HpAfter) * percentage / 100;
         }
 
     }

@@ -143,7 +143,20 @@ namespace WindingTale.UI.Battle
         private void SetActionState(ActionState state)
         {
             animator.SetInteger("actionState", state.GetHashCode());
-
+            switch(state)
+            {
+                case ActionState.Attack:
+                    animator.Play("attack");
+                    break;
+                case ActionState.Idle:
+                    animator.Play("idle");
+                    break;
+                case ActionState.Knocked:
+                    animator.Play("knocked", -1, 0);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
