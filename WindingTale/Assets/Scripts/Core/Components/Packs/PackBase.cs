@@ -24,8 +24,13 @@ namespace WindingTale.Core.Components.Packs
             Talk = 31,
             Prompt = 32,
 
+            BattleFight = 41,
+            BattleMagic = 42,
+
+
             Batch = 90,
             Sequence = 91,
+
 
         }
 

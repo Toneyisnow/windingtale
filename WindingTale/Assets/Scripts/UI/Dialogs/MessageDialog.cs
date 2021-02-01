@@ -53,7 +53,7 @@ namespace WindingTale.UI.Dialogs
         // Start is called before the first frame update
         void Start()
         {
-            GameObject messageBox = AddSubDialog(@"Others/MessageBox", this.transform, new Vector3(-5, -126, 0), new Vector3(37, 1, 37),
+            GameObject messageBox = AddSubDialog(@"Others/MessageBox", this.transform, new Vector3(-5, -63, 0), new Vector3(20, 1, 20),
                 () => { this.OnClicked(1); });
 
             // Add Dato to dato

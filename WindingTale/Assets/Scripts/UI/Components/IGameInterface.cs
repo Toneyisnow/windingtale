@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components;
+using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.ObjectModels;
 using WindingTale.UI.Dialogs;
 using WindingTale.UI.MapObjects;
@@ -46,6 +47,11 @@ namespace WindingTale.UI.Components
         void ShowConversationDialog(FDCreature creature, ConversationId conversation);
 
         void ShowMessageDialog(FDCreature creature, MessageId message);
+
+
+        void BattleFight(FDCreature subject, FDCreature target, FightInformation fightInfo);
+
+        void BattleMagic(FDCreature subject, FDCreature target, FightInformation magicInfo);
 
     }
 }

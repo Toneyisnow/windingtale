@@ -186,6 +186,7 @@
     <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\TeamEliminatedCondition.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIEscapeDelegate.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\NGUI\SL_NGUILabel.cs" />
+    <Compile Include="Assets\Scripts\Core\Components\Packs\BattleFightPack.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Algorithms\DirectRangeFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuActionState.cs" />
     <Compile Include="Assets\Scripts\Common\LevelUpInfo.cs" />
@@ -230,6 +231,10 @@
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageDataHandler.cs" />
     <Compile Include="Assets\Scripts\UI\Components\AssetManager.cs" />
     <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\Title\GameTitleScene.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\Load\GameLoadScene.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\Load\LoadChapterButton.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\Village\GameVillageScene.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\Data\Chapters\Chapter_07_Creature.txt" />

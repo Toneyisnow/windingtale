@@ -18,10 +18,11 @@ using WindingTale.UI.Dialogs;
 using WindingTale.Core.Components.Data;
 using Assets.Scripts.Common;
 using Assets.Scripts.UI.Common;
+using WindingTale.Core.Components.Algorithms;
+using UnityEngine.SceneManagement;
 
 namespace WindingTale.UI.Components
 {
-
     public class GameInterface : MonoBehaviour, IGameCallback, IGameInterface
     {
         public int ChapterId = 0;
@@ -381,6 +382,22 @@ namespace WindingTale.UI.Components
             dialog.Initialize(this.GameCanvas, animationId, message,
                 (index) => { this.OnDialogCallback(index); });
         }
+
+        public void BattleFight(FDCreature subject, FDCreature target, FightInformation fightInfo)
+        {
+            Debug.Log("Entering BattleFight");
+            SceneManager.LoadScene("BattleScene", LoadSceneMode.Additive);
+        }
+
+        public void BattleMagic(FDCreature subject, FDCreature target, FightInformation magicInfo)
+        {
+            Debug.Log("Entering BattleMagic");
+
+
+        }
+
+
+
 
         #endregion
 

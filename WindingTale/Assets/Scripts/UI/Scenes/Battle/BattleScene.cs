@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using WindingTale.Common;
 using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Definitions;
@@ -280,6 +281,7 @@ namespace WindingTale.UI.Scenes.Battle
         private void CompletFight()
         {
             Debug.Log("Fight is completed.");
+            SceneManager.UnloadSceneAsync("BattleScene");
         }
 
         private int CalculatePercentage(AttackInformation info, int percentage)

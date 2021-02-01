@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Components.Data;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.ObjectModels;
@@ -63,6 +64,9 @@ namespace WindingTale.UI.Components.Activities
                 case PackBase.PackType.ClearRange:
                     return new CallbackActivity(
                         (callback) => { callback.ClearCancellableObjects(); });
+
+                case PackBase.PackType.BattleFight:
+                    return BuildBattleFightActivity(pack as BattleFightPack);
 
                 default:
                     break;
@@ -272,6 +276,23 @@ namespace WindingTale.UI.Components.Activities
                 sequenceActivity.Add(activity2);
                 return sequenceActivity;
             }
+
+            return activity;
+        }
+
+        private static CallbackActivity BuildBattleFightActivity(BattleFightPack fightPack)
+        {
+            if (fightPack == null)
+            {
+                throw new ArgumentNullException("fightPack");
+            }
+
+            FDCreature subject = fightPack.Subject;
+            FDCreature target = fightPack.Target;
+            FightInformation fightInfo = fightPack.FightInformation;
+
+            CallbackActivity activity = new CallbackActivity(
+                    (gameInterface) => { gameInterface.BattleFight(subject, target, fightInfo); });
 
             return activity;
         }

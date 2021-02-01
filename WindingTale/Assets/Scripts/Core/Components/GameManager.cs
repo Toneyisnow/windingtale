@@ -560,6 +560,9 @@ namespace WindingTale.Core.Components
 
             FightInformation fighting = DamageFormula.DealWithAttack(creature, target, gameField, true);
 
+            BattleFightPack fightPack = new BattleFightPack(creature, target, fighting);
+            gameCallback.OnHandlePack(fightPack);
+
             // Remove dead creature
             if (target.Data.Hp <= 0)
             {
