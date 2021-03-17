@@ -19,6 +19,7 @@ public class CreateFightAnimators : MonoBehaviour
     [MenuItem("Assets/Create Fight Animators")]
     static void CreateFightAnimator()
     {
+        /*
         for (int aniId = 1; aniId < 999; aniId++)
         {
             Sprite sprite = Resources.Load<Sprite>(string.Format("Fights/{0}/Fight-{0}-1-01", StringUtils.Digit3(aniId)));
@@ -30,6 +31,7 @@ public class CreateFightAnimators : MonoBehaviour
             CreateAnimationClips(aniId);
             CreateAnimator(aniId);
         }
+        */
     }
 
     private static void CreateAnimator(int animationId)

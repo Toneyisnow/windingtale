@@ -29,6 +29,8 @@ namespace WindingTale.UI.Components
 
         public Canvas GameCanvas = null;
 
+        public Camera uiCamera = null;
+
         private IGameHandler gameManager = null;
 
         private GameActivityManager activityManager = null;
@@ -356,11 +358,24 @@ namespace WindingTale.UI.Components
 
             // Show dialog
             string message = LocalizedStrings.GetConversationString(conversation);
-            currentDialog = new GameObject();
+
+            /*
+             * currentDialog = new GameObject();
             MessageDialog dialog = currentDialog.AddComponent<MessageDialog>();
             dialog.Initialize(this.GameCanvas, creature.Definition.AnimationId, conversation,
                 (index) => { this.OnDialogCallback(index); } );
+            */
 
+            GameObject dialogPrefab = Resources.Load<GameObject>("Prefabs/MessageDialog2");
+            currentDialog = GameObject.Instantiate(dialogPrefab);
+            MessageDialog2 dialogScript = currentDialog.GetComponent<MessageDialog2>();
+            dialogScript.Initialize(uiCamera);
+            
+
+            /*
+            GameObject dialogPrefab = Resources.Load<GameObject>("Prefabs/MessageDialog3");
+            currentDialog = GameObject.Instantiate(dialogPrefab);
+            */
         }
 
         public void ShowMessageDialog(FDCreature creature, MessageId message)

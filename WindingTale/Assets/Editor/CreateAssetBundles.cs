@@ -6,6 +6,7 @@ public class CreateAssetBundles
     [MenuItem("Assets/Build AssetBundles")]
     static void BuildAllAssetBundles()
     {
+        /*
         string outputFolder = "Assets/StreamingAssets";
 
         //Check if __Bundles folder exist
@@ -18,5 +19,6 @@ public class CreateAssetBundles
 
         BuildPipeline.BuildAssetBundles(outputFolder, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
         BuildPipeline.BuildAssetBundles(outputFolder, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+        */
     }
 }

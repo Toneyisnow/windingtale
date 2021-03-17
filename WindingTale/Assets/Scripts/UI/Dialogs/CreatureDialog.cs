@@ -83,7 +83,7 @@ namespace WindingTale.UI.Dialogs
             GameObject dato = new GameObject();
             dato.transform.SetParent(datoBase.transform);
             var datoControl = dato.AddComponent<DatoControl>();
-            datoControl.Initialize(creature.Definition.AnimationId, false);
+            datoControl.Initialize(null, creature.Definition.AnimationId, new Vector2(0, 0));
             
             AddToDetails(detail);
 

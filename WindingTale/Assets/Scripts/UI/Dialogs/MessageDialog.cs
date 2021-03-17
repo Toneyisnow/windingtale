@@ -60,7 +60,7 @@ namespace WindingTale.UI.Dialogs
             GameObject dato = new GameObject();
             dato.transform.SetParent(messageBox.transform);
             var datoControl = dato.AddComponent<DatoControl>();
-            datoControl.Initialize(this.creatureAniId, true);
+            datoControl.Initialize(null, this.creatureAniId, new Vector2(0, 0));
             dato.transform.localPosition = new Vector3(9f, 1, 0);
             dato.transform.localScale = new Vector3(8f, 8f, 1);
 
