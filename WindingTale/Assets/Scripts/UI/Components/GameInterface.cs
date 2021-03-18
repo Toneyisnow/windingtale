@@ -118,6 +118,8 @@ namespace WindingTale.UI.Components
 
         void RenderFieldMap(int chapterId)
         {
+            this.ChapterId = chapterId;
+
             // Draw map on UI
             GameField field = gameManager.GetField();
             Material defaultMaterial = Resources.Load<Material>(@"common-mat");
@@ -357,28 +359,17 @@ namespace WindingTale.UI.Components
             // Move the map to corresponding location
 
             // Show dialog
+            int animationId = creature?.Definition?.AnimationId ?? 0;
+
             string message = LocalizedStrings.GetConversationString(conversation);
+            Debug.Log("Showing message dialog: " + message);
 
-            /*
-             * currentDialog = new GameObject();
-            MessageDialog dialog = currentDialog.AddComponent<MessageDialog>();
-            dialog.Initialize(this.GameCanvas, creature.Definition.AnimationId, conversation,
-                (index) => { this.OnDialogCallback(index); } );
-            */
-
-            GameObject dialogPrefab = Resources.Load<GameObject>("Prefabs/MessageDialog2");
-            currentDialog = GameObject.Instantiate(dialogPrefab);
-            MessageDialog2 dialogScript = currentDialog.GetComponent<MessageDialog2>();
-            dialogScript.Initialize(uiCamera);
-            
-
-            /*
-            GameObject dialogPrefab = Resources.Load<GameObject>("Prefabs/MessageDialog3");
-            currentDialog = GameObject.Instantiate(dialogPrefab);
-            */
+            MessageDialog2 messageDialog = GameObjectExtension.CreateFromPrefab<MessageDialog2>("Prefabs/MessageDialog2");
+            messageDialog.Initialize(uiCamera, animationId, message, (index) => { this.OnDialogCallback(index); }, this.ChapterId);
+            currentDialog = messageDialog.gameObject;
         }
 
-        public void ShowMessageDialog(FDCreature creature, MessageId message)
+        public void ShowMessageDialog(FDCreature creature, MessageId messageId)
         {
             // Canvas
             if (currentDialog != null)
@@ -390,12 +381,21 @@ namespace WindingTale.UI.Components
             // Move the map to corresponding location
 
             // Show dialog
+            int animationId = creature?.Definition?.AnimationId ?? 0;
+            string message = LocalizedStrings.GetMessageString(messageId);
+
+            MessageDialog2 messageDialog = GameObjectExtension.CreateFromPrefab<MessageDialog2>("Prefabs/MessageDialog2");
+            messageDialog.Initialize(uiCamera, animationId, message, (index) => { this.OnDialogCallback(index); });
+            currentDialog = messageDialog.gameObject;
+
+            /*
             currentDialog = new GameObject();
             MessageDialog dialog = currentDialog.AddComponent<MessageDialog>();
 
             int animationId = (creature != null) ? creature.Definition.AnimationId : 0;
-            dialog.Initialize(this.GameCanvas, animationId, message,
+            dialog.Initialize(this.GameCanvas, animationId, messageId,
                 (index) => { this.OnDialogCallback(index); });
+            */
         }
 
         public void BattleFight(FDCreature subject, FDCreature target, FightInformation fightInfo)

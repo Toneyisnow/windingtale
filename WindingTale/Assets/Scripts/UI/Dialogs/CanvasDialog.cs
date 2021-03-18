@@ -76,15 +76,15 @@ namespace WindingTale.UI.Dialogs
 
         protected GameObject AddText(int chapterId, string textString, Transform subDialog, Vector3 position, Vector3 scale, Action action = null)
         {
-            GameObject textObj = FontAssets.ComposeTextMeshObjectForChapter(chapterId, textString);
-            IntialText(textObj, subDialog, position, scale, action);
+            TextMeshPro textObj = FontAssets.ComposeTextMeshObjectForChapter(chapterId, textString);
+            IntialText(textObj.gameObject, subDialog, position, scale, action);
 
-            return textObj;
+            return textObj.gameObject;
         }
 
         protected GameObject AddText(string textString, Transform subDialog, Vector3 position, Vector3 scale, Action action = null)
         {
-            GameObject textObj = FontAssets.ComposeTextMeshObject(textString);
+            GameObject textObj = FontAssets.ComposeTextMeshObject(textString).gameObject;
             IntialText(textObj, subDialog, position, scale, action);
 
             return textObj;

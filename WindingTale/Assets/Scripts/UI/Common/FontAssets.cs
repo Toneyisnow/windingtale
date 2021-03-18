@@ -11,35 +11,41 @@ namespace Assets.Scripts.UI.Common
 {
     public class FontAssets
     {
-        public static GameObject ComposeTextMeshObject(string textString)
+        public static TextMeshPro ComposeTextMeshObject(string textString)
         {
             GameObject textPro = new GameObject();
 
             TextMeshPro textComp = textPro.AddComponent<TextMeshPro>();
             textComp.text = textString;
+            textComp.rectTransform.sizeDelta = new Vector2(80, 25);
+            textComp.fontSize = 48;
+
+            textComp.overflowMode = TextOverflowModes.ScrollRect;
+            textComp.enableWordWrapping = true;
 
             TMP_FontAsset fontAssetA = Resources.Load<TMP_FontAsset>("Fonts/FontAssets/FZB_Common");
             textComp.font = fontAssetA;
 
-            return textPro;
+            return textComp;
         }
 
-        public static GameObject ComposeTextMeshObjectForChapter(int chapterId, string textString)
+        public static TextMeshPro ComposeTextMeshObjectForChapter(int chapterId, string textString)
         {
             GameObject textPro = new GameObject();
 
             TextMeshPro textComp = textPro.AddComponent<TextMeshPro>();
             textComp.text = textString;
+            textComp.rectTransform.sizeDelta = new Vector2(80, 25);
+            textComp.fontSize = 48;
 
-            //// textComp.fontSize = 20;
             textComp.overflowMode = TextOverflowModes.ScrollRect;
-            textComp.enableWordWrapping = false;
+            textComp.enableWordWrapping = true;
 
 
             TMP_FontAsset fontAssetA = Resources.Load<TMP_FontAsset>("Fonts/FontAssets/FZB_Chapter-" + StringUtils.Digit2(chapterId));
             textComp.font = fontAssetA;
 
-            return textPro;
+            return textComp;
         }
 
     }

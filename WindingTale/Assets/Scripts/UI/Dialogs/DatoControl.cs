@@ -19,8 +19,11 @@ namespace Assets.Scripts.UI.Dialogs
         private Sprite blinkingSprite = null;
 
         private Image image = null;
+        private float scale = 1.5f;
 
-        public void Initialize(Canvas canvas, int animationId, Vector2 canvasPosition)
+        private bool isTalking = false;
+
+        public void Initialize(Canvas canvas, int animationId, Vector2 canvasPosition, bool isFlipped = false)
         {
             this.transform.parent = canvas.transform;
             this.animationId = animationId;
@@ -30,9 +33,15 @@ namespace Assets.Scripts.UI.Dialogs
             // rect.SetPositionAndRotation(canvasPosition, Quaternion.Euler(0, 0, 0));
             rect.sizeDelta = new Vector2(80, 80);
 
-            this.transform.localScale = new Vector3(3.0f, 3.0f, 1);
-            // rect.si
-            
+            if (isFlipped)
+            {
+                this.transform.localScale = new Vector3(-scale, scale, 1);
+            }
+            else
+            {
+                this.transform.localScale = new Vector3(scale, scale, 1);
+            }
+
             Texture2D texture = Resources.Load<Texture2D>(@"Datos/Dato_" + StringUtils.Digit3(animationId));
             normalSprite = Sprite.Create(texture, new Rect(0, 80, 80, 80), new Vector2(0.5f, 0.5f));
             talking1Sprite = Sprite.Create(texture, new Rect(80, 80, 80, 80), new Vector2(0.5f, 0.5f));
@@ -41,11 +50,16 @@ namespace Assets.Scripts.UI.Dialogs
 
             image = this.GetComponent<Image>();
             image.sprite = blinkingSprite;
-
+            
 
             //gameObject.transform.localScale = new Vector3(10, 10, 0);
             //gameObject.transform.localPosition = new Vector3(0, 1, 0);
             this.gameObject.layer = 5;
+        }
+
+        public void SetTalking(bool talking)
+        {
+            this.isTalking = talking;
         }
 
         private void Start()
@@ -55,10 +69,26 @@ namespace Assets.Scripts.UI.Dialogs
 
         private void Update()
         {
-            if ((int)(Time.time * 10) % 30 == 1)
+            if (isTalking)
             {
-                image.sprite = blinkingSprite;
-                Debug.Log("Blinked!!!");
+                UpdateTalking();
+            }
+            else
+            {
+                UpdateIdle();
+            }
+        }
+
+        private void UpdateTalking()
+        {
+            int seed = (int)(Time.time * 5) % 3;
+            if (seed == 0)
+            {
+                image.sprite = talking1Sprite;
+            }
+            else if (seed == 1)
+            {
+                image.sprite = talking2Sprite;
             }
             else
             {
@@ -66,6 +96,16 @@ namespace Assets.Scripts.UI.Dialogs
             }
         }
 
-
+        private void UpdateIdle()
+        {
+            if ((int)(Time.time * 10) % 30 == 1)
+            {
+                image.sprite = blinkingSprite;
+            }
+            else
+            {
+                image.sprite = normalSprite;
+            }
+        }
     }
 }

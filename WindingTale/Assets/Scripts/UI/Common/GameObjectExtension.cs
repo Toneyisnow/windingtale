@@ -28,6 +28,14 @@ namespace WindingTale.UI.Common
 
             return t;
         }
+        public static GameObject CreateFromPrefab2<T>(string prefabPath)
+        {
+            GameObject prefab = Resources.Load<GameObject>(prefabPath);
+            GameObject obj = GameObject.Instantiate(prefab);
+            T t = obj.GetComponent<T>();
+
+            return obj;
+        }
 
     }
 }
