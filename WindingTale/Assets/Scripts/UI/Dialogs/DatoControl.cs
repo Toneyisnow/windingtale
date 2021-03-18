@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using WindingTale.Common;
 
-namespace Assets.Scripts.UI.Dialogs
+namespace WindingTale.UI.CanvasControls
 {
     public class DatoControl : MonoBehaviour
     {

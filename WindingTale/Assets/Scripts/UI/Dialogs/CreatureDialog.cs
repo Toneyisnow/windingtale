@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts.UI.Common;
-using Assets.Scripts.UI.Dialogs;
 using SmartLocalization;
 using System;
 using System.Collections;
@@ -82,9 +81,7 @@ namespace WindingTale.UI.Dialogs
             // Add Dato to dato
             GameObject dato = new GameObject();
             dato.transform.SetParent(datoBase.transform);
-            var datoControl = dato.AddComponent<DatoControl>();
-            datoControl.Initialize(null, creature.Definition.AnimationId, new Vector2(0, 0));
-            
+             
             AddToDetails(detail);
 
             if (IsItemDialog)

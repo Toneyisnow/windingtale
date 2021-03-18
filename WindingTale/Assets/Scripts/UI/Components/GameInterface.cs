@@ -20,6 +20,7 @@ using Assets.Scripts.Common;
 using Assets.Scripts.UI.Common;
 using WindingTale.Core.Components.Algorithms;
 using UnityEngine.SceneManagement;
+using WindingTale.UI.CanvasControls;
 
 namespace WindingTale.UI.Components
 {
@@ -238,6 +239,11 @@ namespace WindingTale.UI.Components
 
         public void TouchCreature(int creatureId)
         {
+            if (currentDialog != null)
+            {
+                return;
+            }
+
             UICreature creature = GetUICreature(creatureId);
             FDPosition creaturePosition = creature.GetCurrentPosition();
             FDPosition cursorPosition = FieldTransform.GetObjectUnitPosition(gameCursor.transform.localPosition);
@@ -255,6 +261,11 @@ namespace WindingTale.UI.Components
 
         public void TouchShape(FDPosition position)
         {
+            if (currentDialog != null)
+            {
+                return;
+            }
+
             // Move the cursor position to the current position
             FDPosition cursorPosition = FieldTransform.GetObjectUnitPosition(gameCursor.transform.localPosition);
             gameCursor.transform.localPosition = FieldTransform.GetObjectPixelPosition(FieldTransform.FieldObjectLayer.Ground, position.X, position.Y);
@@ -262,12 +273,22 @@ namespace WindingTale.UI.Components
 
         public void TouchMenu(FDPosition position)
         {
+            if (currentDialog != null)
+            {
+                return;
+            }
+
             // Do the actuall game event
             gameManager.HandleOperation(position);
         }
 
         public void TouchCursor()
         {
+            if (currentDialog != null)
+            {
+                return;
+            }
+
             FDPosition cursorPosition = FieldTransform.GetObjectUnitPosition(gameCursor.transform.localPosition);
             
             // Do the actuall game event
@@ -364,7 +385,7 @@ namespace WindingTale.UI.Components
             string message = LocalizedStrings.GetConversationString(conversation);
             Debug.Log("Showing message dialog: " + message);
 
-            MessageDialog2 messageDialog = GameObjectExtension.CreateFromPrefab<MessageDialog2>("Prefabs/MessageDialog2");
+            MessageDialog messageDialog = GameObjectExtension.CreateFromPrefab<MessageDialog>("Prefabs/MessageDialog");
             messageDialog.Initialize(uiCamera, animationId, message, (index) => { this.OnDialogCallback(index); }, this.ChapterId);
             currentDialog = messageDialog.gameObject;
         }
@@ -384,9 +405,18 @@ namespace WindingTale.UI.Components
             int animationId = creature?.Definition?.AnimationId ?? 0;
             string message = LocalizedStrings.GetMessageString(messageId);
 
-            MessageDialog2 messageDialog = GameObjectExtension.CreateFromPrefab<MessageDialog2>("Prefabs/MessageDialog2");
-            messageDialog.Initialize(uiCamera, animationId, message, (index) => { this.OnDialogCallback(index); });
-            currentDialog = messageDialog.gameObject;
+            if (messageId.MessageType == MessageId.MessageTypes.Confirm)
+            {
+                PromptDialog dialog = GameObjectExtension.CreateFromPrefab<PromptDialog>("Prefabs/PromptDialog");
+                dialog.Initialize(uiCamera, animationId, message, (index) => { this.OnDialogCallback(index); });
+                currentDialog = dialog.gameObject;
+            }
+            else
+            {
+                MessageDialog dialog = GameObjectExtension.CreateFromPrefab<MessageDialog>("Prefabs/MessageDialog");
+                dialog.Initialize(uiCamera, animationId, message, (index) => { this.OnDialogCallback(index); });
+                currentDialog = dialog.gameObject;
+            }
 
             /*
             currentDialog = new GameObject();

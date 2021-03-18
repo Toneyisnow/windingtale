@@ -44,11 +44,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3639043503316965603}
-  - component: {fileID: 7173602737666566881}
   - component: {fileID: 366356989589486354}
   - component: {fileID: 2453097870472149967}
+  - component: {fileID: 7051734411529219238}
   m_Layer: 0
-  m_Name: MessageDialog2
+  m_Name: MessageDialog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,19 +69,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7173602737666566881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3639043503316965602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: faa68bf13d24f524c97cec75790a53be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvas: {fileID: 3639043503752309554}
 --- !u!61 &366356989589486354
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -120,6 +107,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31e95ee1a7088b5459f718fe66fb5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7051734411529219238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3639043503316965602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faa68bf13d24f524c97cec75790a53be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 3639043503752309554}
 --- !u!1 &3639043503371858536
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,7 +209,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 2.428955, y: 11.603149}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -220,7 +220,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 616, y: 152.51129}
+  m_Size: {x: 800, y: 853.25366}
   m_EdgeRadius: 0
 --- !u!1 &3639043503540140003
 GameObject:
@@ -338,7 +338,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

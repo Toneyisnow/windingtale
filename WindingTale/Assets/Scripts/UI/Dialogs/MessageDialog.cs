@@ -1,81 +1,130 @@
 ﻿using Assets.Scripts.Common;
 using Assets.Scripts.UI.Common;
-using Assets.Scripts.UI.Dialogs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using WindingTale.Common;
+using WindingTale.UI.Common;
 
-namespace WindingTale.UI.Dialogs
+namespace WindingTale.UI.CanvasControls
 {
-
-    public class MessageDialog : CanvasDialog
+    public class MessageDialog : MonoBehaviour
     {
-        private int creatureAniId;
-
-        private Action<int> onClickCallback = null;
-
-        private bool needsConfirm = false;
-
-        private string localizedMessage = null;
-
-        private int chapterId = -1;
-
-        public void Initialize(Canvas canvas, int animationId, MessageId message, Action<int> callback = null)
+        public enum MessageDialogPosition
         {
-            base.Initialize(canvas);
-            this.gameObject.name = "MessageDialog";
-
-            this.creatureAniId = animationId;
-            this.localizedMessage = LocalizedStrings.GetMessageString(message);
-
-            this.onClickCallback = callback;
-
-            this.transform.localPosition = new Vector3(0, 0, 0);
-            this.transform.localScale = new Vector3(1f, 1f, 1f);
+            UP = 1,
+            DOWN = 2,
         }
 
-        public void Initialize(Canvas canvas, int animationId, ConversationId conversation, Action<int> callback = null)
+        public Canvas canvas;
+        private DatoControl datoControl = null;
+        private Action<int> onClickCallback = null;
+
+
+        private float displayInterval = 0.08f;
+
+        private int displayLength = 0;
+        private string localizedMessage = string.Empty;
+        private TextMeshPro textObj = null;
+
+        private float lastTime;
+        private bool isTalking = false;
+
+        private MessageDialogPosition dialogPosition = MessageDialogPosition.DOWN;
+
+
+        private static Vector2 GetBasePosition(MessageDialogPosition pos)
         {
-            base.Initialize(canvas);
+            if (pos == MessageDialogPosition.UP)
+            {
+                return new Vector2(0, 150);
+            }
+            else
+            {
+                return new Vector2(0, -150);
+            }
+        }
+
+        private static Vector2 GetDatoPosition(MessageDialogPosition pos)
+        {
+            if (pos == MessageDialogPosition.UP)
+            {
+                return new Vector2(230, 150);
+            }
+            else
+            {
+                return new Vector2(-230, -150);
+            }
+        }
+
+        private static Vector3 GetTextPosition(MessageDialogPosition pos)
+        {
+            if (pos == MessageDialogPosition.UP)
+            {
+                return new Vector3(-60, 130, -50);
+            }
+            else
+            {
+                return new Vector3(60, -160, 0);
+            }
+        }
+
+        public void Initialize(Camera camera, int animationId, string message, Action<int> callback, int forChapterId = 0)
+        {
             this.gameObject.name = "MessageDialog";
 
-            this.chapterId = conversation.ChapterId;
-            this.creatureAniId = animationId;
-            this.localizedMessage = LocalizedStrings.GetConversationString(conversation);
-
+            canvas.worldCamera = camera;
             this.onClickCallback = callback;
 
-            this.transform.localPosition = new Vector3(0, 0, 0);
-            this.transform.localScale = new Vector3(1f, 1f, 1f);
+            if (animationId > 500)
+            {
+                dialogPosition = MessageDialogPosition.UP;
+            }
+
+            GameObject messageBoxBase = this.transform.Find("Canvas/MessageBase").gameObject;
+            messageBoxBase.transform.localPosition = GetBasePosition(dialogPosition);
+            Clickable clickable = messageBoxBase.AddComponent<Clickable>();
+            clickable.Initialize(() => { this.OnClicked(); });
+
+            localizedMessage = message;
+
+            localizedMessage = localizedMessage.Replace("#", "\r\n");
+            datoControl = GameObjectExtension.CreateFromPrefab<DatoControl>("Prefabs/DatoControl");
+            datoControl.Initialize(canvas, animationId, GetDatoPosition(dialogPosition), (dialogPosition == MessageDialogPosition.DOWN));
+
+            if (forChapterId > 0)
+            {
+                textObj = FontAssets.ComposeTextMeshObjectForChapter(forChapterId, localizedMessage);
+            }
+            else
+            {
+                textObj = FontAssets.ComposeTextMeshObject(localizedMessage);
+            }
+
+            Transform textAnchor = this.transform.Find("Canvas/TextAnchor");
+            textAnchor.localPosition = GetTextPosition(dialogPosition);
+
+            textObj.transform.parent = textAnchor;
+            //textObj.transform.localPosition = new Vector2(190, -50);
+            textObj.transform.localPosition = new Vector3(0, 0, 0);
+            textObj.gameObject.layer = 5;
+            // textObj.fontSize = 20;
+
+            displayLength = 4;
+            textObj.text = localizedMessage.Substring(0, 4);
+
+
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            GameObject messageBox = AddSubDialog(@"Others/MessageBox", this.transform, new Vector3(-5, -63, 0), new Vector3(20, 1, 20),
-                () => { this.OnClicked(1); });
-
-            // Add Dato to dato
-            GameObject dato = new GameObject();
-            dato.transform.SetParent(messageBox.transform);
-            var datoControl = dato.AddComponent<DatoControl>();
-            datoControl.Initialize(null, this.creatureAniId, new Vector2(0, 0));
-            dato.transform.localPosition = new Vector3(9f, 1, 0);
-            dato.transform.localScale = new Vector3(8f, 8f, 1);
-
-            Vector3 textPosition = new Vector3(1.3f, 1, -2f);
-            Vector3 textScale = new Vector3(0.4f, 0.4f, 1);
-            GameObject textObject;
-            if (chapterId >= 0)
-            {
-                textObject = AddText(chapterId, localizedMessage, messageBox.transform, textPosition, textScale);
-            }
-            else
-            {
-                textObject = AddText(localizedMessage, messageBox.transform, textPosition, textScale);
-            }
-
+            datoControl.SetTalking(true);
+            isTalking = true;
+            lastTime = Time.time;
         }
 
         // Update is called once per frame
@@ -84,16 +133,51 @@ namespace WindingTale.UI.Dialogs
 
         }
 
-        private void OnClicked(int index)
+        private void OnGUI()
         {
-            Debug.Log("Clicked MessageDialog.");
-
-            if (onClickCallback != null)
+            if (!isTalking)
             {
-                onClickCallback(index);
+                return;
+            }
+
+            if (Time.time - lastTime >= displayInterval)
+            {
+                OnShowingText();
+                lastTime = Time.time;
             }
         }
 
 
+
+        private void OnShowingText()
+        {
+            //// Debug.Log("OnShowingText:" + displayLength);
+            if (displayLength++ < localizedMessage.Length)
+            {
+                textObj.text = localizedMessage.Substring(0, displayLength);
+            }
+            else
+            {
+                datoControl.SetTalking(false);
+                isTalking = false;
+            }
+        }
+
+        private void OnClicked()
+        {
+            if (isTalking)
+            {
+                displayLength = localizedMessage.Length;
+                textObj.text = localizedMessage;
+            }
+            else
+            {
+                //// Debug.Log("Clicked on MessageDialog!");
+                if (this.onClickCallback != null)
+                {
+                    this.onClickCallback(1);
+                }
+            }
+        }
     }
 }

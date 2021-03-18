@@ -229,15 +229,13 @@
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuSystemState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\MenuState.cs" />
     <Compile Include="Assets\Scripts\Core\Components\IGameAction.cs" />
-    <Compile Include="Assets\Scripts\UI\Dialogs\MessageDialog.cs" />
     <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\Utility Scripts\QT_MeshCombineUtility.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIStandByDelegate.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageDataHandler.cs" />
     <Compile Include="Assets\Scripts\UI\Components\AssetManager.cs" />
     <Compile Include="Assets\Scripts\UI\Scenes\Title\GameTitleScene.cs" />
     <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
-    <Compile Include="Assets\Scripts\UI\Dialogs\MessageDialog2.cs" />
-    <Compile Include="Assets\Scripts\UI\Dialogs\MessageDialog3.cs" />
+    <Compile Include="Assets\Scripts\UI\Dialogs\MessageDialog.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\Data\Chapters\Chapter_07_Creature.txt" />
