@@ -1,6 +1,4 @@
-﻿using Assets.Scripts.Common;
-using Assets.Scripts.UI.Common;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -64,11 +62,11 @@ namespace WindingTale.UI.CanvasControls
         {
             if (pos == MessageDialogPosition.UP)
             {
-                return new Vector3(-60, 130, -50);
+                return new Vector3(-60, 130, -1);
             }
             else
             {
-                return new Vector3(60, -160, 0);
+                return new Vector3(60, -160, -1);
             }
         }
 
@@ -110,6 +108,7 @@ namespace WindingTale.UI.CanvasControls
             textObj.transform.parent = textAnchor;
             //textObj.transform.localPosition = new Vector2(190, -50);
             textObj.transform.localPosition = new Vector3(0, 0, 0);
+            textObj.transform.localScale = new Vector3(5, 5, 1);
             textObj.gameObject.layer = 5;
             // textObj.fontSize = 20;
 

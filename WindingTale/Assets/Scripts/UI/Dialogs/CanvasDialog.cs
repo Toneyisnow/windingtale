@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.UI.Common;
-using System;
+﻿using System;
 using TMPro;
 using UnityEngine;
 using WindingTale.UI.Common;

@@ -3,38 +3,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Global
+namespace WindingTale.UI.Common
 {
-    private static Global instance = null;
-
-    public Int32 CurrentTick
+    public class Global
     {
-        get; private set;
-    }
+        private static Global instance = null;
 
-    private Global()
-    {
-
-    }
-
-    public static Global Instance()
-    {
-        if(instance == null)
+        public Int32 CurrentTick
         {
-            instance = new Global();
+            get; private set;
         }
 
-        return instance;
-    }
-
-    public void Tick()
-    {
-        if (this.CurrentTick++ > Int32.MaxValue - 10)
+        private Global()
         {
-            this.CurrentTick = 0;
+
         }
 
+        public static Global Instance()
+        {
+            if (instance == null)
+            {
+                instance = new Global();
+            }
+
+            return instance;
+        }
+
+        public void Tick()
+        {
+            if (this.CurrentTick++ > Int32.MaxValue - 10)
+            {
+                this.CurrentTick = 0;
+            }
+
+        }
+
+
     }
-
-
 }

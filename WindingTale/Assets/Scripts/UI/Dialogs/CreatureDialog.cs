@@ -1,17 +1,15 @@
-﻿using Assets.Scripts.UI.Common;
-using SmartLocalization;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using WindingTale.Common;
-using WindingTale.Core.Definitions;
 using WindingTale.Core.ObjectModels;
+using WindingTale.UI.Common;
 
-namespace WindingTale.UI.Dialogs
+namespace WindingTale.UI.CanvasControls
 {
-
-    public class CreatureDialog : CanvasDialog
+    public class CreatureDialog : MonoBehaviour
     {
         public enum ShowType
         {
@@ -23,31 +21,71 @@ namespace WindingTale.UI.Dialogs
             ViewMagic = 6,
         }
 
+        public Canvas canvas;
+        private DatoControl datoControl = null;
+        private Action<int> onClickCallback = null;
+
         private FDCreature creature = null;
 
         private ShowType showType = ShowType.ViewItem;
 
         private Action<int> OnCallback = null;
 
-        public void Initialize(Canvas canvas, FDCreature creature, ShowType showType, Action<int> callback = null)
+
+        public void Initialize(Camera camera, FDCreature creature, ShowType showType, Action<int> callback)
         {
-            LocalizedStrings.SetLanguage("zh-CN");
-            
-            if (creature == null)
-            {
-                throw new ArgumentNullException("creature");
-            }
-
-            base.Initialize(canvas);
-
-            this.OnCallback = callback;
             this.gameObject.name = "CreatureDialog";
 
-            this.transform.localPosition = new Vector3(0, 0, 0);
-            this.transform.localScale = new Vector3(1f, 1f, 1f);
+            canvas.worldCamera = camera;
 
             this.creature = creature;
             this.showType = showType;
+            this.onClickCallback = callback;
+
+            Transform messageBoxBase = this.transform.Find("Canvas/ContainerBase");
+            //// messageBoxBase.transform.localPosition = new Vector2(0, -150);
+            Clickable clickable = messageBoxBase.gameObject.AddComponent<Clickable>();
+            clickable.Initialize(() => { this.OnClicked(); });
+
+
+            Transform datoBase = this.transform.Find("Canvas/DatoBase");
+            datoControl = GameObjectExtension.CreateFromPrefab<DatoControl>("Prefabs/DatoControl");
+            datoControl.Initialize(canvas, creature.Definition.AnimationId, new Vector2(0, 0));
+            datoControl.transform.parent = datoBase;
+            datoControl.transform.localPosition = new Vector3(0, 0, 0);
+
+            RenderDetails();
+
+            if (IsItemDialog)
+            {
+                RenderItemsContainer();
+            }
+            else
+            {
+                RenderMagicsContainer();
+            }
+        }
+
+        // Start is called before the first frame update
+        void Start()
+        {
+
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+
+        private void OnClicked()
+        {
+            Debug.Log("CreatureDialog clicked.");
+            if (this.onClickCallback != null)
+            {
+                this.onClickCallback(0);
+            }
         }
 
         private bool CanEdit
@@ -66,239 +104,80 @@ namespace WindingTale.UI.Dialogs
             }
         }
 
-        // Start is called before the first frame update
-        void Start()
+        private void RenderDetails()
         {
-            GameObject datoBase = AddSubDialog(@"Others/CreatureDato", this.transform, new Vector3(-352, 202, 0), new Vector3(30, 1, 30),
-                () => { OnClickedContainer(); });
-            GameObject detail = AddSubDialog(@"Others/CreatureDetail", this.transform, new Vector3(144, 202, 0), new Vector3(30, 1, 30),
-                () => { OnClickedContainer(); });
-            GameObject container = AddSubDialog(@"Others/ContainerBase", this.transform, new Vector3(-5, -126, 0), new Vector3(37, 1, 37));
-
-            // AddSubDialog(@"Others/ConfirmButtonYes", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
-            // AddSubDialog(@"Others/ConfirmButtonNo", this.transform, new Vector3(200, 102, 2), new Vector3(1, 1, 1));
-
-            // Add Dato to dato
-            GameObject dato = new GameObject();
-            dato.transform.SetParent(datoBase.transform);
-             
-            AddToDetails(detail);
-
-            if (IsItemDialog)
-            {
-                AddItemsToContainer(container);
-            }
-            else
-            {
-                AddMagicsToContainer(container);
-            }
-        }
-
-        void AddToDetails(GameObject detail)
-        {
-            // Name
             string name = LocalizedStrings.GetCreatureName(creature.Definition.AnimationId);
-            AddText(name, detail.transform, new Vector3(7, 2, -3), new Vector3(0.3f, 0.3f, 1));
+            RenderText(name, "Canvas/CreatureDetail/Name", FontAssets.FontSizeType.Normal);
 
-            // Race
             string race = LocalizedStrings.GetRaceName(creature.Definition.Race);
-            AddText(race, detail.transform, new Vector3(-3, 2, -3), new Vector3(0.3f, 0.3f, 1));
+            RenderText(race, "Canvas/CreatureDetail/Race", FontAssets.FontSizeType.Normal);
 
-            // Occupation
             string occupation = LocalizedStrings.GetOccupationName(creature.Definition.Occupation);
-            AddText(occupation, detail.transform, new Vector3(-8, 2, -3), new Vector3(0.3f, 0.3f, 1));
+            RenderText(occupation, "Canvas/CreatureDetail/Occupation", FontAssets.FontSizeType.Normal);
 
             // LV
             int level = creature.Data.Level;
-            AddText(StringUtils.Digit2(level), detail.transform, new Vector3(1.52f, 2, -1.17f), new Vector3(0.3f, 0.3f, 1));
+            RenderText(StringUtils.Digit2(level), "Canvas/CreatureDetail/LV", FontAssets.FontSizeType.Digit);
             // EX
             int ex = creature.Data.Exp;
-            AddText(StringUtils.Digit2(ex), detail.transform, new Vector3(1.52f, 2, -0.12f), new Vector3(0.3f, 0.3f, 1));
+            RenderText(StringUtils.Digit2(ex), "Canvas/CreatureDetail/EX", FontAssets.FontSizeType.Digit);
             // MV
             int mv = creature.Data.CalculatedMv;
-            AddText(StringUtils.Digit2(mv), detail.transform, new Vector3(1.52f, 2, 1.02f), new Vector3(0.3f, 0.3f, 1));
+            RenderText(StringUtils.Digit2(mv), "Canvas/CreatureDetail/MV", FontAssets.FontSizeType.Digit);
             // AP
             int ap = creature.Data.CalculatedAp;
-            AddText(StringUtils.Digit2(ap), detail.transform, new Vector3(1.52f, 2, 2.22f), new Vector3(0.3f, 0.3f, 1));
+            RenderText(StringUtils.Digit2(ap), "Canvas/CreatureDetail/AP", FontAssets.FontSizeType.Digit);
             // DP
             int dp = creature.Data.CalculatedDp;
-            AddText(StringUtils.Digit2(dp), detail.transform, new Vector3(1.52f, 2, 3.36f), new Vector3(0.3f, 0.3f, 1));
+            RenderText(StringUtils.Digit2(dp), "Canvas/CreatureDetail/DP", FontAssets.FontSizeType.Digit);
 
             // DX
             int dx = creature.Data.Dx;
-            AddText(StringUtils.Digit2(dx), detail.transform, new Vector3(5.63f, 2, 1.02f), new Vector3(0.3f, 0.3f, 1));
+            RenderText(StringUtils.Digit2(dx), "Canvas/CreatureDetail/DX", FontAssets.FontSizeType.Digit);
             // HIT
             int hit = creature.Data.CalculatedHit;
-            AddText(StringUtils.Digit2(hit), detail.transform, new Vector3(5.63f, 2, 2.22f), new Vector3(0.3f, 0.3f, 1));
+            RenderText(StringUtils.Digit2(hit), "Canvas/CreatureDetail/HIT", FontAssets.FontSizeType.Digit);
             // EV
             int ev = creature.Data.CalculatedEv;
-            AddText(StringUtils.Digit2(ev), detail.transform, new Vector3(5.63f, 2, 3.36f), new Vector3(0.3f, 0.3f, 1));
+            RenderText(StringUtils.Digit2(ev), "Canvas/CreatureDetail/EV", FontAssets.FontSizeType.Digit);
 
             //HP
             int hp = creature.Data.Hp;
-            AddText(StringUtils.Digit3(hp), detail.transform, new Vector3(-9, 2, -0.5f), new Vector3(0.3f, 0.3f, 1));
+            RenderText(StringUtils.Digit3(hp), "Canvas/CreatureDetail/HP", FontAssets.FontSizeType.Digit);
             //HP MAX
             int hpMax = creature.Data.HpMax;
-            AddText(StringUtils.Digit3(hpMax), detail.transform, new Vector3(-12f, 2, -0.5f), new Vector3(0.3f, 0.3f, 1));
+            RenderText(StringUtils.Digit3(hpMax), "Canvas/CreatureDetail/HPMAX", FontAssets.FontSizeType.Digit);
             //MP
             int mp = creature.Data.Mp;
-            AddText(StringUtils.Digit3(mp), detail.transform, new Vector3(-9, 2, 1.5f), new Vector3(0.3f, 0.3f, 1));
+            RenderText(StringUtils.Digit2(mp), "Canvas/CreatureDetail/MP", FontAssets.FontSizeType.Digit);
             //MP MAX
             int mpMax = creature.Data.MpMax;
-            AddText(StringUtils.Digit3(mpMax), detail.transform, new Vector3(-12f, 2, 1.5f), new Vector3(0.3f, 0.3f, 1));
+            RenderText(StringUtils.Digit2(mpMax), "Canvas/CreatureDetail/MPMAX", FontAssets.FontSizeType.Digit);
 
-            // LV
-            // AddText("01", this.transform, new Vector3(200, 102, -5), new Vector3(8, 8, 1));
+
 
         }
 
-        void AddItemsToContainer(GameObject container)
-        {
-            float zOrder = 2f;
-
-            float intervalX = -12f;
-            float intervalY = 1.7f;
-
-            float startX = 14.0f;
-            float startY = -2.55f;
-
-            float xOffsetIcon = -3.2f;
-            float xOffsetName = -8.5f;
-            float xOffsetAttr = -12.5f;
-            float xOffsetValue = -15.2f;
-
-            Vector3 scale = new Vector3(0.35f, 0.35f, 1);
-            for(int i =  0; i < creature.Data.Items.Count; i++)
-            {
-                int itemId = creature.Data.Items[i];
-                ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
-
-                if (item == null)
-                {
-                    continue;
-                }
-
-                int x = i / 4;
-                int y = i % 4;
-
-                float baseX = startX + intervalX * x;
-                float baseY = startY + intervalY * y;
-
-                // Icon
-                int val = i;
-                AddControl("Others/IconAttack_1", container.transform, new Vector3(baseX + xOffsetIcon, zOrder, baseY), new Vector3(1f, 1f, 1f),
-                    () => { this.OnSelectClicked(val); });
-
-                string name = LocalizedStrings.GetItemName(itemId);
-
-
-                // Name
-                AddText(name, container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale);
-
-                // Attr
-                AddText("+AP", container.transform, new Vector3(baseX + xOffsetAttr, zOrder, baseY), scale);
-
-                // Value
-                int value = 15;
-                AddText(StringUtils.Digit3(value), container.transform, new Vector3(baseX + xOffsetValue, zOrder, baseY), scale);
-
-            }
-        }
-
-        void AddMagicsToContainer(GameObject container)
-        {
-            float zOrder = 2f;
-
-            float intervalX = -8f;
-            float intervalY = 1.7f;
-
-            float startX = 9.0f;
-            float startY = -2.55f;
-
-            float xOffsetName = -0.5f;
-            float xOffsetCost = -4f;
-
-            Vector3 scale = new Vector3(0.35f, 0.35f, 1);
-            for (int i = 0; i < creature.Data.Magics.Count; i++)
-            {
-                int magicId = creature.Data.Magics[i];
-                MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
-
-                if (magic == null)
-                {
-                    continue;
-                }
-
-                int x = i / 4;
-                int y = i % 4;
-
-                float baseX = startX + intervalX * x;
-                float baseY = startY + intervalY * y;
-
-                // Name
-                int val = i;
-                string name = LocalizedStrings.GetMagicName(magicId);
-                AddText(name, container.transform, new Vector3(baseX + xOffsetName, zOrder, baseY), scale,
-                    () => { this.OnSelectClicked(val); });
-
-                // Cost
-                AddText("-MP " + StringUtils.Digit3(magic.MpCost), container.transform, new Vector3(baseX + xOffsetCost, zOrder, baseY), scale);
-
-            }
-        }
-
-        // Update is called once per frame
-        void Update()
+        private void RenderItemsContainer()
         {
 
         }
 
-        void OnSelectClicked(int index)
+        private void RenderMagicsContainer()
         {
-            if (!CanEdit)
-            {
-                return;
-            }
-            
-            Debug.Log("Clicked on index: " + index);
-
-            if(showType == ShowType.SelectAllItem)
-            {
-                OnCallback(index);
-            }
-            else if (showType == ShowType.SelectEquipItem)
-            {
-                int itemId = this.creature.Data.Items[index];
-                ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
-                if (item.IsEquipment())
-                {
-                    OnCallback(index);
-                }
-            }
-            else if (showType == ShowType.SelectUseItem)
-            {
-                int itemId = this.creature.Data.Items[index];
-                ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
-                if (item.IsUsable())
-                {
-                    OnCallback(index);
-                }
-            }
-            else if (showType == ShowType.SelectMagic)
-            {
-                int magicId = this.creature.Data.Magics[index];
-                MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
-                OnCallback(index);
-            }
-
-
 
         }
 
-        void OnClickedContainer()
+        private void RenderText(string content, string anchorName, FontAssets.FontSizeType sizeType)
         {
-            Debug.Log("Clicked on container. ");
-            OnCallback(-1);
+            TextMeshPro textObj = FontAssets.ComposeTextMeshObject(content, sizeType);
+
+            textObj.transform.parent = this.transform.Find(anchorName);
+            textObj.rectTransform.pivot = new Vector2(0, 1);
+            textObj.transform.localPosition = new Vector3(0, 0, 0);
+            textObj.transform.localScale = new Vector3(5, 5, 1);
+            textObj.gameObject.layer = 5;
         }
+
     }
 }

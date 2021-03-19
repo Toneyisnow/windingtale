@@ -1,13 +1,13 @@
-﻿using Assets.Scripts.Common;
-using SmartLocalization;
+﻿using SmartLocalization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using WindingTale.Common;
 
-namespace Assets.Scripts.UI.Common
+namespace WindingTale.UI.Common
 {
     public class LocalizedStrings
     {

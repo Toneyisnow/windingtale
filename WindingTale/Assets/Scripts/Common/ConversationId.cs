@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WindingTale.Common;
 
-namespace Assets.Scripts.Common
+namespace WindingTale.Common
 {
     public class ConversationId
     {

@@ -1,7 +1,8 @@
-﻿using Assets.Scripts.Common;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+using WindingTale.Common;
 using WindingTale.Core.Components;
 using WindingTale.Core.ObjectModels;
 

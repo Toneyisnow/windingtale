@@ -7,18 +7,24 @@ using UnityEngine;
 using TMPro;
 using WindingTale.Common;
 
-namespace Assets.Scripts.UI.Common
+namespace WindingTale.UI.Common
 {
     public class FontAssets
     {
-        public static TextMeshPro ComposeTextMeshObject(string textString)
+        public enum FontSizeType
+        {
+            Digit = 32,
+            Normal = 48,
+        }
+
+        public static TextMeshPro ComposeTextMeshObject(string textString, FontSizeType sizeType = FontSizeType.Normal)
         {
             GameObject textPro = new GameObject();
 
             TextMeshPro textComp = textPro.AddComponent<TextMeshPro>();
             textComp.text = textString;
             textComp.rectTransform.sizeDelta = new Vector2(80, 25);
-            textComp.fontSize = 48;
+            textComp.fontSize = sizeType.GetHashCode();
 
             textComp.overflowMode = TextOverflowModes.ScrollRect;
             textComp.enableWordWrapping = true;

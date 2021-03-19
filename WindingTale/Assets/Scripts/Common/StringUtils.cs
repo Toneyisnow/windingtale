@@ -19,6 +19,11 @@ namespace WindingTale.Common
                 return string.Format(@"0{0}", number);
             }
 
+            if (number > 999)
+            {
+                return "???";
+            }
+
             return number.ToString();
         }
 
@@ -27,6 +32,11 @@ namespace WindingTale.Common
             if (number < 10)
             {
                 return string.Format(@"0{0}", number);
+            }
+
+            if (number > 99)
+            {
+                return "??";
             }
 
             return number.ToString();

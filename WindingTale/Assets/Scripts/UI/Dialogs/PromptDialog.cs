@@ -1,7 +1,7 @@
-﻿using Assets.Scripts.UI.Common;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using TMPro;
 using UnityEngine;
 using WindingTale.UI.Common;
@@ -48,6 +48,7 @@ namespace WindingTale.UI.CanvasControls
             Transform textAnchor = this.transform.Find("Canvas/TextAnchor");
             textObj.transform.parent = textAnchor;
             textObj.transform.localPosition = new Vector3(0, 0, 0);
+            textObj.transform.localScale = new Vector3(5, 5, 1);
             textObj.gameObject.layer = 5;
             // textObj.fontSize = 20;
 

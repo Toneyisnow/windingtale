@@ -1,8 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using SmartLocalization;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Components;
 using WindingTale.Core.Components.Packs;
@@ -11,15 +15,10 @@ using WindingTale.UI.Components.Activities;
 using WindingTale.UI.FieldMap;
 using WindingTale.UI.MapObjects;
 using WindingTale.Common;
-using System;
-using SmartLocalization;
 using WindingTale.UI.Common;
 using WindingTale.UI.Dialogs;
 using WindingTale.Core.Components.Data;
-using Assets.Scripts.Common;
-using Assets.Scripts.UI.Common;
 using WindingTale.Core.Components.Algorithms;
-using UnityEngine.SceneManagement;
 using WindingTale.UI.CanvasControls;
 
 namespace WindingTale.UI.Components
@@ -361,11 +360,11 @@ namespace WindingTale.UI.Components
                 currentDialog = null;
             }
 
-            currentDialog = new GameObject();
-            CreatureDialog creatureDialog = currentDialog.AddComponent<CreatureDialog>();
-            creatureDialog.Initialize(this.GameCanvas, creature, showType,
-                (index) => { this.OnDialogCallback(index); });
+            CreatureDialog dialog = GameObjectExtension.CreateFromPrefab<CreatureDialog>("Prefabs/CreatureDialog");
+            currentDialog = dialog.gameObject;
 
+            dialog.Initialize(this.uiCamera, creature, showType,
+                (index) => { this.OnDialogCallback(index); });
         }
 
         public void ShowConversationDialog(FDCreature creature, ConversationId conversation)

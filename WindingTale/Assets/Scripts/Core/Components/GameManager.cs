@@ -1,8 +1,8 @@
-﻿using Assets.Scripts.Common;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using WindingTale.AI;
 using WindingTale.AI.Delegates;
 using WindingTale.Common;

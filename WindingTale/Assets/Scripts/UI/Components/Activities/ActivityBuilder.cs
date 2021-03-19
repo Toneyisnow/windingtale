@@ -6,6 +6,7 @@ using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Components.Data;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.ObjectModels;
+using WindingTale.UI.CanvasControls;
 using WindingTale.UI.Dialogs;
 
 namespace WindingTale.UI.Components.Activities
