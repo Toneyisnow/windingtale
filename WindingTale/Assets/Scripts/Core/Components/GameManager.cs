@@ -285,6 +285,11 @@ namespace WindingTale.Core.Components
             FDCreature creature = this.GetCreature(creatureId);
 
             AttackItemDefinition attackItem = creature.Data.GetAttackItem();
+            if (attackItem == null)
+            {
+                return null;
+            }
+            
             FDSpan span = attackItem.AttackScope;
 
             DirectRangeFinder finder = new DirectRangeFinder(this.gameField, creature.Position, span.Max, span.Min);
