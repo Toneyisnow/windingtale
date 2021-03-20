@@ -8,8 +8,20 @@ namespace WindingTale.Core.Definitions.Items
 {
     public enum ItemUseType
     {
-        Hp,
-        Mp,
+        Hp = 1,
+        Mp = 2,
+        AntiFreeze = 3,
+        AntiPoison = 4,
+        HpMax = 5,
+        MpMax = 6,
+        Ap = 7,
+        Dp = 8,
+        Mv = 9,
+        Dx = 10,
+        EyeStar = 11,
+        EyeDark = 12,
+        EyeIce = 13,
+        EyeFire = 14
     }
 
     public class ConsumableItemDefinition : ItemDefinition

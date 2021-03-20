@@ -32,6 +32,7 @@ namespace WindingTale.UI.Common
             }
         }
 
+        /*
         private void OnMouseUpAsButton()
         {
             Debug.Log(this.gameObject.name + " Was OnMouseUpAsButton Clicked.");
@@ -55,5 +56,6 @@ namespace WindingTale.UI.Common
                 }
             }
         }
+        */
     }
 }

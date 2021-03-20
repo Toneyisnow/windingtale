@@ -71,6 +71,22 @@ namespace WindingTale.Core.Components.Events
             game.ShowTalk(1, 8, 19);
         };
 
+        private Action<IGameAction> turn1Simple = (game) =>
+        {
+            // Friends appear
+            game.ComposeCreature(CreatureFaction.Friend, 1, 1, FDPosition.At(8, 20));
+            game.ComposeCreature(CreatureFaction.Friend, 2, 2, FDPosition.At(11, 21));
+            game.ComposeCreature(CreatureFaction.Friend, 3, 3, FDPosition.At(9, 22));
+            game.ComposeCreature(CreatureFaction.Friend, 4, 4, FDPosition.At(12, 23));
+
+            // Enemy Group1 appear
+            game.ComposeCreature(CreatureFaction.Enemy, 11, 50101, FDPosition.At(2, 22));
+            game.ComposeCreature(CreatureFaction.Enemy, 12, 50101, FDPosition.At(3, 22), 101);
+            game.ComposeCreature(CreatureFaction.Enemy, 13, 50101, FDPosition.At(4, 23));
+            game.ComposeCreature(CreatureFaction.Enemy, 14, 50101, FDPosition.At(5, 23));
+
+        };
+
         private Action<IGameAction> turn3 = (game) =>
         {
 
@@ -95,7 +111,7 @@ namespace WindingTale.Core.Components.Events
         public override void LoadEvents()
         {
             int eventIndex = 0;
-            LoadTurnEvent(eventIndex++, 1, CreatureFaction.Friend, turn1);
+            LoadTurnEvent(eventIndex++, 1, CreatureFaction.Friend, turn1Simple);
             LoadTurnEvent(eventIndex++, 3, CreatureFaction.Friend, turn3);
             LoadTurnEvent(eventIndex++, 4, CreatureFaction.Friend, turn4);
             LoadTurnEvent(eventIndex++, 5, CreatureFaction.Friend, turn5_Boss);

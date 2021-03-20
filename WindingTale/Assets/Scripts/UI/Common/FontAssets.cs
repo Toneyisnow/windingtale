@@ -13,7 +13,9 @@ namespace WindingTale.UI.Common
     {
         public enum FontSizeType
         {
+            DigitSmall = 28,
             Digit = 32,
+            NormalSmall = 40,
             Normal = 48,
         }
 

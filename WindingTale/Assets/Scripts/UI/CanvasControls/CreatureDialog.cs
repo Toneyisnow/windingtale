@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Definitions;
+using WindingTale.Core.Definitions.Items;
 using WindingTale.Core.ObjectModels;
 using WindingTale.UI.Common;
 
 namespace WindingTale.UI.CanvasControls
 {
-    public class CreatureDialog : MonoBehaviour
+    public class CreatureDialog : CanvasControl
     {
         public enum ShowType
         {
@@ -22,8 +24,13 @@ namespace WindingTale.UI.CanvasControls
         }
 
         public Canvas canvas;
+        private Camera camera;
+
+        public GameObject[] anchorItems;
+
+
         private DatoControl datoControl = null;
-        private Action<int> onClickCallback = null;
+        private Action<int> onCallback = null;
 
         private FDCreature creature = null;
 
@@ -31,21 +38,27 @@ namespace WindingTale.UI.CanvasControls
 
         private Action<int> OnCallback = null;
 
+        private List<ItemControl> itemControlls = null;
+        private int lastSelectedIndex = -1;
 
         public void Initialize(Camera camera, FDCreature creature, ShowType showType, Action<int> callback)
         {
             this.gameObject.name = "CreatureDialog";
 
             canvas.worldCamera = camera;
+            this.camera = camera;
 
             this.creature = creature;
             this.showType = showType;
-            this.onClickCallback = callback;
+            this.onCallback = callback;
 
             Transform messageBoxBase = this.transform.Find("Canvas/ContainerBase");
-            //// messageBoxBase.transform.localPosition = new Vector2(0, -150);
-            Clickable clickable = messageBoxBase.gameObject.AddComponent<Clickable>();
+            Clickable clickable = messageBoxBase.gameObject.GetComponent<Clickable>();
             clickable.Initialize(() => { this.OnClicked(); });
+
+            Transform creatureDetailBox = this.transform.Find("Canvas/CreatureDetail");
+            clickable = creatureDetailBox.gameObject.GetComponent<Clickable>();
+            clickable.Initialize(() => { this.OnCancelled(); });
 
 
             Transform datoBase = this.transform.Find("Canvas/DatoBase");
@@ -81,14 +94,22 @@ namespace WindingTale.UI.CanvasControls
 
         private void OnClicked()
         {
-            Debug.Log("CreatureDialog clicked.");
-            if (this.onClickCallback != null)
+            // if allows selection, then will not allow user clicking on the dialog
+            if (AllowSelection)
             {
-                this.onClickCallback(0);
+                return;
             }
+
+            DoCallback(-1);
         }
 
-        private bool CanEdit
+        private void OnCancelled()
+        {
+            Debug.Log("CreatureDialog cancelled.");
+            DoCallback(-1);
+        }
+
+        private bool AllowSelection
         {
             get
             {
@@ -143,16 +164,16 @@ namespace WindingTale.UI.CanvasControls
 
             //HP
             int hp = creature.Data.Hp;
-            RenderText(StringUtils.Digit3(hp), "Canvas/CreatureDetail/HP", FontAssets.FontSizeType.Digit);
+            RenderText(StringUtils.Digit3(hp), "Canvas/CreatureDetail/HP", FontAssets.FontSizeType.DigitSmall);
             //HP MAX
             int hpMax = creature.Data.HpMax;
-            RenderText(StringUtils.Digit3(hpMax), "Canvas/CreatureDetail/HPMAX", FontAssets.FontSizeType.Digit);
+            RenderText(StringUtils.Digit3(hpMax), "Canvas/CreatureDetail/HPMAX", FontAssets.FontSizeType.DigitSmall);
             //MP
             int mp = creature.Data.Mp;
-            RenderText(StringUtils.Digit2(mp), "Canvas/CreatureDetail/MP", FontAssets.FontSizeType.Digit);
+            RenderText(StringUtils.Digit3(mp), "Canvas/CreatureDetail/MP", FontAssets.FontSizeType.DigitSmall);
             //MP MAX
             int mpMax = creature.Data.MpMax;
-            RenderText(StringUtils.Digit2(mpMax), "Canvas/CreatureDetail/MPMAX", FontAssets.FontSizeType.Digit);
+            RenderText(StringUtils.Digit3(mpMax), "Canvas/CreatureDetail/MPMAX", FontAssets.FontSizeType.DigitSmall);
 
 
 
@@ -160,6 +181,30 @@ namespace WindingTale.UI.CanvasControls
 
         private void RenderItemsContainer()
         {
+            List<int> equipedItems = new List<int>() { creature.Data.AttackItemIndex, creature.Data.DefendItemIndex };
+            itemControlls = new List<ItemControl>();
+            
+            for(int index = 0; index < creature.Data.Items.Count; index++)
+            {
+                int itemId = this.creature.Data.Items[index];
+                bool isEquiped = equipedItems.Contains(index);
+
+                /*
+                ItemControl itemControl = GameObjectExtension.CreateFromPrefab<ItemControl>("Prefabs/ItemControl");
+                itemControl.Initialize(this.canvas, itemId, isEquiped);
+                itemControl.transform.parent = anchorItems[index].transform;
+                itemControl.transform.localPosition = new Vector3(0, 0, 0);
+                */
+
+                int cIndex = index;
+                ItemControl itemControl = GameObjectExtension.CreateFromPrefab<ItemControl>("Prefabs/ItemControl");
+                itemControl.Initialize(this.canvas, itemId, isEquiped, () => { this.OnSelectedItem(cIndex); } );
+                itemControl.transform.parent = anchorItems[index].transform;
+                itemControl.transform.localPosition = new Vector3(0, 0, 0);
+                itemControl.transform.localScale = new Vector3(1, 1, 1);
+
+                itemControlls.Add(itemControl);
+            }
 
         }
 
@@ -168,16 +213,51 @@ namespace WindingTale.UI.CanvasControls
 
         }
 
-        private void RenderText(string content, string anchorName, FontAssets.FontSizeType sizeType)
+        private void OnSelectedItem(int itemIndex)
         {
-            TextMeshPro textObj = FontAssets.ComposeTextMeshObject(content, sizeType);
+            Debug.Log("OnSelectedItem: " + itemIndex);
 
-            textObj.transform.parent = this.transform.Find(anchorName);
-            textObj.rectTransform.pivot = new Vector2(0, 1);
-            textObj.transform.localPosition = new Vector3(0, 0, 0);
-            textObj.transform.localScale = new Vector3(5, 5, 1);
-            textObj.gameObject.layer = 5;
+            if (!AllowSelection)
+            {
+                DoCallback(-1);
+            }
+
+            int itemId = creature.Data.Items[itemIndex];
+            ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
+            if (showType == ShowType.SelectEquipItem && !item.IsEquipment())
+            {
+                return;
+            }
+            if (showType == ShowType.SelectUseItem && !item.IsUsable())
+            {
+                return;
+            }
+
+            if (itemIndex == lastSelectedIndex)
+            {
+                // Do selected action
+                DoCallback(itemIndex);
+            }
+
+            if (lastSelectedIndex >= 0)
+            {
+                itemControlls[lastSelectedIndex].SetSelected(false);
+            }
+
+            itemControlls[itemIndex].SetSelected(true);
+            lastSelectedIndex = itemIndex;
         }
 
+        private void DoCallback(int value)
+        {
+            if (this.onCallback != null)
+            {
+                this.onCallback(value);
+            }
+        }
+        private void OnSelectedMagic(int magicIndex)
+        {
+
+        }
     }
 }

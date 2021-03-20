@@ -165,7 +165,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\ActionState.cs" />
     <Compile Include="Assets\Scripts\UI\Common\Constants.cs" />
-    <Compile Include="Assets\Scripts\UI\Dialogs\DatoControl.cs" />
+    <Compile Include="Assets\Scripts\UI\CanvasControls\DatoControl.cs" />
     <Compile Include="Assets\Scripts\Core\Data\ChapterRecord.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedAudioSource.cs" />
     <Compile Include="Assets\Scripts\Core\Components\ActionStates\SelectItemUseTargetState.cs" />
@@ -177,10 +177,10 @@
     <Compile Include="Assets\Scripts\Core\Definitions\Items\AttackItemDefinition.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\CreatureDeadActivity.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBuilder.cs" />
-    <Compile Include="Assets\Scripts\UI\Dialogs\PromptDialog.cs" />
+    <Compile Include="Assets\Scripts\UI\CanvasControls\PromptDialog.cs" />
     <Compile Include="Assets\Scripts\UI\MapObjects\UICreature.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\SpecialItemDefinition.cs" />
-    <Compile Include="Assets\Scripts\UI\Dialogs\CanvasDialog.cs" />
+    <Compile Include="Assets\Scripts\UI\CanvasControls\CanvasDialog.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIGuardDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Packs\CreatureMovePack.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\ILocalizedAssetLoader.cs" />
@@ -209,7 +209,7 @@
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageManager.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\Chapters\EventChapter2.cs" />
     <Compile Include="Assets\Scripts\UI\Scenes\Village\GameVillageScene.cs" />
-    <Compile Include="Assets\Scripts\UI\Dialogs\CreatureDialogO.cs" />
+    <Compile Include="Assets\Scripts\UI\CanvasControls\CreatureDialogO.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpMagicDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Components\Events\Conditions\TurnEventCondition.cs" />
     <Compile Include="Assets\Scripts\UI\Components\Activities\ActivityBase.cs" />
@@ -235,8 +235,10 @@
     <Compile Include="Assets\Scripts\UI\Components\AssetManager.cs" />
     <Compile Include="Assets\Scripts\UI\Scenes\Title\GameTitleScene.cs" />
     <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
-    <Compile Include="Assets\Scripts\UI\Dialogs\MessageDialog.cs" />
-    <Compile Include="Assets\Scripts\UI\Dialogs\CreatureDialog.cs" />
+    <Compile Include="Assets\Scripts\UI\CanvasControls\MessageDialog.cs" />
+    <Compile Include="Assets\Scripts\UI\CanvasControls\CreatureDialog.cs" />
+    <Compile Include="Assets\Scripts\UI\CanvasControls\ItemControl.cs" />
+    <Compile Include="Assets\Scripts\UI\CanvasControls\CanvasControl.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\Data\Chapters\Chapter_07_Creature.txt" />
