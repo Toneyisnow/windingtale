@@ -3,18 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WindingTale.UI.CanvasControls
+namespace WindingTale.UI.Controls
 {
-    public class SlidingAnimation : MonoBehaviour
+    public class MenuSliding : MonoBehaviour
     {
-        public enum SlidingDirection
-        {
-            Up,
-            Down,
-            Left,
-            Right,
-        }
-
         public enum SlidingPhase
         {
             MovingIn = 1,
@@ -22,47 +14,34 @@ namespace WindingTale.UI.CanvasControls
             MovingOut = 3,
         }
 
-        public SlidingDirection direction;
-
         private Vector3 targetPosition;
         private Vector3 startPosition;
 
-        private float elapseTime = 0.2f;
+        private static readonly float elapseTime = 0.1f;
         private float startTime = 0;
 
-        private SlidingPhase phase = SlidingPhase.Idle;
+        private SlidingPhase phase = SlidingPhase.MovingIn;
 
         private Action closingCallback = null;
 
+        public void Initialize(Vector3 targetPosition)
+        {
+            this.targetPosition = targetPosition;
+            startPosition = this.transform.localPosition;
+        }
+
         public void Close(Action callback = null)
         {
-            phase = SlidingPhase.MovingOut;
             startTime = Time.time;
+            phase = SlidingPhase.MovingOut;
             this.closingCallback = callback;
         }
+
+
 
         // Start is called before the first frame update
         void Start()
         {
-            targetPosition = this.transform.position;
-            switch (direction)
-            {
-                case SlidingDirection.Left:
-                    startPosition = new Vector3(targetPosition.x - 5, targetPosition.y, targetPosition.z);
-                    break;
-                case SlidingDirection.Right:
-                    startPosition = new Vector3(targetPosition.x + 12, targetPosition.y, targetPosition.z);
-                    break;
-                case SlidingDirection.Down:
-                    startPosition = new Vector3(targetPosition.x, targetPosition.y - 10, targetPosition.z);
-                    break;
-
-                default:
-                    break;
-            }
-
-            this.transform.position = startPosition;
-
             startTime = Time.time;
             phase = SlidingPhase.MovingIn;
         }
@@ -73,7 +52,6 @@ namespace WindingTale.UI.CanvasControls
             if (phase == SlidingPhase.MovingIn)
             {
                 transform.position = Vector3.Lerp(startPosition, targetPosition, (Time.time - startTime) / elapseTime);
-                //// transform.position = targetPosition;
 
                 if (transform.position == targetPosition)
                 {

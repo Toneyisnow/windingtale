@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.UI.Components;
+using WindingTale.UI.Controls;
 using WindingTale.UI.FieldMap;
 using static WindingTale.UI.Common.Constants;
 
@@ -25,12 +26,16 @@ namespace WindingTale.UI.MapObjects
         private MenuItemId menuItemId;
         private IGameInterface gameInterface = null;
 
-        public void Initialize(IGameInterface gameInterface, MenuItemId menuItemId, FDPosition position, bool enabled, bool selected)
+        public void Initialize(IGameInterface gameInterface, MenuItemId menuItemId, FDPosition position, FDPosition showUpPosition, bool enabled, bool selected)
         {
             this.gameInterface = gameInterface;
             
             this.gameObject.name = string.Format(@"menuitem_{0}", menuItemId.GetHashCode());
-            this.gameObject.transform.localPosition = FieldTransform.GetGroundPixelPosition(position);
+
+            this.gameObject.transform.localPosition = FieldTransform.GetGroundPixelPosition(showUpPosition);
+            Vector3 menuLocalPosition = FieldTransform.GetGroundPixelPosition(position);
+            MenuSliding sliding = this.gameObject.AddComponent<MenuSliding>();
+            sliding.Initialize(menuLocalPosition);
 
             this.isEnabled = enabled;
             this.isSelected = selected;

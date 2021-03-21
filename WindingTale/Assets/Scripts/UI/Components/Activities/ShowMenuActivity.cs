@@ -49,7 +49,7 @@ namespace WindingTale.UI.Components.Activities
                 }
 
                 // Place the Menu on map
-                menuItems[i] = gameInterface.PlaceMenu(itemId, positions[i], enabled, isSelected);
+                menuItems[i] = gameInterface.PlaceMenuItem(itemId, positions[i], pos, enabled, isSelected);
 
             }
 

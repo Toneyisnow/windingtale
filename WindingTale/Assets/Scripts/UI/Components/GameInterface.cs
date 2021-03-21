@@ -20,6 +20,7 @@ using WindingTale.UI.Dialogs;
 using WindingTale.Core.Components.Data;
 using WindingTale.Core.Components.Algorithms;
 using WindingTale.UI.CanvasControls;
+using WindingTale.UI.Controls;
 
 namespace WindingTale.UI.Components
 {
@@ -196,13 +197,13 @@ namespace WindingTale.UI.Components
             Destroy(creature.gameObject);
         }
 
-        public UIMenuItem PlaceMenu(MenuItemId menuItemId, FDPosition position, bool enabled, bool selected)
+        public UIMenuItem PlaceMenuItem(MenuItemId menuItemId, FDPosition position, FDPosition showUpPosition, bool enabled, bool selected)
         {
             GameObject obj = new GameObject();
             obj.transform.parent = fieldObjectsRoot;
 
             var menuItem = obj.AddComponent<UIMenuItem>();
-            menuItem.Initialize(this, menuItemId, position, enabled, selected);
+            menuItem.Initialize(this, menuItemId, position, showUpPosition, enabled, selected);
 
             cancellableObjects.Add(obj);
 
@@ -213,7 +214,15 @@ namespace WindingTale.UI.Components
         {
             foreach(GameObject obj in cancellableObjects)
             {
-                GameObject.Destroy(obj);
+                MenuSliding menuSliding = obj.GetComponent<MenuSliding>();
+                if (menuSliding != null)
+                {
+                    menuSliding.Close(() => { GameObject.Destroy(obj); });
+                }
+                else
+                {
+                    GameObject.Destroy(obj);
+                }
             }
 
             cancellableObjects.Clear();

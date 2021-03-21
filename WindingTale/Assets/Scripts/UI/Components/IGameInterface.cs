@@ -36,7 +36,7 @@ namespace WindingTale.UI.Components
 
         void TouchMenu(FDPosition position);
 
-        UIMenuItem PlaceMenu(MenuItemId menuItem, FDPosition position, bool enabled, bool selected);
+        UIMenuItem PlaceMenuItem(MenuItemId menuItem, FDPosition position, FDPosition showUpPosition, bool enabled, bool selected);
 
         void ClearCancellableObjects();
 
