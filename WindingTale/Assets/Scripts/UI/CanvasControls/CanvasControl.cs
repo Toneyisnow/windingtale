@@ -69,11 +69,16 @@ namespace WindingTale.UI.CanvasControls
                     default: break;
                 }
 
-                description = string.Format(@"+{0} {1}", prefix, consumableItem.Quantity);
+                description = string.Format(@"+{0}{1}", prefix, consumableItem.Quantity);
                 return description;
             }
 
             return string.Empty;
+        }
+
+        protected string GetMagicDescription(MagicDefinition magic)
+        {
+            return string.Format(@"-MP{0}", StringUtils.Digit2(magic.MpCost));
         }
 
         protected static Sprite LoadSprite(string resourcePath, float width, float height)

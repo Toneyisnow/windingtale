@@ -27,6 +27,7 @@ namespace WindingTale.UI.CanvasControls
         private Camera camera;
 
         public GameObject[] anchorItems;
+        public GameObject[] anchorMagics;
 
 
         private DatoControl datoControl = null;
@@ -39,6 +40,8 @@ namespace WindingTale.UI.CanvasControls
         private Action<int> OnCallback = null;
 
         private List<ItemControl> itemControlls = null;
+        private List<MagicControl> magicControlls = null;
+
         private int lastSelectedIndex = -1;
 
         public void Initialize(Camera camera, FDCreature creature, ShowType showType, Action<int> callback)
@@ -210,7 +213,21 @@ namespace WindingTale.UI.CanvasControls
 
         private void RenderMagicsContainer()
         {
+            magicControlls = new List<MagicControl>();
 
+            for (int index = 0; index < creature.Data.Magics.Count; index++)
+            {
+                int magicId = this.creature.Data.Magics[index];
+
+                int cIndex = index;
+                MagicControl magicControl = GameObjectExtension.CreateFromPrefab<MagicControl>("Prefabs/MagicControl");
+                magicControl.Initialize(this.canvas, magicId, () => { this.OnSelectedMagic(cIndex); });
+                magicControl.transform.parent = anchorMagics[index].transform;
+                magicControl.transform.localPosition = new Vector3(0, 0, 0);
+                magicControl.transform.localScale = new Vector3(1, 1, 1);
+
+                magicControlls.Add(magicControl);
+            }
         }
 
         private void OnSelectedItem(int itemIndex)
@@ -248,16 +265,39 @@ namespace WindingTale.UI.CanvasControls
             lastSelectedIndex = itemIndex;
         }
 
+        private void OnSelectedMagic(int magicIndex)
+        {
+            Debug.Log("OnSelectedMagic: " + magicIndex);
+
+            if (!AllowSelection)
+            {
+                DoCallback(-1);
+            }
+
+            int magicId = creature.Data.Magics[magicIndex];
+            MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
+            
+            if (magicIndex == lastSelectedIndex)
+            {
+                // Do selected action
+                DoCallback(magicIndex);
+            }
+
+            if (lastSelectedIndex >= 0)
+            {
+                magicControlls[lastSelectedIndex].SetSelected(false);
+            }
+
+            magicControlls[magicIndex].SetSelected(true);
+            lastSelectedIndex = magicIndex;
+        }
+
         private void DoCallback(int value)
         {
             if (this.onCallback != null)
             {
                 this.onCallback(value);
             }
-        }
-        private void OnSelectedMagic(int magicIndex)
-        {
-
         }
     }
 }

@@ -239,6 +239,7 @@
     <Compile Include="Assets\Scripts\UI\CanvasControls\CreatureDialog.cs" />
     <Compile Include="Assets\Scripts\UI\CanvasControls\ItemControl.cs" />
     <Compile Include="Assets\Scripts\UI\CanvasControls\CanvasControl.cs" />
+    <Compile Include="Assets\Scripts\UI\CanvasControls\MagicControl.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\Data\Chapters\Chapter_07_Creature.txt" />

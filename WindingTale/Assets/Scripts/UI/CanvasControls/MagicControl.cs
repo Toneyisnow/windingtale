@@ -10,14 +10,9 @@ using WindingTale.UI.Common;
 
 namespace WindingTale.UI.CanvasControls
 {
-    public class ItemControl : CanvasControl
+    public class MagicControl : CanvasControl
     {
-        private ItemDefinition item = null;
-
-        /// <summary>
-        /// Only valid for Attack/Defend items
-        /// </summary>
-        private bool isEquiped = false;
+        private MagicDefinition magic = null;
 
         private Transform indicator = null;
 
@@ -36,7 +31,7 @@ namespace WindingTale.UI.CanvasControls
             }
         }
 
-        public void Initialize(Canvas canvas, int itemId, bool isEquiped = false, Action onClicked = null)
+        public void Initialize(Canvas canvas, int magicId, Action onClicked = null)
         {
             this.transform.parent = canvas.transform;
             this.indicator = this.transform.Find("SelectionIndicator");
@@ -45,13 +40,11 @@ namespace WindingTale.UI.CanvasControls
             // canvas.worldCamera = camera;
             // this.canvas = canvas;
 
-            this.item = DefinitionStore.Instance.GetItemDefinition(itemId);
-            if (this.item == null)
+            this.magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
+            if (this.magic == null)
             {
-                throw new ArgumentException("Cannot find item definition with ID=" + itemId);
+                throw new ArgumentException("Cannot find magic definition with ID=" + magicId);
             }
-
-            this.isEquiped = isEquiped;
 
             if (onClicked != null)
             {
@@ -59,35 +52,13 @@ namespace WindingTale.UI.CanvasControls
                 clickable.Initialize(onClicked);
             }
 
-            // Icon
-            Transform iconObject = this.transform.Find("Icon");
-            Image iconImage = iconObject.GetComponent<Image>();
-
-            string iconKey = string.Empty;
-            if (this.item is AttackItemDefinition)
-            {
-                iconKey = "Attack";
-            }
-            else if (this.item is DefendItemDefinition)
-            {
-                iconKey = "Defend";
-            }
-            else
-            {
-                iconKey = "Usable";
-            }
-
-            int equiped = isEquiped ? 1 : 0;
-            string iconName = string.Format(@"OthersLegacy/Item{0}Icon_{1}", iconKey, equiped);
-            iconImage.sprite = LoadSprite(iconName, 24, 20);
-            
             // Name
-            string name = LocalizedStrings.GetItemName(itemId);
+            string name = LocalizedStrings.GetMagicName(magicId);
             TextMeshPro text = RenderText(name, "Name", FontAssets.FontSizeType.Normal);
             text.transform.localScale = new Vector3(7, 7, 7);
 
             // Description
-            string description = GetItemDescription(this.item);
+            string description = GetMagicDescription(this.magic);
             TextMeshPro descriptionText = RenderText(description, "Description", FontAssets.FontSizeType.Normal);
             descriptionText.transform.localScale = new Vector3(5, 5, 5);
 
