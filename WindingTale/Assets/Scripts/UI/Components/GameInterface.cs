@@ -30,6 +30,7 @@ namespace WindingTale.UI.Components
 
         public Canvas GameCanvas = null;
 
+        public Camera mainCamera = null;
         public Camera uiCamera = null;
 
         private IGameHandler gameManager = null;
@@ -391,10 +392,22 @@ namespace WindingTale.UI.Components
             int animationId = creature?.Definition?.AnimationId ?? 0;
 
             string message = LocalizedStrings.GetConversationString(conversation);
-            Debug.Log("Showing message dialog: " + message);
+            //Debug.Log("Showing message dialog: " + message);
+            Vector3 popupPosition = Vector3.zero;
+            if (creature != null)
+            {
+                UICreature uiCreature = GetUICreature(creature.CreatureId);
+                Vector3 viewPoint = mainCamera.WorldToViewportPoint(uiCreature.transform.position);
 
+                RectTransform canvasRect = GameCanvas.GetComponent<RectTransform>();
+
+                popupPosition = new Vector3(
+                    viewPoint.x * canvasRect.sizeDelta.x - canvasRect.sizeDelta.x * 0.5f,
+                    viewPoint.y * canvasRect.sizeDelta.y - canvasRect.sizeDelta.y * 0.5f,
+                    0);
+            }
             MessageDialog messageDialog = GameObjectExtension.CreateFromPrefab<MessageDialog>("Prefabs/MessageDialog");
-            messageDialog.Initialize(uiCamera, animationId, message, (index) => { this.OnDialogCallback(index); }, this.ChapterId);
+            messageDialog.Initialize(uiCamera, popupPosition, animationId, message, (index) => { this.OnDialogCallback(index); }, this.ChapterId);
             currentDialog = messageDialog.gameObject;
         }
 
@@ -421,8 +434,15 @@ namespace WindingTale.UI.Components
             }
             else
             {
+                Vector2 popupPosition = Vector2.zero;
+                if (creature != null)
+                {
+                    UICreature uiCreature = GetUICreature(creature.CreatureId);
+                    popupPosition = mainCamera.WorldToScreenPoint(uiCreature.transform.position);
+                }
+                
                 MessageDialog dialog = GameObjectExtension.CreateFromPrefab<MessageDialog>("Prefabs/MessageDialog");
-                dialog.Initialize(uiCamera, animationId, message, (index) => { this.OnDialogCallback(index); });
+                dialog.Initialize(uiCamera, popupPosition, animationId, message, (index) => { this.OnDialogCallback(index); });
                 currentDialog = dialog.gameObject;
             }
 

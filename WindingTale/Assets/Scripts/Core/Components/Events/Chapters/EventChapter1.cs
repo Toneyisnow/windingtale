@@ -111,7 +111,7 @@ namespace WindingTale.Core.Components.Events
         public override void LoadEvents()
         {
             int eventIndex = 0;
-            LoadTurnEvent(eventIndex++, 1, CreatureFaction.Friend, turn1Simple);
+            LoadTurnEvent(eventIndex++, 1, CreatureFaction.Friend, turn1);
             LoadTurnEvent(eventIndex++, 3, CreatureFaction.Friend, turn3);
             LoadTurnEvent(eventIndex++, 4, CreatureFaction.Friend, turn4);
             LoadTurnEvent(eventIndex++, 5, CreatureFaction.Friend, turn5_Boss);

@@ -341,6 +341,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChapterId: 0
   GameCanvas: {fileID: 1575611771}
+  mainCamera: {fileID: 963194227}
   uiCamera: {fileID: 1088963996}
 --- !u!1 &705507993
 GameObject:

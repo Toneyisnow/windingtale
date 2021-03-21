@@ -70,7 +70,7 @@ namespace WindingTale.UI.CanvasControls
             }
         }
 
-        public void Initialize(Camera camera, int animationId, string message, Action<int> callback, int forChapterId = 0)
+        public void Initialize(Camera camera, Vector2 popupPosition, int animationId, string message, Action<int> callback, int forChapterId = 0)
         {
             this.gameObject.name = "MessageDialog";
 
@@ -84,8 +84,11 @@ namespace WindingTale.UI.CanvasControls
 
             GameObject messageBoxBase = this.transform.Find("Canvas/MessageBase").gameObject;
             messageBoxBase.transform.localPosition = GetBasePosition(dialogPosition);
-            Clickable clickable = messageBoxBase.AddComponent<Clickable>();
+            Clickable clickable = messageBoxBase.GetComponent<Clickable>();
             clickable.Initialize(() => { this.OnClicked(); });
+
+            PopUp popUp = messageBoxBase.GetComponent<PopUp>();
+            popUp.Initialize(popupPosition);
 
             localizedMessage = message;
 
@@ -112,8 +115,8 @@ namespace WindingTale.UI.CanvasControls
             textObj.gameObject.layer = 5;
             // textObj.fontSize = 20;
 
-            displayLength = 4;
-            textObj.text = localizedMessage.Substring(0, 4);
+            displayLength = 1;
+            textObj.text = localizedMessage.Substring(0, 1);
 
 
         }
