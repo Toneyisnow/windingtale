@@ -42,6 +42,11 @@ namespace WindingTale.UI.CanvasControls
         private List<ItemControl> itemControlls = null;
         private List<MagicControl> magicControlls = null;
 
+        private Transform datoBase = null;
+        private Transform containerBase = null;
+        private Transform creatureDetailBase = null;
+
+
         private int lastSelectedIndex = -1;
 
         public void Initialize(Camera camera, FDCreature creature, ShowType showType, Action<int> callback)
@@ -55,16 +60,14 @@ namespace WindingTale.UI.CanvasControls
             this.showType = showType;
             this.onCallback = callback;
 
-            Transform messageBoxBase = this.transform.Find("Canvas/ContainerBase");
-            Clickable clickable = messageBoxBase.gameObject.GetComponent<Clickable>();
+            containerBase = this.transform.Find("Canvas/ContainerBase");
+            Clickable clickable = containerBase.GetComponent<Clickable>();
             clickable.Initialize(() => { this.OnClicked(); });
 
-            Transform creatureDetailBox = this.transform.Find("Canvas/CreatureDetail");
-            clickable = creatureDetailBox.gameObject.GetComponent<Clickable>();
+            creatureDetailBase = this.transform.Find("Canvas/CreatureDetail");
+            clickable = creatureDetailBase.gameObject.GetComponent<Clickable>();
             clickable.Initialize(() => { this.OnCancelled(); });
-
-
-            Transform datoBase = this.transform.Find("Canvas/DatoBase");
+            datoBase = this.transform.Find("Canvas/DatoBase");
             datoControl = GameObjectExtension.CreateFromPrefab<DatoControl>("Prefabs/DatoControl");
             datoControl.Initialize(canvas, creature.Definition.AnimationId, new Vector2(0, 0));
             datoControl.transform.parent = datoBase;
@@ -103,13 +106,13 @@ namespace WindingTale.UI.CanvasControls
                 return;
             }
 
-            DoCallback(-1);
+            PickAtIndex(-1);
         }
 
         private void OnCancelled()
         {
             Debug.Log("CreatureDialog cancelled.");
-            DoCallback(-1);
+            PickAtIndex(-1);
         }
 
         private bool AllowSelection
@@ -232,11 +235,11 @@ namespace WindingTale.UI.CanvasControls
 
         private void OnSelectedItem(int itemIndex)
         {
-            Debug.Log("OnSelectedItem: " + itemIndex);
+            //// Debug.Log("OnSelectedItem: " + itemIndex);
 
             if (!AllowSelection)
             {
-                DoCallback(-1);
+                PickAtIndex(-1);
             }
 
             int itemId = creature.Data.Items[itemIndex];
@@ -253,7 +256,7 @@ namespace WindingTale.UI.CanvasControls
             if (itemIndex == lastSelectedIndex)
             {
                 // Do selected action
-                DoCallback(itemIndex);
+                PickAtIndex(itemIndex);
             }
 
             if (lastSelectedIndex >= 0)
@@ -271,7 +274,7 @@ namespace WindingTale.UI.CanvasControls
 
             if (!AllowSelection)
             {
-                DoCallback(-1);
+                PickAtIndex(-1);
             }
 
             int magicId = creature.Data.Magics[magicIndex];
@@ -280,7 +283,7 @@ namespace WindingTale.UI.CanvasControls
             if (magicIndex == lastSelectedIndex)
             {
                 // Do selected action
-                DoCallback(magicIndex);
+                PickAtIndex(magicIndex);
             }
 
             if (lastSelectedIndex >= 0)
@@ -292,12 +295,23 @@ namespace WindingTale.UI.CanvasControls
             lastSelectedIndex = magicIndex;
         }
 
-        private void DoCallback(int value)
+        private void PickAtIndex(int value)
         {
-            if (this.onCallback != null)
+            SlidingAnimation sliding = datoBase.GetComponent<SlidingAnimation>();
+            sliding.Close(() =>
             {
-                this.onCallback(value);
-            }
+                if (this.onCallback != null)
+                {
+                    this.onCallback(value);
+                }
+            });
+
+            sliding = creatureDetailBase.GetComponent<SlidingAnimation>();
+            sliding.Close();
+            
+            sliding = containerBase.GetComponent<SlidingAnimation>();
+            sliding.Close();
+            
         }
     }
 }
