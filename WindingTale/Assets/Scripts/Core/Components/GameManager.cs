@@ -751,7 +751,7 @@ namespace WindingTale.Core.Components
                 return null;
             }
 
-            if (walkAction.MovePath.Desitination != null)
+            if (walkAction.MovePath?.Desitination != null)
             {
                 creature.SetMoveTo(walkAction.MovePath.Desitination);
             }

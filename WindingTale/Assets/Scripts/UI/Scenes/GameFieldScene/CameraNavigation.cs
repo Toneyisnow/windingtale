@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.UI.Components;
 
 namespace WindingTale.UI.Scenes.GameFieldScene
 {
@@ -15,9 +16,22 @@ namespace WindingTale.UI.Scenes.GameFieldScene
         private Vector3 dragOrigin;
         private Vector3 elevateOrigin;
 
+        private bool isActive = false;
+
+        private IGameInterface gameInterface;
+
+        public void SetActive(bool value)
+        {
+            isActive = value;
+        }
 
         void Update()
         {
+            if (gameInterface.IsBusy())
+            {
+                return;
+            }
+            
             UpdateDrag();
             UpdateElevate();
         }
@@ -74,7 +88,7 @@ namespace WindingTale.UI.Scenes.GameFieldScene
         // Start is called before the first frame update
         void Start()
         {
-
+            gameInterface = GameObject.Find("GameInterface").GetComponent<GameInterface>();
         }
     }
 }

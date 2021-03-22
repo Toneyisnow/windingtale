@@ -69,7 +69,7 @@ namespace WindingTale.UI.CanvasControls
                     default: break;
                 }
 
-                description = string.Format(@"+{0}{1}", prefix, consumableItem.Quantity);
+                description = string.Format(@"+{0} {1}", prefix, consumableItem.Quantity);
                 return description;
             }
 

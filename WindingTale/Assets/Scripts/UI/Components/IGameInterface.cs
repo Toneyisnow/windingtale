@@ -53,5 +53,6 @@ namespace WindingTale.UI.Components
 
         void BattleMagic(FDCreature subject, FDCreature target, FightInformation magicInfo);
 
+        bool IsBusy();
     }
 }

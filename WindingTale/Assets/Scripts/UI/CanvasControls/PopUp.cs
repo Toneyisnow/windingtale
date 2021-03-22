@@ -12,7 +12,7 @@ public class PopUp : MonoBehaviour
         Closing = 3,
     }
 
-    private static readonly float elapseTime = 0.6f;
+    private static readonly float elapseTime = 0.2f;
 
     private Vector3 targetPosition;
     private Vector3 startPosition;
@@ -29,7 +29,8 @@ public class PopUp : MonoBehaviour
     public void Initialize(Vector2 popupPosition)
     {
         startPosition = popupPosition;
-        targetPosition = this.transform.position;
+        /// startPosition = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y + 3, 0);
+        targetPosition = this.transform.localPosition;
         targetScale = this.transform.localScale;
 
         Debug.Log("PopUp.Initialize: startPosition=" + startPosition + ", targetPosition=" + targetPosition);
@@ -55,7 +56,7 @@ public class PopUp : MonoBehaviour
         }
 
         transform.localScale = startScale;
-        transform.position = startPosition;
+        transform.localPosition = startPosition;
 
         startTime = Time.time;
         
@@ -67,7 +68,7 @@ public class PopUp : MonoBehaviour
         if (phase == PoppingPhase.Opening)
         {
             float t = (Time.time - startTime) / elapseTime;
-            transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            transform.localPosition = Vector3.Lerp(startPosition, targetPosition, t);
             transform.localScale = Vector3.Lerp(startScale, targetScale, t);
 
             if (t >= 1)
@@ -78,7 +79,7 @@ public class PopUp : MonoBehaviour
         else if (phase == PoppingPhase.Closing)
         {
             float t = (Time.time - startTime) / elapseTime;
-            transform.position = Vector3.Lerp(targetPosition, startPosition, t);
+            transform.localPosition = Vector3.Lerp(targetPosition, startPosition, t);
             transform.localScale = Vector3.Lerp(targetScale, startScale, t);
 
             if (t >= 1)

@@ -23,11 +23,11 @@ namespace WindingTale.UI.CanvasControls
 
         private bool isTalking = false;
 
-        public void Initialize(Canvas canvas, int animationId, Vector2 canvasPosition, bool isFlipped = false)
+        public void Initialize(Transform parent, int animationId, Vector2 position, bool isFlipped = false)
         {
-            this.transform.parent = canvas.transform;
+            this.transform.parent = parent;
             this.animationId = animationId;
-            this.transform.localPosition = canvasPosition;
+            this.transform.localPosition = position;
 
             RectTransform rect = this.GetComponent<RectTransform>();
             // rect.SetPositionAndRotation(canvasPosition, Quaternion.Euler(0, 0, 0));

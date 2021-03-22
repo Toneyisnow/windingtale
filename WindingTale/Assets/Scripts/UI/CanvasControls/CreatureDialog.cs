@@ -69,9 +69,8 @@ namespace WindingTale.UI.CanvasControls
             clickable.Initialize(() => { this.OnCancelled(); });
             datoBase = this.transform.Find("Canvas/DatoBase");
             datoControl = GameObjectExtension.CreateFromPrefab<DatoControl>("Prefabs/DatoControl");
-            datoControl.Initialize(canvas, creature.Definition.AnimationId, new Vector2(0, 0));
-            datoControl.transform.parent = datoBase;
-            datoControl.transform.localPosition = new Vector3(0, 0, 0);
+            datoControl.Initialize(datoBase, creature.Definition.AnimationId, new Vector2(0, 0));
+            //// datoControl.transform.localPosition = new Vector3(0, 0, 0);
 
             RenderDetails();
 

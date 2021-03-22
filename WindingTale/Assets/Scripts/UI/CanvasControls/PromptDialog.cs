@@ -40,7 +40,7 @@ namespace WindingTale.UI.CanvasControls
 
             localizedMessage = localizedMessage.Replace("#", "\r\n");
             datoControl = GameObjectExtension.CreateFromPrefab<DatoControl>("Prefabs/DatoControl");
-            datoControl.Initialize(canvas, animationId, new Vector2(-230, -150), true);
+            datoControl.Initialize(messageBoxBase.transform, animationId, new Vector2(-230, -150), true);
 
             textObj = FontAssets.ComposeTextMeshObject(localizedMessage);
             

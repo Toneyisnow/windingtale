@@ -469,8 +469,10 @@ namespace WindingTale.UI.Components
 
         }
 
-
-
+        public bool IsBusy()
+        {
+            return currentDialog != null || !this.activityManager.IsIdling();
+        }
 
         #endregion
 

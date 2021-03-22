@@ -73,5 +73,10 @@ namespace WindingTale.UI.Components.Activities
 
             currentActivity.Update(gameInterface);
         }
+
+        public bool IsIdling()
+        {
+            return isIdling;
+        }
     }
 }

@@ -32,7 +32,7 @@ namespace WindingTale.UI.CanvasControls
         private bool isTalking = false;
 
         private MessageDialogPosition dialogPosition = MessageDialogPosition.DOWN;
-
+        private GameObject messageBoxBase;
 
         private static Vector2 GetBasePosition(MessageDialogPosition pos)
         {
@@ -50,11 +50,11 @@ namespace WindingTale.UI.CanvasControls
         {
             if (pos == MessageDialogPosition.UP)
             {
-                return new Vector2(230, 150);
+                return new Vector2(230, 0);
             }
             else
             {
-                return new Vector2(-230, -150);
+                return new Vector2(-230, 0);
             }
         }
 
@@ -62,11 +62,11 @@ namespace WindingTale.UI.CanvasControls
         {
             if (pos == MessageDialogPosition.UP)
             {
-                return new Vector3(-60, 130, -1);
+                return new Vector3(-80, -5, -1);
             }
             else
             {
-                return new Vector3(60, -160, -1);
+                return new Vector3(60, -5, -1);
             }
         }
 
@@ -82,7 +82,7 @@ namespace WindingTale.UI.CanvasControls
                 dialogPosition = MessageDialogPosition.UP;
             }
 
-            GameObject messageBoxBase = this.transform.Find("Canvas/MessageBase").gameObject;
+            messageBoxBase = this.transform.Find("Canvas/MessageBase").gameObject;
             messageBoxBase.transform.localPosition = GetBasePosition(dialogPosition);
             Clickable clickable = messageBoxBase.GetComponent<Clickable>();
             clickable.Initialize(() => { this.OnClicked(); });
@@ -94,7 +94,7 @@ namespace WindingTale.UI.CanvasControls
 
             localizedMessage = localizedMessage.Replace("#", "\r\n");
             datoControl = GameObjectExtension.CreateFromPrefab<DatoControl>("Prefabs/DatoControl");
-            datoControl.Initialize(canvas, animationId, GetDatoPosition(dialogPosition), (dialogPosition == MessageDialogPosition.DOWN));
+            datoControl.Initialize(messageBoxBase.transform, animationId, GetDatoPosition(dialogPosition), (dialogPosition == MessageDialogPosition.DOWN));
 
             if (forChapterId > 0)
             {
@@ -105,7 +105,7 @@ namespace WindingTale.UI.CanvasControls
                 textObj = FontAssets.ComposeTextMeshObject(localizedMessage);
             }
 
-            Transform textAnchor = this.transform.Find("Canvas/TextAnchor");
+            Transform textAnchor = this.transform.Find("Canvas/MessageBase/TextAnchor");
             textAnchor.localPosition = GetTextPosition(dialogPosition);
 
             textObj.transform.parent = textAnchor;
@@ -174,11 +174,16 @@ namespace WindingTale.UI.CanvasControls
             }
             else
             {
-                //// Debug.Log("Clicked on MessageDialog!");
-                if (this.onClickCallback != null)
+                PopUp popUp = messageBoxBase.GetComponent<PopUp>();
+                popUp.Close(() =>
                 {
-                    this.onClickCallback(1);
-                }
+                    //// Debug.Log("Clicked on MessageDialog!");
+                    if (this.onClickCallback != null)
+                    {
+                        this.onClickCallback(1);
+                    }
+                });
+                
             }
         }
     }
