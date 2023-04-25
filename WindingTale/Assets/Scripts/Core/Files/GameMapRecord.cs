@@ -1,6 +1,6 @@
 using WindingTale.Core.Map;
 
-namespace WindingTile.Core.Files
+namespace WindingTale.Core.Files
 {
     /// <summary>
     /// Saved in the Battle Field so that could load from Continue button

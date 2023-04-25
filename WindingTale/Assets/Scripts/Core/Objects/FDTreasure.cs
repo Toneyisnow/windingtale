@@ -1,6 +1,5 @@
-using static UnityEditor.Progress;
 
-namespace WindingTile.Core.Objects
+namespace WindingTale.Core.Objects
 {
     public class FDTreasure : FDObject
     {

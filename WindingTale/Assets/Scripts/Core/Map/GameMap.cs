@@ -2,7 +2,8 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Events;
 using WindingTale.Core.Objects;
-using WindingTile.Core.Files;
+using WindingTale.Core.Files;
+using System.Collections.Generic;
 
 namespace WindingTale.Core.Map
 {
@@ -16,13 +17,46 @@ namespace WindingTale.Core.Map
 
         public GameField Field { get; private set; }
 
-        private FDObject[] objects = null;
 
-        private FDEvent events = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<FDEvent> Events { get; private set; }
 
-        public int TurnNo { get; private set; }
+        public List<FDTreasure> Treasures { get; private set; }
 
-        public TurnType TurnType { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<FDCreature> Creatures { get; private set; }
+
+        public List<FDCreature> Friends
+        {
+            get
+            {
+                return this.Creatures.FindAll(c => c.Faction == CreatureFaction.Friend);
+            }
+        }
+
+        public List<FDCreature> Npcs
+        {
+            get
+            {
+                return this.Creatures.FindAll(c => c.Faction == CreatureFaction.Npc);
+            }
+        }
+        public List<FDCreature> Enemies
+        {
+            get
+            {
+                return this.Creatures.FindAll(c => c.Faction == CreatureFaction.Enemy);
+            }
+        }
+
+
+        public int TurnNo { get; set; }
+
+        public CreatureType TurnType { get; set; }
 
 
 

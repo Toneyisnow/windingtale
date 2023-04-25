@@ -267,6 +267,10 @@
     <Compile Include="Assets\Scripts\Core\Common\Constants.cs" />
     <Compile Include="Assets\Scripts\Core\Map\GameField.cs" />
     <Compile Include="Assets\Scripts\Core\Common\SingleSelectCallback.cs" />
+    <Compile Include="Assets\Scripts\Core\Common\Callbacks.cs" />
+    <Compile Include="Assets\Scripts\Chapters\ChapterLoader.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter2.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter3.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_24.txt" />

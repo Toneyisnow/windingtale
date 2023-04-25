@@ -191,6 +191,11 @@ namespace WindingTale.Core.Definitions
             get; private set;
         }
 
+        public virtual void LoadEvents()
+        {
+
+        }
+
         public void ReadConversationIdsFromFile(ResourceDataFile dataFile)
         {
             this.ConversationIds = new Dictionary<string, int>();

@@ -1,14 +1,14 @@
 namespace WindingTale.Core.Common
 {
-    public delegate void SelectionCallback(int index);
+    ////public delegate void SelectionCallback(int index);
 
     /// <summary>
     /// A simple callback signature that returns a number as result.
     /// 
     /// </summary>
-    public class SingleSelectionCallback
+    public class SingleSelectCallback
     {
-        public SingleSelectionCallback(SelectionCallback callback)
+        public SingleSelectCallback(SelectionCallback callback)
         {
             this.callback = callback;
         }

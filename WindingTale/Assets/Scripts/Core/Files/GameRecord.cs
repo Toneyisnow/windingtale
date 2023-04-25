@@ -1,6 +1,6 @@
 using WindingTale.Legacy.Core.ObjectModels;
 
-namespace WindingTile.Core.Files
+namespace WindingTale.Core.Files
 {
     
     public class GameRecord

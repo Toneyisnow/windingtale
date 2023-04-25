@@ -12,11 +12,10 @@ namespace WindingTale.UI.Components.Activities
     /// </summary>
     public class PromptActivity : ActivityBase
     {
-        private SingleSelectionCallback callback = null;
 
 
 
-        public PromptActivity(SingleSelectionCallback callback)
+        public PromptActivity(SelectionCallback callback)
         {
             this.callback = callback;
         }
