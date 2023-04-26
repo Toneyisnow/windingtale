@@ -1,3 +1,5 @@
+using WindingTale.Common;
+
 namespace WindingTale.Core.Objects
 {
     public enum ObjectType
@@ -15,10 +17,14 @@ namespace WindingTale.Core.Objects
 
         public ObjectType Type { get; protected set; }
 
+        public FDPosition Position { get; set; }
+
         public FDObject(int id, ObjectType type)
         {
             Id = id;
             Type = type;
         }
+
+        public 
     }
 }

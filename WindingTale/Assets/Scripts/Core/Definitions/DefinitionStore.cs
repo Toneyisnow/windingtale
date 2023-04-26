@@ -9,6 +9,9 @@ using WindingTale.Core.Definitions.Items;
 
 namespace WindingTale.Core.Definitions
 {
+    /// <summary>
+    /// Main place in game to store all definitions
+    /// </summary>
     public class DefinitionStore
     {
         private static DefinitionStore instance = null;

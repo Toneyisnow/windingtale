@@ -13,12 +13,20 @@ namespace WindingTale.Core.Events
     /// </summary>
     public abstract class FDEvent
     {
-        public bool IsActive { get; private set; }
+        public bool IsActive { get; protected set; }
 
-        public FDEventType EventType { get; private set; }
+        public FDEventType EventType { get; protected set; }
 
-        public abstract bool IsTriggered(GameMap gameMap);
+        public void Execute(GameMap gameMap)
+        {
+            DoExecute(gameMap);
+            this.IsActive = false;
+        }
 
-        public abstract void Execute(GameMap gameMap);
+        /// <summary>
+        /// Interface for higher level class to implement details
+        /// </summary>
+        /// <param name="gameMap"></param>
+        public abstract void DoExecute(GameMap gameMap);
     }
 }

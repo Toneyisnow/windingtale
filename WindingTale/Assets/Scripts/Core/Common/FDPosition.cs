@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +33,7 @@ namespace WindingTale.Common
 
         public int IsNextToDirection(FDPosition other)
         {
-            if(other.X == this.X + 1 && other.Y == this.Y)
+            if (other.X == this.X + 1 && other.Y == this.Y)
             {
                 return 1;
             }

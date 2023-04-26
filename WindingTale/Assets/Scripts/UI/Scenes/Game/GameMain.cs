@@ -12,6 +12,8 @@ using WindingTale.Core.Map;
 using WindingTale.Core.Files;
 using WindingTale.Core.Objects;
 using WindingTale.UI.Components.Activities;
+using WindingTale.Core.Components.Algorithms;
+using WindingTale.Core;
 
 namespace WindingTale.UI.Scenes.Game
 {
@@ -19,13 +21,15 @@ namespace WindingTale.UI.Scenes.Game
     {
         #region Properties
 
-        /// <summary>
-        /// /public int TurnNo { get; private set; }
-        /// </summary>
 
-        //// public CreatureType TurnType { get; private set; }
+        public int TurnNo { get; private set; }
+        
+
+        public CreatureFaction TurnType { get; private set; }
 
         public GameMap GameMap { get; private set; }
+
+        public GameHandler GameHandler { get; private set; }
 
         /// TODO: Whether should I use singleton pattern here?
         public static GameMain Instance { get; private set; } = new GameMain();
@@ -47,7 +51,7 @@ namespace WindingTale.UI.Scenes.Game
         private GameMain()
         {
             this.TurnNo = 0;
-            this.TurnType = CreatureType.Player;
+            this.TurnType = CreatureFaction.Friend;
         }
 
         #endregion
@@ -75,6 +79,7 @@ namespace WindingTale.UI.Scenes.Game
             // Load chapter map
             ChapterDefinition chapterDefinition = ChapterLoader.Load(chapterId);
             Instance.GameMap = GameMap.LoadFromChapter(chapterDefinition, record);
+            Instance.GameHandler = new GameHandler(Instance.GameMap);
 
             // Load chapter creatures from record
 
@@ -106,13 +111,13 @@ namespace WindingTale.UI.Scenes.Game
 
         private void OnNewTurn()
         {
-            this.GameMap.TurnNo++;
+            this.TurnNo++;
             this.OnPlayerTurn();
         }
 
         private void OnPlayerTurn()
         {
-            this.GameMap.TurnType = CreatureType.Player;
+            this.TurnType = CreatureFaction.Friend;
 
             CheckTurnEvents();
 
@@ -133,7 +138,7 @@ namespace WindingTale.UI.Scenes.Game
                 return;
             }
 
-            this.GameMap.TurnType = CreatureType.Npc;
+            this.TurnType = CreatureFaction.Npc;
             CheckTurnEvents();
 
         }
@@ -145,7 +150,7 @@ namespace WindingTale.UI.Scenes.Game
 
         private void OnEnemyTurn()
         {
-            this.GameMap.TurnType = CreatureType.Enemy;
+            this.TurnType = CreatureFaction.Enemy;
             CheckTurnEvents();
         }
 
@@ -182,22 +187,30 @@ namespace WindingTale.UI.Scenes.Game
 
         private void CheckTurnEvents()
         {
-            foreach (FDEvent fdEvent in this.GameMap.Events)
+            foreach (FDEvent fdEvent in this.GameMap.GetActiveEvents())
             {
-                if (fdEvent.EventType == FDEventType.Turn && fdEvent.IsTriggered(this.GameMap))
+                if (fdEvent.EventType == FDEventType.Turn)
                 {
-                    fdEvent.Execute(this.GameMap);
+                    FDTurnEvent turnEvent = (FDTurnEvent)fdEvent;
+                    if (turnEvent.TurnNo == this.TurnNo && turnEvent.TurnType == this.TurnType)
+                    {
+                        fdEvent.Execute(this.GameMap);
+                    }
                 }
             }
         }
 
         private void CheckConditionEvents()
         {
-            foreach (FDEvent fdEvent in this.GameMap.Events)
+            foreach (FDEvent fdEvent in this.GameMap.GetActiveEvents())
             {
-                if (fdEvent.EventType == FDEventType.Condition && fdEvent.IsTriggered(this.GameMap))
+                if (fdEvent.EventType == FDEventType.Condition)
                 {
-                    fdEvent.Execute(this.GameMap);
+                    FDConditionEvent conditionEvent = (FDConditionEvent)fdEvent;
+                    if (conditionEvent.Match(this.GameMap))
+                    {
+                        conditionEvent.Execute(this.GameMap);
+                    }
                 }
             }
         }
@@ -230,11 +243,17 @@ namespace WindingTale.UI.Scenes.Game
 
         }
 
-        public void CreatureAttack(FDCreature creature, FDPosition position)
+        public void CreatureMoveCancel(FDCreature creature)
         {
-            AttackResult result = this.GameEngine.handleCreatureAttack(creature, position);
+        }
+
+        public void CreatureAttack(FDCreature creature, FDCreature target)
+        {
+            AttackResult result = this.GameHandler.HandleCreatureAttack(creature, target);
 
             // TODO: AttackActivity to Fight Scene
+
+
 
             CheckConditionEvents();
 
@@ -267,7 +286,20 @@ namespace WindingTale.UI.Scenes.Game
 
         public void EndAllFriendsTurn()
         {
-            PromptActivity prompt = new PromptActivity(doEndAllFriendsTurn);
+            PromptActivity prompt = new PromptActivity((index) =>
+            {
+                // 1 means YES
+                if (index == 1)
+                {
+
+                }
+                else
+                {
+
+                }
+            });
+
+            PushActivity(prompt);
         }
 
         #endregion

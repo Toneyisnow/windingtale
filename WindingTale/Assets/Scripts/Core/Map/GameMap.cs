@@ -13,7 +13,8 @@ namespace WindingTale.Core.Map
     public class GameMap
     {
         public GameMap()
-        { }
+        { 
+        }
 
         public GameField Field { get; private set; }
 
@@ -29,6 +30,8 @@ namespace WindingTale.Core.Map
         /// 
         /// </summary>
         public List<FDCreature> Creatures { get; private set; }
+
+        public List<FDCreature> DeadCreatures { get; private set; }
 
         public List<FDCreature> Friends
         {
@@ -53,12 +56,15 @@ namespace WindingTale.Core.Map
             }
         }
 
+        public FDCreature FindCreatureById(int creatureId)
+        {
+            return this.Creatures.Find(c => c.Id == creatureId);
+        }
 
-        public int TurnNo { get; set; }
-
-        public CreatureType TurnType { get; set; }
-
-
+        public List<FDEvent> GetActiveEvents()
+        {
+            return this.Events.FindAll(ev => ev.IsActive);
+        }
 
         public static GameMap LoadFromChapter(ChapterDefinition chapter, GameRecord record)
         {
@@ -69,6 +75,5 @@ namespace WindingTale.Core.Map
         {
             return null;
         }
-
     }
 }

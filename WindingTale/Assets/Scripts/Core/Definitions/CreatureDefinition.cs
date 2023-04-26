@@ -11,8 +11,8 @@ namespace WindingTale.Core.Definitions
     public enum CreatureFaction
     {
         Friend = 0,
-        Enemy = 1,
-        Npc = 2,
+        Npc = 1,
+        Enemy = 2,
     }
 
     /// <summary>

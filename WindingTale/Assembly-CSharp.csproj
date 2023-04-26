@@ -62,16 +62,13 @@
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\EventLoader.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\IGameAction.cs" />
     <Compile Include="Assets\Scripts\Legacy\Common\FDRandom.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\Conditions\TurnDelayCondition.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CloseMenuPack.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIGuardDelegate.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\CanvasControls\SlidingAnimation.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Controls\MenuSliding.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Data\FieldRecord.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\Conditions\CreatureDyingCondition.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Data\CreatureData.cs" />
     <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_LightFlicker.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\Conditions\TriggeredEventCondition.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIMagicalDelegate.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\Title\GameTitleScene.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AITreasureDelegate.cs" />
@@ -84,13 +81,11 @@
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageParser.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\ShowBriefPack.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\SequencedPack.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\Conditions\EventCondition.cs" />
     <Compile Include="Assets\Scripts\Legacy\Common\FDMovePath.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\CanvasControls\PopUp.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\TalkPack.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Common\Constants.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\ILocalizedAssetLoader.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\Conditions\TeamEliminatedCondition.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Algorithms\DistanceResolver.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\ShowMenuPack.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedSprite.cs" />
@@ -98,7 +93,6 @@
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\Chapters\EventChapter1.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\Load\GameLoadScene.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\FieldMap\ShapeMappings.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\ObjectModels\FDCreature.cs" />
     <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\Utility Scripts\QT_MeshCombineUtility.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedText.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\PromptPack.cs" />
@@ -119,10 +113,8 @@
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageManager.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\ShowRangePack.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Components\IGameInterface.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\FDPosition.cs" />
     <Compile Include="Assets\Scripts\Legacy\Common\ConversationId.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Controls\CreatureInfoBar.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\Conditions\TurnEventCondition.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedAudioSource.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Algorithms\AttackInformation.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CreatureRefreshPack.cs" />
@@ -163,7 +155,6 @@
     <Compile Include="Assets\SmartLocalization\Scripts\RuntimeLocalizedAssetLoader.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Common\Clickable.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CreatureRefreshAllPack.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\Conditions\CreatureDeadCondition.cs" />
     <Compile Include="Assets\Scripts\Legacy\Common\FDMoveRange.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\NGUI\SL_NGUISpriteAtlas.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\ObjectModels\FDMenu.cs" />
@@ -194,7 +185,6 @@
     <Compile Include="Assets\Scripts\Legacy\Core\Components\GameField.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CreatureDeadPack.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\CanvasControls\DatoControl.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\Conditions\ReachPositionCondition.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\Village\GameVillageScene.cs" />
     <Compile Include="Assets\Scripts\Legacy\Common\StringUtils.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\BatchPack.cs" />
@@ -235,7 +225,7 @@
     <Compile Include="Assets\Scripts\Core\Events\FDTurnEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Events\FDEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Events\FDConditionEvent.cs" />
-    <Compile Include="Assets\Scripts\Core\GameEngine.cs" />
+    <Compile Include="Assets\Scripts\Core\GameHandler.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\MenuSettingsState.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\PromptActivity.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\ShowMoveRangeState.cs" />
@@ -271,6 +261,11 @@
     <Compile Include="Assets\Scripts\Chapters\ChapterLoader.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter2.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter3.cs" />
+    <Compile Include="Assets\Scripts\Core\Common\FDPosition.cs" />
+    <Compile Include="Assets\Scripts\Core\Events\CreatureDeadEvent.cs" />
+    <Compile Include="Assets\Scripts\Core\Events\CreatureDyingEvent.cs" />
+    <Compile Include="Assets\Scripts\Core\Events\ReachPositionEvent.cs" />
+    <Compile Include="Assets\Scripts\Core\Events\TeamEliminatedEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_24.txt" />
