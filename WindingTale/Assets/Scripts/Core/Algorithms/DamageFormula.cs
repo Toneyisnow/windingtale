@@ -20,10 +20,10 @@ namespace WindingTale.Core.Components.Algorithms
 
         public static FightInformation DealWithAttack(FDCreature subject, FDCreature target, GameField field, bool canFightBack)
         {
-            AttackInformation attack1 = AttackFrom(subject, target, field);
-            AttackInformation attack2 = null;
-            AttackInformation back1 = null;
-            AttackInformation back2 = null;
+            BattleResults attack1 = AttackFrom(subject, target, field);
+            BattleResults attack2 = null;
+            BattleResults back1 = null;
+            BattleResults back2 = null;
 
             int exp1 = CalculateAttackExp(subject, target, attack1);
             int backExp1 = 0;
@@ -102,7 +102,7 @@ namespace WindingTale.Core.Components.Algorithms
             int totalExp = 0;
             foreach(FDCreature target in targetList)
             {
-                AttackInformation magicInfo = MagicFrom(magic, subject, target, field);
+                BattleResults magicInfo = MagicFrom(magic, subject, target, field);
                 result.AddInformation(magicInfo);
 
                 if (magic.Type == MagicType.Attack || magic.Type == MagicType.Recover)
@@ -123,7 +123,7 @@ namespace WindingTale.Core.Components.Algorithms
             return result;
         }
 
-        private static AttackInformation AttackFrom(FDCreature subject, FDCreature target, GameField field)
+        private static BattleResults AttackFrom(FDCreature subject, FDCreature target, GameField field)
         {
             bool isHit = FDRandom.BoolFromRate(subject.Data.CalculatedHit - target.Data.CalculatedEv);
             bool isCritical = FDRandom.BoolFromRate(commonCriticalAttackRate);
@@ -161,13 +161,13 @@ namespace WindingTale.Core.Components.Algorithms
                 }
             }
 
-            AttackInformation info = new AttackInformation(target.Data.Hp, target.Data.Hp - reduceHp, isCritical);
+            BattleResults info = new AttackInformation(target.Data.Hp, target.Data.Hp - reduceHp, isCritical);
             target.Data.UpdateHp(-reduceHp);
 
             return info;
         }
 
-        private static AttackInformation MagicFrom(MagicDefinition magic, FDCreature subject, FDCreature target, GameField field)
+        private static BattleResults MagicFrom(MagicDefinition magic, FDCreature subject, FDCreature target, GameField field)
         {
             bool isHit = FDRandom.BoolFromRate(magic.HittingRate);
 
@@ -204,13 +204,13 @@ namespace WindingTale.Core.Components.Algorithms
                 }
             }
 
-            AttackInformation info = new AttackInformation(target.Data.Hp, target.Data.Hp + changedHp, false);
+            BattleResults info = new AttackInformation(target.Data.Hp, target.Data.Hp + changedHp, false);
             target.Data.UpdateHp(changedHp);
 
             return info;
         }
 
-        private static int CalculateAttackExp(FDCreature subject, FDCreature target, AttackInformation info)
+        private static int CalculateAttackExp(FDCreature subject, FDCreature target, BattleResults info)
         {
             return 0;
         }

@@ -60,10 +60,10 @@ namespace WindingTale.UI.Scenes.Battle
 
             Debug.Log(string.Format(@"hp1: {0}, hp2: {1}, hp3: {2}", hp1, hp2, hp3));
 
-            AttackInformation a1 = new AttackInformation(hp1, hp2, false);
-            AttackInformation a2 = new AttackInformation(hp2, hp3, false);
-            AttackInformation b1 = new AttackInformation(hp4, hp5, false);
-            AttackInformation b2 = new AttackInformation(hp5, hp6, false);
+            BattleResults a1 = new AttackInformation(hp1, hp2, false);
+            BattleResults a2 = new AttackInformation(hp2, hp3, false);
+            BattleResults b1 = new AttackInformation(hp4, hp5, false);
+            BattleResults b2 = new AttackInformation(hp5, hp6, false);
 
             FightInformation fightInfo = new FightInformation(a1, a2, b1, b2);
 
@@ -284,7 +284,7 @@ namespace WindingTale.UI.Scenes.Battle
             SceneManager.UnloadSceneAsync("BattleScene");
         }
 
-        private int CalculatePercentage(AttackInformation info, int percentage)
+        private int CalculatePercentage(BattleResults info, int percentage)
         {
             return info.HpBefore - (info.HpBefore - info.HpAfter) * percentage / 100;
         }

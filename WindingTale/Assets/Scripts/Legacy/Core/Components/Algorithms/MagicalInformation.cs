@@ -8,17 +8,17 @@ namespace WindingTale.Core.Components.Algorithms
 {
     public class MagicalInformation
     {
-        public List<AttackInformation> Informations
+        public List<BattleResults> Informations
         {
             get; private set;
         }
 
         public MagicalInformation()
         {
-            this.Informations = new List<AttackInformation>();
+            this.Informations = new List<BattleResults>();
         }
 
-        public void AddInformation(AttackInformation info)
+        public void AddInformation(BattleResults info)
         {
             this.Informations.Add(info);
         }

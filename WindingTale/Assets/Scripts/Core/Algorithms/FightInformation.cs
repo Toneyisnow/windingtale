@@ -8,27 +8,27 @@ namespace WindingTale.Core.Components.Algorithms
 {
     public class FightInformation
     {
-        public AttackInformation Attack1
+        public BattleResults Attack1
         {
             get; private set;
         }
 
-        public AttackInformation Attack2
+        public BattleResults Attack2
         {
             get; private set;
         }
 
-        public AttackInformation Back1
+        public BattleResults Back1
         {
             get; private set;
         }
 
-        public AttackInformation Back2
+        public BattleResults Back2
         {
             get; private set;
         }
 
-        public FightInformation(AttackInformation attack1, AttackInformation attack2, AttackInformation back1, AttackInformation back2)
+        public FightInformation(BattleResults attack1, BattleResults attack2, BattleResults back1, BattleResults back2)
         {
             this.Attack1 = attack1;
             this.Attack2 = attack2;

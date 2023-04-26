@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WindingTale.Core.Components.Algorithms
 {
-    public class AttackInformation
+    public class BattleResults
     {
         public int HpBefore
         {
@@ -23,7 +23,7 @@ namespace WindingTale.Core.Components.Algorithms
             get; private set;
         }
 
-        public AttackInformation(int before, int after, bool critical)
+        public BattleResults(int before, int after, bool critical)
         {
             this.HpBefore = before;
             this.HpAfter = after;

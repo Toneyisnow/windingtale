@@ -207,7 +207,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\FightAnimation.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDObject.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDNpc.cs" />
-    <Compile Include="Assets\Scripts\Core\Algorithms\AttackInformation.cs" />
+    <Compile Include="Assets\Scripts\Core\Algorithms\BattleResults.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\MoveRangeFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDTreasure.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TransferDefinition.cs" />
