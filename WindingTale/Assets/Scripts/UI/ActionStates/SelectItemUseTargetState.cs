@@ -64,23 +64,23 @@ namespace WindingTale.Core.Components.ActionStates
             SendPack(pack);
         }
 
-        public override StateOperationResult OnSelectPosition(FDPosition position)
+        public override StateResult OnSelectPosition(FDPosition position)
         {
             // Selecte position must be included in the range
             if (!this.ItemRange.Contains(position))
             {
-                return StateOperationResult.Pop();
+                return StateResult.Pop();
             }
 
             // No creature or not a friend/NPC
             FDCreature targetCreature = this.gameAction.GetCreatureAt(position);
             if(targetCreature == null || targetCreature.Faction == Definitions.CreatureFaction.Enemy)
             {
-                return StateOperationResult.None();
+                return StateResult.None();
             }
 
             gameAction.DoCreatureUseItem(this.CreatureId, this.SelectedItemIndex, targetCreature.CreatureId);
-            return StateOperationResult.Clear();
+            return StateResult.Clear();
         }
     }
 }

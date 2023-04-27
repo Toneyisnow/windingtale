@@ -42,7 +42,7 @@ namespace WindingTale.Core.Components.ActionStates
                 SendPack(pack);
 
                 subState = SubActionState.SelectExchangeItem;
-                return StateOperationResult.None();
+                return StateResult.None();
             });
 
             // Use
@@ -52,7 +52,7 @@ namespace WindingTale.Core.Components.ActionStates
                 SendPack(pack);
 
                 subState = SubActionState.SelectUseItem;
-                return StateOperationResult.None();
+                return StateResult.None();
             });
 
             // Equip
@@ -62,7 +62,7 @@ namespace WindingTale.Core.Components.ActionStates
                 SendPack(pack);
 
                 subState = SubActionState.SelectEquipItem;
-                return StateOperationResult.None();
+                return StateResult.None();
             });
 
             // Discard
@@ -72,16 +72,16 @@ namespace WindingTale.Core.Components.ActionStates
                 SendPack(pack);
 
                 subState = SubActionState.SelectDiscardItem;
-                return StateOperationResult.None();
+                return StateResult.None();
             });
         }
 
-        public override StateOperationResult OnSelectIndex(int index)
+        public override StateResult OnSelectIndex(int index)
         {
             if (index < 0)
             {
                 // Cancel
-                return StateOperationResult.None();
+                return StateResult.None();
             }
 
             switch (this.subState)
@@ -95,7 +95,7 @@ namespace WindingTale.Core.Components.ActionStates
                 case SubActionState.SelectDiscardItem:
                     return OnSelectedDiscardItem(index);
                 default:
-                    return StateOperationResult.Pop();
+                    return StateResult.Pop();
             }
         }
 
@@ -126,38 +126,38 @@ namespace WindingTale.Core.Components.ActionStates
             return this.Creature.Data.HasItem();
         }
 
-        private StateOperationResult OnSelectedExchangeItem(int index)
+        private StateResult OnSelectedExchangeItem(int index)
         {
             if (index < 0)
             {
-                return StateOperationResult.Pop();
+                return StateResult.Pop();
             }
 
             // Selete Target Friend
             SelectItemExchangeTargetState exchangeTargetState = new SelectItemExchangeTargetState(gameAction, this.CreatureId, index);
-            return StateOperationResult.Push(exchangeTargetState);
+            return StateResult.Push(exchangeTargetState);
         }
 
-        private StateOperationResult OnSelectedUseItem(int index)
+        private StateResult OnSelectedUseItem(int index)
         {
             int itemId = this.Creature.Data.GetItemAt(index);
             if (itemId < 0)
             {
                 // Item not found, should not reach here
-                return StateOperationResult.Clear();
+                return StateResult.Clear();
             }
 
             // Selete Target Friend
             SelectItemUseTargetState selectTargetState = new SelectItemUseTargetState(gameAction, this.CreatureId, index);
-            return StateOperationResult.Push(selectTargetState);
+            return StateResult.Push(selectTargetState);
         }
         
-        private StateOperationResult OnSelectedEquipItem(int index)
+        private StateResult OnSelectedEquipItem(int index)
         {
             if (index < 0)
             {
                 // Cancel the selection
-                return StateOperationResult.None();
+                return StateResult.None();
             }
 
             this.Creature.Data.EquipItemAt(index);
@@ -167,14 +167,14 @@ namespace WindingTale.Core.Components.ActionStates
             SendPack(pack);
 
             subState = SubActionState.SelectEquipItem;
-            return StateOperationResult.None();
+            return StateResult.None();
         }
 
-        private StateOperationResult OnSelectedDiscardItem(int index)
+        private StateResult OnSelectedDiscardItem(int index)
         {
             // Discard the item
             this.Creature.Data.RemoveItemAt(index);
-            return StateOperationResult.None();
+            return StateResult.None();
         }
 
 

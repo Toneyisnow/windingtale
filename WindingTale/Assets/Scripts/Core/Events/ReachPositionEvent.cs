@@ -24,7 +24,7 @@ namespace WindingTale.Core.Events
 
         public override bool Match(GameMap gameMap)
         {
-            FDCreature creature = gameMap.FindCreatureById(creatureId);
+            FDCreature creature = gameMap.GetCreatureById(creatureId);
             if (creature == null)
             {
                 return false;

@@ -3,34 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
-using WindingTale.Core.ObjectModels;
-using WindingTale.UI.Components;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
-    public class GameStateDispatcher
+    public class StateDispatcher
     {
         private Stack<ActionState> actionStateStack = null;
 
-        private IGameAction gameAction = null;
-
-        private ActionState currentState = null;
-
-        public GameStateDispatcher(IGameAction gameAction)
+        public StateDispatcher(GameMain gameMain)
         {
-            this.gameAction = gameAction;
-
             this.actionStateStack = new Stack<ActionState>();
 
             // Push Idle State for init
-            var idle = new IdleState(gameAction);
+            var idle = new IdleState(gameMain);
             actionStateStack.Push(idle);
-
-            currentState = RetrieveCurrentState();
-
         }
 
-        public ActionState RetrieveCurrentState()
+        public ActionState GetCurrentState()
         {
             if (actionStateStack == null || actionStateStack.Count == 0)
             {
@@ -42,6 +32,8 @@ namespace WindingTale.Core.Components.ActionStates
 
         public void OnSelectPosition(FDPosition position)
         {
+            ActionState currentState = GetCurrentState();
+
             if (currentState == null)
             {
                 throw new InvalidOperationException("current state is null.");
@@ -51,67 +43,40 @@ namespace WindingTale.Core.Components.ActionStates
             this.HandleOperationResult(result);
         }
 
-        public void OnSelectIndex(int index)
+        public void OnSelectCallback(int index)
         {
+            ActionState currentState = GetCurrentState();
+
             if (currentState == null)
             {
                 throw new InvalidOperationException("current state is null.");
             }
 
-            var result = currentState.OnSelectIndex(index);
+            var result = currentState.OnSelectCallback(index);
             this.HandleOperationResult(result);
         }
 
-
-
-        /*
-         * 
-        // Might not be used
-        public void SelectCreature(int creatureId)
+        private void HandleOperationResult(StateResult result)
         {
+            ActionState currentState = GetCurrentState();
 
-        }
-        
-        public void SelectCreature(FDCreature creature)
-        {
-
-        }
-
-        public void SelectMenu(int menuId)
-        {
-
-        }
-
-        public void SelectMenu(FDMenu menu)
-        {
-
-        }
-        */
-
-        private void HandleOperationResult(StateOperationResult result)
-        {
-            switch(result.Type)
+            switch (result.Type)
             {
-                case StateOperationResult.ResultType.None:
-                    // Nothing to do here
-                    break;
-                case StateOperationResult.ResultType.Push:
+                case StateResult.ResultType.Push:
                     if (result.NextState != null)
                     {
                         currentState.OnExit();
                         actionStateStack.Push(result.NextState);
                         result.NextState.OnEnter();
-                        currentState = actionStateStack.Peek();
-
                     }
                     break;
-                case StateOperationResult.ResultType.Pop:   // Pop the last state
+                case StateResult.ResultType.Pop:   // Pop the last state
                     currentState.OnExit();
                     actionStateStack.Pop();
                     currentState = actionStateStack.Peek();
                     currentState.OnEnter();
                     break;
-                case StateOperationResult.ResultType.Clear: // Clear all states and only keep the first one IdleState
+                case StateResult.ResultType.Clear: // Clear all states and only keep the first one IdleState
                     currentState.OnExit();
                     while(actionStateStack.Count > 1)
                     {

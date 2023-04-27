@@ -75,24 +75,24 @@ namespace WindingTale.Core.Components.ActionStates
             SendPack(clear);
         }
 
-        public override StateOperationResult OnSelectPosition(FDPosition position)
+        public override StateResult OnSelectPosition(FDPosition position)
         {
             if (range == null || !range.Contains(position))
             {
-                return StateOperationResult.Pop();
+                return StateResult.Pop();
             }
 
             // No creature or not a friend/NPC
             FDCreature targetCreature = this.gameAction.GetCreatureAt(position);
             if (targetCreature == null || targetCreature.Faction == Definitions.CreatureFaction.Enemy)
             {
-                return StateOperationResult.None();
+                return StateResult.None();
             }
 
             if(!targetCreature.Data.IsItemsFull())
             {
                 gameAction.DoCreatureExchangeItem(this.CreatureId, this.SelectedItemIndex, targetCreature.CreatureId);
-                return StateOperationResult.Clear();
+                return StateResult.Clear();
             }
             else
             {
@@ -101,31 +101,31 @@ namespace WindingTale.Core.Components.ActionStates
                 CreatureShowInfoPack pack = new CreatureShowInfoPack(targetCreature, CreatureInfoType.SelectAllItem);
                 SendPack(pack);
 
-                return StateOperationResult.None();
+                return StateResult.None();
             }
         }
 
-        public override StateOperationResult OnSelectIndex(int index)
+        public override StateResult OnSelectIndex(int index)
         {
             if (subState == SubState.SelectExchangeItem)
             {
                 if (index < 0)
                 {
-                    return StateOperationResult.None();
+                    return StateResult.None();
                 }
 
                 int itemId = this.TargetCreature.Data.GetItemAt(index);
                 if (itemId <= 0)
                 {
-                    return StateOperationResult.None();
+                    return StateResult.None();
                 }
 
                 // Exchange the items
                 gameAction.DoCreatureExchangeItem(this.CreatureId, this.SelectedItemIndex, TargetCreature.CreatureId, index);
-                return StateOperationResult.Clear();
+                return StateResult.Clear();
             }
 
-            return StateOperationResult.None();
+            return StateResult.None();
         }
     }
 }

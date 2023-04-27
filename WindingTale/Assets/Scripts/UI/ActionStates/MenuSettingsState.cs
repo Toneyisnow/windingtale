@@ -22,7 +22,7 @@ namespace WindingTale.Core.Components.ActionStates
             throw new System.NotImplementedException();
         }
 
-        public override StateOperationResult OnSelectPosition(FDPosition position)
+        public override StateResult OnSelectPosition(FDPosition position)
         {
             throw new System.NotImplementedException();
         }

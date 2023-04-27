@@ -14,6 +14,8 @@ using WindingTale.Core.Objects;
 using WindingTale.UI.Components.Activities;
 using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core;
+using WindingTale.Core.Components.Packs;
+using UnityEditor.VersionControl;
 
 namespace WindingTale.UI.Scenes.Game
 {
@@ -245,6 +247,12 @@ namespace WindingTale.UI.Scenes.Game
 
         public void CreatureMoveCancel(FDCreature creature)
         {
+            // If the creature has moved, reset the creature position
+            this.creature.ResetPosition();
+            CreatureRefreshPack reset = new CreatureRefreshPack(this.creature.Clone());
+            SendPack(reset);
+
+
         }
 
         public void CreatureAttack(FDCreature creature, FDCreature target)
@@ -279,7 +287,40 @@ namespace WindingTale.UI.Scenes.Game
 
         public void CreatureRest(FDCreature creature)
         {
-            // Check treature
+            // Check Treasure
+            FDTreasure treasure = this.GameMap.GetTreatureAt(creature.Position);
+            if (treasure != null)
+            {
+                PromptActivity prompt = new PromptActivity((index) =>
+                {
+                    // 1 means YES
+                    if (index == 1)
+                    {
+                        if (creature.IsItemsFull())
+                        {
+                            PromptActivity confirmExchange = new PromptActivity((index) => {
+                                if (index == 1)
+                                {
+                                    TalkActivity talk = new TalkActivity(messageId);
+                                    PushActivity(talk);
+                                }
+                                else
+                                {
+                                    TalkActivity talk = new TalkActivity(messageId);
+                                    PushActivity(talk);
+                                }
+                            });
+                            PushActivity(confirmExchange);
+                        }
+                    }
+                    else
+                    {
+                        TalkActivity talk = new TalkActivity(messageId);
+                        PushActivity(talk);
+                    }
+                });
+                PushActivity(prompt);
+            }
 
             PushActivity(() => OnCreatureDone(creature));
         }

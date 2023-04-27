@@ -3,17 +3,13 @@ namespace WindingTale.Core.Objects
 {
     public class FDTreasure : FDObject
     {
-        public FDItem Item { get; private set; }
+        public int ItemId { get; private set; }
         public int Money { get; private set; }
 
-        public FDTreasure(int id, FDItem item) : base(id, ObjectType.Treature)
+        public FDTreasure(int id, int itemId) : base(id, ObjectType.Treature)
         {
-            Item = item;
+            this.ItemId = itemId;
         }
 
-        public FDTreasure(int id, int money) : base(id, ObjectType.Treature)
-        {
-            Money = money;
-        }
     }
 }

@@ -4,15 +4,15 @@ using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.Definitions;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
     public class IdleState : ActionState
     {
-        public IdleState(IGameAction action) : base(action)
+        public IdleState(GameMain gamgMain) : base(gamgMain)
         {
-
         }
 
         public override void OnEnter()
@@ -27,36 +27,33 @@ namespace WindingTale.Core.Components.ActionStates
             base.OnExit();
         }
 
-        public override StateOperationResult OnSelectPosition(FDPosition position)
+        public override StateResult OnSelectPosition(FDPosition position)
         {
-
-            FDCreature creature = gameAction.GetCreatureAt(position);
+            FDCreature creature = gameMain.GameMap.GetCreatureAt(position);
             if (creature == null)
             {
                 // Empty space, show system menu
-                MenuSystemState state = new MenuSystemState(gameAction, position);
-                return new StateOperationResult(StateOperationResult.ResultType.Push, state);
+                MenuSystemState state = new MenuSystemState(gameMain, position);
+                return StateResult.Push(state);
             }
-            else if (creature.IsActionable())
+            else if (creature.IsActionable() && creature.Faction == CreatureFaction.Friend)
             {
                 // Actionable friend
-                ShowMoveRangeState nextState = new ShowMoveRangeState(gameAction, creature);
-                return new StateOperationResult(StateOperationResult.ResultType.Push, nextState);
+                ShowMoveRangeState nextState = new ShowMoveRangeState(gameMain, creature);
+                return StateResult.Push(nextState);
             }
             else
             {
                 // Show creature information
-                CreatureShowInfoPack pack = new CreatureShowInfoPack(creature.Clone(), CreatureInfoType.View);
-                var gameCallback = gameAction.GetCallback();
-                gameCallback.OnHandlePack(pack);
+                CreatureShowInfoActivity showInfo = new CreatureShowInfoActivity(gameMain, creature, CreatureInfoType.View);
 
-                return new StateOperationResult(StateOperationResult.ResultType.None);
+                return null;
             }
         }
 
-        public override StateOperationResult OnSelectIndex(int index)
+        public override StateResult OnSelectCallback(int index)
         {
-            return StateOperationResult.None();
+            return null;
         }
 
     }

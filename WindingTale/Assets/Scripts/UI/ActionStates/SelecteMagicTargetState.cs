@@ -65,12 +65,12 @@ namespace WindingTale.Core.Components.ActionStates
             SendPack(clear);
         }
 
-        public override StateOperationResult OnSelectPosition(FDPosition position)
+        public override StateResult OnSelectPosition(FDPosition position)
         {
             if (this.magicRange == null)
             {
                 // should not happen
-                return StateOperationResult.Clear();
+                return StateResult.Clear();
             }
 
             if (this.magicRange.Contains(position))
@@ -82,18 +82,18 @@ namespace WindingTale.Core.Components.ActionStates
                 if (targets == null || targets.Count == 0)
                 {
                     // Cannot spell on that position, do nothing
-                    return StateOperationResult.None();
+                    return StateResult.None();
                 }
                 else
                 {
                     gameAction.DoCreatureSpellMagic(this.Creature.CreatureId, this.Magic.MagicId, position);
-                    return StateOperationResult.Clear();
+                    return StateResult.Clear();
                 }
             }
             else
             {
                 // Cancel the magic
-                return StateOperationResult.Pop();
+                return StateResult.Pop();
             }
         }
     }

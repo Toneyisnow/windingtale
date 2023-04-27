@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components.Packs;
+using WindingTale.UI.Components.Activities;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
     public enum MenuId
     {
@@ -68,12 +70,12 @@ namespace WindingTale.Core.Components.ActionStates
             get; private set;
         }
 
-        public Func<StateOperationResult>[] MenuActions
+        public Func<StateResult>[] MenuActions
         {
             get; private set;
         }
 
-        public MenuState(IGameAction gameAction, FDPosition central) : base(gameAction)
+        public MenuState(GameMain gameMain, FDPosition central) : base(gameMain)
         {
             this.Central = central;
 
@@ -86,7 +88,7 @@ namespace WindingTale.Core.Components.ActionStates
             };
 
             this.MenuItemIds = new MenuItemId[4];
-            this.MenuActions = new Func<StateOperationResult>[4];
+            this.MenuActions = new Func<StateResult>[4];
             this.MenuItemEnabled = new bool[4];
         }
 
@@ -95,8 +97,8 @@ namespace WindingTale.Core.Components.ActionStates
             base.OnEnter();
 
             // Show Action Menu
-            ShowMenuPack pack = new ShowMenuPack(this.MenuItemIds, this.MenuItemEnabled, this.Central);
-            SendPack(pack);
+            ShowMenuActivity activity = new ShowMenuActivity(this.MenuItemPositions, this.MenuItemIds, this.MenuItemEnabled, this.Central);
+            
         }
 
         public override void OnExit()
@@ -104,11 +106,10 @@ namespace WindingTale.Core.Components.ActionStates
             base.OnExit();
 
             // Close Action Menu
-            CloseMenuPack pack = new CloseMenuPack();
-            SendPack(pack);
+            CloseMenuActivity activity = new CloseMenuActivity();
         }
 
-        protected void SetMenu(int index, MenuItemId menuItemId, bool enabled, Func<StateOperationResult> action)
+        protected void SetMenu(int index, MenuItemId menuItemId, bool enabled, Func<StateResult> action)
         {
             if (index < 0 || index >= 4)
             {
@@ -120,7 +121,7 @@ namespace WindingTale.Core.Components.ActionStates
             this.MenuItemEnabled[index] = enabled;
         }
 
-        public override StateOperationResult OnSelectPosition(FDPosition position)
+        public override StateResult OnSelectPosition(FDPosition position)
         {
             for(int index = 0; index < 4; index++)
             {
@@ -132,7 +133,7 @@ namespace WindingTale.Core.Components.ActionStates
             }
 
             // Cancell the menu
-            return StateOperationResult.Pop();
+            return StateResult.Pop();
         }
 
     }

@@ -238,10 +238,9 @@
     <Compile Include="Assets\Scripts\UI\ActionStates\MenuSystemState.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\SelectAttackTargetState.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\MenuActionState.cs" />
-    <Compile Include="Assets\Scripts\UI\ActionStates\StateOperationResult.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter1.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\ActivityBuilder.cs" />
-    <Compile Include="Assets\Scripts\UI\ActionStates\GameStateDispatcher.cs" />
+    <Compile Include="Assets\Scripts\UI\ActionStates\StateDispatcher.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\SelectItemUseTargetState.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\ActivityBase.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\CallbackActivity.cs" />
@@ -266,6 +265,7 @@
     <Compile Include="Assets\Scripts\Core\Events\CreatureDyingEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Events\ReachPositionEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Events\TeamEliminatedEvent.cs" />
+    <Compile Include="Assets\Scripts\UI\ActionStates\StateResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_24.txt" />

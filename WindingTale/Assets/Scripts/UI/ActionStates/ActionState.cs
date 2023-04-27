@@ -4,16 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components.Packs;
+using WindingTale.Core.Map;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
     public abstract class ActionState
     {
-        protected IGameAction gameAction = null;
+        protected GameMain gameMain = null;
 
-        public ActionState(IGameAction action)
+        protected GameMap gameMap = null;
+
+        public ActionState(GameMain gameMain)
         {
-            this.gameAction = action;
+            this.gameMain = gameMain;
+            this.gameMap = gameMain.GameMap;
         }
 
         public virtual void OnEnter()
@@ -28,20 +33,11 @@ namespace WindingTale.Core.Components.ActionStates
 
         #region State Operations
 
-        public abstract StateOperationResult OnSelectPosition(FDPosition position);
+        public abstract StateResult OnSelectPosition(FDPosition position);
 
-        public virtual StateOperationResult OnSelectIndex(int index)
+        public virtual StateResult OnSelectCallback(int index)
         {
-            return StateOperationResult.None();
-        }
-
-        protected void SendPack(PackBase pack)
-        {
-            if (this.gameAction != null && this.gameAction.GetCallback() != null)
-            {
-                this.gameAction.GetCallback().OnHandlePack(pack);
-            }
-
+            return null;
         }
 
         #endregion

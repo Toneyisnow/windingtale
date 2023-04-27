@@ -29,21 +29,21 @@ namespace WindingTale.Core.Components.ActionStates
                 TalkPack pack = new TalkPack(null, message);
                 SendPack(pack);
 
-                return StateOperationResult.None();
+                return StateResult.None();
             });
 
             // Record
             this.SetMenu(1, MenuItemId.SystemRecord, true, () =>
             {
                 ActionState nextState = new MenuRecordState(gameAction, central);
-                return StateOperationResult.Push(nextState);
+                return StateResult.Push(nextState);
             });
 
             // Settings
             this.SetMenu(2, MenuItemId.SystemSettings, true, () =>
             {
                 ActionState nextState = new MenuSettingsState(gameAction, central);
-                return StateOperationResult.Push(nextState);
+                return StateResult.Push(nextState);
             });
 
             // Rest All
@@ -55,11 +55,11 @@ namespace WindingTale.Core.Components.ActionStates
                 TalkPack pack = new TalkPack(null, message);
                 SendPack(pack);
                 
-                return StateOperationResult.None();
+                return StateResult.None();
             });
         }
 
-        public override StateOperationResult OnSelectIndex(int index)
+        public override StateResult OnSelectIndex(int index)
         {
             switch(subState)
             {
@@ -69,18 +69,18 @@ namespace WindingTale.Core.Components.ActionStates
                     break;
             }
 
-            return StateOperationResult.None();
+            return StateResult.None();
         }
 
-        private StateOperationResult OnConfrimRestAll(int index)
+        private StateResult OnConfrimRestAll(int index)
         {
             if (index == 1)
             {
                 gameAction.DoCreatureAllRest();
-                return StateOperationResult.Clear();
+                return StateResult.Clear();
             }
 
-            return StateOperationResult.None();
+            return StateResult.None();
         }
     }
 }

@@ -4,6 +4,8 @@ using WindingTale.Core.Events;
 using WindingTale.Core.Objects;
 using WindingTale.Core.Files;
 using System.Collections.Generic;
+using WindingTale.Common;
+using System;
 
 namespace WindingTale.Core.Map
 {
@@ -56,9 +58,21 @@ namespace WindingTale.Core.Map
             }
         }
 
-        public FDCreature FindCreatureById(int creatureId)
+        public FDCreature GetCreatureById(int creatureId)
         {
             return this.Creatures.Find(c => c.Id == creatureId);
+        }
+
+
+        internal FDCreature GetCreatureAt(FDPosition position)
+        {
+            return this.Creatures.Find(c => c.Position.AreSame(position));
+        }
+
+
+        internal FDTreasure GetTreatureAt(FDPosition position)
+        {
+            return this.Treasures.Find(t => t.Position.AreSame(position));
         }
 
         public List<FDEvent> GetActiveEvents()
@@ -75,5 +89,6 @@ namespace WindingTale.Core.Map
         {
             return null;
         }
+
     }
 }

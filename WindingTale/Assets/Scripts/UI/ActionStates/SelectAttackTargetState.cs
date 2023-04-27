@@ -56,7 +56,7 @@ namespace WindingTale.Core.Components.ActionStates
             SendPack(pack);
         }
 
-        public override StateOperationResult OnSelectPosition(FDPosition position)
+        public override StateResult OnSelectPosition(FDPosition position)
         {
             if (this.AttackRange != null && this.AttackRange.Contains(position))
             {
@@ -65,18 +65,18 @@ namespace WindingTale.Core.Components.ActionStates
                 {
                     // Do the attack
                     this.gameAction.DoCreatureAttack(this.Creature.CreatureId, position);
-                    return StateOperationResult.Clear();
+                    return StateResult.Clear();
                 }
                 else
                 {
                     // Clicked in the range, but no target, let the player to click again
-                    return StateOperationResult.None();
+                    return StateResult.None();
                 }
             }
             else
             {
                 // Clicked out of range, cancel
-                return StateOperationResult.Pop();
+                return StateResult.Pop();
             }
 
         }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components.Algorithms;
-using WindingTale.Core.Components.Packs;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
     public class ShowMoveRangeState : ActionState
     {
@@ -21,7 +21,7 @@ namespace WindingTale.Core.Components.ActionStates
 
 
 
-        public ShowMoveRangeState(IGameAction action, FDCreature creature) : base(action)
+        public ShowMoveRangeState(GameMain gameMain, FDCreature creature) : base(gameMain)
         {
             this.creature = creature;
             this.position = creature.Position;
@@ -34,17 +34,12 @@ namespace WindingTale.Core.Components.ActionStates
             // Calculcate the moving scopes and save it in cache
             if (moveRange == null)
             {
-                MoveRangeFinder finder = new MoveRangeFinder(gameAction, this.creature);
+                MoveRangeFinder finder = new MoveRangeFinder(gameMain, this.creature);
                 moveRange = finder.CalculateMoveRange();
             }
 
-            // If the creature has moved, reset the creature position
-            this.creature.ResetPosition();
-            CreatureRefreshPack reset = new CreatureRefreshPack(this.creature.Clone());
-            SendPack(reset);
-
-            ShowRangePack showRange = new ShowRangePack(moveRange);
-            SendPack(showRange);
+            // Send move range to UI
+            ShowRangeActivity showRange = new ShowRangeActivity(gameMain, moveRange);
         }
 
         public override void OnExit()
@@ -52,27 +47,23 @@ namespace WindingTale.Core.Components.ActionStates
             base.OnExit();
 
             // Clear move range on UI
-            SendPack(new ClearRangePack());
         }
 
-        public override StateOperationResult OnSelectPosition(FDPosition position)
+        public override StateResult OnSelectPosition(FDPosition position)
         {
             // If position is in range
             if (moveRange.Contains(position))
             {
-                ClearRangePack clear = new ClearRangePack();
-                SendPack(clear);
-
                 FDMovePath movePath = moveRange.GetPath(position);
-                gameAction.CreatureWalk(new SingleWalkAction(creature.CreatureId, movePath));
+                gameAction.CreatureWalk(new SingleWalkAction(creature.Id, movePath));
 
-                var nextState = new MenuActionState(gameAction, creature.CreatureId, position);
-                return new StateOperationResult(StateOperationResult.ResultType.Push, nextState);
+                var nextState = new MenuActionState(gameAction, creature.Id, position);
+                return StateResult.Push(nextState);
             }
             else
             {
                 // Cancel
-                return new StateOperationResult(StateOperationResult.ResultType.Pop);
+                return StateResult.Pop();
             }
         }
     }

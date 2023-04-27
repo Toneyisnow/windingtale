@@ -6,9 +6,10 @@ using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.Definitions;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
     public class MenuActionState : MenuState
     {
@@ -21,10 +22,7 @@ namespace WindingTale.Core.Components.ActionStates
             ConfirmExchangeSelecting,
         }
 
-        public FDCreature Creature
-        {
-            get; private set;
-        }
+        private FDCreature creature;
 
         public int CreatureId
         {
@@ -34,54 +32,45 @@ namespace WindingTale.Core.Components.ActionStates
         private ItemDefinition treasureItem = null;
         private SubActionState subState = SubActionState.SelectMagic;
 
-        public MenuActionState(IGameAction gameAction, int creatureId, FDPosition position)
-            : base(gameAction, position)
+        public MenuActionState(GameMain gameMain, int creatureId, FDPosition position)
+            : base(gameMain, position)
         {
             this.CreatureId = creatureId;
-            this.Creature = gameAction.GetCreature(creatureId);
+            this.creature = gameMap.GetCreatureById(creatureId);
 
             // Magic
             this.SetMenu(0, MenuItemId.ActionMagic, IsMenuMagicEnabled(), () =>
             {
-                CreatureShowInfoPack pack = new CreatureShowInfoPack(this.Creature, CreatureInfoType.SelectMagic);
-                gameAction.GetCallback().OnHandlePack(pack);
-
+                CreatureShowInfoActivity activity = new CreatureShowInfoActivity(this.creature, CreatureInfoType.SelectMagic);
+                
                 subState = SubActionState.SelectMagic;
-                return StateOperationResult.None();
+                return null;
             });
 
             // Attack
             this.SetMenu(1, MenuItemId.ActionAttack, IsMenuAttackEnabled(), () =>
             {
-                SelectAttackTargetState attackState = new SelectAttackTargetState(gameAction, this.Creature);
-                return StateOperationResult.Push(attackState);
+                SelectAttackTargetState attackState = new SelectAttackTargetState(gameMain, creature);
+                return StateResult.Push(attackState);
             });
 
             // Item
             this.SetMenu(2, MenuItemId.ActionItems, IsMenuItemEnabled(), () =>
             {
-                MenuItemState itemState = new MenuItemState(gameAction, this.CreatureId, this.Central);
-                return StateOperationResult.Push(itemState);
+                MenuItemState itemState = new MenuItemState(gameMain, this.CreatureId, this.Central);
+                return StateResult.Push(itemState);
             });
 
             // Rest
             this.SetMenu(3, MenuItemId.ActionRest, true, () =>
             {
-                // Check Treasure
-                treasureItem = gameAction.GetTreatureAt(this.Creature.Position);
-                if (treasureItem != null)
-                {
-                    subState = SubActionState.ConfirmPickTreasure;
-                    return StateOperationResult.None();
-                }
-
-                gameAction.DoCreatureRest(this.CreatureId);
-                return StateOperationResult.Clear();
+                gameMain.CreatureRest(creature);
+                return StateResult.Clear();
             });
 
         }
 
-        public override StateOperationResult OnSelectIndex(int index)
+        public override StateResult OnSelectCallback(int index)
         {
             switch(this.subState)
             {
@@ -100,70 +89,70 @@ namespace WindingTale.Core.Components.ActionStates
 
         private bool IsMenuAttackEnabled()
         {
-            bool canAttack = this.Creature.Data.CanAttack();
-            FDCreature target = gameAction.GetPreferredAttackTargetInRange(this.Creature.CreatureId);
+            bool canAttack = this.creature.Data.CanAttack();
+            FDCreature target = gameAction.GetPreferredAttackTargetInRange(this.creature.CreatureId);
             return canAttack && (target != null);
         }
 
         private bool IsMenuMagicEnabled()
         {
-            return this.Creature.Data.CanSpellMagic() && (!this.Creature.HasMoved() || this.Creature.Data.HasAfterMoveMagic());
+            return this.creature.Data.CanSpellMagic() && (!this.creature.HasMoved() || this.creature.Data.HasAfterMoveMagic());
         }
 
         private bool IsMenuItemEnabled()
         {
-            return this.Creature.Data.Items.Count > 0;
+            return this.creature.Data.Items.Count > 0;
         }
 
         #region Callback Index Methods
 
-        private StateOperationResult OnMagicSelected(int index)
+        private StateResult OnMagicSelected(int index)
         {
             Debug.Log("MenuActionState: OnMagicSelected.");
-            if (index < 0 || index >= this.Creature.Data.Magics.Count)
+            if (index < 0 || index >= this.creature.Data.Magics.Count)
             {
                 // Cancelled
-                return StateOperationResult.Pop();
+                return StateResult.Pop();
             }
 
-            int magicId = this.Creature.Data.Magics[index];
+            int magicId = this.creature.Data.Magics[index];
             MagicDefinition magicDefinition = DefinitionStore.Instance.GetMagicDefinition(magicId);
 
-            if (magicDefinition != null && this.Creature.Data.CanSpellMagic() && magicDefinition.MpCost <= this.Creature.Data.Mp)
+            if (magicDefinition != null && this.creature.Data.CanSpellMagic() && magicDefinition.MpCost <= this.creature.Data.Mp)
             {
                 // Enough MP to spell
-                SelecteMagicTargetState magicTargetState = new SelecteMagicTargetState(gameAction, this.Creature, magicDefinition);
-                return StateOperationResult.Push(magicTargetState);
+                SelecteMagicTargetState magicTargetState = new SelecteMagicTargetState(gameAction, this.creature, magicDefinition);
+                return StateResult.Push(magicTargetState);
             }
             else
             {
                 // Go back to open magic info
-                CreatureShowInfoPack pack = new CreatureShowInfoPack(this.Creature, CreatureInfoType.SelectMagic);
+                CreatureShowInfoPack pack = new CreatureShowInfoPack(this.creature, CreatureInfoType.SelectMagic);
                 SendPack(pack);
 
-                return StateOperationResult.None();
+                return StateResult.None();
             }
         }
 
-        private StateOperationResult OnPickTreasureConfirmed(int index)
+        private StateResult OnPickTreasureConfirmed(int index)
         {
             if (treasureItem == null)
             {
-                return StateOperationResult.Clear();
+                return StateResult.Clear();
             }
 
             if (index == 1)
             {
-                TalkPack pack = new TalkPack(this.Creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 3, treasureItem.ItemId));
+                TalkPack pack = new TalkPack(this.creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 3, treasureItem.ItemId));
                 SendPack(pack);
 
-                if (!this.Creature.Data.IsItemsFull())
+                if (!this.creature.Data.IsItemsFull())
                 {
                     // Pick up it
-                    this.Creature.Data.Items.Add(treasureItem.ItemId);
-                    gameAction.PickTreasure(this.Creature.Position);
+                    this.creature.Data.Items.Add(treasureItem.ItemId);
+                    gameAction.PickTreasure(this.creature.Position);
                     gameAction.DoCreatureRest(this.CreatureId);
-                    return StateOperationResult.Clear();
+                    return StateResult.Clear();
                 }
                 else
                 {
@@ -171,70 +160,70 @@ namespace WindingTale.Core.Components.ActionStates
                     subState = SubActionState.ConfirmExchangeTreature;
                     ////PromptPack prompt = new PromptPack(this.Creature.Definition.AnimationId, "");
                     ////SendPack(prompt);
-                    TalkPack prompt = new TalkPack(this.Creature.Clone(), MessageId.Create(MessageId.MessageTypes.Confirm, 7));
+                    TalkPack prompt = new TalkPack(this.creature.Clone(), MessageId.Create(MessageId.MessageTypes.Confirm, 7));
                     SendPack(prompt);
 
-                    return StateOperationResult.None();
+                    return StateResult.None();
                 }
             }
             else
             {
                 // Then discard it
-                TalkPack pack = new TalkPack(this.Creature, MessageId.Create(MessageId.MessageTypes.Message, 2));
+                TalkPack pack = new TalkPack(this.creature, MessageId.Create(MessageId.MessageTypes.Message, 2));
                 SendPack(pack);
 
                 gameAction.DoCreatureRest(this.CreatureId);
-                return StateOperationResult.Clear();
+                return StateResult.Clear();
             }
         }
 
-        private StateOperationResult OnExchangeTreasureConfirmed(int index)
+        private StateResult OnExchangeTreasureConfirmed(int index)
         {
             if (index == 0)
             {
                 // Put it back
-                TalkPack talkPack = new TalkPack(this.Creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 7));
+                TalkPack talkPack = new TalkPack(this.creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 7));
                 SendPack(talkPack);
 
                 gameAction.DoCreatureRest(this.CreatureId);
-                return StateOperationResult.Clear();
+                return StateResult.Clear();
             }
 
             subState = SubActionState.ConfirmExchangeSelecting;
-            CreatureShowInfoPack pack = new CreatureShowInfoPack(this.Creature, CreatureInfoType.SelectAllItem);
+            CreatureShowInfoPack pack = new CreatureShowInfoPack(this.creature, CreatureInfoType.SelectAllItem);
             SendPack(pack);
 
-            return StateOperationResult.None();
+            return StateResult.None();
 
         }
 
-        private StateOperationResult OnExchangeTreasureSelected(int index)
+        private StateResult OnExchangeTreasureSelected(int index)
         {
             if (index < 0)
             {
                 // Cancelled, put it back
-                TalkPack talkPack = new TalkPack(this.Creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 7));
+                TalkPack talkPack = new TalkPack(this.creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 7));
                 SendPack(talkPack);
             }
             else
             {
                 // Picked up xxx, put back xxxx
-                if (index >= 0 && index < this.Creature.Data.Items.Count)
+                if (index >= 0 && index < this.creature.Data.Items.Count)
                 {
-                    int exchangeItemId = this.Creature.Data.Items[index];
-                    TalkPack talkPack = new TalkPack(this.Creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 6, treasureItem.ItemId, exchangeItemId));
+                    int exchangeItemId = this.creature.Data.Items[index];
+                    TalkPack talkPack = new TalkPack(this.creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 6, treasureItem.ItemId, exchangeItemId));
                     SendPack(talkPack);
 
-                    this.Creature.Data.RemoveItemAt(index);
-                    this.Creature.Data.AddItem(treasureItem.ItemId);
+                    this.creature.Data.RemoveItemAt(index);
+                    this.creature.Data.AddItem(treasureItem.ItemId);
 
                     // Add that item back to the treasure
-                    gameAction.UpdateTreasure(this.Creature.Position, exchangeItemId);
+                    gameAction.UpdateTreasure(this.creature.Position, exchangeItemId);
                 }
             }
 
             gameAction.DoCreatureRest(this.CreatureId);
-            return StateOperationResult.Clear();
+            return StateResult.Clear();
         }
 
         #endregion

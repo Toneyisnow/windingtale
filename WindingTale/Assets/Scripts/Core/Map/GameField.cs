@@ -18,5 +18,21 @@ namespace WindingTale.Core.Map
             Width = width;
             Height = height;
         }
+
+        public MapBlock GetBlock(int x, int y)
+        {
+            if (blocks == null)
+            {
+                return null;
+            }
+
+            if (x < 0 || x >= Width || y < 0 || y >= Height)
+            {
+                return null;
+            }
+
+            return blocks[x, y];
+        }
+
     }
 }

@@ -229,6 +229,25 @@ namespace WindingTale.Core.Objects
 
         #region Public Methods
 
+        public bool IsActionable()
+        {
+            if (this.Hp <= 0)
+            {
+                return false;
+            }
+
+            if (this.HasActioned)
+            {
+                return false;
+            }
+
+            if (this.Effects.Contains(CreatureEffects.Frozen))
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         public bool IsItemsFull()
         {

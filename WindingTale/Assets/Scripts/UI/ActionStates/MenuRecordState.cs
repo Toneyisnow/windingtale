@@ -28,7 +28,7 @@ namespace WindingTale.Core.Components.ActionStates
                 SendPack(prompt);
                 this.subState = SubRecordState.SaveGame;
 
-                return StateOperationResult.None();
+                return StateResult.None();
             });
 
             // Game Info
@@ -39,7 +39,7 @@ namespace WindingTale.Core.Components.ActionStates
                 ShowBriefPack pack = new ShowBriefPack();
                 SendPack(pack);
 
-                return StateOperationResult.None();
+                return StateResult.None();
             });
 
             // Load Game
@@ -49,7 +49,7 @@ namespace WindingTale.Core.Components.ActionStates
                 SendPack(prompt);
                 this.subState = SubRecordState.LoadGame;
 
-                return StateOperationResult.None();
+                return StateResult.None();
             });
 
             // Quit Game
@@ -59,13 +59,13 @@ namespace WindingTale.Core.Components.ActionStates
                 SendPack(prompt);
                 this.subState = SubRecordState.QuitGame;
 
-                return StateOperationResult.None();
+                return StateResult.None();
             });
 
 
         }
 
-        public override StateOperationResult OnSelectIndex(int index)
+        public override StateResult OnSelectIndex(int index)
         {
             switch (this.subState)
             {
@@ -80,7 +80,7 @@ namespace WindingTale.Core.Components.ActionStates
             }
         }
 
-        private StateOperationResult OnLoadGameConfirmed(int index)
+        private StateResult OnLoadGameConfirmed(int index)
         {
             if (index == 1)
             {
@@ -88,15 +88,15 @@ namespace WindingTale.Core.Components.ActionStates
                 
                 // Load Game
                 // gameAction.LoadGame();
-                return StateOperationResult.Clear();
+                return StateResult.Clear();
             }
             else
             {
-                return StateOperationResult.None();
+                return StateResult.None();
             }
         }
 
-        private StateOperationResult OnSaveGameConfirmed(int index)
+        private StateResult OnSaveGameConfirmed(int index)
         {
             if (index == 1)
             {
@@ -104,15 +104,15 @@ namespace WindingTale.Core.Components.ActionStates
 
                 // Save Game
                 gameAction.SaveGame();
-                return StateOperationResult.Clear();
+                return StateResult.Clear();
             }
             else
             {
-                return StateOperationResult.None();
+                return StateResult.None();
             }
         }
 
-        private StateOperationResult OnQuitGameConfirmed(int index)
+        private StateResult OnQuitGameConfirmed(int index)
         {
             if (index == 1)
             {
@@ -121,11 +121,11 @@ namespace WindingTale.Core.Components.ActionStates
                 // Quit Game
                 SendPack(new SystemPack(SystemPack.Command.Quit));
 
-                return StateOperationResult.Clear();
+                return StateResult.Clear();
             }
             else
             {
-                return StateOperationResult.None();
+                return StateResult.None();
             }
         }
     }
