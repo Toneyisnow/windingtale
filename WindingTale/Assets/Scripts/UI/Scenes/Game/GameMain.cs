@@ -16,6 +16,7 @@ using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core;
 using WindingTale.Core.Components.Packs;
 using UnityEditor.VersionControl;
+using WindingTale.UI.Activities;
 
 namespace WindingTale.UI.Scenes.Game
 {
@@ -33,8 +34,11 @@ namespace WindingTale.UI.Scenes.Game
 
         public GameHandler GameHandler { get; private set; }
 
+        public ActivityManager ActivityManager { get; set; }
+        
         /// TODO: Whether should I use singleton pattern here?
         public static GameMain Instance { get; private set; } = new GameMain();
+
 
         #endregion
 
@@ -55,6 +59,8 @@ namespace WindingTale.UI.Scenes.Game
             this.TurnNo = 0;
             this.TurnType = CreatureFaction.Friend;
         }
+
+        private ActivityManager activityManager = null;
 
         #endregion
 
@@ -282,6 +288,11 @@ namespace WindingTale.UI.Scenes.Game
         public void CreatureUseItem(FDCreature creature, int itemIndex, FDPosition position)
         {
 
+            PushActivity(() => OnCreatureDone(creature));
+        }
+
+        public void CreatureExchangeItem(FDCreature creature, int itemIndex, FDCreature target, int backItemIndex = -1)
+        {
             PushActivity(() => OnCreatureDone(creature));
         }
 

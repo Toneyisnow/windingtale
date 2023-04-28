@@ -249,6 +249,16 @@ namespace WindingTale.Core.Objects
             return true;
         }
 
+        /// <summary>
+        /// Has some equip items to equip, other than the current equip items
+        /// </summary>
+        /// <returns></returns>
+        public bool HasEquipItem()
+        {
+            // TODO
+            return true;
+        }
+
         public bool IsItemsFull()
         {
             return this.Items != null && this.Items.Count >= 8;

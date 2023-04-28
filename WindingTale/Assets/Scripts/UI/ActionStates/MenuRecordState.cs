@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
-using WindingTale.Core.Components.Data;
-using WindingTale.Core.Components.Packs;
+using WindingTale.UI.Components.Activities;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
     public class MenuRecordState : MenuState
     {
@@ -19,66 +19,50 @@ namespace WindingTale.Core.Components.ActionStates
         private SubRecordState subState;
 
 
-        public MenuRecordState(IGameAction gameAction, FDPosition position) : base(gameAction, position)
+        public MenuRecordState(GameMain gameMain, FDPosition position) : base(gameMain, position)
         {
             // Save Game
-            this.SetMenu(0, MenuItemId.RecordSave, gameAction.CanSaveGame(), () =>
+            this.SetMenu(0, MenuItemId.RecordSave, gameMap.CanSaveGame(), () =>
             {
-                PromptPack prompt = new PromptPack(0, "");
+                PromptActivity prompt = new PromptActivity(0, "", OnSaveGameConfirmed);
                 SendPack(prompt);
                 this.subState = SubRecordState.SaveGame;
 
-                return StateResult.None();
+                return null;
             });
 
             // Game Info
             this.SetMenu(1, MenuItemId.RecordInfo, true, () =>
             {
-                int turnId = gameAction.TurnId();
-                int chapterId = gameAction.ChapterId();
+                int turnId = gameMain.TurnNo;
+                int chapterId = gameMap.ChapterId;
                 ShowBriefPack pack = new ShowBriefPack();
                 SendPack(pack);
 
-                return StateResult.None();
+                return null;
             });
 
             // Load Game
             this.SetMenu(2, MenuItemId.RecordLoad, true, () =>
             {
-                PromptPack prompt = new PromptPack(0, "");
+                PromptActivity prompt = new PromptActivity(0, "", OnLoadGameConfirmed);
                 SendPack(prompt);
                 this.subState = SubRecordState.LoadGame;
 
-                return StateResult.None();
+                return null;
             });
 
             // Quit Game
             this.SetMenu(3, MenuItemId.RecordQuit, true, () =>
             {
-                PromptPack prompt = new PromptPack(0, "");
+                PromptActivity prompt = new PromptActivity(0, "", OnQuitGameConfirmed);
                 SendPack(prompt);
                 this.subState = SubRecordState.QuitGame;
 
-                return StateResult.None();
+                return null;
             });
-
-
         }
 
-        public override StateResult OnSelectIndex(int index)
-        {
-            switch (this.subState)
-            {
-                case SubRecordState.LoadGame:
-                    return OnLoadGameConfirmed(index);
-                case SubRecordState.SaveGame:
-                    return OnSaveGameConfirmed(index);
-                case SubRecordState.QuitGame:
-                    return OnQuitGameConfirmed(index);
-                default:
-                    return null;
-            }
-        }
 
         private StateResult OnLoadGameConfirmed(int index)
         {
@@ -92,7 +76,7 @@ namespace WindingTale.Core.Components.ActionStates
             }
             else
             {
-                return StateResult.None();
+                return null;
             }
         }
 
@@ -103,12 +87,14 @@ namespace WindingTale.Core.Components.ActionStates
                 Debug.Log("Saving Game...");
 
                 // Save Game
-                gameAction.SaveGame();
+                gameMain.SaveMapRecord();
+
+                TalkActivity talk = new TalkActivity(0, "");
                 return StateResult.Clear();
             }
             else
             {
-                return StateResult.None();
+                return null;
             }
         }
 
@@ -119,13 +105,13 @@ namespace WindingTale.Core.Components.ActionStates
                 Debug.Log("Quiting Game...");
 
                 // Quit Game
-                SendPack(new SystemPack(SystemPack.Command.Quit));
+                gameMain.OnGameQuit();
 
                 return StateResult.Clear();
             }
             else
             {
-                return StateResult.None();
+                return null;
             }
         }
     }

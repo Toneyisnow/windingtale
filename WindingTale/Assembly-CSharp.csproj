@@ -231,7 +231,7 @@
     <Compile Include="Assets\Scripts\UI\ActionStates\ShowMoveRangeState.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\ShowMenuActivity.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\ShowRangeActivity.cs" />
-    <Compile Include="Assets\Scripts\UI\Activities\GameActivityManager.cs" />
+    <Compile Include="Assets\Scripts\UI\Activities\ActivityManager.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\TalkActivity.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\SequenceActivity.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\CreatureDeadActivity.cs" />
@@ -266,6 +266,7 @@
     <Compile Include="Assets\Scripts\Core\Events\ReachPositionEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Events\TeamEliminatedEvent.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\StateResult.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\Game\IGameInterface.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_24.txt" />

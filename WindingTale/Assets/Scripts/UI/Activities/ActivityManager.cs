@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Components;
 using WindingTale.Core.Components.Packs;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.UI.Components.Activities
+namespace WindingTale.UI.Activities
 {
-    public class GameActivityManager
+    public class ActivityManager
     {
         private Queue<ActivityBase> activityQueue = null;
 
@@ -14,44 +15,36 @@ namespace WindingTale.UI.Components.Activities
 
         private ActivityBase currentActivity = null;
 
-        private bool isIdling = false;
+        public bool IsIdle { get; private set; }
 
-        public GameActivityManager(IGameInterface gameInterface)
+
+        public ActivityManager(IGameInterface gameInterface)
         {
             this.gameInterface = gameInterface;
             this.activityQueue = new Queue<ActivityBase>();
         }
 
-        public void PushActivity(ActivityBase activity)
+        public void Push(ActivityBase activity)
         {
             activityQueue.Enqueue(activity);
         }
 
-        public void PushPack(PackBase pack)
-        {
-            Debug.LogFormat("PushPack: type={0}", pack.Type);
-            var activity = ActivityBuilder.BuildFromPack(pack);
-            if (activity != null)
-            {
-                this.PushActivity(activity);
-            }
-        }
 
         public void Update()
         {
             if (currentActivity == null && (activityQueue == null || activityQueue.Count == 0))
             {
                 // Nothing to do now
-                if (!isIdling)
+                if (!IsIdle)
                 {
-                    isIdling = true;
+                    IsIdle = true;
                     gameInterface.GetGameHandler().NotifyAI();
                 }
 
                 return;
             }
 
-            isIdling = false;
+            IsIdle = false;
             if (currentActivity == null || currentActivity.HasFinished)
             {
                 if (currentActivity != null)
@@ -74,9 +67,5 @@ namespace WindingTale.UI.Components.Activities
             currentActivity.Update(gameInterface);
         }
 
-        public bool IsIdling()
-        {
-            return isIdling;
-        }
     }
 }

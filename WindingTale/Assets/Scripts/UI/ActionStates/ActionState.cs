@@ -5,6 +5,7 @@ using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.Map;
+using WindingTale.UI.Activities;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.ActionStates
@@ -15,10 +16,13 @@ namespace WindingTale.UI.ActionStates
 
         protected GameMap gameMap = null;
 
+        protected ActivityManager activityManager = null;
+
         public ActionState(GameMain gameMain)
         {
             this.gameMain = gameMain;
             this.gameMap = gameMain.GameMap;
+            this.activityManager = gameMain.ActivityManager;
         }
 
         public virtual void OnEnter()

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using UnityEngine;
+using UnityEngine.TestTools;
 using WindingTale.Common;
 using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Components.Packs;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core.Definitions;
+using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
     public class SelectItemExchangeTargetState : ActionState
     {
@@ -22,10 +25,6 @@ namespace WindingTale.Core.Components.ActionStates
             get; private set;
         }
 
-        public int CreatureId
-        {
-            get; private set;
-        }
 
         public int SelectedItemIndex
         {
@@ -45,12 +44,10 @@ namespace WindingTale.Core.Components.ActionStates
         /// 
         /// </summary>
         /// <param name="gameAction"></param>
-        public SelectItemExchangeTargetState(IGameAction gameAction, int creatureId, int itemIndex) : base(gameAction)
+        public SelectItemExchangeTargetState(GameMain gameMain, int creatureId, int itemIndex) : base(gameMain)
         {
-            this.CreatureId = creatureId;
-            this.Creature = gameAction.GetCreature(creatureId);
+            this.Creature = gameMap.GetCreatureById(creatureId);
             this.SelectedItemIndex = itemIndex;
-
         }
 
         public override void OnEnter()
@@ -59,20 +56,18 @@ namespace WindingTale.Core.Components.ActionStates
 
             if (range == null)
             {
-                DirectRangeFinder finder = new DirectRangeFinder(gameAction.GetField(), this.Creature.Position, 1, 1);
+                DirectRangeFinder finder = new DirectRangeFinder(gameMap.Field, this.Creature.Position, 1, 1);
                 range = finder.CalculateRange();
             }
-
-            ShowRangePack rangePack = new ShowRangePack(range);
-            SendPack(rangePack);
+            ShowRangeActivity showRange = new ShowRangeActivity(gameMain, range);
         }
 
         public override void OnExit()
         {
             base.OnExit();
 
-            ClearRangePack clear = new ClearRangePack();
-            SendPack(clear);
+            ClearRangeActivity clear = new ClearRangeActivity();
+            PushActivity(clear);
         }
 
         public override StateResult OnSelectPosition(FDPosition position)
@@ -83,49 +78,46 @@ namespace WindingTale.Core.Components.ActionStates
             }
 
             // No creature or not a friend/NPC
-            FDCreature targetCreature = this.gameAction.GetCreatureAt(position);
-            if (targetCreature == null || targetCreature.Faction == Definitions.CreatureFaction.Enemy)
+            FDCreature targetCreature = gameMap.GetCreatureAt(position);
+            if (targetCreature == null || targetCreature.Faction != CreatureFaction.Friend)
             {
-                return StateResult.None();
+                return null;
             }
 
-            if(!targetCreature.Data.IsItemsFull())
+            if (!targetCreature.IsItemsFull())
             {
-                gameAction.DoCreatureExchangeItem(this.CreatureId, this.SelectedItemIndex, targetCreature.CreatureId);
+                gameMain.CreatureExchangeItem(this.Creature, this.SelectedItemIndex, targetCreature);
                 return StateResult.Clear();
             }
             else
             {
                 subState = SubState.SelectExchangeItem;
                 this.TargetCreature = targetCreature;
-                CreatureShowInfoPack pack = new CreatureShowInfoPack(targetCreature, CreatureInfoType.SelectAllItem);
-                SendPack(pack);
 
-                return StateResult.None();
+                ShowCreatureInfoDialog dialog = new ShowCreatureInfoDialog(this.Creature, CreatureInfoType.SelectAllItem, OnSelectBackItem);
+                PushActivity(dialog);
+
+                return null;
             }
         }
 
-        public override StateResult OnSelectIndex(int index)
+        private StateResult OnSelectBackItem(int index)
         {
-            if (subState == SubState.SelectExchangeItem)
+            if (index < 0)
             {
-                if (index < 0)
-                {
-                    return StateResult.None();
-                }
-
-                int itemId = this.TargetCreature.Data.GetItemAt(index);
-                if (itemId <= 0)
-                {
-                    return StateResult.None();
-                }
-
-                // Exchange the items
-                gameAction.DoCreatureExchangeItem(this.CreatureId, this.SelectedItemIndex, TargetCreature.CreatureId, index);
-                return StateResult.Clear();
+                return null;
             }
 
-            return StateResult.None();
+            int itemId = this.TargetCreature.GetItemAt(index);
+            if (itemId <= 0)
+            {
+                return null;
+            }
+
+            // Exchange the items
+            gameMain.CreatureExchangeItem(this.Creature, this.SelectedItemIndex, TargetCreature, index);
+            return StateResult.Clear();
+
         }
     }
 }
