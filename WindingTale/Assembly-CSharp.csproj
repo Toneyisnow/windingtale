@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{D9176146-9110-062C-C27E-962CDA9312BC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -113,7 +114,7 @@
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageManager.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\ShowRangePack.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Components\IGameInterface.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\ConversationId.cs" />
+    <Compile Include="Assets\Scripts\Core\Common\Conversation.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Controls\CreatureInfoBar.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedAudioSource.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Algorithms\AttackInformation.cs" />
@@ -143,7 +144,7 @@
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIDelegate.cs" />
     <Compile Include="Assets\Scripts\Legacy\Common\ResourceJsonFile.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\Load\LoadChapterButton.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\MessageId.cs" />
+    <Compile Include="Assets\Scripts\Core\Common\Message.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\Chapters\EventChapter2.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\GameFieldScene\CameraNavigation.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\MapObjects\UIMenuItem.cs" />

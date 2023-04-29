@@ -4,9 +4,12 @@ using UnityEngine;
 
 using WindingTale.Common;
 using WindingTale.Core.Components.Packs;
+using WindingTale.Legacy.Core.Components;
+using WindingTale.UI.Activities;
 using WindingTale.UI.Dialogs;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
     public class MenuSystemState : MenuState
     {
@@ -18,69 +21,49 @@ namespace WindingTale.Core.Components.ActionStates
 
         private SubState subState = 0;
 
-        public MenuSystemState(IGameAction gameAction, FDPosition central) : base(gameAction, central)
+        public MenuSystemState(GameMain gameMain, IStateResultHandler stateHandler, FDPosition central) : base(gameMain, stateHandler, central)
         {
             // Matching
             this.SetMenu(0, MenuItemId.SystemMatching, false, () =>
             {
                 subState = SubState.ConfirmMatching;
                 
-                MessageId message = MessageId.Create(MessageId.MessageTypes.Confirm, 1);
+                Message message = Message.Create(Message.MessageTypes.Confirm, 1);
                 TalkPack pack = new TalkPack(null, message);
                 SendPack(pack);
 
-                return StateResult.None();
             });
 
             // Record
             this.SetMenu(1, MenuItemId.SystemRecord, true, () =>
             {
-                ActionState nextState = new MenuRecordState(gameAction, central);
-                return StateResult.Push(nextState);
+                ActionState nextState = new MenuRecordState(gameMain, stateHandler, central);
+                stateHandler.HandlePushState(nextState);
             });
 
             // Settings
             this.SetMenu(2, MenuItemId.SystemSettings, true, () =>
             {
-                ActionState nextState = new MenuSettingsState(gameAction, central);
-                return StateResult.Push(nextState);
+                ActionState nextState = new MenuSettingsState(gameMain, stateHandler, central);
+                stateHandler.HandlePushState(nextState);
             });
 
             // Rest All
             this.SetMenu(3, MenuItemId.SystemRestAll, true, () =>
             {
-                subState = SubState.ConfirmRestAll;
+                PromptActivity prompt = new PromptActivity((index) =>
+                {
+                    if (index == 0)
+                    {
+                        return;
+                    }
 
-                MessageId message = MessageId.Create(MessageId.MessageTypes.Confirm, 1);
-                TalkPack pack = new TalkPack(null, message);
-                SendPack(pack);
-                
-                return StateResult.None();
+                    gameMain.EndAllFriendsTurn();
+                    stateHandler.HandleClearStates();
+                });
+
+                activityManager.Push(prompt);
             });
-        }
-
-        public override StateResult OnSelectIndex(int index)
-        {
-            switch(subState)
-            {
-                case SubState.ConfirmRestAll:
-                    return OnConfrimRestAll(index);
-                default:
-                    break;
-            }
-
-            return StateResult.None();
-        }
-
-        private StateResult OnConfrimRestAll(int index)
-        {
-            if (index == 1)
-            {
-                gameAction.DoCreatureAllRest();
-                return StateResult.Clear();
-            }
-
-            return StateResult.None();
         }
     }
 }

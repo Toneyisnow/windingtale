@@ -6,9 +6,10 @@ using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
     public class SelectAttackTargetState : ActionState
     {
@@ -22,7 +23,7 @@ namespace WindingTale.Core.Components.ActionStates
             get; private set;
         }
 
-        public SelectAttackTargetState(IGameAction action, FDCreature creature) : base(action)
+        public SelectAttackTargetState(GameMain gameMain, IStateResultHandler stateHandler, FDCreature creature) : base(gameMain, stateHandler)
         {
             this.Creature = creature;
             this.AttackRange = null;
@@ -34,14 +35,14 @@ namespace WindingTale.Core.Components.ActionStates
 
             if (this.AttackRange == null)
             {
-                AttackItemDefinition attackItem = this.Creature.Data.GetAttackItem();
+                AttackItemDefinition attackItem = this.Creature.GetAttackItem();
                 if (attackItem == null)
                 {
                     return;
                 }
                 
                 FDSpan span = attackItem.AttackScope;
-                DirectRangeFinder finder = new DirectRangeFinder(gameAction.GetField(), this.Creature.Position, span.Max, span.Min);
+                DirectRangeFinder finder = new DirectRangeFinder(gameMap.Field, this.Creature.Position, span.Max, span.Min);
                 this.AttackRange = finder.CalculateRange();
             }
 
@@ -56,27 +57,26 @@ namespace WindingTale.Core.Components.ActionStates
             SendPack(pack);
         }
 
-        public override StateResult OnSelectPosition(FDPosition position)
+        public override void OnSelectPosition(FDPosition position)
         {
             if (this.AttackRange != null && this.AttackRange.Contains(position))
             {
-                FDCreature target = this.gameAction.GetCreatureAt(position);
-                if (target != null && target.Faction == Definitions.CreatureFaction.Enemy)
+                FDCreature target = gameMap.GetCreatureAt(position);
+                if (target != null && target.Faction == CreatureFaction.Enemy)
                 {
                     // Do the attack
-                    this.gameAction.DoCreatureAttack(this.Creature.CreatureId, position);
-                    return StateResult.Clear();
+                    this.gameMain.CreatureAttack(this.Creature, target);
+                    stateHandler.HandleClearStates();
                 }
                 else
                 {
                     // Clicked in the range, but no target, let the player to click again
-                    return StateResult.None();
                 }
             }
             else
             {
                 // Clicked out of range, cancel
-                return StateResult.Pop();
+                stateHandler.HandlePopState();
             }
 
         }

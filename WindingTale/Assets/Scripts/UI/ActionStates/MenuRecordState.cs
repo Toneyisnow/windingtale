@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
-using WindingTale.UI.Components.Activities;
+using WindingTale.UI.Activities;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.ActionStates
@@ -19,7 +19,7 @@ namespace WindingTale.UI.ActionStates
         private SubRecordState subState;
 
 
-        public MenuRecordState(GameMain gameMain, FDPosition position) : base(gameMain, position)
+        public MenuRecordState(GameMain gameMain, IStateResultHandler stateHandler, FDPosition position) : base(gameMain, stateHandler, position)
         {
             // Save Game
             this.SetMenu(0, MenuItemId.RecordSave, gameMap.CanSaveGame(), () =>
@@ -27,8 +27,6 @@ namespace WindingTale.UI.ActionStates
                 PromptActivity prompt = new PromptActivity(0, "", OnSaveGameConfirmed);
                 SendPack(prompt);
                 this.subState = SubRecordState.SaveGame;
-
-                return null;
             });
 
             // Game Info
@@ -38,8 +36,6 @@ namespace WindingTale.UI.ActionStates
                 int chapterId = gameMap.ChapterId;
                 ShowBriefPack pack = new ShowBriefPack();
                 SendPack(pack);
-
-                return null;
             });
 
             // Load Game
@@ -48,8 +44,6 @@ namespace WindingTale.UI.ActionStates
                 PromptActivity prompt = new PromptActivity(0, "", OnLoadGameConfirmed);
                 SendPack(prompt);
                 this.subState = SubRecordState.LoadGame;
-
-                return null;
             });
 
             // Quit Game
@@ -58,8 +52,6 @@ namespace WindingTale.UI.ActionStates
                 PromptActivity prompt = new PromptActivity(0, "", OnQuitGameConfirmed);
                 SendPack(prompt);
                 this.subState = SubRecordState.QuitGame;
-
-                return null;
             });
         }
 
@@ -80,7 +72,7 @@ namespace WindingTale.UI.ActionStates
             }
         }
 
-        private StateResult OnSaveGameConfirmed(int index)
+        private void OnSaveGameConfirmed(int index)
         {
             if (index == 1)
             {
@@ -89,16 +81,12 @@ namespace WindingTale.UI.ActionStates
                 // Save Game
                 gameMain.SaveMapRecord();
 
-                TalkActivity talk = new TalkActivity(0, "");
-                return StateResult.Clear();
-            }
-            else
-            {
-                return null;
+                TalkActivity talk = new TalkActivity("");
+                stateHandler.HandleClearStates();
             }
         }
 
-        private StateResult OnQuitGameConfirmed(int index)
+        private void OnQuitGameConfirmed(int index)
         {
             if (index == 1)
             {
@@ -106,12 +94,7 @@ namespace WindingTale.UI.ActionStates
 
                 // Quit Game
                 gameMain.OnGameQuit();
-
-                return StateResult.Clear();
-            }
-            else
-            {
-                return null;
+                stateHandler.HandleClearStates();
             }
         }
     }

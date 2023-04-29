@@ -72,14 +72,14 @@ namespace WindingTale.UI.Common
             return LanguageManager.Instance.GetTextValue(key);
         }
 
-        public static string GetConversationString(ConversationId conversationId)
+        public static string GetConversationString(Conversation conversationId)
         {
             string key = string.Format(@"Chapter-{0}-{0}-{1}-{2}", 
                 StringUtils.Digit2(conversationId.ChapterId), StringUtils.Digit2(conversationId.SequenceId), StringUtils.Digit3(conversationId.Index));
             return LanguageManager.Instance.GetTextValue(key);
         }
 
-        public static int GetConversationCreatureId(ConversationId conversationId)
+        public static int GetConversationCreatureId(Conversation conversationId)
         {
             string key = string.Format(@"Chapter-{0}-{0}-{1}-{2}-Id",
                 StringUtils.Digit2(conversationId.ChapterId), StringUtils.Digit2(conversationId.SequenceId), StringUtils.Digit3(conversationId.Index));
@@ -95,15 +95,15 @@ namespace WindingTale.UI.Common
         /// </summary>
         /// <param name="messageId"></param>
         /// <returns></returns>
-        public static string GetMessageString(MessageId messageId)
+        public static string GetMessageString(Message messageId)
         {
-            string key = string.Format(@"Message-{0}-{1}", messageId.MessageType.ToString(), StringUtils.Digit2(messageId.MessageKey));
+            string key = string.Format(@"Message-{0}-{1}", messageId.MessageType.ToString(), StringUtils.Digit2(messageId.Key));
 
             string messageTemplate = LanguageManager.Instance.GetTextValue(key);
             string message = messageTemplate;
-            if(messageId.MessageType == MessageId.MessageTypes.Message)
+            if(messageId.MessageType == Message.MessageTypes.Information)
             {
-                switch(messageId.MessageKey)
+                switch(messageId.Key)
                 {
                     //打开宝箱，发现%@！
                     case 3:
@@ -153,9 +153,9 @@ namespace WindingTale.UI.Common
                 }
             }
             
-            if (messageId.MessageType == MessageId.MessageTypes.Confirm)
+            if (messageId.MessageType == Message.MessageTypes.Confirm)
             {
-                switch(messageId.MessageKey)
+                switch(messageId.Key)
                 {
                     // 这个%@，#%d元，要不要啊？
                     case 54:

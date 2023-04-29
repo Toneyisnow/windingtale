@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WindingTale.Common
 {
-    public class ConversationId
+    public class Conversation
     {
         public int ChapterId
         {
@@ -23,9 +23,9 @@ namespace WindingTale.Common
             get; private set;
         }
 
-        public static ConversationId Create(int cId, int sId, int index)
+        public static Conversation Create(int cId, int sId, int index)
         {
-            ConversationId conversation = new ConversationId();
+            Conversation conversation = new Conversation();
 
             conversation.ChapterId = cId;
             conversation.SequenceId = sId;

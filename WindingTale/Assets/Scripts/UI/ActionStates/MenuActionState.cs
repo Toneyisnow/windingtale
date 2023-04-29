@@ -32,8 +32,8 @@ namespace WindingTale.UI.ActionStates
         private ItemDefinition treasureItem = null;
         private SubActionState subState = SubActionState.SelectMagic;
 
-        public MenuActionState(GameMain gameMain, int creatureId, FDPosition position)
-            : base(gameMain, position)
+        public MenuActionState(GameMain gameMain, IStateResultHandler stateHandler, int creatureId, FDPosition position)
+            : base(gameMain, stateHandler, position)
         {
             this.CreatureId = creatureId;
             this.creature = gameMap.GetCreatureById(creatureId);
@@ -41,31 +41,30 @@ namespace WindingTale.UI.ActionStates
             // Magic
             this.SetMenu(0, MenuItemId.ActionMagic, IsMenuMagicEnabled(), () =>
             {
-                CreatureShowInfoActivity activity = new CreatureShowInfoActivity(this.creature, CreatureInfoType.SelectMagic);
+                CreatureShowInfoActivity activity = new CreatureShowInfoActivity(this.creature, CreatureInfoType.SelectMagic, OnMagicSelected);
                 
                 subState = SubActionState.SelectMagic;
-                return null;
             });
 
             // Attack
             this.SetMenu(1, MenuItemId.ActionAttack, IsMenuAttackEnabled(), () =>
             {
                 SelectAttackTargetState attackState = new SelectAttackTargetState(gameMain, creature);
-                return StateResult.Push(attackState);
+                stateHandler.HandlePushState(attackState);
             });
 
             // Item
             this.SetMenu(2, MenuItemId.ActionItems, IsMenuItemEnabled(), () =>
             {
                 MenuItemState itemState = new MenuItemState(gameMain, this.CreatureId, this.Central);
-                return StateResult.Push(itemState);
+                stateHandler.HandlePushState(itemState);
             });
 
             // Rest
             this.SetMenu(3, MenuItemId.ActionRest, true, () =>
             {
                 gameMain.CreatureRest(creature);
-                return StateResult.Clear();
+                stateHandler.HandleClearStates();
             });
 
         }
@@ -89,7 +88,7 @@ namespace WindingTale.UI.ActionStates
 
         private bool IsMenuAttackEnabled()
         {
-            bool canAttack = this.creature.Data.CanAttack();
+            bool canAttack = this.creature.CanAttack();
             FDCreature target = gameAction.GetPreferredAttackTargetInRange(this.creature.CreatureId);
             return canAttack && (target != null);
         }
@@ -101,24 +100,24 @@ namespace WindingTale.UI.ActionStates
 
         private bool IsMenuItemEnabled()
         {
-            return this.creature.Data.Items.Count > 0;
+            return this.creature.Items.Count > 0;
         }
 
         #region Callback Index Methods
 
-        private StateResult OnMagicSelected(int index)
+        private void OnMagicSelected(int index)
         {
             Debug.Log("MenuActionState: OnMagicSelected.");
-            if (index < 0 || index >= this.creature.Data.Magics.Count)
+            if (index < 0 || index >= this.creature.Magics.Count)
             {
                 // Cancelled
                 return StateResult.Pop();
             }
 
-            int magicId = this.creature.Data.Magics[index];
+            int magicId = this.creature.Magics[index];
             MagicDefinition magicDefinition = DefinitionStore.Instance.GetMagicDefinition(magicId);
 
-            if (magicDefinition != null && this.creature.Data.CanSpellMagic() && magicDefinition.MpCost <= this.creature.Data.Mp)
+            if (magicDefinition != null && this.creature.CanSpellMagic() && magicDefinition.MpCost <= this.creature.Data.Mp)
             {
                 // Enough MP to spell
                 SelecteMagicTargetState magicTargetState = new SelecteMagicTargetState(gameAction, this.creature, magicDefinition);
@@ -134,16 +133,16 @@ namespace WindingTale.UI.ActionStates
             }
         }
 
-        private StateResult OnPickTreasureConfirmed(int index)
+        private void OnPickTreasureConfirmed(int index)
         {
             if (treasureItem == null)
             {
-                return StateResult.Clear();
+                stateHandler.HandleClearStates();
             }
 
             if (index == 1)
             {
-                TalkPack pack = new TalkPack(this.creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 3, treasureItem.ItemId));
+                TalkPack pack = new TalkPack(this.creature.Clone(), Message.Create(Message.MessageTypes.Information, 3, treasureItem.ItemId));
                 SendPack(pack);
 
                 if (!this.creature.Data.IsItemsFull())
@@ -152,7 +151,7 @@ namespace WindingTale.UI.ActionStates
                     this.creature.Data.Items.Add(treasureItem.ItemId);
                     gameAction.PickTreasure(this.creature.Position);
                     gameAction.DoCreatureRest(this.CreatureId);
-                    return StateResult.Clear();
+                    stateHandler.HandleClearStates();
                 }
                 else
                 {
@@ -160,20 +159,18 @@ namespace WindingTale.UI.ActionStates
                     subState = SubActionState.ConfirmExchangeTreature;
                     ////PromptPack prompt = new PromptPack(this.Creature.Definition.AnimationId, "");
                     ////SendPack(prompt);
-                    TalkPack prompt = new TalkPack(this.creature.Clone(), MessageId.Create(MessageId.MessageTypes.Confirm, 7));
+                    TalkPack prompt = new TalkPack(this.creature.Clone(), Message.Create(Message.MessageTypes.Confirm, 7));
                     SendPack(prompt);
-
-                    return StateResult.None();
                 }
             }
             else
             {
                 // Then discard it
-                TalkPack pack = new TalkPack(this.creature, MessageId.Create(MessageId.MessageTypes.Message, 2));
+                TalkPack pack = new TalkPack(this.creature, Message.Create(Message.MessageTypes.Information, 2));
                 SendPack(pack);
 
                 gameAction.DoCreatureRest(this.CreatureId);
-                return StateResult.Clear();
+                stateHandler.HandleClearStates();
             }
         }
 
@@ -182,7 +179,7 @@ namespace WindingTale.UI.ActionStates
             if (index == 0)
             {
                 // Put it back
-                TalkPack talkPack = new TalkPack(this.creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 7));
+                TalkPack talkPack = new TalkPack(this.creature.Clone(), Message.Create(Message.MessageTypes.Information, 7));
                 SendPack(talkPack);
 
                 gameAction.DoCreatureRest(this.CreatureId);
@@ -202,7 +199,7 @@ namespace WindingTale.UI.ActionStates
             if (index < 0)
             {
                 // Cancelled, put it back
-                TalkPack talkPack = new TalkPack(this.creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 7));
+                TalkPack talkPack = new TalkPack(this.creature.Clone(), Message.Create(Message.MessageTypes.Information, 7));
                 SendPack(talkPack);
             }
             else
@@ -211,7 +208,7 @@ namespace WindingTale.UI.ActionStates
                 if (index >= 0 && index < this.creature.Data.Items.Count)
                 {
                     int exchangeItemId = this.creature.Data.Items[index];
-                    TalkPack talkPack = new TalkPack(this.creature.Clone(), MessageId.Create(MessageId.MessageTypes.Message, 6, treasureItem.ItemId, exchangeItemId));
+                    TalkPack talkPack = new TalkPack(this.creature.Clone(), Message.Create(Message.MessageTypes.Information, 6, treasureItem.ItemId, exchangeItemId));
                     SendPack(talkPack);
 
                     this.creature.Data.RemoveItemAt(index);

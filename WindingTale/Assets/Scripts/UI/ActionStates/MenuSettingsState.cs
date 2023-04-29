@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
     public class MenuSettingsState : MenuState
     {
-        public MenuSettingsState(IGameAction gameAction, FDPosition position) : base(gameAction, position)
+        public MenuSettingsState(GameMain gameMain, IStateResultHandler stateHandler, FDPosition position) : base(gameMain, stateHandler, position)
         {
 
         }
@@ -22,9 +23,8 @@ namespace WindingTale.Core.Components.ActionStates
             throw new System.NotImplementedException();
         }
 
-        public override StateResult OnSelectPosition(FDPosition position)
+        public override void OnSelectPosition(FDPosition position)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using WindingTale.Common;
-using WindingTale.Core.Components;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.UI.Components.Activities
+namespace WindingTale.UI.Activities
 {
     public class TalkActivity : ActivityBase
     {
@@ -19,12 +19,12 @@ namespace WindingTale.UI.Components.Activities
             get; private set;
         }
 
-        public ConversationId ConversationId
+        public Conversation ConversationId
         {
             get; private set;
         }
 
-        public MessageId MessageId
+        public Message MessageId
         {
             get; private set;
         }
@@ -34,16 +34,21 @@ namespace WindingTale.UI.Components.Activities
 
         }
 
-        public TalkActivity(FDCreature creature, ConversationId cId)
+        public TalkActivity(Conversation cId, FDCreature creature = null)
         {
             this.Creature = creature;
             this.ConversationId = cId;
         }
 
-        public TalkActivity(FDCreature creature, MessageId mId)
+        public TalkActivity(Message messageId, FDCreature creature = null)
         {
+            if (messageId.MessageType == Message.MessageTypes.Confirm)
+            {
+                throw new System.Exception("Talk activity could only handle informational messages, not confirm messages.");
+            }
+
             this.Creature = creature;
-            this.MessageId = mId;
+            this.MessageId = messageId;
         }
 
         public override void Start(IGameInterface gameInterface)
@@ -52,11 +57,11 @@ namespace WindingTale.UI.Components.Activities
 
             if (this.ConversationId != null)
             {
-                gameInterface.ShowConversationDialog(this.Creature, this.ConversationId);
+                //// gameInterface.ShowConversationDialog(this.Creature, this.ConversationId);
             }
             else if (this.MessageId != null)
             {
-                gameInterface.ShowMessageDialog(this.Creature, this.MessageId);
+                //// gameInterface.ShowMessageDialog(this.Creature, this.MessageId);
             }
 
             this.HasFinished = true;

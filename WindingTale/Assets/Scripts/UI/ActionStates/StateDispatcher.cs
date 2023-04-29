@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.UI.Scenes.Game;
+using static UnityEngine.Networking.UnityWebRequest;
+using static WindingTale.UI.ActionStates.StateDispatcher;
 
 namespace WindingTale.UI.ActionStates
 {
-    public class StateDispatcher
+    public class StateDispatcher : IStateResultHandler
     {
         private Stack<ActionState> actionStateStack = null;
 
@@ -16,7 +18,7 @@ namespace WindingTale.UI.ActionStates
             this.actionStateStack = new Stack<ActionState>();
 
             // Push Idle State for init
-            var idle = new IdleState(gameMain);
+            var idle = new IdleState(gameMain, this);
             actionStateStack.Push(idle);
         }
 
@@ -56,7 +58,11 @@ namespace WindingTale.UI.ActionStates
             this.HandleOperationResult(result);
         }
 
-        private void HandleOperationResult(StateResult result)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        public void HandleOperationResult(StateResult result)
         {
             ActionState currentState = GetCurrentState();
 
@@ -89,6 +95,50 @@ namespace WindingTale.UI.ActionStates
                     break;
             }
         }
+
+        public void HandlePushState(ActionState nextState)
+        {
+            ActionState currentState = GetCurrentState();
+            if (nextState != null)
+            {
+                currentState.OnExit();
+                actionStateStack.Push(nextState);
+                nextState.OnEnter();
+            }
+        }
+
+        public void HandlePopState()
+        {
+            ActionState currentState = GetCurrentState();
+            
+            currentState.OnExit();
+            actionStateStack.Pop();
+            currentState = actionStateStack.Peek();
+            currentState.OnEnter();
+        }
+
+        public void HandleClearStates()
+        {
+            ActionState currentState = GetCurrentState();
+
+            currentState.OnExit();
+            while (actionStateStack.Count > 1)
+            {
+                actionStateStack.Pop();
+            }
+            currentState = actionStateStack.Peek();
+            currentState.OnEnter();
+        }
     }
 
+    public interface IStateResultHandler
+    {
+        public void HandleOperationResult(StateResult result);
+
+        public void HandlePushState(ActionState nextState);
+
+        public void HandlePopState();
+
+        public void HandleClearStates();
+    }
 }

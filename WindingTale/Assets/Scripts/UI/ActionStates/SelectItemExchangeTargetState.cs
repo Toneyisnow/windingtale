@@ -70,24 +70,24 @@ namespace WindingTale.UI.ActionStates
             PushActivity(clear);
         }
 
-        public override StateResult OnSelectPosition(FDPosition position)
+        public override void OnSelectPosition(FDPosition position)
         {
             if (range == null || !range.Contains(position))
             {
-                return StateResult.Pop();
+                stateHandler.HandlePopState();
             }
 
             // No creature or not a friend/NPC
             FDCreature targetCreature = gameMap.GetCreatureAt(position);
             if (targetCreature == null || targetCreature.Faction != CreatureFaction.Friend)
             {
-                return null;
+                return;
             }
 
             if (!targetCreature.IsItemsFull())
             {
                 gameMain.CreatureExchangeItem(this.Creature, this.SelectedItemIndex, targetCreature);
-                return StateResult.Clear();
+                stateHandler.HandleClearStates();
             }
             else
             {
@@ -97,26 +97,26 @@ namespace WindingTale.UI.ActionStates
                 ShowCreatureInfoDialog dialog = new ShowCreatureInfoDialog(this.Creature, CreatureInfoType.SelectAllItem, OnSelectBackItem);
                 PushActivity(dialog);
 
-                return null;
+                return;
             }
         }
 
-        private StateResult OnSelectBackItem(int index)
+        private void OnSelectBackItem(int index)
         {
             if (index < 0)
             {
-                return null;
+                return;
             }
 
             int itemId = this.TargetCreature.GetItemAt(index);
             if (itemId <= 0)
             {
-                return null;
+                return;
             }
 
             // Exchange the items
             gameMain.CreatureExchangeItem(this.Creature, this.SelectedItemIndex, TargetCreature, index);
-            return StateResult.Clear();
+            stateHandler.HandleClearStates();
 
         }
     }

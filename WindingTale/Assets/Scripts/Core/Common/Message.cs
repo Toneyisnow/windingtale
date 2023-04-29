@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace WindingTale.Common
 {
-    public class MessageId
+    public class Message
     {
         public enum MessageTypes
         {
             Confirm,
-            Message,
+            Information,
         }
 
-        public int MessageKey
+        public int Key
         {
             get; private set;
         }
@@ -39,12 +39,12 @@ namespace WindingTale.Common
             get; private set;
         }
 
-        public static MessageId Create(MessageTypes type, int key, int iParam1 = 0, int iParam2 = 0, int iParam3 = 0)
+        public static Message Create(MessageTypes type, int key, int iParam1 = 0, int iParam2 = 0, int iParam3 = 0)
         {
-            MessageId result = new MessageId();
+            Message result = new Message();
 
             result.MessageType = type;
-            result.MessageKey = key;
+            result.Key = key;
             result.IntParam1 = iParam1;
             result.IntParam2 = iParam2;
             result.IntParam3 = iParam3;

@@ -4,9 +4,11 @@ using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Components.Packs;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core.Definitions;
+using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
     public class SelectItemUseTargetState : ActionState
     {
@@ -34,10 +36,10 @@ namespace WindingTale.Core.Components.ActionStates
         /// 
         /// </summary>
         /// <param name="gameAction"></param>
-        public SelectItemUseTargetState(IGameAction gameAction, int creatureId, int itemIndex) : base(gameAction)
+        public SelectItemUseTargetState(GameMain gameMain, IStateResultHandler stateHandler, int creatureId, int itemIndex) : base(gameMain, stateHandler)
         {
             this.CreatureId = creatureId;
-            this.Creature = gameAction.GetCreature(creatureId);
+            this.Creature = gameMap.GetCreatureById(creatureId);
             this.SelectedItemIndex = itemIndex;
 
         }
@@ -48,7 +50,7 @@ namespace WindingTale.Core.Components.ActionStates
 
             if (this.ItemRange == null)
             {
-                DirectRangeFinder rangeFinder = new DirectRangeFinder(this.gameAction.GetField(), this.Creature.Position, 1);
+                DirectRangeFinder rangeFinder = new DirectRangeFinder(gameMap.Field, this.Creature.Position, 1);
                 this.ItemRange = rangeFinder.CalculateRange();
             }
 
@@ -64,23 +66,24 @@ namespace WindingTale.Core.Components.ActionStates
             SendPack(pack);
         }
 
-        public override StateResult OnSelectPosition(FDPosition position)
+        public override void OnSelectPosition(FDPosition position)
         {
             // Selecte position must be included in the range
             if (!this.ItemRange.Contains(position))
             {
-                return StateResult.Pop();
+                stateHandler.HandlePopState();
+                return;
             }
 
             // No creature or not a friend/NPC
-            FDCreature targetCreature = this.gameAction.GetCreatureAt(position);
-            if(targetCreature == null || targetCreature.Faction == Definitions.CreatureFaction.Enemy)
+            FDCreature targetCreature = gameMap.GetCreatureAt(position);
+            if(targetCreature == null || targetCreature.Faction == CreatureFaction.Enemy)
             {
-                return StateResult.None();
+                return;
             }
 
-            gameAction.DoCreatureUseItem(this.CreatureId, this.SelectedItemIndex, targetCreature.CreatureId);
-            return StateResult.Clear();
+            gameMain.CreatureUseItem(this.Creature, this.SelectedItemIndex, position);
+            stateHandler.HandleClearStates();
         }
     }
 }

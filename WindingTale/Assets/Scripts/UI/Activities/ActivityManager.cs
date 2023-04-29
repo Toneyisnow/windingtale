@@ -38,7 +38,7 @@ namespace WindingTale.UI.Activities
                 if (!IsIdle)
                 {
                     IsIdle = true;
-                    gameInterface.GetGameHandler().NotifyAI();
+                    /// gameInterface.GetGameHandler().NotifyAI();
                 }
 
                 return;

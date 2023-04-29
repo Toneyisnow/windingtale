@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Components;
-using WindingTale.Core.ObjectModels;
 using WindingTale.UI.FieldMap;
 using WindingTale.UI.MapObjects;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.UI.Components.Activities
+namespace WindingTale.UI.Activities
 {
     public class CreatureMoveActivity : ActivityBase
     {
@@ -205,5 +205,7 @@ namespace WindingTale.UI.Components.Activities
             this.UICreature.SetPixelPosition(position + delta);
 
         }
+
+
     }
 }

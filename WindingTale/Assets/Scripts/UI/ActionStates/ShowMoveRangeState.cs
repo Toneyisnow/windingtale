@@ -21,7 +21,7 @@ namespace WindingTale.UI.ActionStates
 
 
 
-        public ShowMoveRangeState(GameMain gameMain, FDCreature creature) : base(gameMain)
+        public ShowMoveRangeState(GameMain gameMain, IStateResultHandler stateHandler, FDCreature creature) : base(gameMain, stateHandler)
         {
             this.creature = creature;
             this.position = creature.Position;
@@ -49,21 +49,21 @@ namespace WindingTale.UI.ActionStates
             // Clear move range on UI
         }
 
-        public override StateResult OnSelectPosition(FDPosition position)
+        public override void OnSelectPosition(FDPosition position)
         {
             // If position is in range
             if (moveRange.Contains(position))
             {
                 FDMovePath movePath = moveRange.GetPath(position);
-                gameAction.CreatureWalk(new SingleWalkAction(creature.Id, movePath));
+                gameMain.CreatureWalk(new SingleWalkAction(creature.Id, movePath));
 
-                var nextState = new MenuActionState(gameAction, creature.Id, position);
-                return StateResult.Push(nextState);
+                var nextState = new MenuActionState(gameMain, stateHandler, creature.Id, position);
+                stateHandler.HandlePushState(nextState);
             }
             else
             {
                 // Cancel
-                return StateResult.Pop();
+                stateHandler.HandlePopState();
             }
         }
     }

@@ -11,7 +11,7 @@ namespace WindingTale.UI.ActionStates
 {
     public class IdleState : ActionState
     {
-        public IdleState(GameMain gamgMain) : base(gamgMain)
+        public IdleState(GameMain gamgMain, IStateResultHandler stateHandler) : base(gamgMain, stateHandler)
         {
         }
 
@@ -27,34 +27,28 @@ namespace WindingTale.UI.ActionStates
             base.OnExit();
         }
 
-        public override StateResult OnSelectPosition(FDPosition position)
+        public override void OnSelectPosition(FDPosition position)
         {
             FDCreature creature = gameMain.GameMap.GetCreatureAt(position);
             if (creature == null)
             {
                 // Empty space, show system menu
                 MenuSystemState state = new MenuSystemState(gameMain, position);
-                return StateResult.Push(state);
+                stateHandler.HandlePushState(state);
             }
             else if (creature.IsActionable() && creature.Faction == CreatureFaction.Friend)
             {
                 // Actionable friend
                 ShowMoveRangeState nextState = new ShowMoveRangeState(gameMain, creature);
-                return StateResult.Push(nextState);
+                stateHandler.HandlePushState(nextState);
             }
             else
             {
                 // Show creature information
                 CreatureShowInfoActivity showInfo = new CreatureShowInfoActivity(gameMain, creature, CreatureInfoType.View);
-
-                return null;
             }
         }
 
-        public override StateResult OnSelectCallback(int index)
-        {
-            return null;
-        }
 
     }
 }

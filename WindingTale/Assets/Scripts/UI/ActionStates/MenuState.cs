@@ -70,12 +70,12 @@ namespace WindingTale.UI.ActionStates
             get; private set;
         }
 
-        public Func<StateResult>[] MenuActions
+        public Action[] MenuActions
         {
             get; private set;
         }
 
-        public MenuState(GameMain gameMain, FDPosition central) : base(gameMain)
+        public MenuState(GameMain gameMain, IStateResultHandler stateHandler, FDPosition central) : base(gameMain, stateHandler)
         {
             this.Central = central;
 
@@ -88,7 +88,7 @@ namespace WindingTale.UI.ActionStates
             };
 
             this.MenuItemIds = new MenuItemId[4];
-            this.MenuActions = new Func<StateResult>[4];
+            this.MenuActions = new Action[4];
             this.MenuItemEnabled = new bool[4];
         }
 
@@ -109,7 +109,7 @@ namespace WindingTale.UI.ActionStates
             CloseMenuActivity activity = new CloseMenuActivity();
         }
 
-        protected void SetMenu(int index, MenuItemId menuItemId, bool enabled, Func<StateResult> action)
+        protected void SetMenu(int index, MenuItemId menuItemId, bool enabled, Action action)
         {
             if (index < 0 || index >= 4)
             {
@@ -121,19 +121,18 @@ namespace WindingTale.UI.ActionStates
             this.MenuItemEnabled[index] = enabled;
         }
 
-        public override StateResult OnSelectPosition(FDPosition position)
+        public override void OnSelectPosition(FDPosition position)
         {
             for(int index = 0; index < 4; index++)
             {
                 if (this.MenuItemEnabled[index] && this.MenuItemPositions[index].AreSame(position))
                 {
                     // Clicked on menu
-                    return this.MenuActions[index]();
+                    this.MenuActions[index]();
                 }
             }
 
-            // Cancell the menu
-            return StateResult.Pop();
+            stateHandler.HandlePopState();
         }
 
     }

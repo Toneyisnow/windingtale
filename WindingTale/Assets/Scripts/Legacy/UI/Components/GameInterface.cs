@@ -377,7 +377,7 @@ namespace WindingTale.UI.Components
                 (index) => { this.OnDialogCallback(index); });
         }
 
-        public void ShowConversationDialog(FDCreature creature, ConversationId conversation)
+        public void ShowConversationDialog(FDCreature creature, Conversation conversation)
         {
             // Canvas
             if (currentDialog != null)
@@ -411,7 +411,7 @@ namespace WindingTale.UI.Components
             currentDialog = messageDialog.gameObject;
         }
 
-        public void ShowMessageDialog(FDCreature creature, MessageId messageId)
+        public void ShowMessageDialog(FDCreature creature, Message messageId)
         {
             // Canvas
             if (currentDialog != null)
@@ -426,7 +426,7 @@ namespace WindingTale.UI.Components
             int animationId = creature?.Definition?.AnimationId ?? 0;
             string message = LocalizedStrings.GetMessageString(messageId);
 
-            if (messageId.MessageType == MessageId.MessageTypes.Confirm)
+            if (messageId.MessageType == Message.MessageTypes.Confirm)
             {
                 PromptDialog dialog = GameObjectExtension.CreateFromPrefab<PromptDialog>("Prefabs/PromptDialog");
                 dialog.Initialize(uiCamera, animationId, message, (index) => { this.OnDialogCallback(index); });

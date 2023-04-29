@@ -486,7 +486,7 @@ namespace WindingTale.Legacy.Core.Components
             
             for (int i = startIndex; i <= endIndex; i++)
             {
-                ConversationId conversationId = ConversationId.Create(this.ChapterId(), sequenceId, i);
+                Conversation conversationId = Conversation.Create(this.ChapterId(), sequenceId, i);
                 string key = conversationId.GetKeyForId();
                 if (chapterDefinition.ConversationIds.ContainsKey(key))
                 {
@@ -581,7 +581,7 @@ namespace WindingTale.Legacy.Core.Components
             if (creature.Faction == CreatureFaction.Friend)
             {
                 // Talk about experience
-                MessageId mId = MessageId.Create(MessageId.MessageTypes.Message, 5, 33);
+                Message mId = Message.Create(Message.MessageTypes.Information, 5, 33);
                 TalkPack talk = new TalkPack(creature, mId);
                 gameCallback.OnHandlePack(talk);
             }

@@ -44,11 +44,11 @@ namespace WindingTale.UI.Scenes.Game
 
         #region Callbacks
 
-        public DoCallback OnGameQuit { get; set; } = () => { };
+        public Action OnGameQuit { get; set; } = () => { };
 
-        public DoCallback OnGameWin { get; set; } = () => { };
+        public Action OnGameWin { get; set; } = () => { };
 
-        public DoCallback OnGameOver { get; set; } = () => { };
+        public Action OnGameOver { get; set; } = () => { };
 
         #endregion
 
@@ -173,23 +173,24 @@ namespace WindingTale.UI.Scenes.Game
 
 
             // Set the creature to inactive
+            creature.HasActioned = true;
 
             // Check if all creatures are inactive, then end turn
 
             if (creature.Faction == CreatureFaction.Friend && this.GameMap.Friends.Find(c => !c.HasActioned) == null)
             {
-                PushActivity(() => this.OnPlayerEndTurn());
-                PushActivity(() => this.OnNpcTurn());
+                PushCallbackActivity(() => this.OnPlayerEndTurn());
+                PushCallbackActivity(() => this.OnNpcTurn());
             }
             else if (creature.Faction == CreatureFaction.Npc && this.GameMap.Npcs.Find(c => !c.HasActioned) == null)
             {
-                PushActivity(() => this.OnNpcEndTurn());
-                PushActivity(() => this.OnEnemyTurn());
+                PushCallbackActivity(() => this.OnNpcEndTurn());
+                PushCallbackActivity(() => this.OnEnemyTurn());
             }
             else if (creature.Faction == CreatureFaction.Enemy && this.GameMap.Enemies.Find(c => !c.HasActioned) == null)
             {
-                PushActivity(() => this.OnEnemyEndTurn());
-                PushActivity(() => this.OnNewTurn());
+                PushCallbackActivity(() => this.OnEnemyEndTurn());
+                PushCallbackActivity(() => this.OnNewTurn());
             }
         }
 
@@ -223,10 +224,15 @@ namespace WindingTale.UI.Scenes.Game
             }
         }
 
-        private void PushActivity(DoCallback callback)
+        private void PushActivity(ActivityBase activity)
         {
-            CallbackActivity activity = new CallbackActivity(callback);
-            this.ActivityManager.pushActivity(activity);
+            this.ActivityManager.Push(activity);
+        }
+
+        private void PushCallbackActivity(Action callback)
+        {
+            CallbackActivity activiy = new CallbackActivity(callback);
+            this.ActivityManager.Push(activiy);
         }
 
         private void doEndAllFriendsTurn(int index)
@@ -254,10 +260,9 @@ namespace WindingTale.UI.Scenes.Game
         public void CreatureMoveCancel(FDCreature creature)
         {
             // If the creature has moved, reset the creature position
-            this.creature.ResetPosition();
-            CreatureRefreshPack reset = new CreatureRefreshPack(this.creature.Clone());
-            SendPack(reset);
-
+            creature.ResetPosition();
+            CreatureRefreshPack reset = new CreatureRefreshPack(creature.Clone());
+            
 
         }
 
@@ -277,23 +282,23 @@ namespace WindingTale.UI.Scenes.Game
             // Check if the creature is dead and remove dead creatures
 
 
-            PushActivity(() => OnCreatureDone(creature));
+            PushCallbackActivity(() => OnCreatureDone(creature));
         }
 
         public void CreatureMagic(FDCreature creature, int magicIndex, FDPosition position)
         {
 
-            PushActivity(() => OnCreatureDone(creature));
+            PushCallbackActivity(() => OnCreatureDone(creature));
         }
         public void CreatureUseItem(FDCreature creature, int itemIndex, FDPosition position)
         {
 
-            PushActivity(() => OnCreatureDone(creature));
+            PushCallbackActivity(() => OnCreatureDone(creature));
         }
 
         public void CreatureExchangeItem(FDCreature creature, int itemIndex, FDCreature target, int backItemIndex = -1)
         {
-            PushActivity(() => OnCreatureDone(creature));
+            PushCallbackActivity(() => OnCreatureDone(creature));
         }
 
         public void CreatureRest(FDCreature creature)
@@ -312,43 +317,51 @@ namespace WindingTale.UI.Scenes.Game
                             PromptActivity confirmExchange = new PromptActivity((index) => {
                                 if (index == 1)
                                 {
+                                    WindingTale.Common.Message messageId = WindingTale.Common.Message.Create(WindingTale.Common.Message.MessageTypes.Information, 14, treasure.ItemId);
                                     TalkActivity talk = new TalkActivity(messageId);
                                     PushActivity(talk);
                                 }
                                 else
                                 {
+                                    WindingTale.Common.Message messageId = WindingTale.Common.Message.Create(WindingTale.Common.Message.MessageTypes.Information, 10);
                                     TalkActivity talk = new TalkActivity(messageId);
                                     PushActivity(talk);
                                 }
                             });
                             PushActivity(confirmExchange);
                         }
-                    }
-                    else
-                    {
-                        TalkActivity talk = new TalkActivity(messageId);
-                        PushActivity(talk);
+                        else
+                        {
+                            WindingTale.Common.Message messageId = WindingTale.Common.Message.Create(WindingTale.Common.Message.MessageTypes.Information, 11, treasure.ItemId);
+                            TalkActivity talk = new TalkActivity(messageId);
+                            PushActivity(talk);
+                        }
                     }
                 });
                 PushActivity(prompt);
             }
 
-            PushActivity(() => OnCreatureDone(creature));
+            PushCallbackActivity(() => OnCreatureDone(creature));
         }
 
         public void EndAllFriendsTurn()
         {
             PromptActivity prompt = new PromptActivity((index) =>
             {
-                // 1 means YES
-                if (index == 1)
+                if (index == 0)
                 {
-
+                    return;
                 }
-                else
+
+                this.GameMap.Friends.ForEach(friend =>
                 {
+                    if (!friend.HasActioned)
+                    {
+                        OnCreatureDone(friend);
 
-                }
+                    }
+                });
+
             });
 
             PushActivity(prompt);

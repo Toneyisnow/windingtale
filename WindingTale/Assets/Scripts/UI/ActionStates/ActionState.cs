@@ -18,10 +18,14 @@ namespace WindingTale.UI.ActionStates
 
         protected ActivityManager activityManager = null;
 
-        public ActionState(GameMain gameMain)
+        protected IStateResultHandler stateHandler = null;
+
+        public ActionState(GameMain gameMain, IStateResultHandler stateHandler)
         {
             this.gameMain = gameMain;
             this.gameMap = gameMain.GameMap;
+            this.stateHandler = stateHandler;
+
             this.activityManager = gameMain.ActivityManager;
         }
 
@@ -37,12 +41,9 @@ namespace WindingTale.UI.ActionStates
 
         #region State Operations
 
-        public abstract StateResult OnSelectPosition(FDPosition position);
+        public abstract void OnSelectPosition(FDPosition position);
 
-        public virtual StateResult OnSelectCallback(int index)
-        {
-            return null;
-        }
+        ///// public abstract void OnSelectCallback(int index);
 
         #endregion
     }

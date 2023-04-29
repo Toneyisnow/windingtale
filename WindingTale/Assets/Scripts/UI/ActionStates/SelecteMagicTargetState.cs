@@ -6,9 +6,10 @@ using WindingTale.Common;
 using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.Definitions;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.Core.Components.ActionStates
+namespace WindingTale.UI.ActionStates
 {
     /// <summary>
     /// 
@@ -27,7 +28,7 @@ namespace WindingTale.Core.Components.ActionStates
 
         private FDRange magicRange = null;
 
-        public SelecteMagicTargetState(IGameAction action, FDCreature creature, MagicDefinition magic) : base(action)
+        public SelecteMagicTargetState(GameMain gameMain, IStateResultHandler stateHandler, FDCreature creature, MagicDefinition magic) : base(gameMain, stateHandler)
         {
             this.Creature = creature;
             this.Magic = magic;
@@ -49,7 +50,7 @@ namespace WindingTale.Core.Components.ActionStates
 
             if (magicRange == null)
             {
-                DirectRangeFinder rangeFinder = new DirectRangeFinder(gameAction.GetField(), this.Creature.Position, this.Magic.EffectRange);
+                DirectRangeFinder rangeFinder = new DirectRangeFinder(gameMap.Field, this.Creature.Position, this.Magic.EffectRange);
                 magicRange = rangeFinder.CalculateRange();
             }
 
@@ -65,35 +66,34 @@ namespace WindingTale.Core.Components.ActionStates
             SendPack(clear);
         }
 
-        public override StateResult OnSelectPosition(FDPosition position)
+        public override void OnSelectPosition(FDPosition position)
         {
             if (this.magicRange == null)
             {
                 // should not happen
-                return StateResult.Clear();
+                stateHandler.HandlePopState();
             }
 
             if (this.magicRange.Contains(position))
             {
-                DirectRangeFinder rangeFinder = new DirectRangeFinder(gameAction.GetField(), position, this.Magic.EffectScope);
+                DirectRangeFinder rangeFinder = new DirectRangeFinder(gameMap.Field, position, this.Magic.EffectScope);
                 FDRange magicScope = rangeFinder.CalculateRange();
 
-                List<FDCreature> targets = gameAction.GetCreatureInRange(magicScope, CreatureFaction.Enemy);
+                List<FDCreature> targets = gameMap.GetCreatureInRange(magicScope, CreatureFaction.Enemy);
                 if (targets == null || targets.Count == 0)
                 {
                     // Cannot spell on that position, do nothing
-                    return StateResult.None();
                 }
                 else
                 {
-                    gameAction.DoCreatureSpellMagic(this.Creature.CreatureId, this.Magic.MagicId, position);
-                    return StateResult.Clear();
+                    gameMain.CreatureMagic(this.Creature, this.Magic.MagicId, position);
+                    stateHandler.HandleClearStates();
                 }
             }
             else
             {
                 // Cancel the magic
-                return StateResult.Pop();
+                stateHandler.HandlePopState();
             }
         }
     }
