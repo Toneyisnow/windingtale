@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Core.Components;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.UI.Components.Activities
+namespace WindingTale.UI.Activities
 {
     public class SequenceActivity : ActivityBase
     {
@@ -32,6 +32,7 @@ namespace WindingTale.UI.Components.Activities
             currentActivity = activityQueue.Dequeue();
             currentActivity.Start(gameInterface);
         }
+
 
         public override void Update(IGameInterface gameInterface)
         {
@@ -64,5 +65,6 @@ namespace WindingTale.UI.Components.Activities
 
             currentActivity.Update(gameInterface);
         }
+
     }
 }

@@ -581,7 +581,7 @@ namespace WindingTale.Legacy.Core.Components
             if (creature.Faction == CreatureFaction.Friend)
             {
                 // Talk about experience
-                Message mId = Message.Create(Message.MessageTypes.Information, 5, 33);
+                FDMessage mId = FDMessage.Create(FDMessage.MessageTypes.Information, 5, 33);
                 TalkPack talk = new TalkPack(creature, mId);
                 gameCallback.OnHandlePack(talk);
             }

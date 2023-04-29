@@ -24,7 +24,7 @@ namespace WindingTale.UI.Activities
             get; private set;
         }
 
-        public Message MessageId
+        public FDMessage MessageId
         {
             get; private set;
         }
@@ -40,9 +40,9 @@ namespace WindingTale.UI.Activities
             this.ConversationId = cId;
         }
 
-        public TalkActivity(Message messageId, FDCreature creature = null)
+        public TalkActivity(FDMessage messageId, FDCreature creature = null)
         {
-            if (messageId.MessageType == Message.MessageTypes.Confirm)
+            if (messageId.MessageType == FDMessage.MessageTypes.Confirm)
             {
                 throw new System.Exception("Talk activity could only handle informational messages, not confirm messages.");
             }

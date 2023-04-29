@@ -18,7 +18,7 @@ namespace WindingTale.Core.Components.Packs
             get; private set;
         }
 
-        public Message MessageId
+        public FDMessage MessageId
         {
             get; private set;
         }
@@ -30,7 +30,7 @@ namespace WindingTale.Core.Components.Packs
             this.ConversationId = convId;
         }
 
-        public TalkPack(FDCreature creature, Message mId)
+        public TalkPack(FDCreature creature, FDMessage mId)
         {
             this.Type = PackType.Talk;
             this.Creature = creature;

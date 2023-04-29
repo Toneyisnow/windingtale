@@ -3,53 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
-using WindingTale.Core.Components.Packs;
-using WindingTale.UI.Components.Activities;
+using WindingTale.Core.Common;
+using WindingTale.UI.Activities;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.ActionStates
 {
-    public enum MenuId
-    {
-        ActionMenu = 11,
-        ItemsMenu = 12,
-
-        SystemMenu = 21,
-        SettingsMenu = 22,
-        RecordMenu = 23,
-
-    }
-
-    public enum MenuItemId
-    {
-        ActionMagic = 110,
-        ActionAttack = 111,
-        ActionItems = 112,
-        ActionRest = 113,
-
-        ItemExchange = 120,
-        ItemUse = 121,
-        ItemEquip = 122,
-        ItemDiscard = 123,
-
-        SystemMatching = 210,
-        SystemRecord = 211,
-        SystemSettings = 212,
-        SystemRestAll = 213,
-
-        SettingsSound = 220,
-        SettingsMusic = 221,
-        SettingsFight = 222,
-        SettingsInfo = 223,
-
-        RecordSave = 230,
-        RecordInfo = 231,
-        RecordLoad = 232,
-        RecordQuit = 233,
-    }
-
     public abstract class MenuState : ActionState
     {
+
+        public FDMenu Menu { get; private set; }
+
+
         public FDPosition Central
         {
             get; private set;
@@ -77,19 +42,7 @@ namespace WindingTale.UI.ActionStates
 
         public MenuState(GameMain gameMain, IStateResultHandler stateHandler, FDPosition central) : base(gameMain, stateHandler)
         {
-            this.Central = central;
-
-            this.MenuItemPositions = new FDPosition[4]
-            {
-                FDPosition.At(Central.X - 1, Central.Y),
-                FDPosition.At(Central.X, Central.Y - 1),
-                FDPosition.At(Central.X + 1, Central.Y),
-                FDPosition.At(Central.X, Central.Y + 1),
-            };
-
-            this.MenuItemIds = new MenuItemId[4];
-            this.MenuActions = new Action[4];
-            this.MenuItemEnabled = new bool[4];
+            this.Menu = new FDMenu(central);
         }
 
         public override void OnEnter()
@@ -97,8 +50,8 @@ namespace WindingTale.UI.ActionStates
             base.OnEnter();
 
             // Show Action Menu
-            ShowMenuActivity activity = new ShowMenuActivity(this.MenuItemPositions, this.MenuItemIds, this.MenuItemEnabled, this.Central);
-            
+            ShowMenuActivity activity = new ShowMenuActivity(this.Menu);
+            activityManager.Push(activity);
         }
 
         public override void OnExit()
@@ -116,16 +69,14 @@ namespace WindingTale.UI.ActionStates
                 return;
             }
 
-            this.MenuItemIds[index] = menuItemId;
-            this.MenuActions[index] = action;
-            this.MenuItemEnabled[index] = enabled;
+            this.Menu.Items[index] = new FDMenuItem(menuItemId, enabled, action);
         }
 
         public override void OnSelectPosition(FDPosition position)
         {
             for(int index = 0; index < 4; index++)
             {
-                if (this.MenuItemEnabled[index] && this.MenuItemPositions[index].AreSame(position))
+                if (this.MenuItemEnabled[index] && this.Menu.Items[index].Position.AreSame(position))
                 {
                     // Clicked on menu
                     this.MenuActions[index]();

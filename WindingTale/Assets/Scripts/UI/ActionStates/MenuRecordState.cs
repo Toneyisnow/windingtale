@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Common;
 using WindingTale.UI.Activities;
 using WindingTale.UI.Scenes.Game;
 
@@ -24,51 +25,47 @@ namespace WindingTale.UI.ActionStates
             // Save Game
             this.SetMenu(0, MenuItemId.RecordSave, gameMap.CanSaveGame(), () =>
             {
-                PromptActivity prompt = new PromptActivity(0, "", OnSaveGameConfirmed);
-                SendPack(prompt);
-                this.subState = SubRecordState.SaveGame;
+                // 是否保存当前游戏？
+                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 5);
+                PromptActivity prompt = new PromptActivity(message, OnSaveGameConfirmed);
+                activityManager.Push(prompt);
             });
 
             // Game Info
             this.SetMenu(1, MenuItemId.RecordInfo, true, () =>
             {
-                int turnId = gameMain.TurnNo;
-                int chapterId = gameMap.ChapterId;
-                ShowBriefPack pack = new ShowBriefPack();
-                SendPack(pack);
+                ShowGameInfoActivity info = new ShowGameInfoActivity(gameMain);
+                activityManager.Push(info);
             });
 
             // Load Game
             this.SetMenu(2, MenuItemId.RecordLoad, true, () =>
             {
-                PromptActivity prompt = new PromptActivity(0, "", OnLoadGameConfirmed);
-                SendPack(prompt);
-                this.subState = SubRecordState.LoadGame;
+                // 要读取战况吗？
+                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 4);
+                PromptActivity prompt = new PromptActivity(message, OnLoadGameConfirmed);
+                activityManager.Push(prompt);
             });
 
             // Quit Game
             this.SetMenu(3, MenuItemId.RecordQuit, true, () =>
             {
-                PromptActivity prompt = new PromptActivity(0, "", OnQuitGameConfirmed);
-                SendPack(prompt);
-                this.subState = SubRecordState.QuitGame;
+                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 6);
+                PromptActivity prompt = new PromptActivity(message, OnQuitGameConfirmed);
+                activityManager.Push(prompt);
             });
         }
 
 
-        private StateResult OnLoadGameConfirmed(int index)
+        private void OnLoadGameConfirmed(int index)
         {
             if (index == 1)
             {
                 Debug.Log("Loading Game...");
-                
+
                 // Load Game
                 // gameAction.LoadGame();
-                return StateResult.Clear();
-            }
-            else
-            {
-                return null;
+                stateHandler.HandleClearStates();
             }
         }
 
@@ -81,7 +78,8 @@ namespace WindingTale.UI.ActionStates
                 // Save Game
                 gameMain.SaveMapRecord();
 
-                TalkActivity talk = new TalkActivity("");
+                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 33);
+                TalkActivity talk = new TalkActivity(message);
                 stateHandler.HandleClearStates();
             }
         }
@@ -93,7 +91,15 @@ namespace WindingTale.UI.ActionStates
                 Debug.Log("Quiting Game...");
 
                 // Quit Game
-                gameMain.OnGameQuit();
+               ;
+
+                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 16);
+                TalkActivity prompt = new TalkActivity(message);
+                activityManager.Push(prompt);
+
+                CallbackActivity callback = new CallbackActivity(() => gameMain.OnGameQuit());
+                activityManager.Push(callback);
+
                 stateHandler.HandleClearStates();
             }
         }

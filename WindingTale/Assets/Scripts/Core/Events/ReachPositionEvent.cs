@@ -1,6 +1,8 @@
+using System;
 using WindingTale.Common;
 using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.Core.Events
 {
@@ -16,7 +18,7 @@ namespace WindingTale.Core.Events
         /// </summary>
         /// <param name="creatureId"></param>
         /// <param name="position"></param>
-        public ReachPositionEvent(int creatureId, FDPosition position)
+        public ReachPositionEvent(int creatureId, FDPosition position, Action<GameMain> action): base(action) 
         {
             this.creatureId = creatureId;
             this.position = position;

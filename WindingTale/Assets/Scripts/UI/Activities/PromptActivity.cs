@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Common;
 using WindingTale.Core.Common;
+using WindingTale.Core.Objects;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
@@ -14,9 +16,14 @@ namespace WindingTale.UI.Activities
     {
         private Action<int> callback = null;
 
+        public FDCreature Creature { get; private set; }
 
-        public PromptActivity(Action<int> callback)
+        private FDMessage message = null;
+
+        public PromptActivity(FDMessage message, Action<int> callback, FDCreature creature = null)
         {
+            this.message = message;
+            this.Creature = creature;
             this.callback = callback;
         }
 

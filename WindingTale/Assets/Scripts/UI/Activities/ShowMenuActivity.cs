@@ -2,21 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
-using WindingTale.Core.Components;
-using WindingTale.Core.Components.Packs;
+using WindingTale.Core.Common;
 using WindingTale.UI.MapObjects;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.UI.Components.Activities
+namespace WindingTale.UI.Activities
 {
     public class ShowMenuActivity : ActivityBase
     {
-        private ShowMenuPack pack = null;
 
         private UIMenuItem[] menuItems = null;
 
-        public ShowMenuActivity(ShowMenuPack pack)
+        private FDMenu menu = null;
+
+        public ShowMenuActivity(FDMenu menu)
         {
-            this.pack = pack;
+            this.menu = menu;
         }
 
         public override void Start(IGameInterface gameInterface)
@@ -58,6 +59,7 @@ namespace WindingTale.UI.Components.Activities
                 menuItems[i].RelatedMenuItems = menuItems;
             }
         }
+
 
         public override void Update(IGameInterface gameInterface)
         {

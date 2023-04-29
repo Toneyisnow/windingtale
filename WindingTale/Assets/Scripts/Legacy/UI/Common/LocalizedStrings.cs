@@ -95,13 +95,13 @@ namespace WindingTale.UI.Common
         /// </summary>
         /// <param name="messageId"></param>
         /// <returns></returns>
-        public static string GetMessageString(Message messageId)
+        public static string GetMessageString(FDMessage messageId)
         {
             string key = string.Format(@"Message-{0}-{1}", messageId.MessageType.ToString(), StringUtils.Digit2(messageId.Key));
 
             string messageTemplate = LanguageManager.Instance.GetTextValue(key);
             string message = messageTemplate;
-            if(messageId.MessageType == Message.MessageTypes.Information)
+            if(messageId.MessageType == FDMessage.MessageTypes.Information)
             {
                 switch(messageId.Key)
                 {
@@ -153,7 +153,7 @@ namespace WindingTale.UI.Common
                 }
             }
             
-            if (messageId.MessageType == Message.MessageTypes.Confirm)
+            if (messageId.MessageType == FDMessage.MessageTypes.Confirm)
             {
                 switch(messageId.Key)
                 {

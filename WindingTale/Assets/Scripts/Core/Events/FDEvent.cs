@@ -1,4 +1,6 @@
+using System;
 using WindingTale.Core.Map;
+using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.Core.Events
 {
@@ -17,16 +19,22 @@ namespace WindingTale.Core.Events
 
         public FDEventType EventType { get; protected set; }
 
-        public void Execute(GameMap gameMap)
+        public Action<GameMain> Execution { get; protected set; }
+
+        public FDEvent(Action<GameMain> action)
         {
-            DoExecute(gameMap);
+            this.Execution = action;
+            this.IsActive = true;
+        }
+
+        public void Execute(GameMain game)
+        {
+            if (this.Execution != null) {
+                this.Execution(game);
+            }
+
             this.IsActive = false;
         }
 
-        /// <summary>
-        /// Interface for higher level class to implement details
-        /// </summary>
-        /// <param name="gameMap"></param>
-        public abstract void DoExecute(GameMap gameMap);
     }
 }

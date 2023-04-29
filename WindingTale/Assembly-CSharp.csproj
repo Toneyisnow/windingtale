@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{D9176146-9110-062C-C27E-962CDA9312BC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -73,7 +72,6 @@
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIMagicalDelegate.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\Title\GameTitleScene.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AITreasureDelegate.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CreatureShowInfoPack.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedTextMeshPro.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Data\ChapterRecord.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIMagicalDefensiveDelegate.cs" />
@@ -114,7 +112,6 @@
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageManager.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\ShowRangePack.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Components\IGameInterface.cs" />
-    <Compile Include="Assets\Scripts\Core\Common\Conversation.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Controls\CreatureInfoBar.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedAudioSource.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Algorithms\AttackInformation.cs" />
@@ -144,7 +141,6 @@
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIDelegate.cs" />
     <Compile Include="Assets\Scripts\Legacy\Common\ResourceJsonFile.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\Load\LoadChapterButton.cs" />
-    <Compile Include="Assets\Scripts\Core\Common\Message.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\Chapters\EventChapter2.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\GameFieldScene\CameraNavigation.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\MapObjects\UIMenuItem.cs" />
@@ -268,6 +264,12 @@
     <Compile Include="Assets\Scripts\Core\Events\TeamEliminatedEvent.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\StateResult.cs" />
     <Compile Include="Assets\Scripts\UI\Scenes\Game\IGameInterface.cs" />
+    <Compile Include="Assets\Scripts\Core\Common\Conversation.cs" />
+    <Compile Include="Assets\Scripts\UI\Activities\ShowCreatureInfoActivity.cs" />
+    <Compile Include="Assets\Scripts\Core\Common\FDMenu.cs" />
+    <Compile Include="Assets\Scripts\UI\Activities\CloseMenuActivity.cs" />
+    <Compile Include="Assets\Scripts\Core\Common\FDMessage.cs" />
+    <Compile Include="Assets\Scripts\UI\Activities\ShowGameInfoActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_24.txt" />

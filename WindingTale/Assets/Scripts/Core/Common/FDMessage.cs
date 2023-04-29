@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WindingTale.Common
 {
-    public class Message
+    public class FDMessage
     {
         public enum MessageTypes
         {
@@ -39,9 +39,14 @@ namespace WindingTale.Common
             get; private set;
         }
 
-        public static Message Create(MessageTypes type, int key, int iParam1 = 0, int iParam2 = 0, int iParam3 = 0)
+        public override string ToString()
         {
-            Message result = new Message();
+            return "";
+        }
+
+        public static FDMessage Create(MessageTypes type, int key, int iParam1 = 0, int iParam2 = 0, int iParam3 = 0)
+        {
+            FDMessage result = new FDMessage();
 
             result.MessageType = type;
             result.Key = key;

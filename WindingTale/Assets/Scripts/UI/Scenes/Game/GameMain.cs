@@ -17,6 +17,7 @@ using WindingTale.Core;
 using WindingTale.Core.Components.Packs;
 using UnityEditor.VersionControl;
 using WindingTale.UI.Activities;
+using WindingTale.UI.MapObjects;
 
 namespace WindingTale.UI.Scenes.Game
 {
@@ -26,7 +27,7 @@ namespace WindingTale.UI.Scenes.Game
 
 
         public int TurnNo { get; private set; }
-        
+
 
         public CreatureFaction TurnType { get; private set; }
 
@@ -35,7 +36,7 @@ namespace WindingTale.UI.Scenes.Game
         public GameHandler GameHandler { get; private set; }
 
         public ActivityManager ActivityManager { get; set; }
-        
+
         /// TODO: Whether should I use singleton pattern here?
         public static GameMain Instance { get; private set; } = new GameMain();
 
@@ -203,7 +204,7 @@ namespace WindingTale.UI.Scenes.Game
                     FDTurnEvent turnEvent = (FDTurnEvent)fdEvent;
                     if (turnEvent.TurnNo == this.TurnNo && turnEvent.TurnType == this.TurnType)
                     {
-                        fdEvent.Execute(this.GameMap);
+                        fdEvent.Execute(this);
                     }
                 }
             }
@@ -218,7 +219,7 @@ namespace WindingTale.UI.Scenes.Game
                     FDConditionEvent conditionEvent = (FDConditionEvent)fdEvent;
                     if (conditionEvent.Match(this.GameMap))
                     {
-                        conditionEvent.Execute(this.GameMap);
+                        conditionEvent.Execute(this);
                     }
                 }
             }
@@ -262,7 +263,7 @@ namespace WindingTale.UI.Scenes.Game
             // If the creature has moved, reset the creature position
             creature.ResetPosition();
             CreatureRefreshPack reset = new CreatureRefreshPack(creature.Clone());
-            
+
 
         }
 
@@ -301,70 +302,24 @@ namespace WindingTale.UI.Scenes.Game
             PushCallbackActivity(() => OnCreatureDone(creature));
         }
 
+        /// <summary>
+        /// Note: this function will not handle pick up treasure, which is handled in ActionState
+        /// </summary>
+        /// <param name="creature"></param>
         public void CreatureRest(FDCreature creature)
         {
-            // Check Treasure
-            FDTreasure treasure = this.GameMap.GetTreatureAt(creature.Position);
-            if (treasure != null)
-            {
-                PromptActivity prompt = new PromptActivity((index) =>
-                {
-                    // 1 means YES
-                    if (index == 1)
-                    {
-                        if (creature.IsItemsFull())
-                        {
-                            PromptActivity confirmExchange = new PromptActivity((index) => {
-                                if (index == 1)
-                                {
-                                    WindingTale.Common.Message messageId = WindingTale.Common.Message.Create(WindingTale.Common.Message.MessageTypes.Information, 14, treasure.ItemId);
-                                    TalkActivity talk = new TalkActivity(messageId);
-                                    PushActivity(talk);
-                                }
-                                else
-                                {
-                                    WindingTale.Common.Message messageId = WindingTale.Common.Message.Create(WindingTale.Common.Message.MessageTypes.Information, 10);
-                                    TalkActivity talk = new TalkActivity(messageId);
-                                    PushActivity(talk);
-                                }
-                            });
-                            PushActivity(confirmExchange);
-                        }
-                        else
-                        {
-                            WindingTale.Common.Message messageId = WindingTale.Common.Message.Create(WindingTale.Common.Message.MessageTypes.Information, 11, treasure.ItemId);
-                            TalkActivity talk = new TalkActivity(messageId);
-                            PushActivity(talk);
-                        }
-                    }
-                });
-                PushActivity(prompt);
-            }
-
             PushCallbackActivity(() => OnCreatureDone(creature));
         }
 
         public void EndAllFriendsTurn()
         {
-            PromptActivity prompt = new PromptActivity((index) =>
+            this.GameMap.Friends.ForEach(friend =>
             {
-                if (index == 0)
+                if (!friend.HasActioned)
                 {
-                    return;
+                    PushCallbackActivity(() => OnCreatureDone(friend));
                 }
-
-                this.GameMap.Friends.ForEach(friend =>
-                {
-                    if (!friend.HasActioned)
-                    {
-                        OnCreatureDone(friend);
-
-                    }
-                });
-
             });
-
-            PushActivity(prompt);
         }
 
         #endregion

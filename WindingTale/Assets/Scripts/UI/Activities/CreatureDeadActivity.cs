@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WindingTale.Core.ObjectModels;
 using WindingTale.UI.MapObjects;
+using WindingTale.UI.Scenes.Game;
 
-namespace WindingTale.UI.Components.Activities
+namespace WindingTale.UI.Activities
 {
     public class CreatureDeadActivity : ActivityBase
     {
@@ -32,6 +32,8 @@ namespace WindingTale.UI.Components.Activities
             }
         }
 
+
+
         public override void Update(IGameInterface gameInterface)
         {
             bool allGone = true;
@@ -49,5 +51,6 @@ namespace WindingTale.UI.Components.Activities
                 this.HasFinished = true;
             }
         }
+
     }
 }

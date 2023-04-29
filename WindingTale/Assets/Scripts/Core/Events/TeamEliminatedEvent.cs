@@ -1,5 +1,7 @@
+using System;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Map;
+using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.Core.Events
 {
@@ -7,10 +9,11 @@ namespace WindingTale.Core.Events
     {
         private CreatureFaction faction = CreatureFaction.Enemy;
 
-        public TeamEliminatedEvent(CreatureFaction faction)
+        public TeamEliminatedEvent(CreatureFaction faction, Action<GameMain> game) : base(game)
         {
             this.faction = faction;
         }
+
 
         public override bool Match(GameMap gameMap)
         {

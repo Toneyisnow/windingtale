@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
+using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
+using WindingTale.UI.Activities;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.ActionStates
@@ -30,47 +32,36 @@ namespace WindingTale.UI.ActionStates
 
         private SubActionState subState;
 
-        public MenuItemState(GameMain gameMain, int creatureId, FDPosition position) : base(gameMain, position)
+        public MenuItemState(GameMain gameMain, IStateResultHandler stateHandler, FDCreature creature) : base(gameMain, stateHandler, creature.Position)
         {
-            this.CreatureId = creatureId;
-            this.Creature = gameMap.GetCreatureById(creatureId);
+            this.Creature = creature;
 
             // Exchange
             this.SetMenu(0, MenuItemId.ItemExchange, IsMenuExchangeEnabled(), () =>
             {
-                ShowCreatureInfoDialog dialog = new ShowCreatureInfoDialog(this.Creature, CreatureInfoType.SelectAllItem, OnSelectedExchangeItem);
+                ShowCreatureInfoActivity dialog = new ShowCreatureInfoActivity(gameMain, this.Creature, CreatureInfoType.SelectAllItem, OnSelectedExchangeItem);
                 activityManager.Push(dialog);
-
-                return null;
             });
 
             // Use
             this.SetMenu(1, MenuItemId.ItemUse, IsMenuUseEnabled(), () =>
             {
-                ShowCreatureInfoDialog dialog = new ShowCreatureInfoDialog(this.Creature, CreatureInfoType.SelectUseItem, OnSelectedUseItem);
-                PushActivity(dialog);
-
-                return null;
+                ShowCreatureInfoActivity dialog = new ShowCreatureInfoActivity(gameMain, this.Creature, CreatureInfoType.SelectUseItem, OnSelectedUseItem);
+                activityManager.Push(dialog);
             });
 
             // Equip
             this.SetMenu(2, MenuItemId.ItemEquip, IsMenuEquipEnabled(), () =>
             {
-                ShowCreatureInfoDialog dialog = new CreatureShowInfoPack(this.Creature, CreatureInfoType.SelectEquipItem, OnSelectedEquipItem);
-                PushActivity(dialog);
-
-                subState = SubActionState.SelectEquipItem;
-                return null;
+                ShowCreatureInfoActivity dialog = new ShowCreatureInfoActivity(gameMain, this.Creature, CreatureInfoType.SelectEquipItem, OnSelectedEquipItem);
+                activityManager.Push(dialog);
             });
 
             // Discard
             this.SetMenu(3, MenuItemId.ItemDiscard, IsMenuDiscardEnabled(), () =>
             {
-                ShowCreatureInfoDialog dialog = new CreatureShowInfoPack(this.Creature, CreatureInfoType.SelectAllItem, OnSelectedDiscardItem);
-                PushActivity(dialog);
-
-                subState = SubActionState.SelectDiscardItem;
-                return null;
+                ShowCreatureInfoActivity dialog = new ShowCreatureInfoActivity(gameMain, this.Creature, CreatureInfoType.SelectAllItem, OnSelectedDiscardItem);
+                activityManager.Push(dialog);
             });
         }
 
@@ -101,58 +92,54 @@ namespace WindingTale.UI.ActionStates
             return this.Creature.HasAnyItem();
         }
 
-        private StateResult OnSelectedExchangeItem(int index)
+        private void OnSelectedExchangeItem(int index)
         {
             if (index < 0)
             {
-                return StateResult.Pop();
+                stateHandler.HandlePopState();
+                return;
             }
 
             // Selete Target Friend
             SelectItemExchangeTargetState exchangeTargetState = new SelectItemExchangeTargetState(gameMain, this.CreatureId, index);
-            return StateResult.Push(exchangeTargetState);
+            stateHandler.HandlePushState(exchangeTargetState);
         }
 
-        private StateResult OnSelectedUseItem(int index)
+        private void OnSelectedUseItem(int index)
         {
-            int itemId = this.Creature.Data.GetItemAt(index);
+            int itemId = this.Creature.GetItemAt(index);
             if (itemId < 0)
             {
                 // Item not found, should not reach here
-                return StateResult.Clear();
+                stateHandler.HandleClearStates();
             }
 
             // Selete Target Friend
-            SelectItemUseTargetState selectTargetState = new SelectItemUseTargetState(gameAction, this.CreatureId, index);
-            return StateResult.Push(selectTargetState);
+            SelectItemUseTargetState selectTargetState = new SelectItemUseTargetState(gameMain, this.CreatureId, index);
+            stateHandler.HandlePushState(selectTargetState);
         }
         
-        private StateResult OnSelectedEquipItem(int index)
+        private void OnSelectedEquipItem(int index)
         {
             if (index < 0)
             {
                 // Cancel the selection
-                return StateResult.None();
+                return;
             }
 
-            this.Creature.Data.EquipItemAt(index);
+            this.Creature.EquipItemAt(index);
 
             // Reopen the item dialog
-            CreatureShowInfoPack pack = new CreatureShowInfoPack(this.Creature, CreatureInfoType.SelectEquipItem);
-            SendPack(pack);
+            ShowCreatureInfoActivity pack = new ShowCreatureInfoActivity(gameMain, this.Creature, CreatureInfoType.SelectEquipItem, OnSelectedEquipItem);
+            activityManager.Push(pack);
 
-            subState = SubActionState.SelectEquipItem;
-            return StateResult.None();
         }
 
-        private StateResult OnSelectedDiscardItem(int index)
+        private void OnSelectedDiscardItem(int index)
         {
             // Discard the item
-            this.Creature.Data.RemoveItemAt(index);
-            return StateResult.None();
+            this.Creature.RemoveItemAt(index);
         }
-
-
 
     }
 }

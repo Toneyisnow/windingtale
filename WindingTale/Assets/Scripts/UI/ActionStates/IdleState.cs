@@ -5,6 +5,7 @@ using WindingTale.Common;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
+using WindingTale.UI.Activities;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.ActionStates
@@ -33,19 +34,20 @@ namespace WindingTale.UI.ActionStates
             if (creature == null)
             {
                 // Empty space, show system menu
-                MenuSystemState state = new MenuSystemState(gameMain, position);
+                MenuSystemState state = new MenuSystemState(gameMain, stateHandler, position);
                 stateHandler.HandlePushState(state);
             }
             else if (creature.IsActionable() && creature.Faction == CreatureFaction.Friend)
             {
                 // Actionable friend
-                ShowMoveRangeState nextState = new ShowMoveRangeState(gameMain, creature);
+                ShowMoveRangeState nextState = new ShowMoveRangeState(gameMain, stateHandler, creature);
                 stateHandler.HandlePushState(nextState);
             }
             else
             {
                 // Show creature information
-                CreatureShowInfoActivity showInfo = new CreatureShowInfoActivity(gameMain, creature, CreatureInfoType.View);
+                ShowCreatureInfoActivity showInfo = new ShowCreatureInfoActivity(gameMain, creature, CreatureInfoType.View);
+                activityManager.Push(showInfo);
             }
         }
 

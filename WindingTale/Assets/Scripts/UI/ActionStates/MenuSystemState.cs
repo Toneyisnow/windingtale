@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using WindingTale.Common;
+using WindingTale.Core.Common;
 using WindingTale.Core.Components.Packs;
 using WindingTale.Legacy.Core.Components;
 using WindingTale.UI.Activities;
@@ -13,25 +14,12 @@ namespace WindingTale.UI.ActionStates
 {
     public class MenuSystemState : MenuState
     {
-        public enum SubState
-        {
-            ConfirmMatching = 1,
-            ConfirmRestAll = 2,
-        }
-
-        private SubState subState = 0;
-
         public MenuSystemState(GameMain gameMain, IStateResultHandler stateHandler, FDPosition central) : base(gameMain, stateHandler, central)
         {
             // Matching
             this.SetMenu(0, MenuItemId.SystemMatching, false, () =>
             {
-                subState = SubState.ConfirmMatching;
-                
-                Message message = Message.Create(Message.MessageTypes.Confirm, 1);
-                TalkPack pack = new TalkPack(null, message);
-                SendPack(pack);
-
+                // TODO
             });
 
             // Record
@@ -51,15 +39,15 @@ namespace WindingTale.UI.ActionStates
             // Rest All
             this.SetMenu(3, MenuItemId.SystemRestAll, true, () =>
             {
-                PromptActivity prompt = new PromptActivity((index) =>
+                // 想要结束本回合吗
+                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 1);
+                PromptActivity prompt = new PromptActivity(message, (index) =>
                 {
-                    if (index == 0)
+                    if (index == 1)
                     {
-                        return;
+                        gameMain.EndAllFriendsTurn();
+                        stateHandler.HandleClearStates();
                     }
-
-                    gameMain.EndAllFriendsTurn();
-                    stateHandler.HandleClearStates();
                 });
 
                 activityManager.Push(prompt);

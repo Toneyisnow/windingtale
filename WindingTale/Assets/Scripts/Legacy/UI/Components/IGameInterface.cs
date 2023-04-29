@@ -46,7 +46,7 @@ namespace WindingTale.UI.Components
 
         void ShowConversationDialog(FDCreature creature, Conversation conversation);
 
-        void ShowMessageDialog(FDCreature creature, Message message);
+        void ShowMessageDialog(FDCreature creature, FDMessage message);
 
 
         void BattleFight(FDCreature subject, FDCreature target, FightInformation fightInfo);
