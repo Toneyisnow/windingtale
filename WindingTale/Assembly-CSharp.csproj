@@ -80,7 +80,7 @@
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageParser.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\ShowBriefPack.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\SequencedPack.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\FDMovePath.cs" />
+    <Compile Include="Assets\Scripts\Core\Algorithms\FDMovePath.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\CanvasControls\PopUp.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\TalkPack.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Common\Constants.cs" />
@@ -107,7 +107,6 @@
     <Compile Include="Assets\Scripts\Legacy\UI\CanvasControls\MagicControl.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIEscapeDelegate.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizationSystem\SmartCultureInfo.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Components\Algorithms\MoveRangeFinder.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIDefensiveDelegate.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageManager.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\ShowRangePack.cs" />
@@ -152,7 +151,6 @@
     <Compile Include="Assets\SmartLocalization\Scripts\RuntimeLocalizedAssetLoader.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Common\Clickable.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CreatureRefreshAllPack.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\FDMoveRange.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\NGUI\SL_NGUISpriteAtlas.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\ObjectModels\FDMenu.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\ApplicationExtensions.cs" />
@@ -211,7 +209,6 @@
     <Compile Include="Assets\Scripts\Core\Objects\FDFriend.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\DirectRangeFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Files\GameMapRecord.cs" />
-    <Compile Include="Assets\Scripts\Core\Map\MapBlock.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDEnemy.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\MagicDefinition.cs" />
@@ -270,6 +267,10 @@
     <Compile Include="Assets\Scripts\UI\Activities\CloseMenuActivity.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDMessage.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\ShowGameInfoActivity.cs" />
+    <Compile Include="Assets\Scripts\Core\Definitions\ShapeDefinition.cs" />
+    <Compile Include="Assets\Scripts\Core\Definitions\TreasureDefinition.cs" />
+    <Compile Include="Assets\Scripts\Core\Algorithms\MovePathFinder.cs" />
+    <Compile Include="Assets\Scripts\Core\Algorithms\FDMoveRange.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_24.txt" />

@@ -1,139 +1,124 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using WindingTale.Common;
 using WindingTale.Core.Definitions;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core.Map;
+using WindingTale.Core.Objects;
 
-namespace WindingTale.Core.Components.Algorithms
+namespace WindingTale.Core.Algorithms
 {
-
-    public class MoveRangeQueueObject
-    {
-        public FDPosition Position
-        {
-            get; set;
-        }
-
-        public int LeftMovePoint
-        {
-            get; set;
-        }
-
-        public MoveRangeQueueObject(FDPosition pos, int left)
-        {
-            this.Position = pos;
-            this.LeftMovePoint = left;
-        }
-    }
 
     public class MoveRangeFinder
     {
-        private IGameAction gameAction;
+        private GameMap gameMap = null;
 
-        private GameField gameField = null;
         private FDCreature creature = null;
 
-        private Queue<MoveRangeQueueObject> positionQueue = null;
 
-        public MoveRangeFinder(IGameAction gameAction, FDCreature creature)
+        public MoveRangeFinder(GameMap gameMap, FDCreature creature)
         {
-            this.gameAction = gameAction;
-            this.gameField = gameAction.GetField();
+            this.gameMap = gameMap;
             this.creature = creature;
         }
 
         public FDMoveRange CalculateMoveRange()
         {
-            FDPosition central = this.creature.Position;
+            int movePoint = creature.CalculatedMv;
+            DirectedPosition central = new DirectedPosition(creature.Position, movePoint, null);
+
             FDMoveRange range = new FDMoveRange(central);
 
-            int movePoint = creature.Data.CalculatedMv;
-            positionQueue = new Queue<MoveRangeQueueObject>();
+            Queue<DirectedPosition> positionQueue = new Queue<DirectedPosition>();
 
-            range.AddPosition(central, null);
-            positionQueue.Enqueue(new MoveRangeQueueObject(central, movePoint));
+            positionQueue.Enqueue(central);
 
             while (positionQueue.Count > 0)
             {
-                MoveRangeQueueObject queueObject = positionQueue.Dequeue();
-                WalkOnPosition(queueObject.Position, queueObject.LeftMovePoint, range);
+                WalkOnPosition(positionQueue, range);
             }
 
-            // Remove the friend creatures from range
-            List<FDCreature> creatureInRange = gameAction.GetCreatureInRange(range, creature.Faction);
+            // Remove the friend creatures from range, except the creature itself
+            List<FDCreature> creatureInRange = gameMap.GetCreaturesInRange(range.ToList(), creature.Faction);
             if (creature.Faction == CreatureFaction.Friend)
             {
-                creatureInRange.AddRange(gameAction.GetCreatureInRange(range, CreatureFaction.Npc));
+                creatureInRange.AddRange(gameMap.GetCreaturesInRange(range.ToList(), CreatureFaction.Npc));
             }
             else if (creature.Faction == CreatureFaction.Npc)
             {
-                creatureInRange.AddRange(gameAction.GetCreatureInRange(range, CreatureFaction.Friend));
+                creatureInRange.AddRange(gameMap.GetCreaturesInRange(range.ToList(), CreatureFaction.Friend));
             }
 
-            foreach (FDCreature c in creatureInRange)
+            creatureInRange.ForEach(c =>
             {
-                if (c.CreatureId == creature.CreatureId)
+                if (c.Id != creature.Id)
                 {
-                    continue;
+                    DirectedPosition directed = range.GetPosition(c.Position);
+                    if (directed != null)
+                    {
+                        directed.IsSkipped = true;
+                    }
                 }
-
-                range.AddSkipPosition(c.Position);
-            }
+            });
 
             return range;
         }
 
-        private void WalkOnPosition(FDPosition position, int leftMovePoint, FDMoveRange range)
+        private void WalkOnPosition(Queue<DirectedPosition> positionQueue, FDMoveRange range)
         {
-            int moveCost = GetMoveCost(position, creature);
-            if (moveCost == -1 || leftMovePoint < moveCost)
+            DirectedPosition queuePosition = positionQueue.Dequeue();
+            
+            int moveCost = GetMoveCost(queuePosition, creature);
+            if (moveCost == -1 || queuePosition.LeftMovePoint < moveCost)
             {
                 // Nothing to walk
                 return;
             }
 
             // If this is ZOC, stop the move
-            if (!position.AreSame(this.creature.Position) && HasAdjacentEnemy(position))
+            if (!queuePosition.AreSame(creature.Position) && HasAdjacentEnemy(queuePosition))
             {
                 return;
             }
 
-            int leftPoint = leftMovePoint - moveCost;
-            foreach (FDPosition direction in position.GetAdjacentPositions())
+            int leftPoint = queuePosition.LeftMovePoint - moveCost;
+            foreach (FDPosition position in queuePosition.GetAdjacentPositions())
             {
-                if (direction.X <= 0 || direction.X > gameField.Width
-                    || direction.Y <= 0 || direction.Y > gameField.Height)
+                if (position.X <= 0 || position.X > gameMap.Field.Width
+                    || position.Y <= 0 || position.Y > gameMap.Field.Height)
                 {
                     continue;
                 }
 
-                if (range.Contains(direction))
+                if (range.ToList().Find(pos => pos.AreSame(position)) != null)
                 {
                     continue;
                 }
 
                 // If already occupied by creature
-                FDCreature existing = gameAction.GetCreatureAt(direction);
+                FDCreature existing = gameMap.GetCreatureAt(position);
                 if (existing != null && existing.IsOppositeFaction(creature))
                 {
                     continue;
                 }
 
-                if (GetMoveCost(direction, creature) == -1)
+                if (GetMoveCost(position, creature) == -1)
                 {
                     // Cannot land on target direction
                     continue;
                 }
 
-                range.AddPosition(direction, position);
-                positionQueue.Enqueue(new MoveRangeQueueObject(direction, leftPoint));
+                DirectedPosition directed = new DirectedPosition(position, leftPoint, queuePosition);
+
+                range.Add(directed);
+                positionQueue.Enqueue(directed);
             }
         }
 
         private int GetMoveCost(FDPosition position, FDCreature creature)
         {
-            ShapeDefinition targetShape = gameField.GetShapeAt(position.X, position.Y);
+            ShapeDefinition targetShape = gameMap.Field.GetShapeAt(position.X, position.Y);
             if (targetShape == null)
             {
                 return -1;
@@ -167,7 +152,7 @@ namespace WindingTale.Core.Components.Algorithms
         {
             foreach (FDPosition direction in position.GetAdjacentPositions())
             {
-                FDCreature c = gameAction.GetCreatureAt(direction);
+                FDCreature c = gameMap.GetCreatureAt(direction);
                 if (c == null)
                 {
                     continue;

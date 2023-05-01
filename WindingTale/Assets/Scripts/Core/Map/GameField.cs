@@ -1,3 +1,5 @@
+using WindingTale.Core.Definitions;
+
 namespace WindingTale.Core.Map
 {
     /// <summary>
@@ -8,10 +10,7 @@ namespace WindingTale.Core.Map
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        private MapBlock[,] blocks = null;
-
-
-
+        private ShapeDefinition[,] shapes = null;
 
         public GameField(int width, int height)
         {
@@ -19,9 +18,9 @@ namespace WindingTale.Core.Map
             Height = height;
         }
 
-        public MapBlock GetBlock(int x, int y)
+        public ShapeDefinition GetShapeAt(int x, int y)
         {
-            if (blocks == null)
+            if (shapes == null)
             {
                 return null;
             }
@@ -31,8 +30,7 @@ namespace WindingTale.Core.Map
                 return null;
             }
 
-            return blocks[x, y];
+            return shapes[x, y];
         }
-
     }
 }

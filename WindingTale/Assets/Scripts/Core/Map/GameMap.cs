@@ -87,6 +87,20 @@ namespace WindingTale.Core.Map
             return friends;
         }
 
+        public List<FDCreature> GetCreaturesInRange(List<FDPosition> range, CreatureFaction faction)
+        {
+            List<FDCreature> creatures = new List<FDCreature>();
+            foreach (FDPosition position in range)
+            {
+                FDCreature creature = GetCreatureAt(position);
+                if (creature != null && creature.Faction == faction)
+                {
+                    creatures.Add(creature);
+                }
+            }
+            return creatures;
+        }
+
         internal FDTreasure GetTreatureAt(FDPosition position)
         {
             return this.Treasures.Find(t => t.Position.AreSame(position));

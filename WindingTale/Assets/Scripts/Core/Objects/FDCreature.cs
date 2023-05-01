@@ -52,7 +52,7 @@ namespace WindingTale.Core.Objects
         public FDPosition PrePosition { get; set; }
 
 
-        public int DefinitionId
+        public CreatureDefinition Definition
         {
             get; set;
         }
@@ -446,6 +446,18 @@ namespace WindingTale.Core.Objects
             return this.Hp <= 0;
         }
 
+        public bool IsOppositeFaction(FDCreature target)
+        {
+            if (this.Faction == CreatureFaction.Friend || this.Faction == CreatureFaction.Npc)
+            {
+                return target.Faction == CreatureFaction.Enemy;
+            }
+            else
+            {
+                return target.Faction == CreatureFaction.Friend || target.Faction == CreatureFaction.Npc;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -453,7 +465,7 @@ namespace WindingTale.Core.Objects
         public static FDCreature FromDefinition(int creatureId, CreatureDefinition definition)
         {
             FDCreature creature = new FDCreature(creatureId, CreatureFaction.Friend);
-            creature.DefinitionId = definition.DefinitionId;
+            creature.Definition = definition.Definition;
 
             creature.Level = definition.InitialLevel;
             creature.Hp = creature.HpMax = definition.InitialHp;

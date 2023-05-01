@@ -18,6 +18,7 @@ using WindingTale.Core.Components.Packs;
 using UnityEditor.VersionControl;
 using WindingTale.UI.Activities;
 using WindingTale.UI.MapObjects;
+using WindingTale.Core.Algorithms;
 
 namespace WindingTale.UI.Scenes.Game
 {
@@ -253,7 +254,7 @@ namespace WindingTale.UI.Scenes.Game
 
         #region Game Public Actions
 
-        public void CreatureMove(FDCreature creature, FDPosition position)
+        public void CreatureMove(FDCreature creature, FDMovePath movePath)
         {
 
         }
@@ -263,8 +264,6 @@ namespace WindingTale.UI.Scenes.Game
             // If the creature has moved, reset the creature position
             creature.ResetPosition();
             CreatureRefreshPack reset = new CreatureRefreshPack(creature.Clone());
-
-
         }
 
         public void CreatureAttack(FDCreature creature, FDCreature target)

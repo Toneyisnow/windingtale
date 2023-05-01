@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using WindingTale.Common;
-using WindingTale.Core.Components.Algorithms;
+using WindingTale.Core.Algorithms;
 using WindingTale.Core.Objects;
+using WindingTale.UI.Activities;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.ActionStates
@@ -12,19 +14,14 @@ namespace WindingTale.UI.ActionStates
     {
         private FDCreature creature = null;
 
-        private FDPosition position = null;
-
         /// <summary>
         /// This is cached value
         /// </summary>
         private FDMoveRange moveRange = null;
 
-
-
         public ShowMoveRangeState(GameMain gameMain, IStateResultHandler stateHandler, FDCreature creature) : base(gameMain, stateHandler)
         {
             this.creature = creature;
-            this.position = creature.Position;
         }
 
         public override void OnEnter()
@@ -34,12 +31,13 @@ namespace WindingTale.UI.ActionStates
             // Calculcate the moving scopes and save it in cache
             if (moveRange == null)
             {
-                MoveRangeFinder finder = new MoveRangeFinder(gameMain, this.creature);
+                MoveRangeFinder finder = new MoveRangeFinder(gameMap, creature);
                 moveRange = finder.CalculateMoveRange();
             }
 
             // Send move range to UI
-            ShowRangeActivity showRange = new ShowRangeActivity(gameMain, moveRange);
+            ShowRangeActivity activity = new ShowRangeActivity(gameMain, moveRange.ToList());
+            activityManager.Push(activity);
         }
 
         public override void OnExit()
@@ -54,10 +52,12 @@ namespace WindingTale.UI.ActionStates
             // If position is in range
             if (moveRange.Contains(position))
             {
-                FDMovePath movePath = moveRange.GetPath(position);
-                gameMain.CreatureWalk(new SingleWalkAction(creature.Id, movePath));
+                MovePathFinder movePathFinder = new MovePathFinder(moveRange);
+                FDMovePath movePath = movePathFinder.GetPath(position);
 
-                var nextState = new MenuActionState(gameMain, stateHandler, creature.Id, position);
+                gameMain.CreatureMove(creature, movePath);
+
+                var nextState = new MenuActionState(gameMain, stateHandler, creature);
                 stateHandler.HandlePushState(nextState);
             }
             else

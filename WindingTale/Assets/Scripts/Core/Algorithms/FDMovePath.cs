@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Common;
 
-namespace WindingTale.Common
+namespace WindingTale.Core.Algorithms
 {
     /// <summary>
     /// A point list to indicate move path. The start point is not included.

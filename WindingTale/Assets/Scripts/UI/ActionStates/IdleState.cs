@@ -46,7 +46,7 @@ namespace WindingTale.UI.ActionStates
             else
             {
                 // Show creature information
-                ShowCreatureInfoActivity showInfo = new ShowCreatureInfoActivity(gameMain, creature, CreatureInfoType.View);
+                ShowCreatureInfoActivity showInfo = new ShowCreatureInfoActivity(gameMain, creature, CreatureInfoType.View, (int result) => { });
                 activityManager.Push(showInfo);
             }
         }
