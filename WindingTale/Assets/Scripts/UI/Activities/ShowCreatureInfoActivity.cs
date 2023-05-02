@@ -8,7 +8,6 @@ using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
 {
-
     public enum CreatureInfoType
     {
         SelectEquipItem = 1,
@@ -37,7 +36,6 @@ namespace WindingTale.UI.Activities
         {
             throw new System.NotImplementedException();
         }
-
 
         public override void Update(IGameInterface gameInterface)
         {

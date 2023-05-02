@@ -1,4 +1,4 @@
-using WindingTale.Legacy.Core.ObjectModels;
+using WindingTale.Core.Objects;
 
 namespace WindingTale.Core.Files
 {

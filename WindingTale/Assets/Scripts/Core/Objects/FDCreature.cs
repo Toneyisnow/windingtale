@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using WindingTale.Common;
+using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
-using WindingTale.Legacy.Core.Components.Data;
 
 namespace WindingTale.Core.Objects
 {
@@ -465,7 +464,7 @@ namespace WindingTale.Core.Objects
         public static FDCreature FromDefinition(int creatureId, CreatureDefinition definition)
         {
             FDCreature creature = new FDCreature(creatureId, CreatureFaction.Friend);
-            creature.Definition = definition.Definition;
+            creature.Definition = definition;
 
             creature.Level = definition.InitialLevel;
             creature.Hp = creature.HpMax = definition.InitialHp;

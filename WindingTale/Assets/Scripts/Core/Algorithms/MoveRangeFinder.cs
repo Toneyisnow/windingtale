@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using WindingTale.Common;
+using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Map;
 using WindingTale.Core.Objects;

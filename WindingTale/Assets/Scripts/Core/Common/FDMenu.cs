@@ -61,27 +61,7 @@ namespace WindingTale.Core.Common
 
         }
 
-        /*
-        public static MenuId GetMenuId(MenuItemId menuItemId)
-        {
-            int menuId = (int)menuItemId / 10;
-            return (MenuId)menuId;
-        }
-
-        public static List<MenuItemId> GetItems(MenuId menuId)
-        {
-            List<MenuItemId> items = new List<MenuItemId>();
-            for(int index = 0; index < 4; index++)
-            {
-                int menuItemId = (int)menuId * 10 + index;
-                items.Add((MenuItemId)menuItemId);
-            }
-
-            return items;
-        }
-        */
-
-        public static FDPosition[] GetPositions(FDPosition central)
+        public static FDPosition[] GetItemPositions(FDPosition central)
         {
             return new FDPosition[4]
             {
@@ -91,11 +71,13 @@ namespace WindingTale.Core.Common
                 FDPosition.At(central.X, central.Y + 1),
             };
         }
-
     }
 
     public class FDMenuItem
     {
+
+        public FDMenu Menu { get; private set; }
+
         public MenuItemId Id
         {
             get;
@@ -118,13 +100,13 @@ namespace WindingTale.Core.Common
 
         public FDPosition Position { get; set; }
 
-        public FDMenuItem(MenuItemId menuItemId, bool enabled, Action action)
+        public FDMenuItem(MenuItemId menuItemId, bool enabled, Action action, FDMenu menu)
         {
             this.Id = menuItemId;
             this.Enabled = enabled;
             this.Action = action;
-
             this.Selected = false;
+            this.Menu = menu;
         }
     }
 }

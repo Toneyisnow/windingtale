@@ -130,7 +130,6 @@
     <Compile Include="Assets\Scripts\Legacy\UI\MapObjects\UIIndicator.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\NGUI\SL_NGUILabel.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\GameManager.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Components\Algorithms\DirectRangeFinder.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedImage.cs" />
     <Compile Include="Assets\Scripts\Legacy\Common\ResourceDataFile.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\DefendItemDefinition.cs" />
@@ -164,7 +163,7 @@
     <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\Utility Scripts\MeshCombineUtility.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\MapObjects\UIObject.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\MapObjects\UIShape.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\FDSpan.cs" />
+    <Compile Include="Assets\Scripts\Core\Common\FDSpan.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Common\GameObjectExtension.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIStandByDelegate.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedObject.cs" />
@@ -181,14 +180,13 @@
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CreatureDeadPack.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\CanvasControls\DatoControl.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\Village\GameVillageScene.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\StringUtils.cs" />
+    <Compile Include="Assets\Scripts\Core\Common\StringUtils.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\BatchPack.cs" />
     <Compile Include="Assets\Scripts\Legacy\Common\GameFormula.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CreatureAnimationPack.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Battle\FightAnimator.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ItemDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\AI\AIHandler.cs" />
-    <Compile Include="Assets\Scripts\Core\Algorithms\MagicalInformation.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\FightAnimation.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDObject.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDNpc.cs" />
@@ -196,7 +194,6 @@
     <Compile Include="Assets\Scripts\Core\Algorithms\MoveRangeFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDTreasure.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TransferDefinition.cs" />
-    <Compile Include="Assets\Scripts\Core\Algorithms\FightInformation.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\DistanceResolver.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ShopDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDCreature.cs" />
@@ -271,6 +268,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\TreasureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\MovePathFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\FDMoveRange.cs" />
+    <Compile Include="Assets\Scripts\Core\Common\FDRange.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_24.txt" />

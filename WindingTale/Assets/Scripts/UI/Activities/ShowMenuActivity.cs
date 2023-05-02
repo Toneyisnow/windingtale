@@ -15,6 +15,7 @@ namespace WindingTale.UI.Activities
 
         private FDMenu menu = null;
 
+
         public ShowMenuActivity(FDMenu menu)
         {
             this.menu = menu;
@@ -22,35 +23,22 @@ namespace WindingTale.UI.Activities
 
         public override void Start(IGameInterface gameInterface)
         {
-            if (pack == null)
-            {
-                return;
-            }
-
             menuItems = new UIMenuItem[4];
-            FDPosition pos = pack.Position;
-            FDPosition[] positions = new FDPosition[4]
-            {
-                FDPosition.At(pos.X - 1, pos.Y),
-                FDPosition.At(pos.X, pos.Y - 1),
-                FDPosition.At(pos.X + 1, pos.Y),
-                FDPosition.At(pos.X, pos.Y + 1)
-            };
-
             bool hasSelected = false;
             for (int i = 0; i < 4; i++)
             {
-                MenuItemId itemId = pack.MenuItems[i];
-                bool enabled = pack.Enabled[i];
+                FDMenuItem item = menu.Items[i];
                 bool isSelected = false;
-                if (enabled && !hasSelected)
+                if (item.Enabled && !item.Selected)
                 {
                     isSelected = true;
                     hasSelected = true;
                 }
 
                 // Place the Menu on map
-                menuItems[i] = gameInterface.PlaceMenuItem(itemId, positions[i], pos, enabled, isSelected);
+                FDPosition position = item.Position;
+                
+                ////menuItems[i] = gameInterface.PlaceMenuItem(itemId, , pos, enabled, isSelected);
 
             }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
-using WindingTale.Core.Components;
+using WindingTale.Core.Algorithms;
 using WindingTale.UI.FieldMap;
 using WindingTale.UI.MapObjects;
 using WindingTale.UI.Scenes.Game;

@@ -17,8 +17,6 @@ namespace WindingTale.UI.ActionStates
             QuitGame = 3,
         }
 
-        private SubRecordState subState;
-
 
         public MenuRecordState(GameMain gameMain, IStateResultHandler stateHandler, FDPosition position) : base(gameMain, stateHandler, position)
         {
@@ -56,7 +54,6 @@ namespace WindingTale.UI.ActionStates
             });
         }
 
-
         private void OnLoadGameConfirmed(int index)
         {
             if (index == 1)
@@ -91,7 +88,6 @@ namespace WindingTale.UI.ActionStates
                 Debug.Log("Quiting Game...");
 
                 // Quit Game
-               ;
 
                 FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 16);
                 TalkActivity prompt = new TalkActivity(message);

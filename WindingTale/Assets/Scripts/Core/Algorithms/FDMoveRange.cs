@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
-using WindingTale.Common;
+using WindingTale.Core.Common;
 
 namespace WindingTale.Core.Algorithms
 {

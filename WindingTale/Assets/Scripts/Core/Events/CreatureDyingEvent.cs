@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.Core.Events
 {
@@ -11,7 +12,7 @@ namespace WindingTale.Core.Events
     {
         private int creatureId = 0;
 
-        public CreatureDyingCondition(int creatureId, Action<GameMap> action) : base(action)
+        public CreatureDyingCondition(int creatureId, Action<GameMain> action) : base(action)
         {
             this.creatureId = creatureId;
         }

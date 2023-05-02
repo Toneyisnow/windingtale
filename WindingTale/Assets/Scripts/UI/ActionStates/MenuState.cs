@@ -69,7 +69,7 @@ namespace WindingTale.UI.ActionStates
                 return;
             }
 
-            this.Menu.Items[index] = new FDMenuItem(menuItemId, enabled, action);
+            this.Menu.Items[index] = new FDMenuItem(menuItemId, enabled, action, this.Menu);
         }
 
         public override void OnSelectPosition(FDPosition position)

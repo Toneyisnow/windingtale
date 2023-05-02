@@ -10,6 +10,8 @@ namespace WindingTale.UI.Components.Activities
 {
     public class ActivityBuilder
     {
+
+        /*
         public static ActivityBase BuildFromPack(PackBase pack)
         {
             if(pack == null)
@@ -294,5 +296,7 @@ namespace WindingTale.UI.Components.Activities
 
             return activity;
         }
+
+        */
     }
 }

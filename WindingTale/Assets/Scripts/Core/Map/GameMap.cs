@@ -3,7 +3,7 @@ using WindingTale.Core.Events;
 using WindingTale.Core.Objects;
 using WindingTale.Core.Files;
 using System.Collections.Generic;
-using WindingTale.Common;
+using WindingTale.Core.Common;
 
 namespace WindingTale.Core.Map
 {

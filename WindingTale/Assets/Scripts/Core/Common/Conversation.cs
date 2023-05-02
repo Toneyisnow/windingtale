@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WindingTale.Common
+namespace WindingTale.Core.Common
 {
     public class Conversation
     {

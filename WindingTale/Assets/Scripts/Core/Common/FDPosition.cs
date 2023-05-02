@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace WindingTale.Common
+namespace WindingTale.Core.Common
 {
     public class FDPosition : IEquatable<FDPosition>
     {

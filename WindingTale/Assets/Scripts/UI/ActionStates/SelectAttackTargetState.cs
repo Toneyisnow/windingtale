@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Common;
-using WindingTale.Core.Components.Algorithms;
-using WindingTale.Core.Components.Packs;
+using WindingTale.Core.Algorithms;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
 using WindingTale.Core.Objects;

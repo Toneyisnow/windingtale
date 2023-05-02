@@ -1,4 +1,4 @@
-using WindingTale.Common;
+using WindingTale.Core.Common;
 
 namespace WindingTale.Core.Objects
 {

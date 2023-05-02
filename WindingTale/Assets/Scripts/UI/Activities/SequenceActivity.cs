@@ -65,6 +65,5 @@ namespace WindingTale.UI.Activities
 
             currentActivity.Update(gameInterface);
         }
-
     }
 }

@@ -1,4 +1,4 @@
-using WindingTale.Common;
+using WindingTale.Core.Common;
 using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Map;
@@ -9,7 +9,6 @@ namespace WindingTale.Core
     public class GameHandler
     {
         private GameMap gameMap = null;
-
 
         public GameHandler(GameMap map)
         {

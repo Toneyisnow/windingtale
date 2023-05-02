@@ -2,11 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Common;
+using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core.Map;
 
-namespace WindingTale.Core.Components.Algorithms
+namespace WindingTale.Core.Algorithms
 {
     public class DirectRangeFinder
     {

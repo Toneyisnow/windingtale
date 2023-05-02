@@ -2,10 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Common;
+using WindingTale.Core.Common;
 using WindingTale.UI.Scenes.Game;
 using static UnityEngine.Networking.UnityWebRequest;
-using static WindingTale.UI.ActionStates.StateDispatcher;
 
 namespace WindingTale.UI.ActionStates
 {
@@ -41,10 +40,12 @@ namespace WindingTale.UI.ActionStates
                 throw new InvalidOperationException("current state is null.");
             }
 
-            var result = currentState.OnSelectPosition(position);
-            this.HandleOperationResult(result);
+            currentState.OnSelectPosition(position);
         }
 
+        /**
+         * @deprecated
+         */
         public void OnSelectCallback(int index)
         {
             ActionState currentState = GetCurrentState();
@@ -54,8 +55,7 @@ namespace WindingTale.UI.ActionStates
                 throw new InvalidOperationException("current state is null.");
             }
 
-            var result = currentState.OnSelectCallback(index);
-            this.HandleOperationResult(result);
+            //// currentState.OnSelectCallback(index);
         }
 
         /// <summary>

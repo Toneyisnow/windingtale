@@ -17,7 +17,6 @@ namespace WindingTale.UI.Activities
 
         public bool IsIdle { get; private set; }
 
-
         public ActivityManager(IGameInterface gameInterface)
         {
             this.gameInterface = gameInterface;

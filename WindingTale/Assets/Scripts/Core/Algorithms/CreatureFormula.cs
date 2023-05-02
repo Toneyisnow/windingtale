@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WindingTale.Core.Components.Algorithms
+namespace WindingTale.Core.Algorithms
 {
     public class CreatureFormula
     {
@@ -16,8 +16,5 @@ namespace WindingTale.Core.Components.Algorithms
 
             return result;
         }
-
-
-
     }
 }

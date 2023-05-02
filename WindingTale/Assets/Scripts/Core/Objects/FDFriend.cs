@@ -1,4 +1,6 @@
 
+using WindingTale.Core.Definitions;
+
 namespace WindingTale.Core.Objects
 {
     public class FDFriend : FDCreature

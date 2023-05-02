@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 using WindingTale.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
-using WindingTale.Core.ObjectModels;
-using WindingTale.Core.Components.Data;
 
 namespace WindingTale.Core.Components.Algorithms
 {
