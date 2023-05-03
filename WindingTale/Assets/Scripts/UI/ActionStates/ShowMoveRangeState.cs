@@ -45,6 +45,8 @@ namespace WindingTale.UI.ActionStates
             base.OnExit();
 
             // Clear move range on UI
+            ClearRangeActivity activity = new ClearRangeActivity();
+            activityManager.Push(activity);
         }
 
         public override void OnSelectPosition(FDPosition position)

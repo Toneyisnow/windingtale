@@ -11,7 +11,7 @@ namespace WindingTale.Core.Events
 
         public CreatureFaction TurnType { get; private set; }
 
-        public FDTurnEvent(int turnNo, CreatureFaction turnType, Action<GameMain> action) : base(action)
+        public FDTurnEvent(int eventId, int turnNo, CreatureFaction turnType, Action<GameMain> action) : base(eventId, action)
         {
             this.TurnNo = turnNo;
             this.TurnType = turnType;

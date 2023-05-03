@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WindingTale.Common
+namespace WindingTale.Core.Files
 {
     public class ResourceJsonFile
     {

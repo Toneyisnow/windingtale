@@ -61,13 +61,12 @@
     <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_PolyWorldTerrain.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\EventLoader.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\IGameAction.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\FDRandom.cs" />
+    <Compile Include="Assets\Scripts\Core\Common\FDRandom.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CloseMenuPack.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIGuardDelegate.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\CanvasControls\SlidingAnimation.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Controls\MenuSliding.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Data\FieldRecord.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Data\CreatureData.cs" />
     <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_LightFlicker.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIMagicalDelegate.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\Title\GameTitleScene.cs" />
@@ -95,7 +94,6 @@
     <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\Utility Scripts\QT_MeshCombineUtility.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedText.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\PromptPack.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\FDRange.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Algorithms\MagicalInformation.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Algorithms\DamageFormula.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\PluralForms.cs" />
@@ -119,7 +117,6 @@
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\ClearRangePack.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ConsumableItemDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIAggressiveDelegate.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\Components\IGameCallback.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\CanvasControls\CanvasControl.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\CanvasControls\ItemControl.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageDataHandler.cs" />
@@ -131,27 +128,23 @@
     <Compile Include="Assets\SmartLocalization\Scripts\NGUI\SL_NGUILabel.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\GameManager.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedImage.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\ResourceDataFile.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\DefendItemDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\MoneyItemDefinition.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CreatureMovePack.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Algorithms\CreatureFormula.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIDelegate.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\ResourceJsonFile.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\Load\LoadChapterButton.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Events\Chapters\EventChapter2.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\GameFieldScene\CameraNavigation.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\MapObjects\UIMenuItem.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CreatureComposePack.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Common\Global.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\Shared.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\PackBase.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIMagicalAggressiveDelegate.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\RuntimeLocalizedAssetLoader.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Common\Clickable.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CreatureRefreshAllPack.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\NGUI\SL_NGUISpriteAtlas.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Core\ObjectModels\FDMenu.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\ApplicationExtensions.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\StringExtensions.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizationSystem\SmartCultureInfoCollectionDeserializer.cs" />
@@ -172,8 +165,6 @@
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\Battle\BattleScene.cs" />
     <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_InteractContainer.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\CanvasControls\MessageDialog.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\Constants.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\LevelUpInfo.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedBase.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\CanvasControls\PromptDialog.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\GameField.cs" />
@@ -182,7 +173,6 @@
     <Compile Include="Assets\Scripts\Legacy\UI\Scenes\Village\GameVillageScene.cs" />
     <Compile Include="Assets\Scripts\Core\Common\StringUtils.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\BatchPack.cs" />
-    <Compile Include="Assets\Scripts\Legacy\Common\GameFormula.cs" />
     <Compile Include="Assets\Scripts\Legacy\Core\Components\Packs\CreatureAnimationPack.cs" />
     <Compile Include="Assets\Scripts\Legacy\UI\Battle\FightAnimator.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ItemDefinition.cs" />
@@ -269,6 +259,11 @@
     <Compile Include="Assets\Scripts\Core\Algorithms\MovePathFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\FDMoveRange.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDRange.cs" />
+    <Compile Include="Assets\Scripts\UI\Activities\ClearRangeActivity.cs" />
+    <Compile Include="Assets\Scripts\Core\Files\ResourceDataFile.cs" />
+    <Compile Include="Assets\Scripts\Core\Files\ResourceJsonFile.cs" />
+    <Compile Include="Assets\Scripts\UI\Activities\CreatureRefreshActivity.cs" />
+    <Compile Include="Assets\Scripts\Chapters\ChapterEvents.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_24.txt" />

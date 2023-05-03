@@ -8,11 +8,11 @@ using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.Core.Events
 {
-    public class CreatureDeadCondition : FDConditionEvent
+    public class CreatureDeadEvent : FDConditionEvent
     {
         private int creatureId = 0;
 
-        public CreatureDeadCondition(int creatureId, Action<GameMain> action) : base(action)
+        public CreatureDeadEvent(int eventId, int creatureId, Action<GameMain> action) : base(eventId, action)
         {
             this.creatureId = creatureId;
         }

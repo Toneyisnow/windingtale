@@ -9,6 +9,7 @@ using WindingTale.Core.Algorithms;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
 using WindingTale.UI.Scenes.Game;
+using WindingTale.UI.Activities;
 
 namespace WindingTale.UI.ActionStates
 {
@@ -43,7 +44,7 @@ namespace WindingTale.UI.ActionStates
         /// 
         /// </summary>
         /// <param name="gameAction"></param>
-        public SelectItemExchangeTargetState(GameMain gameMain, int creatureId, int itemIndex) : base(gameMain)
+        public SelectItemExchangeTargetState(GameMain gameMain, IStateResultHandler stateHandler, int creatureId, int itemIndex) : base(gameMain, stateHandler)
         {
             this.Creature = gameMap.GetCreatureById(creatureId);
             this.SelectedItemIndex = itemIndex;
@@ -58,7 +59,8 @@ namespace WindingTale.UI.ActionStates
                 DirectRangeFinder finder = new DirectRangeFinder(gameMap.Field, this.Creature.Position, 1, 1);
                 range = finder.CalculateRange();
             }
-            ShowRangeActivity showRange = new ShowRangeActivity(gameMain, range);
+            ShowRangeActivity showRange = new ShowRangeActivity(gameMain, range.ToList());
+            activityManager.Push(showRange);
         }
 
         public override void OnExit()
@@ -66,7 +68,7 @@ namespace WindingTale.UI.ActionStates
             base.OnExit();
 
             ClearRangeActivity clear = new ClearRangeActivity();
-            PushActivity(clear);
+            activityManager.Push(clear);
         }
 
         public override void OnSelectPosition(FDPosition position)
@@ -93,10 +95,8 @@ namespace WindingTale.UI.ActionStates
                 subState = SubState.SelectExchangeItem;
                 this.TargetCreature = targetCreature;
 
-                ShowCreatureInfoDialog dialog = new ShowCreatureInfoDialog(this.Creature, CreatureInfoType.SelectAllItem, OnSelectBackItem);
-                PushActivity(dialog);
-
-                return;
+                ShowCreatureInfoActivity dialog = new ShowCreatureInfoActivity(gameMain, this.Creature, CreatureInfoType.SelectAllItem, OnSelectBackItem);
+                activityManager.Push(dialog);
             }
         }
 
@@ -116,7 +116,6 @@ namespace WindingTale.UI.ActionStates
             // Exchange the items
             gameMain.CreatureExchangeItem(this.Creature, this.SelectedItemIndex, TargetCreature, index);
             stateHandler.HandleClearStates();
-
         }
     }
 }

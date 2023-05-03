@@ -18,7 +18,7 @@ namespace WindingTale.Core.Events
         /// </summary>
         /// <param name="creatureId"></param>
         /// <param name="position"></param>
-        public ReachPositionEvent(int creatureId, FDPosition position, Action<GameMain> action): base(action) 
+        public ReachPositionEvent(int eventId, int creatureId, FDPosition position, Action<GameMain> action) : base(eventId, action) 
         {
             this.creatureId = creatureId;
             this.position = position;

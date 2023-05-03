@@ -15,14 +15,17 @@ namespace WindingTale.Core.Events
     /// </summary>
     public abstract class FDEvent
     {
+        public int EventId { get; private set; }
+
         public bool IsActive { get; protected set; }
 
         public FDEventType EventType { get; protected set; }
 
         public Action<GameMain> Execution { get; protected set; }
 
-        public FDEvent(Action<GameMain> action)
+        public FDEvent(int eventId, Action<GameMain> action)
         {
+            this.EventId = eventId;
             this.Execution = action;
             this.IsActive = true;
         }

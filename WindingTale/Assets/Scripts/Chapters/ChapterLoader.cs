@@ -1,5 +1,11 @@
-using WindingTale.Common;
+using System;
+using System.Collections.Generic;
+using WindingTale.Core.Common;
+using WindingTale.Core.Components.Events;
 using WindingTale.Core.Definitions;
+using WindingTale.Core.Events;
+using WindingTale.Core.Files;
+using WindingTale.Legacy.Core.Components;
 
 namespace WindingTale.Chapters
 {
@@ -8,13 +14,30 @@ namespace WindingTale.Chapters
         public ChapterLoader()
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="chapterId"></param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public static ChapterDefinition LoadChapter(int chapterId)
         {
             // Load Chapter
             ChapterDefinition definition = ResourceJsonFile.Load<ChapterDefinition>(string.Format(@"Data/Chapters/Chapter_{0}", StringUtils.Digit2(chapterId)));
+            if (definition == null)
+            {
+                throw new Exception("Cannot find definition for chapter " + chapterId);
+            }
+            
             definition.ChapterId = chapterId;
 
-            ChapterDefinition chapter = null;
+            return definition;
+        }
+
+        public static List<FDEvent> LoadEvents(int chapterId)
+        {
+            ChapterEvents chapter = null;
             switch (chapterId)
             {
                 case 1:
@@ -32,11 +55,11 @@ namespace WindingTale.Chapters
 
             if (chapter == null)
             {
-                throw new System.Exception("Cannot find definition for chapter " + chapterId);
+                throw new Exception("Cannot find definition for chapter " + chapterId);
             }
 
-            chapter.LoadEvents();
-            return chapter;
+            return chapter.AllEvents;
         }
+        
     }
 }

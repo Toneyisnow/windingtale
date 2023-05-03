@@ -7,6 +7,7 @@ using WindingTale.Core.Components.Packs;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
 using WindingTale.UI.Scenes.Game;
+using WindingTale.UI.Activities;
 
 namespace WindingTale.UI.ActionStates
 {
@@ -27,10 +28,7 @@ namespace WindingTale.UI.ActionStates
             get; private set;
         }
 
-        public FDRange ItemRange
-        {
-            get; private set;
-        }
+        private FDRange itemRange = null;
 
         /// <summary>
         /// 
@@ -41,35 +39,34 @@ namespace WindingTale.UI.ActionStates
             this.CreatureId = creatureId;
             this.Creature = gameMap.GetCreatureById(creatureId);
             this.SelectedItemIndex = itemIndex;
-
         }
 
         public override void OnEnter()
         {
             base.OnEnter();
 
-            if (this.ItemRange == null)
+            if (itemRange == null)
             {
                 DirectRangeFinder rangeFinder = new DirectRangeFinder(gameMap.Field, this.Creature.Position, 1);
-                this.ItemRange = rangeFinder.CalculateRange();
+                itemRange = rangeFinder.CalculateRange();
             }
 
             // Display the attack range on the UI.
-            ShowRangePack pack = new ShowRangePack(this.ItemRange);
-            SendPack(pack);
+            ShowRangeActivity activity = new ShowRangeActivity(gameMain, itemRange.ToList());
+            activityManager.Push(activity);
         }
 
         public override void OnExit()
         {
             base.OnExit();
-            ClearRangePack pack = new ClearRangePack();
-            SendPack(pack);
+            ClearRangeActivity clear = new ClearRangeActivity();
+            activityManager.Push(clear);
         }
 
         public override void OnSelectPosition(FDPosition position)
         {
             // Selecte position must be included in the range
-            if (!this.ItemRange.Contains(position))
+            if (!itemRange.Contains(position))
             {
                 stateHandler.HandlePopState();
                 return;

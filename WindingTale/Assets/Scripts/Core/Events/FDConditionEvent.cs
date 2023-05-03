@@ -9,7 +9,7 @@ namespace WindingTale.Core.Events
 
         public abstract bool Match(GameMap gameMap);
 
-        public FDConditionEvent(Action<GameMain> action): base(action)
+        public FDConditionEvent(int eventId, Action<GameMain> action): base(eventId, action)
         {
             this.EventType = FDEventType.Condition;
         }

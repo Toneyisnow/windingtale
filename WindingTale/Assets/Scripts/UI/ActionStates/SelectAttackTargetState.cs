@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Common;
 using WindingTale.Core.Algorithms;
+using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
 using WindingTale.Core.Objects;
+using WindingTale.UI.Activities;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.ActionStates
@@ -46,14 +47,16 @@ namespace WindingTale.UI.ActionStates
             }
 
             // Display the attack range on the UI.
-            ShowRangePack pack = new ShowRangePack(this.AttackRange);
-            SendPack(pack);
+            ShowRangeActivity activity = new ShowRangeActivity(gameMain, this.AttackRange.ToList());
+            activityManager.Push(activity);
         }
 
         public override void OnExit()
         {
-            ClearRangePack pack = new ClearRangePack();
-            SendPack(pack);
+            base.OnExit();
+            
+            ClearRangeActivity activity = new ClearRangeActivity();
+            activityManager.Push(activity);
         }
 
         public override void OnSelectPosition(FDPosition position)

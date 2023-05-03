@@ -501,6 +501,10 @@ namespace WindingTale.Core.Objects
             return creature;
         }
 
+        internal void ResetPosition()
+        {
+            this.Position = this.PrePosition;
+        }
 
         public FDCreature(int id, CreatureFaction faction) : base(id, ObjectType.Creature)
         {

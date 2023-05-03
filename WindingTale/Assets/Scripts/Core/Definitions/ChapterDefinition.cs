@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Common;
+using WindingTale.Core.Events;
+using WindingTale.Core.Files;
 
 namespace WindingTale.Core.Definitions
 {
@@ -54,11 +55,6 @@ namespace WindingTale.Core.Definitions
         public Dictionary<string, int> ConversationIds
         {
             get; private set;
-        }
-
-        public virtual void LoadEvents()
-        {
-
         }
 
         public void ReadConversationIdsFromFile(ResourceDataFile dataFile)

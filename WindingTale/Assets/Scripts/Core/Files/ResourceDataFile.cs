@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.Common;
 
-namespace WindingTale.Common
+namespace WindingTale.Core.Files
 {
     public class ResourceDataFile
     {

@@ -9,7 +9,7 @@ namespace WindingTale.Core.Events
     {
         private CreatureFaction faction = CreatureFaction.Enemy;
 
-        public TeamEliminatedEvent(CreatureFaction faction, Action<GameMain> game) : base(game)
+        public TeamEliminatedEvent(int eventId, CreatureFaction faction, Action<GameMain> game) : base(eventId, game)
         {
             this.faction = faction;
         }

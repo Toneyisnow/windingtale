@@ -4,21 +4,20 @@
 
 using System;
 
-using WindingTale.Common;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Events;
 using WindingTale.Core.Map;
 using WindingTale.Core.Files;
 using WindingTale.Core.Objects;
-using WindingTale.UI.Components.Activities;
 using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core;
-using WindingTale.Core.Components.Packs;
 using UnityEditor.VersionControl;
 using WindingTale.UI.Activities;
 using WindingTale.UI.MapObjects;
 using WindingTale.Core.Algorithms;
+using System.Collections.Generic;
+using WindingTale.Chapters;
 
 namespace WindingTale.UI.Scenes.Game
 {
@@ -87,13 +86,11 @@ namespace WindingTale.UI.Scenes.Game
             Instance = new GameMain();
 
             // Load chapter map
-            ChapterDefinition chapterDefinition = ChapterLoader.Load(chapterId);
+            ChapterDefinition chapterDefinition = ChapterLoader.LoadChapter(chapterId);
             Instance.GameMap = GameMap.LoadFromChapter(chapterDefinition, record);
             Instance.GameHandler = new GameHandler(Instance.GameMap);
 
             // Load chapter creatures from record
-
-
 
             return Instance;
         }
@@ -102,8 +99,6 @@ namespace WindingTale.UI.Scenes.Game
         public static GameMain LoadMapRecord()
         {
             Instance = new GameMain();
-
-
             return Instance;
         }
 
@@ -254,6 +249,20 @@ namespace WindingTale.UI.Scenes.Game
 
         #region Game Public Actions
 
+        /// <summary>
+        /// Create a new Creature and add to the map.
+        /// </summary>
+        /// <param name="faction"></param>
+        /// <param name="creatureId"></param>
+        /// <param name="definitionId"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public FDCreature AddCreature(CreatureFaction faction, int creatureId, int definitionId, FDPosition position)
+        {
+            //
+            return null;
+        }
+
         public void CreatureMove(FDCreature creature, FDMovePath movePath)
         {
 
@@ -263,7 +272,8 @@ namespace WindingTale.UI.Scenes.Game
         {
             // If the creature has moved, reset the creature position
             creature.ResetPosition();
-            CreatureRefreshPack reset = new CreatureRefreshPack(creature.Clone());
+            CreatureRefreshActivity reset = new CreatureRefreshActivity(new List<int> { creature.Id });
+            PushActivity(reset);
         }
 
         public void CreatureAttack(FDCreature creature, FDCreature target)

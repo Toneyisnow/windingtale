@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace WindingTale.Common
+namespace WindingTale.Core.Common
 {
     public class FDRandom
     {

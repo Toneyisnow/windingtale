@@ -7,6 +7,7 @@ using WindingTale.Core.Algorithms;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
 using WindingTale.UI.Scenes.Game;
+using WindingTale.UI.Activities;
 
 namespace WindingTale.UI.ActionStates
 {
@@ -53,16 +54,16 @@ namespace WindingTale.UI.ActionStates
                 magicRange = rangeFinder.CalculateRange();
             }
 
-            ShowRangePack rangePack = new ShowRangePack(magicRange);
-            SendPack(rangePack);
+            ShowRangeActivity activity = new ShowRangeActivity(gameMain, magicRange.ToList());
+            activityManager.Push(activity);
         }
 
         public override void OnExit()
         {
             base.OnExit();
 
-            ClearRangePack clear = new ClearRangePack();
-            SendPack(clear);
+            ClearRangeActivity activity = new ClearRangeActivity();
+            activityManager.Push(activity);
         }
 
         public override void OnSelectPosition(FDPosition position)
@@ -78,7 +79,7 @@ namespace WindingTale.UI.ActionStates
                 DirectRangeFinder rangeFinder = new DirectRangeFinder(gameMap.Field, position, this.Magic.EffectScope);
                 FDRange magicScope = rangeFinder.CalculateRange();
 
-                List<FDCreature> targets = gameMap.GetCreatureInRange(magicScope, CreatureFaction.Enemy);
+                List<FDCreature> targets = gameMap.GetCreaturesInRange(magicScope.ToList(), CreatureFaction.Enemy);
                 if (targets == null || targets.Count == 0)
                 {
                     // Cannot spell on that position, do nothing

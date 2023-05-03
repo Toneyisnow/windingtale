@@ -121,6 +121,7 @@ namespace WindingTale.Core.Map
 
         public static GameMap LoadFromChapter(ChapterDefinition chapter, GameRecord record)
         {
+
             return null;
         }
 
