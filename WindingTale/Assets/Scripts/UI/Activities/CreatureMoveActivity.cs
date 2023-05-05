@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Common;
 using WindingTale.Core.Algorithms;
+using WindingTale.Core.Common;
+using WindingTale.Core.Objects;
 using WindingTale.UI.FieldMap;
 using WindingTale.UI.MapObjects;
 using WindingTale.UI.Scenes.Game;
@@ -11,14 +12,14 @@ namespace WindingTale.UI.Activities
 {
     public class CreatureMoveActivity : ActivityBase
     {
-        private float moveDeltaPerTick = 1.0f / WindingTale.UI.Common.Constants.TICK_PER_FRAME;
+        private float moveDeltaPerTick = 1.0f / Common.Constants.TICK_PER_FRAME;
 
         private int currentVertex = 0;
 
         private Vector3 targetPosition = Vector3.zero;
 
 
-        public int CreatureId
+        public FDCreature Creature
         {
             get; private set;
         }
@@ -33,16 +34,16 @@ namespace WindingTale.UI.Activities
             get; private set;
         }
 
-        public CreatureMoveActivity(int creaId, FDMovePath path)
+        public CreatureMoveActivity(FDCreature creature, FDMovePath path)
         {
-            this.CreatureId = creaId;
+            this.Creature = creature;
             this.MovePath = path;
             currentVertex = 0;
         }
 
         public override void Start(IGameInterface gameInterface)
         {
-            this.UICreature = gameInterface.GetUICreature(this.CreatureId);
+            this.UICreature = gameInterface.GetUICreature(this.Creature.Id);
             if (this.UICreature == null)
             {
                 this.HasFinished = true;

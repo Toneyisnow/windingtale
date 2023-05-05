@@ -257,7 +257,7 @@ namespace WindingTale.UI.Scenes.Game
         /// <param name="definitionId"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public FDCreature AddCreature(CreatureFaction faction, int creatureId, int definitionId, FDPosition position)
+        public FDCreature AddCreature(CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItemId = 0)
         {
             //
             return null;
@@ -274,6 +274,16 @@ namespace WindingTale.UI.Scenes.Game
             creature.ResetPosition();
             CreatureRefreshActivity reset = new CreatureRefreshActivity(new List<int> { creature.Id });
             PushActivity(reset);
+        }
+
+        public void CreatureBatchMove(List<Tuple<FDCreature, FDMovePath>> creatureMoves)
+        {
+            BatchActivity batchActivity = new BatchActivity();
+            foreach(Tuple<FDCreature, FDMovePath> move in creatureMoves)
+            {
+                batchActivity.Add(new CreatureMoveActivity(move.Item1, move.Item2));
+            }
+            PushActivity(batchActivity);
         }
 
         public void CreatureAttack(FDCreature creature, FDCreature target)
