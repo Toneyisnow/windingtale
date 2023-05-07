@@ -66,7 +66,7 @@ namespace WindingTale.Core.Algorithms
                 return;
             }
 
-            range.AddPosition(pos);
+            range.Add(pos);
         }
     }
 }

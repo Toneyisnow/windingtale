@@ -3,7 +3,7 @@ using WindingTale.Core.Definitions;
 namespace WindingTale.Core.Map
 {
     /// <summary>
-    /// 
+    /// A matrix of ShapeDefinition
     /// </summary>
     public class GameField
     {

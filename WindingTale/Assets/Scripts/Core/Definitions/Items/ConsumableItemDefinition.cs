@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
-using WindingTale.Common;
+using WindingTale.Core.Common;
+using WindingTale.Core.Files;
 
 namespace WindingTale.Core.Definitions.Items
 {
+    /// <summary>
+    /// @deprecated Should use EffectType instead
+    /// </summary>
     public enum ItemUseType
     {
         Hp = 1,

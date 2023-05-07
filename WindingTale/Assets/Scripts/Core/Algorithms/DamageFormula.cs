@@ -4,21 +4,23 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using WindingTale.Common;
+using WindingTale.Core.Common;
+using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
+using WindingTale.Core.Map;
+using WindingTale.Core.Objects;
 
-namespace WindingTale.Core.Components.Algorithms
+namespace WindingTale.Core.Algorithms
 {
     public class DamageFormula
     {
         private static int commonDoubleAttackRate = 5;
         private static int commonCriticalAttackRate = 5;
 
-
-        public static FightInformation DealWithAttack(FDCreature subject, FDCreature target, GameField field, bool canFightBack)
+        public static AttackResult DealWithAttack(FDCreature subject, FDCreature target, GameField field, bool canFightBack)
         {
-            BattleResults attack1 = AttackFrom(subject, target, field);
+            AttackResult attack1 = AttackFrom(subject, target, field);
             BattleResults attack2 = null;
             BattleResults back1 = null;
             BattleResults back2 = null;
@@ -121,50 +123,7 @@ namespace WindingTale.Core.Components.Algorithms
             return result;
         }
 
-        private static BattleResults AttackFrom(FDCreature subject, FDCreature target, GameField field)
-        {
-            bool isHit = FDRandom.BoolFromRate(subject.Data.CalculatedHit - target.Data.CalculatedEv);
-            bool isCritical = FDRandom.BoolFromRate(commonCriticalAttackRate);
-
-            int reduceHp = 0;
-            if(isHit)
-            {
-                FDPosition pos = subject.Position;
-                ShapeDefinition shape = field.GetShapeAt(pos.X, pos.Y);
-                int adjustedAp = subject.Data.CalculatedAp * (100 + shape.AdjustedAp) / 100;
-
-                FDPosition targetPos = target.Position;
-                ShapeDefinition targetShape = field.GetShapeAt(targetPos.X, targetPos.Y);
-                int adjustedDp = target.Data.CalculatedDp * (100 + shape.AdjustedDp) / 100;
-
-                int attackMax = adjustedAp - adjustedDp;
-                int attackMin = (int)(attackMax * 0.9f);
-                reduceHp = FDRandom.IntFromSpan(attackMin, attackMax);
-                reduceHp = (reduceHp < 0) ? 0 : reduceHp;
-
-                if (isCritical)
-                {
-                    reduceHp *= 2;
-                }
-
-                // Poisoned
-                AttackItemDefinition attackItem = subject.Data.GetAttackItem();
-                if (attackItem != null)
-                {
-                    bool isPoisoned = FDRandom.BoolFromRate(attackItem.GetPoisonRate());
-                    if(isPoisoned)
-                    {
-                        target.Data.SetEffect(CreatureData.CreatureEffects.Poisoned);
-                    }
-                }
-            }
-
-            BattleResults info = new AttackInformation(target.Data.Hp, target.Data.Hp - reduceHp, isCritical);
-            target.Data.UpdateHp(-reduceHp);
-
-            return info;
-        }
-
+        
         private static BattleResults MagicFrom(MagicDefinition magic, FDCreature subject, FDCreature target, GameField field)
         {
             bool isHit = FDRandom.BoolFromRate(magic.HittingRate);

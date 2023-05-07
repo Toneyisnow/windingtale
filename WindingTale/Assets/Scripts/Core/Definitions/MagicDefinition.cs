@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Common;
+using WindingTale.Core.Common;
+using WindingTale.Core.Components.Algorithms;
+using WindingTale.Core.Files;
 
 namespace WindingTale.Core.Definitions
 {
@@ -110,7 +113,7 @@ namespace WindingTale.Core.Definitions
             def.HittingRate = dataFile.ReadInt();
             def.EffectRange = dataFile.ReadInt();
             def.EffectScope = dataFile.ReadInt();
-            
+
             def.MpCost = dataFile.ReadInt();
             def.AllowAfterMove = dataFile.ReadBoolean();
             def.AiConsiderRate = dataFile.ReadInt();
@@ -125,5 +128,47 @@ namespace WindingTale.Core.Definitions
             return def;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        public EffectResult GenerateEffect()
+        {
+            int value = 0;
+            switch (MagicId)
+            {
+                case 301:
+                    value = FDRandom.IntFromSpan(2, 4);
+                    return new EffectResult(EffectType.Forbidden, value);
+                case 302:
+                    value = FDRandom.IntFromSpan(3, 5);
+                    return new EffectResult(EffectType.Poison, value);
+                case 303:
+                    value = FDRandom.IntFromSpan(2, 4);
+                    return new EffectResult(EffectType.Freezing, value);
+                case 401:
+                    return new EffectResult(EffectType.Ap, 5);
+                case 402:
+                    return new EffectResult(EffectType.Dp, 5);
+                case 403:
+                    return new EffectResult(EffectType.Dx, 5);
+                case 404:
+                    return new EffectResult(EffectType.AntiPoison, 0);
+                case 405:
+                    return new EffectResult(EffectType.AntiFreeze, 0);
+                case 406:
+                    return new EffectResult(EffectType.StartAction, 0);
+                case 407:
+                    return new MultiEffectResult(new List<EffectResult>() {
+                        new EffectResult(EffectType.Ap, 5),
+                        new EffectResult(EffectType.Dp, 5),
+                        new EffectResult(EffectType.Dx, 5),
+                    });
+                case 408:
+                    return null;
+                default:
+                    return null;
+            }
+        }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.XPath;
-using WindingTale.Common;
+using WindingTale.Core.Common;
 
 namespace WindingTale.Core.Components.Algorithms
 {
@@ -63,14 +63,33 @@ namespace WindingTale.Core.Components.Algorithms
 
     public class EffectResult : SoloResult
     {
+        public EffectType Type { get; private set; }
+
         public int Amount { get; private set; }
 
 
-        public EffectResult(int amount) : base(SoloResultType.Effect)
+        public EffectResult(EffectType type, int amount) : base(SoloResultType.Effect)
         {
+            this.Type = type;
             this.Amount = amount;
         }
     }
+
+    public class MultiEffectResult : EffectResult
+    {
+        public List<EffectResult> Effects { get; private set; }
+
+        public void AddEffect(EffectResult effect)
+        {
+            this.Effects.Add(effect);
+        }
+
+        public MultiEffectResult(List<EffectResult> effects) : base(EffectType.Multi, 0)
+        {
+            this.Effects = effects;
+        }
+    }
+
 
     #endregion
 
@@ -79,12 +98,19 @@ namespace WindingTale.Core.Components.Algorithms
 
     public abstract class BattleResult
     {
-        public int Experience { get; protected set; }
+        public int Experience { get; set; }
 
-        public List<int> GainedItems { get; protected set; }
+        public List<int> GainedItems { get; set; }
 
 
-        public LevelUpInfo LevelUp { get; protected set; }
+        public LevelUpInfo LevelUp { get; set; }
+
+        public BattleResult()
+        {
+            this.Experience = 0;
+            this.GainedItems = new List<int>();
+            this.LevelUp = null;
+        }
 
     }
 
@@ -97,6 +123,11 @@ namespace WindingTale.Core.Components.Algorithms
 
         public List<DamageResult> BackDamages;
 
+        public AttackResult() : base()
+        {
+            this.Damages = new List<DamageResult>();
+            this.BackDamages = new List<DamageResult>();
+        }
     }
 
     /// <summary>
@@ -107,7 +138,12 @@ namespace WindingTale.Core.Components.Algorithms
         /// <summary>
         /// Results has format of <CreatureId, SoloResult>
         /// </summary>
-        public Dictionary<string, SoloResult> Results;
+        public Dictionary<int, SoloResult> Results;
+
+        public MagicResult() : base()
+        {
+            this.Results = new Dictionary<int, SoloResult>();
+        }
     }
 
     public class ItemResult
