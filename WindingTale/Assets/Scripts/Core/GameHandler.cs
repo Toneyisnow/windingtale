@@ -22,6 +22,8 @@ namespace WindingTale.Core
             this.gameMap = map;
         }
 
+        #region
+
         /// <summary>
         /// This function will actually update the creature and target, the returned
         /// result is only for UI display.
@@ -128,6 +130,19 @@ namespace WindingTale.Core
             return null;
         }
 
+        public RecoverResult HandleCreatureRecover(FDCreature creature)
+        {
+            if (creature == null)
+            {
+                return null;
+            }
+
+            int recoverAmount = (int)(creature.HpMax * 0.15);
+            int actualAmount = Math.Min(recoverAmount, creature.HpMax - creature.Hp);
+            return new RecoverResult(RecoverType.Hp, actualAmount);
+        }
+
+        #endregion
 
         #region Private Methods
 

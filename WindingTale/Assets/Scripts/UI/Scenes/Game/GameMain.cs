@@ -168,9 +168,6 @@ namespace WindingTale.UI.Scenes.Game
 
         private void OnCreatureDone(FDCreature creature)
         {
-            // If creature haven't moved, then take rest recover
-
-
             // Set the creature to inactive
             creature.HasActioned = true;
 
@@ -459,6 +456,17 @@ namespace WindingTale.UI.Scenes.Game
         /// <param name="creature"></param>
         public void CreatureRest(FDCreature creature)
         {
+            // Check creature not moved and not actioned, if yes, do recover
+            if (!creature.HasMoved() && !creature.HasActioned)
+            {
+                RecoverResult recover = this.GameHandler.HandleCreatureRecover(creature);
+                if (recover != null && recover.Amount > 0)
+                {
+                    CreatureRecoverActivity activity = new CreatureRecoverActivity(creature);
+                    PushActivity(activity);
+                }
+            }
+
             PushCallbackActivity(() => OnCreatureDone(creature));
         }
 
@@ -468,7 +476,7 @@ namespace WindingTale.UI.Scenes.Game
             {
                 if (!friend.HasActioned)
                 {
-                    PushCallbackActivity(() => OnCreatureDone(friend));
+                    CreatureRest(friend);
                 }
             });
         }
