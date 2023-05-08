@@ -13,7 +13,8 @@ namespace WindingTale.Core.Components.Algorithms
     public enum SoloResultType
     {
         Damage = 0,
-        Effect = 1,
+        Recover = 1,
+        Effect = 2,
     }
 
     public abstract class SoloResult
@@ -61,17 +62,28 @@ namespace WindingTale.Core.Components.Algorithms
 
     }
 
-    public class EffectResult : SoloResult
+    public class RecoverResult : SoloResult
     {
-        public EffectType Type { get; private set; }
+        public RecoverType Type { get; private set; }
 
         public int Amount { get; private set; }
 
 
-        public EffectResult(EffectType type, int amount) : base(SoloResultType.Effect)
+        public RecoverResult(RecoverType type, int amount) : base(SoloResultType.Recover)
         {
             this.Type = type;
             this.Amount = amount;
+        }
+    }
+
+    public class EffectResult : SoloResult
+    {
+        public EffectType Type { get; private set; }
+
+
+        public EffectResult(EffectType type) : base(SoloResultType.Effect)
+        {
+            this.Type = type;
         }
     }
 
@@ -84,7 +96,7 @@ namespace WindingTale.Core.Components.Algorithms
             this.Effects.Add(effect);
         }
 
-        public MultiEffectResult(List<EffectResult> effects) : base(EffectType.Multi, 0)
+        public MultiEffectResult(List<EffectResult> effects) : base(EffectType.Multi)
         {
             this.Effects = effects;
         }
@@ -186,7 +198,15 @@ namespace WindingTale.Core.Components.Algorithms
             get; set;
         }
 
-
+        public LevelUpInfo()
+        {
+            this.ImprovedHp = 0;
+            this.ImprovedMp = 0;
+            this.ImprovedAp = 0;
+            this.ImprovedDp = 0;
+            this.ImprovedDx = 0;
+            this.LearntMagicId = 0;
+        }
     }
     #endregion
 }

@@ -233,7 +233,6 @@
     <Compile Include="Assets\Scripts\Core\Files\ResourceJsonFile.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\CreatureRefreshActivity.cs" />
     <Compile Include="Assets\Scripts\Chapters\ChapterEvents.cs" />
-    <Compile Include="Assets\Scripts\Core\Common\EffectType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_24.txt" />

@@ -42,7 +42,7 @@ namespace WindingTale.Core.Definitions
             get; private set;
         }
 
-        public int ApInvoledRate
+        public int ApInvolvedRate
         {
             get; private set;
         }
@@ -107,7 +107,7 @@ namespace WindingTale.Core.Definitions
 
             if (def.Type == MagicType.Attack)
             {
-                def.ApInvoledRate = dataFile.ReadInt();
+                def.ApInvolvedRate = dataFile.ReadInt();
             }
 
             def.HittingRate = dataFile.ReadInt();
@@ -169,6 +169,33 @@ namespace WindingTale.Core.Definitions
                 default:
                     return null;
             }
+        }
+
+        public int GetBaseExperience()
+        {
+            switch (this.MagicId)
+            {
+                case 401:
+                case 402:
+                case 403:
+                    return 4;
+                case 406:
+                    return 8;
+                case 301:
+                case 302:
+                case 303:
+                case 404:
+                case 405:
+                    return 4;
+                case 407:
+                case 408:
+                    return 3;
+                case 501:
+                    return 10;
+                default:
+                    break;
+            }
+            return 0;
         }
     }
 }

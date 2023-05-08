@@ -18,6 +18,8 @@ using WindingTale.UI.MapObjects;
 using WindingTale.Core.Algorithms;
 using System.Collections.Generic;
 using WindingTale.Chapters;
+using static UnityEditor.Progress;
+using static UnityEngine.GraphicsBuffer;
 
 namespace WindingTale.UI.Scenes.Game
 {
@@ -221,9 +223,18 @@ namespace WindingTale.UI.Scenes.Game
             }
         }
 
+        private void PushActivities(List<ActivityBase> activities)
+        {
+            this.ActivityManager.Insert(activities);
+        }
+
         private void PushActivity(ActivityBase activity)
         {
             this.ActivityManager.Push(activity);
+        }
+        private void InsertActivity(ActivityBase activity)
+        {
+            this.ActivityManager.Insert(activity);
         }
 
         private void PushCallbackActivity(Action callback)
@@ -288,28 +299,149 @@ namespace WindingTale.UI.Scenes.Game
 
         public void CreatureAttack(FDCreature creature, FDCreature target)
         {
-            AttackResult result = this.GameHandler.HandleCreatureAttack(creature, target);
+            AttackResult result = this.GameHandler.HandleCreatureAttack(creature, target, this.GameMap);
+            List<ActivityBase> activities = new List<ActivityBase>();
 
             // TODO: AttackActivity to Fight Scene
 
-
+            // 1. Apply the attack result to subject and target
+            result.Damages.ForEach(damage => target.ApplyDamage(damage));
+            result.BackDamages.ForEach(backDamage => creature.ApplyDamage(backDamage));
 
             CheckConditionEvents();
 
+            // 2. Check if the creature or target is dead, if so, remove the target from the map
+            List<int> deadCreatureIds = new List<int>();
+            if (creature.IsDead())
+            {
+                deadCreatureIds.Add(creature.Id);
+            }
+            if (target.IsDead())
+            {
+                deadCreatureIds.Add(target.Id);
+            }
+
             // Dead Animation
+            if (deadCreatureIds.Count > 0)
+            {
+                CreatureDeadActivity deadActivity = new CreatureDeadActivity(deadCreatureIds);
+                activities.Add(deadActivity);
+            }
 
+            CheckConditionEvents();
 
-            // Check if the creature is dead and remove dead creatures
+            // 3. Check gained item
+            if (result.GainedItems.Count > 0)
+            {
+                result.GainedItems.ForEach((itemId) =>
+                {
+                    List<ActivityBase> acts = OnCreatureGainItem(creature, itemId);
+                    activities.AddRange(acts);
+                });
+            }
 
+            // 4. Apply experience
+            if (result.Experience > 0)
+            {
+                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 13, result.Experience);
+                TalkActivity talk = new TalkActivity(message, creature);
+                activities.Add(talk);
 
-            PushCallbackActivity(() => OnCreatureDone(creature));
+                LevelUpInfo levelUp = ApplyExperience(creature, result.Experience);
+                if (levelUp != null)
+                {
+                    // 等级上升了！
+                    FDMessage levelUpMessage = FDMessage.Create(FDMessage.MessageTypes.Information, 18);
+                    TalkActivity talk2 = new TalkActivity(levelUpMessage, creature);
+                    activities.Add(talk2);
+                }
+            }
+
+            activities.Add(new CallbackActivity(() => OnCreatureDone(creature)));
+            PushActivities(activities);
         }
 
         public void CreatureMagic(FDCreature creature, int magicIndex, FDPosition position)
         {
+            int magicId = creature.GetMagicAt(magicIndex);
+            if (magicId == 0)
+            {
+                throw new Exception("Creature doesn't have magic at index.");
+            }
 
-            PushCallbackActivity(() => OnCreatureDone(creature));
+            MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
+            MagicResult magicResult = this.GameHandler.HandleCreatureMagic(creature, position, magic, this.GameMap);
+
+            List<ActivityBase> activities = new List<ActivityBase>();
+
+            // TODO: AttackActivity to Fight Scene
+
+            // 1. Apply the attack result to subject and target
+            creature.Mp -= magic.MpCost;
+            List<int> deadCreatureIds = new List<int>();
+            foreach (int creatureId in magicResult.Results.Keys)
+            {
+                SoloResult result = magicResult.Results[creatureId];
+                FDCreature target = this.GameMap.GetCreatureById(creatureId);
+                if (result.ResultType == SoloResultType.Damage)
+                {
+                    target.ApplyDamage((DamageResult)result);
+                }
+                else if (result.ResultType == SoloResultType.Effect)
+                {
+                    target.ApplyEffect((EffectResult)result);
+                }
+
+                if (target.IsDead())
+                {
+                    deadCreatureIds.Add(target.Id);
+                }
+            };
+
+            CheckConditionEvents();
+
+            // 2. Check if the creature or target is dead, if so, remove the target from the map
+            
+            // Dead Animation
+            if (deadCreatureIds.Count > 0)
+            {
+                CreatureDeadActivity deadActivity = new CreatureDeadActivity(deadCreatureIds);
+                activities.Add(deadActivity);
+            }
+
+            CheckConditionEvents();
+
+            // 3. Check gained item
+            if (magicResult.GainedItems.Count > 0)
+            {
+                magicResult.GainedItems.ForEach((itemId) =>
+                {
+                    List<ActivityBase> acts = OnCreatureGainItem(creature, itemId);
+                    activities.AddRange(acts);
+                });
+            }
+
+            // 4. Apply experience
+            if (magicResult.Experience > 0)
+            {
+                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 13, magicResult.Experience);
+                TalkActivity talk = new TalkActivity(message, creature);
+                activities.Add(talk);
+
+                LevelUpInfo levelUp = ApplyExperience(creature, magicResult.Experience);
+                if (levelUp != null)
+                {
+                    // 等级上升了！
+                    FDMessage levelUpMessage = FDMessage.Create(FDMessage.MessageTypes.Information, 18);
+                    TalkActivity talk2 = new TalkActivity(levelUpMessage, creature);
+                    activities.Add(talk2);
+                }
+            }
+
+            activities.Add(new CallbackActivity(() => OnCreatureDone(creature)));
+            PushActivities(activities);
         }
+
         public void CreatureUseItem(FDCreature creature, int itemIndex, FDPosition position)
         {
 
@@ -343,7 +475,81 @@ namespace WindingTale.UI.Scenes.Game
 
         #endregion
 
+        #region Private Methods
 
+        private List<ActivityBase> OnCreatureGainItem(FDCreature creature, int itemId)
+        {
+            List<ActivityBase> activities = new List<ActivityBase>();
+
+            FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 25, itemId);
+            TalkActivity talk = new TalkActivity(message, creature);
+            activities.Add(talk);
+
+            // If item is full, prompt whether to drop item
+            if (creature.IsItemsFull())
+            {
+                FDMessage confirm = FDMessage.Create(FDMessage.MessageTypes.Confirm, 7);
+                PromptActivity prompt = new PromptActivity(confirm, (result) => {
+                    if (result == 1)
+                    {
+                        ShowCreatureInfoActivity showItems = new ShowCreatureInfoActivity(this, creature, CreatureInfoType.SelectAllItem, (index) =>
+                        {
+                            if (index > 0)
+                            {
+                                creature.RemoveItemAt(index);
+                                creature.AddItem(itemId);
+                            }
+                            else
+                            {
+                                // 那么就不要了
+                                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 10, itemId);
+                                TalkActivity talk = new TalkActivity(message, creature);
+                                InsertActivity(talk);
+                            }
+                        });
+                        InsertActivity(showItems);
+                    }
+                    else
+                    {
+                        // 那么就不要了
+                        FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 10, itemId);
+                        TalkActivity talk = new TalkActivity(message, creature);
+                        InsertActivity(talk);
+                    }
+                }, creature);
+                activities.Add(prompt);
+            }
+
+            return activities;
+        }
+
+        private LevelUpInfo ApplyExperience(FDCreature creature, int experience)
+        {
+            creature.Exp += experience;
+
+            if (creature.Exp < 100 || creature.Level >= creature.Definition.GetMaxLevel()) 
+            {
+                return null;
+            }
+
+            creature.Exp -= 100;
+            creature.Level++;
+
+            LevelUpDefinition levelUpDef = DefinitionStore.Instance.GetLevelUpDefinition(creature.Definition.DefinitionId);
+            LevelUpMagicDefinition levelUpMagic = DefinitionStore.Instance.GetLevelUpMagicDefinition(creature.Definition.DefinitionId, creature.Level);
+            
+            LevelUpInfo levelUp = new LevelUpInfo();
+            levelUp.ImprovedHp = FDRandom.IntFromSpan(levelUpDef.HpRange);
+            levelUp.ImprovedMp = FDRandom.IntFromSpan(levelUpDef.MpRange);
+            levelUp.ImprovedAp= FDRandom.IntFromSpan(levelUpDef.ApRange);
+            levelUp.ImprovedDp = FDRandom.IntFromSpan(levelUpDef.DpRange);
+            levelUp.ImprovedDx = FDRandom.IntFromSpan(levelUpDef.DxRange);
+            levelUp.LearntMagicId = levelUpMagic.MagicId;
+
+            return levelUp;
+        }
+
+        #endregion
 
     }
 }

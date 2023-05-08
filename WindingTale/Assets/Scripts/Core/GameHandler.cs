@@ -102,9 +102,13 @@ namespace WindingTale.Core
                 {
                     result.Experience += CalculateDamageExp(subject, target, (DamageResult)soloResult);
                 }
-                else
+                else if (soloResult.ResultType == SoloResultType.Recover)
                 {
-                    result.Experience += CalculateMagicExp(subject, target, magic);
+                    result.Experience += CalculateRecoverExp(subject, target, magic, (RecoverResult)soloResult);
+                }
+                else if (soloResult.ResultType == SoloResultType.Effect)
+                {
+                    result.Experience += CalculateMagicEffectExp(subject, target, magic, (EffectResult)soloResult);
                 }
             }
 
@@ -187,14 +191,14 @@ namespace WindingTale.Core
                 switch (magic.Type)
                 {
                     case MagicType.Attack:
-                        changedHp = -FDRandom.IntFromSpan(magic.Span) + magic.ApInvoledRate * subject.CalculatedAp / 100;
+                        changedHp = -FDRandom.IntFromSpan(magic.Span) + magic.ApInvolvedRate * subject.CalculatedAp / 100;
                         changedHp = (int)(changedHp * hitRate);
                         changedHp = Math.Min(0, changedHp);
                         return new DamageResult(target.Hp, target.Hp + changedHp, false);
                     case MagicType.Recover:
                         changedHp = FDRandom.IntFromSpan(magic.Span);
                         changedHp = Math.Max(0, changedHp);
-                        return new EffectResult(EffectType.Hp, changedHp);
+                        return new RecoverResult(RecoverType.Hp, changedHp);
                     case MagicType.Offensive:
                     case MagicType.Defensive:
                         return magic.GenerateEffect();
@@ -209,14 +213,54 @@ namespace WindingTale.Core
 
         private static int CalculateDamageExp(FDCreature subject, FDCreature target, DamageResult damage)
         {
-            return 0;
+            if (subject == null || target == null || damage == null || subject.Faction != CreatureFaction.Friend)
+            {
+                return 0;
+            }
+
+            int calculatedHp = 0;
+            if (damage.HpAfter <= 0)
+            {
+                calculatedHp = target.HpMax;
+            }
+            else
+            {
+                calculatedHp = damage.HpBefore - damage.HpAfter;
+            }
+
+            return calculatedHp * target.Level * target.Exp / subject.Level / target.HpMax;
         }
 
-        private static int CalculateMagicExp(FDCreature subject, FDCreature target, MagicDefinition magic)
+        private static int CalculateRecoverExp(FDCreature subject, FDCreature target, MagicDefinition magic, RecoverResult recoverResult)
         {
-            return 0;
+            if (subject == null || target == null || magic == null || recoverResult == null || subject.Faction != CreatureFaction.Friend)
+            {
+                return 0;
+            }
+
+            if (recoverResult.Type == RecoverType.Hp)
+            {
+                // Recover
+                int calculatedHp = recoverResult.Amount;
+                return (int)(calculatedHp * 100 * target.Level * 0.7 / subject.Level / target.HpMax);
+            }
+            else
+            {
+                // No others now
+                return 0;
+            }
         }
 
+        private static int CalculateMagicEffectExp(FDCreature subject, FDCreature target, MagicDefinition magic, EffectResult effectResult)
+        {
+            if (subject == null || target == null || magic == null || effectResult == null || subject.Faction != CreatureFaction.Friend)
+            {
+                return 0;
+            }
+
+            // Other effects magic
+            return magic.GetBaseExperience() * target.Level / subject.Level;
+        }
 
         private static bool CanFightBack(FDCreature subject, FDCreature target, GameField field)
         {

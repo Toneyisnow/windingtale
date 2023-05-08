@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using WindingTale.Core.Common;
+using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
 
@@ -13,9 +14,10 @@ namespace WindingTale.Core.Objects
     {
         EnhancedAp = 1,
         EnhancedDp = 2,
-        Forbidden = 3,
-        Frozen = 4,
-        Poisoned = 5,
+        EnhancedDx = 3,
+        Forbidden = 4,
+        Frozen = 5,
+        Poisoned = 6,
     }
 
     /// <summary>
@@ -126,7 +128,7 @@ namespace WindingTale.Core.Objects
             get; private set;
         }
 
-        public List<CreatureEffects> Effects
+        public HashSet<CreatureEffects> Effects
         {
             get; private set;
         }
@@ -263,6 +265,10 @@ namespace WindingTale.Core.Objects
             return this.Items != null && this.Items.Count >= 8;
         }
 
+        /// <summary>
+        /// Note: need to update attack/defense item index after this call
+        /// </summary>
+        /// <param name="itemIndex"></param>
         public void RemoveItemAt(int itemIndex)
         {
             if (itemIndex < 0 || itemIndex >= this.Items.Count)
@@ -372,7 +378,7 @@ namespace WindingTale.Core.Objects
         {
             if (this.Magics != null || magicIndex < 0 || magicIndex >= this.Magics.Count)
             {
-                return -1;
+                return 0;
             }
 
             return this.Magics[magicIndex];
@@ -430,7 +436,7 @@ namespace WindingTale.Core.Objects
         {
             if (this.Effects == null)
             {
-                this.Effects = new List<CreatureEffects>();
+                this.Effects = new HashSet<CreatureEffects>();
             }
 
             this.Effects.Add(effect);
@@ -496,14 +502,49 @@ namespace WindingTale.Core.Objects
                 }
             }
 
-            creature.Effects = new List<CreatureEffects>();
+            creature.Effects = new HashSet<CreatureEffects>();
 
             return creature;
         }
 
-        internal void ResetPosition()
+        public void ResetPosition()
         {
             this.Position = this.PrePosition;
+        }
+
+        public void ApplyDamage(DamageResult damage)
+        {
+            this.Hp = damage.HpAfter;
+        }
+
+        public void ApplyEffect(EffectResult effect)
+        {
+            switch (effect.Type)
+            {
+                case EffectType.Ap:
+                    this.Effects.Add(CreatureEffects.EnhancedAp);
+                    break;
+                case EffectType.Dp:
+                    this.Effects.Add(CreatureEffects.EnhancedDp);
+                    break;
+                case EffectType.Dx:
+                    this.Effects.Add(CreatureEffects.EnhancedDx);
+                    break;
+                case EffectType.Hp:
+                    this.Hp += effect.Amount;
+                    break;
+                case EffectType.Mp:
+                    this.Mp += effect.Amount;
+                    break;
+                case EffectType.HpMax:
+                    this.HpMax += effect.Amount;
+                    break;
+                case EffectType.MpMax:
+                    this.MpMax += effect.Amount;
+                    break;
+                default:
+                    break;
+            }
         }
 
         public FDCreature(int id, CreatureFaction faction) : base(id, ObjectType.Creature)
@@ -512,7 +553,7 @@ namespace WindingTale.Core.Objects
 
             this.Items = new List<int>();
             this.Magics = new List<int>();
-            this.Effects = new List<CreatureEffects>();
+            this.Effects = new HashSet<CreatureEffects>();
 
             this.AttackItemIndex = -1;
             this.DefendItemIndex = -1;

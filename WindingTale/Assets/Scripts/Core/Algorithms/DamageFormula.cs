@@ -142,7 +142,7 @@ namespace WindingTale.Core.Algorithms
                 switch(magic.Type)
                 {
                     case MagicType.Attack:
-                        changedHp = -FDRandom.IntFromSpan(magic.Span) + magic.ApInvoledRate * subject.Data.CalculatedAp / 100;
+                        changedHp = -FDRandom.IntFromSpan(magic.Span) + magic.ApInvolvedRate * subject.Data.CalculatedAp / 100;
                         changedHp = (int)(changedHp * hitRate);
                         changedHp = Math.Min(0, changedHp);
                         break;
@@ -174,7 +174,12 @@ namespace WindingTale.Core.Algorithms
 
         private static int CalculateMagicExp(FDCreature subject, FDCreature target, MagicDefinition magic)
         {
-            return 0;
+            if (subject == null || target == null || magic == null)
+            {
+                return 0;
+            }
+
+            return magic.GetBaseExperience() * target.Level / subject.Level;
         }
 
         private static void TakeOffensiveEffect(MagicDefinition magic, FDCreature target)

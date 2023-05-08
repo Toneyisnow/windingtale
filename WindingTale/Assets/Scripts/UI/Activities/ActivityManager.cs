@@ -1,15 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Core.Components;
-using WindingTale.Core.Components.Packs;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
 {
     public class ActivityManager
     {
-        private Queue<ActivityBase> activityQueue = null;
+        private List<ActivityBase> activityQueue = null;
 
         private IGameInterface gameInterface = null;
 
@@ -20,14 +18,23 @@ namespace WindingTale.UI.Activities
         public ActivityManager(IGameInterface gameInterface)
         {
             this.gameInterface = gameInterface;
-            this.activityQueue = new Queue<ActivityBase>();
+            this.activityQueue = new List<ActivityBase>();
         }
 
         public void Push(ActivityBase activity)
         {
-            activityQueue.Enqueue(activity);
+            activityQueue.Add(activity);
         }
 
+        public void Insert(ActivityBase activity)
+        {
+            activityQueue.Insert(0, activity);
+        }
+
+        public void Insert(List<ActivityBase> activities)
+        {
+            activityQueue.InsertRange(0, activities);
+        }
 
         public void Update()
         {
@@ -54,7 +61,8 @@ namespace WindingTale.UI.Activities
 
                 if (activityQueue != null && activityQueue.Count > 0)
                 {
-                    currentActivity = activityQueue.Dequeue();
+                    currentActivity = activityQueue[0];
+                    activityQueue.RemoveAt(0);
                     Debug.LogFormat("ActivityManager: Starting activity. type={0}", currentActivity.GetType());
 
                     currentActivity.Start(gameInterface);
