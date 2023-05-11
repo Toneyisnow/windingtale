@@ -22,7 +22,7 @@ namespace WindingTale.Core
             this.gameMap = map;
         }
 
-        #region
+        #region Public Methods
 
         /// <summary>
         /// This function will actually update the creature and target, the returned
@@ -47,7 +47,6 @@ namespace WindingTale.Core
             }
 
             // Fight back
-            int backExp1 = 0;
             bool canFightBack = CanFightBack(subject, target, gameMap.Field );
             if (canFightBack && target.Hp > 0)
             {

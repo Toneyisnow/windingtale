@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WindingTale.Common;
+using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
+using WindingTale.Core.Map;
 
-namespace WindingTale.Core.Components.Algorithms
+namespace WindingTale.Core.Algorithms
 {
     public class DistanceResolver
     {
@@ -102,7 +103,6 @@ namespace WindingTale.Core.Components.Algorithms
             }
 
             ShapeDefinition shape = field.GetShapeAt(position);
-
             if (shape.Type != ShapeType.Gap)
             {
                 distanceDict[position] = value;
@@ -113,8 +113,5 @@ namespace WindingTale.Core.Components.Algorithms
                 distanceDict[position] = 999;
             }
         }
-
-
-
     }
 }

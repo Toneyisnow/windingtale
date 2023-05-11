@@ -4,6 +4,8 @@ using WindingTale.Core.Objects;
 using WindingTale.Core.Files;
 using System.Collections.Generic;
 using WindingTale.Core.Common;
+using WindingTale.Core.Algorithms;
+using WindingTale.Core.Definitions.Items;
 
 namespace WindingTale.Core.Map
 {
@@ -99,6 +101,32 @@ namespace WindingTale.Core.Map
                 }
             }
             return creatures;
+        }
+
+        public FDCreature GetPreferredAttackTargetInRange(int creatureId)
+        {
+            FDCreature creature = this.GetCreatureById(creatureId);
+            AttackItemDefinition attackItem = creature.GetAttackItem();
+            if (attackItem == null)
+            {
+                return null;
+            }
+
+            FDSpan span = attackItem.AttackScope;
+            DirectRangeFinder finder = new DirectRangeFinder(this.Field, creature.Position, span.Max, span.Min);
+            FDRange range = finder.CalculateRange();
+
+            // Get a preferred target in range
+            foreach (FDPosition position in range.ToList())
+            {
+                FDCreature target = this.GetCreatureAt(position);
+                if (target != null && target.Faction == CreatureFaction.Enemy)
+                {
+                    return target;
+                }
+            }
+
+            return null;
         }
 
         internal FDTreasure GetTreatureAt(FDPosition position)

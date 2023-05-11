@@ -1,3 +1,4 @@
+using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 
 namespace WindingTale.Core.Map
@@ -16,6 +17,11 @@ namespace WindingTale.Core.Map
         {
             Width = width;
             Height = height;
+        }
+
+        public ShapeDefinition GetShapeAt(FDPosition position)
+        {
+            return GetShapeAt(position.X, position.Y);
         }
 
         public ShapeDefinition GetShapeAt(int x, int y)

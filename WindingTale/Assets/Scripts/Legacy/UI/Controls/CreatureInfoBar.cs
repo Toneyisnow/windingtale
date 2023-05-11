@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core;
+using WindingTale.Core.Objects;
 
 namespace WindingTale.UI.Controls
 {
@@ -17,14 +18,14 @@ namespace WindingTale.UI.Controls
 
         public void SetHP(int value)
         {
-            if (this.creature == null || creature.Data.HpMax <= 0)
+            if (this.creature == null || creature.HpMax <= 0)
             {
                 return;
             }
 
             Debug.Log("Set HP to value: " + value);
 
-            float percentage = (float)value / creature.Data.HpMax;
+            float percentage = (float)value / creature.HpMax;
             float scaleX = baseScale * percentage;
 
             Vector3 currentScale = this.hpBar.transform.localScale;
@@ -44,7 +45,7 @@ namespace WindingTale.UI.Controls
 
             // SpriteRenderer renderer = this.gameObject.AddComponent<SpriteRenderer>();
             // renderer.sprite = Resources.Load<Sprite>("OthersLegacy/CreatureInfoBarBase");
-            this.mpBar.SetActive(this.creature.Data.MpMax > 0);
+            this.mpBar.SetActive(this.creature.MpMax > 0);
         }
 
         // Start is called before the first frame update
