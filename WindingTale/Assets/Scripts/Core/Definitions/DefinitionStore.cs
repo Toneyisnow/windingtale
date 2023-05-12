@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Mime;
 using UnityEngine;
-using WindingTale.Common;
+using WindingTale.Core.Common;
 using WindingTale.Core.Definitions.Items;
+using WindingTale.Core.Files;
 
 namespace WindingTale.Core.Definitions
 {

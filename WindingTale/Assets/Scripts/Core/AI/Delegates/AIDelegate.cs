@@ -1,30 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Common;
 using WindingTale.Core.Components;
-using WindingTale.Core.ObjectModels;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Components.Algorithms;
+
+using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
+using WindingTale.Core.Map;
+using WindingTale.Core.Common;
+using WindingTale.Core.Algorithms;
 
 namespace WindingTale.AI.Delegates
 {
     public abstract class AIDelegate
     {
-        protected IGameAction GameAction
+        protected GameMain gameMain
         {
             get; private set;
         }
 
-        protected FDCreature Creature
+        protected FDCreature creature
         {
             get; private set;
         }
 
-        public AIDelegate(IGameAction gameAction, FDCreature c)
+        public AIDelegate(GameMain gameAction, FDCreature c)
         {
-            this.GameAction = gameAction;
-            this.Creature = c;
+            this.gameMain = gameAction;
+            this.creature = c;
         }
 
         public abstract void TakeAction();
@@ -36,12 +40,12 @@ namespace WindingTale.AI.Delegates
 
         public bool NeedRecover()
         {
-            if (this.Creature.Faction == CreatureFaction.Npc && this.Creature.Data.Hp < this.Creature.Data.HpMax)
+            if (this.creature.Faction == CreatureFaction.Npc && this.creature.Hp < this.creature.HpMax)
             {
                 return true;
             }
 
-            if (this.Creature.Data.Hp < this.Creature.Data.HpMax / 2)
+            if (this.creature.Hp < this.creature.HpMax / 2)
             {
                 return true;
             }
@@ -61,9 +65,9 @@ namespace WindingTale.AI.Delegates
 
         public int getRecoverItem()
         {
-            for (int index = 0; index < this.Creature.Data.Items.Count; index++)
+            for (int index = 0; index < this.creature.Items.Count; index++)
             {
-                int itemId = this.Creature.Data.Items[index];
+                int itemId = this.creature.Items[index];
                 if (itemId == 101 || itemId == 102 || itemId == 103 || itemId == 104 || itemId == 122)
                 {
                     return index;
@@ -75,10 +79,10 @@ namespace WindingTale.AI.Delegates
 
         protected FDCreature LookForAggressiveTarget()
         {
-            List<FDCreature> candidates = this.GameAction.GetOppositeCreatures(this.Creature);
+            List<FDCreature> candidates = this.gameMain.GameMap.GetOppositeCreatures(this.creature);
 
             int candidateIndex = 0;
-            while (candidateIndex < candidates.Count && !this.Creature.IsAbleToAttack(candidates[candidateIndex]))
+            while (candidateIndex < candidates.Count && !this.creature.IsAbleToAttack(candidates[candidateIndex]))
             {
                 candidateIndex++;
             }
@@ -90,15 +94,15 @@ namespace WindingTale.AI.Delegates
 
             FDCreature terminateCreature = candidates[candidateIndex];
 
-            DistanceResolver disResolver = new DistanceResolver(this.GameAction.GetField());
-            disResolver.ResolveDistanceFrom(this.Creature.Position, terminateCreature.Position);
+            DistanceResolver disResolver = new DistanceResolver(gameMain.GameMap.Field);
+            disResolver.ResolveDistanceFrom(this.creature.Position, terminateCreature.Position);
 
             float minDistance = 999;
             FDCreature finalTarget = terminateCreature;
             foreach (FDCreature c in candidates)
             {
                 float distance = disResolver.GetDistanceTo(c.Position);
-                if (distance < minDistance && this.Creature.IsAbleToAttack(c))
+                if (distance < minDistance && this.creature.IsAbleToAttack(c))
                 {
                     minDistance = distance;
                     finalTarget = c;
@@ -110,30 +114,30 @@ namespace WindingTale.AI.Delegates
 
         protected FDMovePath DecidePositionAndPath(FDPosition targetPos)
         {
-            DistanceResolver disResolver = new DistanceResolver(this.GameAction.GetField());
-            disResolver.ResolveDistanceFrom(targetPos, this.Creature.Position);
+            DistanceResolver disResolver = new DistanceResolver(gameMain.GameMap.Field);
+            disResolver.ResolveDistanceFrom(targetPos, this.creature.Position);
 
-            FDPosition originalPos = this.Creature.Position;
+            FDPosition originalPos = this.creature.Position;
 
             float bestDistance = 999;
             int bestDistanceInUnit = -1;
             bool inAttackScope = false;
 
-            MoveRangeFinder finder = new MoveRangeFinder(this.GameAction, this.Creature);
+            MoveRangeFinder finder = new MoveRangeFinder(gameMain.GameMap, this.creature);
             FDMoveRange moveRange = finder.CalculateMoveRange();
 
             FDSpan span = null;
             FDPosition finalPos = originalPos;
-            if(this.GameAction.GetCreatureAt(targetPos) != null)
+            if(gameMain.GameMap.GetCreatureAt(targetPos) != null)
             {
-                span = Creature.Data.GetAttackItem()?.AttackScope;
+                span = creature.GetAttackItem()?.AttackScope;
             }
             else
             {
                 span = new FDSpan(0, 0);
             }
 
-            foreach (FDPosition movePos in moveRange.Positions)
+            foreach (FDPosition movePos in moveRange.ToList())
             {
                 int distanceToTarget = GetDirectDistance(targetPos, movePos);
                 if (span.ContainsValue(distanceToTarget))
@@ -157,7 +161,8 @@ namespace WindingTale.AI.Delegates
                 }
             }
 
-            return moveRange.GetPath(finalPos);
+            MovePathFinder pathFinder = new MovePathFinder(moveRange);
+            return pathFinder.GetPath(finalPos);
         }
 
         protected int GetDirectDistance(FDPosition pos1, FDPosition pos2)

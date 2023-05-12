@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WindingTale.Core.Components;
-using WindingTale.Core.Components.Data;
 using WindingTale.Core.Definitions;
-using WindingTale.Core.ObjectModels;
 using WindingTale.AI.Delegates;
-using WindingTale.Legacy.Core.Components.Data;
+using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.AI
 {
 
     public class AIHandler
     {
-        private IGameAction gameAction = null;
 
         private int lastOperatedCreatureId = 0;
 
@@ -24,35 +21,28 @@ namespace WindingTale.AI
             get; private set;
         }
 
-        private List<FDCreature> creatureList = null;
+        private GameMain gameMain = null;
 
-        public AIHandler(IGameAction gameAction, CreatureFaction faction)
+        private List<FDAICreature> creatureList = null;
+
+        public AIHandler(GameMain gameMain, CreatureFaction faction)
         {
-            this.gameAction = gameAction;
+            this.gameMain = gameMain;
             this.Faction = faction;
-
-            if (this.Faction == CreatureFaction.Enemy)
-            {
-                creatureList = gameAction.GetAllEnemies();
-            }
-            else if (this.Faction == CreatureFaction.Npc)
-            {
-                creatureList = gameAction.GetAllNpcs();
-            }
         }
 
         public void IsNotified()
         {
-            FDCreature selectedCreature = null;
+            FDAICreature selectedCreature = null;
 
-            foreach (FDCreature creature in creatureList)
+            foreach (FDAICreature creature in creatureList)
             {
-                if (creature.HasActioned || creature.IsFrozen())
+                if (creature.HasActioned || creature.HasEffect(CreatureEffects.Frozen))
                 {
                     continue;
                 }
 
-                if (selectedCreature == null || creature.CreatureId < selectedCreature.CreatureId)
+                if (selectedCreature == null || creature.Id < selectedCreature.Id)
                 {
                     selectedCreature = creature;
                 }
@@ -66,53 +56,53 @@ namespace WindingTale.AI
             RunAIDelegate(selectedCreature);
         }
 
-        private void RunAIDelegate(FDCreature creature)
+        private void RunAIDelegate(FDAICreature creature)
         {
             AIDelegate aiDelegate = null;
 
-            switch (creature.Data.AIType)
+            switch (creature.AIType)
             {
-                case CreatureData.AITypes.AIType_Aggressive:
+                case AITypes.AIType_Aggressive:
                     if (creature.Definition.IsMagical())
                     {
-                        aiDelegate = new AIMagicalAggressiveDelegate(gameAction, creature);
+                        aiDelegate = new AIMagicalAggressiveDelegate(gameMain, creature);
                     }
                     else
                     {
-                        aiDelegate = new AIAggressiveDelegate(gameAction, creature);
+                        aiDelegate = new AIAggressiveDelegate(gameMain, creature);
                     }
                     break;
-                case CreatureData.AITypes.AIType_Defensive:
+                case AITypes.AIType_Defensive:
                     if (creature.Definition.IsMagical())
                     {
-                        aiDelegate = new AIMagicalDefensiveDelegate(gameAction, creature);
+                        aiDelegate = new AIMagicalDefensiveDelegate(gameMain, creature);
                     }
                     else
                     {
-                        aiDelegate = new AIDefensiveDelegate(gameAction, creature);
+                        aiDelegate = new AIDefensiveDelegate(gameMain, creature);
                     }
                     break;
-                case CreatureData.AITypes.AIType_Guard:
+                case AITypes.AIType_Guard:
                     if (creature.Definition.IsMagical())
                     {
-                        aiDelegate = new AIMagicalGuardDelegate(gameAction, creature);
+                        aiDelegate = new AIMagicalGuardDelegate(gameMain, creature);
                     }
                     else
                     {
-                        aiDelegate = new AIGuardDelegate(gameAction, creature);
+                        aiDelegate = new AIGuardDelegate(gameMain, creature);
                     }
                     break;
-                case CreatureData.AITypes.AIType_Escape:
-                    aiDelegate = new AIEscapeDelegate(gameAction, creature);
+                case AITypes.AIType_Escape:
+                    aiDelegate = new AIEscapeDelegate(gameMain, creature);
                     break;
-                case CreatureData.AITypes.AIType_Treasure:
-                    aiDelegate = new AITreasureDelegate(gameAction, creature);
+                case AITypes.AIType_Treasure:
+                    aiDelegate = new AITreasureDelegate(gameMain, creature);
                     break;
             }
 
             if (aiDelegate != null)
             {
-                lastOperatedCreatureId = creature.CreatureId;
+                lastOperatedCreatureId = creature.Id;
                 aiDelegate.TakeAction();
             }
 

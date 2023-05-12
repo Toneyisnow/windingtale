@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngineInternal;
 using WindingTale.Core.Common;
-using WindingTale.Core.Components.Events;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Events;
 using WindingTale.Core.Objects;

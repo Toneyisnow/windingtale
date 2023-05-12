@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Core.Components;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.AI.Delegates
 {
     public abstract class AIMagicalDelegate : AIDelegate
     {
-        public AIMagicalDelegate(IGameAction gameAction, FDCreature c) : base(gameAction, c)
+        public AIMagicalDelegate(GameMain gameMain, FDAICreature c) : base(gameMain, c)
         {
 
         }

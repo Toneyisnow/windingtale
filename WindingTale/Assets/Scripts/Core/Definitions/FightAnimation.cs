@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WindingTale.Common;
+using WindingTale.Core.Common;
+using WindingTale.Core.Files;
 
 namespace WindingTale.Core.Definitions
 {

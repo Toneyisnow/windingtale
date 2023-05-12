@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using WindingTale.Core.Common;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Definitions.Items;
+using System;
 
 namespace WindingTale.Core.Map
 {
@@ -57,6 +58,21 @@ namespace WindingTale.Core.Map
             get
             {
                 return this.Creatures.FindAll(c => c.Faction == CreatureFaction.Enemy);
+            }
+        }
+
+        public List<FDCreature> GetOppositeCreatures(FDCreature creature)
+        {
+            if (creature.Faction == CreatureFaction.Enemy)
+            {
+                List<FDCreature> arr = new List<FDCreature>();
+                arr.AddRange(this.Friends);
+                arr.AddRange(this.Npcs);
+                return arr;
+            }
+            else
+            {
+                return this.Enemies;
             }
         }
 

@@ -6,9 +6,8 @@ namespace WindingTale.Core.Objects
     /// <summary>
     /// 
     /// </summary>
-    public class FDNpc : FDCreature
+    public class FDNpc : FDAICreature
     {
-        public AITypes AIType { get; private set; }
 
         public FDNpc(int id) : base(id, CreatureFaction.Npc)
         {

@@ -6,7 +6,6 @@ using WindingTale.Core.Definitions;
 using WindingTale.Core.Events;
 using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
-using WindingTale.Legacy.Core.Components;
 using WindingTale.UI.Activities;
 using WindingTale.UI.Scenes.Game;
 

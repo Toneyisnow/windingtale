@@ -6,9 +6,9 @@ namespace WindingTale.Chapters
 {
     public class Chapter2 : ChapterEvents
     {
-        public override List<FDEvent> LoadEvents()
+        public Chapter2() : base(2)
         {
-            return null;
         }
+
     }
 }

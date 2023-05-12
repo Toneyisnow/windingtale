@@ -1,18 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Common;
+using WindingTale.Core.Algorithms;
+using WindingTale.Core.Common;
 using WindingTale.Core.Components;
 using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
-using WindingTale.Core.ObjectModels;
+using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.AI.Delegates
 {
     public class AIAggressiveDelegate : AIDelegate
     {
-        public AIAggressiveDelegate(IGameAction gameAction, FDCreature c) : base(gameAction, c)
+        public AIAggressiveDelegate(GameMain gameMain, FDAICreature c) : base(gameMain, c)
         {
 
         }
@@ -21,7 +23,7 @@ namespace WindingTale.AI.Delegates
         {
             if (this.NeedAndCanRecover())
             {
-                this.GameAction.DoCreatureRest(this.Creature.CreatureId);
+                this.gameMain.CreatureRest(this.creature);
                 return;
             }
 
@@ -32,24 +34,25 @@ namespace WindingTale.AI.Delegates
             FDMovePath movePath = this.DecidePositionAndPath(target.Position);
 
             // Do the walk
-            this.GameAction.CreatureWalk(new SingleWalkAction(this.Creature.CreatureId, movePath));
+            this.gameMain.CreatureMove(creature, movePath);
 
-            FDPosition destination = movePath.Desitination ?? this.Creature.Position;
+            FDPosition destination = movePath.Desitination ?? this.creature.Position;
 
-            AttackItemDefinition item = this.Creature.Data.GetAttackItem();
+            AttackItemDefinition item = this.creature.GetAttackItem();
             if (item != null)
             {
                 FDSpan span = item.AttackScope;
-                DirectRangeFinder finder = new DirectRangeFinder(this.GameAction.GetField(), destination, span.Max, span.Min);
+                DirectRangeFinder finder = new DirectRangeFinder(this.gameMain.GameMap.Field, destination, span.Max, span.Min);
                 FDRange range = finder.CalculateRange();
                 if (range.Contains(target.Position))
                 {
                     // If in attack range, attack the target
-                    this.GameAction.DoCreatureAttack(this.Creature.CreatureId, target.Position);
+                    this.gameMain.CreatureAttack(this.creature, target);
+                    return;
                 }
             }
 
-            this.GameAction.DoCreatureRest(this.Creature.CreatureId);
+            this.gameMain.CreatureRest(this.creature);
         }
     }
 }

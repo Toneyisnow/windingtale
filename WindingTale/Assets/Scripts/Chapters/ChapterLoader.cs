@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using WindingTale.Core.Common;
-using WindingTale.Core.Components.Events;
-using WindingTale.Core.Definitions;
 using WindingTale.Core.Events;
+using WindingTale.Core.Definitions;
 using WindingTale.Core.Files;
-using WindingTale.Legacy.Core.Components;
 
 namespace WindingTale.Chapters
 {
@@ -45,9 +43,6 @@ namespace WindingTale.Chapters
                     break;
                 case 2:
                     chapter = new Chapter2();
-                    break;
-                case 3:
-                    chapter = new Chapter3();
                     break;
                 default:
                     break;

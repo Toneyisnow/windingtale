@@ -178,7 +178,7 @@ namespace WindingTale.Core
                     bool isPoisoned = FDRandom.BoolFromRate(attackItem.GetPoisonRate());
                     if (isPoisoned)
                     {
-                        target.SetEffect(CreatureEffects.Poisoned);
+                        target.ApplyEffect(new EffectResult(EffectType.Poison));
                     }
                 }
             }
