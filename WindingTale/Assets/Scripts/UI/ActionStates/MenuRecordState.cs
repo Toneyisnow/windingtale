@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Common;
 using WindingTale.Core.Common;
 using WindingTale.UI.Activities;
 using WindingTale.UI.Scenes.Game;
@@ -16,7 +15,6 @@ namespace WindingTale.UI.ActionStates
             LoadGame = 2,
             QuitGame = 3,
         }
-
 
         public MenuRecordState(GameMain gameMain, IStateResultHandler stateHandler, FDPosition position) : base(gameMain, stateHandler, position)
         {

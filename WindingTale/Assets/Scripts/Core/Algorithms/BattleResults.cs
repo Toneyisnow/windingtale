@@ -80,10 +80,12 @@ namespace WindingTale.Core.Components.Algorithms
     {
         public EffectType Type { get; private set; }
 
+        public int RoundCount { get; private set; }
 
-        public EffectResult(EffectType type) : base(SoloResultType.Effect)
+        public EffectResult(EffectType type, int roundCount) : base(SoloResultType.Effect)
         {
             this.Type = type;
+            RoundCount = roundCount;
         }
     }
 
@@ -96,7 +98,7 @@ namespace WindingTale.Core.Components.Algorithms
             this.Effects.Add(effect);
         }
 
-        public MultiEffectResult(List<EffectResult> effects) : base(EffectType.Multi)
+        public MultiEffectResult(List<EffectResult> effects) : base(EffectType.Multi, 0)
         {
             this.Effects = effects;
         }

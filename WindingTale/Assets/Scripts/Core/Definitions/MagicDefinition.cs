@@ -147,11 +147,11 @@ namespace WindingTale.Core.Definitions
                     value = FDRandom.IntFromSpan(2, 4);
                     return new EffectResult(EffectType.Freezing, value);
                 case 401:
-                    return new EffectResult(EffectType.Ap, 5);
+                    return new EffectResult(EffectType.EnhancedAp, 5);
                 case 402:
-                    return new EffectResult(EffectType.Dp, 5);
+                    return new EffectResult(EffectType.EnhancedDp, 5);
                 case 403:
-                    return new EffectResult(EffectType.Dx, 5);
+                    return new EffectResult(EffectType.EnhancedDx, 5);
                 case 404:
                     return new EffectResult(EffectType.AntiPoison, 0);
                 case 405:
@@ -160,9 +160,9 @@ namespace WindingTale.Core.Definitions
                     return new EffectResult(EffectType.StartAction, 0);
                 case 407:
                     return new MultiEffectResult(new List<EffectResult>() {
-                        new EffectResult(EffectType.Ap, 5),
-                        new EffectResult(EffectType.Dp, 5),
-                        new EffectResult(EffectType.Dx, 5),
+                        new EffectResult(EffectType.EnhancedAp, 5),
+                        new EffectResult(EffectType.EnhancedDp, 5),
+                        new EffectResult(EffectType.EnhancedDx, 5),
                     });
                 case 408:
                     return null;

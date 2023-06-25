@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WindingTale.UI.MapObjects;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
@@ -27,8 +26,8 @@ namespace WindingTale.UI.Activities
         {
             foreach (int creatureId in creatureIds)
             {
-                UICreature creature = gameInterface.GetUICreature(creatureId);
-                creature.SetAnimateState(UICreature.AnimateStates.Dying);
+                ////UICreature creature = gameInterface.GetUICreature(creatureId);
+                ////creature.SetAnimateState(UICreature.AnimateStates.Dying);
             }
         }
 
@@ -39,8 +38,8 @@ namespace WindingTale.UI.Activities
             bool allGone = true;
             foreach (int creatureId in creatureIds)
             {
-                UICreature creature = gameInterface.GetUICreature(creatureId);
-                if (creature != null)
+                ////UICreature creature = gameInterface.GetUICreature(creatureId);
+                ////if (creature != null)
                 {
                     allGone = false;
                 }

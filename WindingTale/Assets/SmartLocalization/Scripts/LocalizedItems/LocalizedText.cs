@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
+//// using UnityEngine.UI;
 
 namespace SmartLocalization.Editor
 {
-	[RequireComponent(typeof(Text))]
 	public class LocalizedText : LocalizedBase 
 	{
 		private void Start () 
@@ -26,7 +25,7 @@ namespace SmartLocalization.Editor
 
 		private void OnChangeLanguage(LanguageManager languageManager)
 		{
-			GetComponent<Text>().text = LanguageManager.Instance.GetTextValue(localizedKey);
+			//// GetComponent<Text>().text = LanguageManager.Instance.GetTextValue(localizedKey);
 		}
 	}
 }

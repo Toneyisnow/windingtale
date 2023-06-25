@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WindingTale.UI.MapObjects;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
@@ -30,7 +29,7 @@ namespace WindingTale.UI.Activities
         {
             foreach (int creatureId in creatureIds)
             {
-                UICreature creature = gameInterface.GetUICreature(creatureId);
+                //// UICreature creature = gameInterface.GetUICreature(creatureId);
             }
         }
 

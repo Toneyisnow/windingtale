@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using WindingTale.Common;
 using WindingTale.Core.Common;
-using WindingTale.Core.Components.Packs;
-using WindingTale.Legacy.Core.Components;
 using WindingTale.UI.Activities;
-using WindingTale.UI.Dialogs;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.ActionStates

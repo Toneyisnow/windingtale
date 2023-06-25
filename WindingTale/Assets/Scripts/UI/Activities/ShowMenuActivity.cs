@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WindingTale.Common;
 using WindingTale.Core.Common;
-using WindingTale.UI.MapObjects;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
@@ -11,7 +9,9 @@ namespace WindingTale.UI.Activities
     public class ShowMenuActivity : ActivityBase
     {
 
-        private UIMenuItem[] menuItems = null;
+        /// <summary>
+        /// / private UIMenuItem[] menuItems = null;
+        /// </summary>
 
         private FDMenu menu = null;
 
@@ -23,6 +23,7 @@ namespace WindingTale.UI.Activities
 
         public override void Start(IGameInterface gameInterface)
         {
+            /*
             menuItems = new UIMenuItem[4];
             bool hasSelected = false;
             for (int i = 0; i < 4; i++)
@@ -46,6 +47,7 @@ namespace WindingTale.UI.Activities
             {
                 menuItems[i].RelatedMenuItems = menuItems;
             }
+            */
         }
 
 

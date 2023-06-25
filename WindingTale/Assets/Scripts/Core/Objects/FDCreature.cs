@@ -245,6 +245,11 @@ namespace WindingTale.Core.Objects
         {
             this.Faction = faction;
 
+            // TEST
+            this.Definition = new CreatureDefinition();
+            this.Definition.DefinitionId = id;
+            this.Definition.AnimationId = id;
+
             this.Items = new List<int>();
             this.Magics = new List<int>();
             this.Effects = new HashSet<CreatureEffects>();

@@ -100,7 +100,7 @@ namespace WindingTale.UI.ActionStates
             }
 
             // Selete Target Friend
-            SelectItemExchangeTargetState exchangeTargetState = new SelectItemExchangeTargetState(gameMain, this.CreatureId, index);
+            SelectItemExchangeTargetState exchangeTargetState = new SelectItemExchangeTargetState(gameMain, stateHandler, this.CreatureId, index);
             stateHandler.HandlePushState(exchangeTargetState);
         }
 
@@ -114,7 +114,7 @@ namespace WindingTale.UI.ActionStates
             }
 
             // Selete Target Friend
-            SelectItemUseTargetState selectTargetState = new SelectItemUseTargetState(gameMain, this.CreatureId, index);
+            SelectItemUseTargetState selectTargetState = new SelectItemUseTargetState(gameMain, stateHandler, this.CreatureId, index);
             stateHandler.HandlePushState(selectTargetState);
         }
         

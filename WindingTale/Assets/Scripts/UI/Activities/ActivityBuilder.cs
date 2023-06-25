@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Components.Algorithms;
-using WindingTale.UI.CanvasControls;
-using WindingTale.UI.Dialogs;
 
 namespace WindingTale.UI.Components.Activities
 {

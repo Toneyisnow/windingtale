@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
+////using UnityEngine.UI;
 using System.Collections.Generic;
 
 //script is for demo purposes only. Shouldn't be used in a production setting as all the UI work should be handled elsewhere.
@@ -17,7 +17,9 @@ public class QT_InteractContainer : MonoBehaviour
     private bool isTriggered = false;
 
    
-    public Text uiCanvasText;
+    /// <summary>
+    /// /public Text uiCanvasText;
+    /// </summary>
     private Canvas uiCanvas;
     private List<Collider> colliders = new List<Collider>();
     
@@ -25,7 +27,7 @@ public class QT_InteractContainer : MonoBehaviour
     // Use this for initialization
     void Start()
     {        
-        uiCanvasText.gameObject.SetActive(false);       
+        ////uiCanvasText.gameObject.SetActive(false);       
         Anim = ContainerTop.GetComponent<Animator>();
     
         if(raycastObjects.Length==0)
@@ -39,7 +41,7 @@ public class QT_InteractContainer : MonoBehaviour
             
         }
 
-        uiCanvas = uiCanvasText.canvas;
+        ////uiCanvas = uiCanvasText.canvas;
     }
 
    void Update()
@@ -90,7 +92,7 @@ public class QT_InteractContainer : MonoBehaviour
 
         if (Physics.Raycast(rayStart, rayDir, out rayHit, 5.0f))
         {
-            
+            /*
             if (HitValidObject(rayHit.collider) && !isOpen)
             {
                 uiCanvasText.gameObject.SetActive(true);
@@ -110,13 +112,13 @@ public class QT_InteractContainer : MonoBehaviour
                 uiCanvasText.gameObject.SetActive(false);
                 isTriggered = false;
             }
-
+            */
         }
     }
 
     void OnTriggerExit()
     {
-        uiCanvasText.gameObject.SetActive(false);
+        /// uiCanvasText.gameObject.SetActive(false);
         isTriggered = false;
     }
 

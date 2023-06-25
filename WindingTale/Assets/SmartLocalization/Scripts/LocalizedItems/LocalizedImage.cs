@@ -1,9 +1,7 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace SmartLocalization
 {
-	[RequireComponent(typeof(Image))]
 	public class LocalizedImage : LocalizedBase 
 	{
 		private void Start () 
@@ -26,7 +24,7 @@ namespace SmartLocalization
 
 		private void OnChangeLanguage(LanguageManager languageManager)
 		{
-			GetComponent<Image>().sprite = LanguageManager.Instance.GetSprite(localizedKey);
+			//// GetComponent<Image>().sprite = LanguageManager.Instance.GetSprite(localizedKey);
 		}
 	}
 }

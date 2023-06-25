@@ -33,6 +33,7 @@ namespace WindingTale.UI.ActionStates
             : base(gameMain, stateHandler, creature.Position)
         {
             this.creature = creature;
+            this.treasure = gameMap.GetTreatureAt(creature.Position);
 
             // Magic
             this.SetMenu(0, MenuItemId.ActionMagic, IsMenuMagicEnabled(), () =>
@@ -44,7 +45,7 @@ namespace WindingTale.UI.ActionStates
             // Attack
             this.SetMenu(1, MenuItemId.ActionAttack, IsMenuAttackEnabled(), () =>
             {
-                SelectAttackTargetState attackState = new SelectAttackTargetState(gameMain, creature);
+                SelectAttackTargetState attackState = new SelectAttackTargetState(gameMain, stateHandler, creature);
                 stateHandler.HandlePushState(attackState);
             });
 
@@ -58,8 +59,7 @@ namespace WindingTale.UI.ActionStates
             // Rest
             this.SetMenu(3, MenuItemId.ActionRest, true, () =>
             {
-                FDTreasure treature = gameMap.GetTreatureAt(creature.Position);
-                if (treasure == null)
+                if (treasure == null || !treasure.HasOpened)
                 {
                     gameMain.CreatureRest(creature);
                     stateHandler.HandleClearStates();
@@ -111,7 +111,7 @@ namespace WindingTale.UI.ActionStates
             if (magicDefinition != null && creature.CanSpellMagic() && magicDefinition.MpCost <= creature.Mp)
             {
                 // Enough MP to spell
-                SelecteMagicTargetState magicTargetState = new SelecteMagicTargetState(gameMain, creature, magicDefinition);
+                SelecteMagicTargetState magicTargetState = new SelecteMagicTargetState(gameMain, stateHandler, creature, magicDefinition);
                 stateHandler.HandlePushState(magicTargetState);
             }
             else
@@ -141,6 +141,7 @@ namespace WindingTale.UI.ActionStates
             }
             else
             {
+
                 if (creature.IsItemsFull())
                 {
                     // 身上的道具满了，需要交换吗
@@ -202,7 +203,7 @@ namespace WindingTale.UI.ActionStates
                     creature.AddItem(treasureItem.ItemId);
 
                     // Add that item back to the treasure
-                    gameMain.UpdateTreasure(creature.Position, exchangeItemId);
+                    treasure.UpdateItem(exchangeItemId);
                 }
             }
 

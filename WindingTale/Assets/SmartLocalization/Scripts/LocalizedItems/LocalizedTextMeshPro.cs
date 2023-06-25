@@ -1,9 +1,7 @@
 using UnityEngine;
-using TMPro;
 
 namespace SmartLocalization.Editor
 {
-	[RequireComponent(typeof(TextMeshProUGUI))]
 	public class LocalizedTextMeshPro : LocalizedBase 
 	{			
 		private void Start () 
@@ -27,7 +25,7 @@ namespace SmartLocalization.Editor
 		public void OnChangeLanguage(LanguageManager languageManager)
 		{
 			var text = LanguageManager.Instance.GetTextValue(localizedKey);
-			GetComponent<TextMeshProUGUI>().text = text;
+			//// GetComponent<TextMeshProUGUI>().text = text;
 		}
 	}
 }

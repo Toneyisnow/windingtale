@@ -25,6 +25,5 @@ namespace WindingTale.Core.Objects
             Type = type;
         }
 
-        public 
     }
 }

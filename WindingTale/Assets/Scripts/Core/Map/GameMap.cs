@@ -15,10 +15,7 @@ namespace WindingTale.Core.Map
     /// </summary>
     public class GameMap
     {
-        public GameMap()
-        { 
-        }
-
+        
         public int ChapterId { get; private set; }
 
         public GameField Field { get; private set; }
@@ -76,6 +73,16 @@ namespace WindingTale.Core.Map
             }
         }
 
+        #region Constructors
+
+        public GameMap()
+        {
+            this.Creatures = new List<FDCreature>();
+        }
+
+        #endregion
+
+
         #region Calculated Functions
 
         public FDCreature GetCreatureById(int creatureId)
@@ -119,9 +126,8 @@ namespace WindingTale.Core.Map
             return creatures;
         }
 
-        public FDCreature GetPreferredAttackTargetInRange(int creatureId)
+        public FDCreature GetPreferredAttackTargetInRange(FDCreature creature)
         {
-            FDCreature creature = this.GetCreatureById(creatureId);
             AttackItemDefinition attackItem = creature.GetAttackItem();
             if (attackItem == null)
             {
@@ -145,7 +151,7 @@ namespace WindingTale.Core.Map
             return null;
         }
 
-        internal FDTreasure GetTreatureAt(FDPosition position)
+        public FDTreasure GetTreatureAt(FDPosition position)
         {
             return this.Treasures.Find(t => t.Position.AreSame(position));
         }
@@ -165,8 +171,8 @@ namespace WindingTale.Core.Map
 
         public static GameMap LoadFromChapter(ChapterDefinition chapter, GameRecord record)
         {
-
-            return null;
+            return new GameMap();
+            /// return null;
         }
 
         public static GameMap LoadFromSave(GameMapRecord mapRecord)

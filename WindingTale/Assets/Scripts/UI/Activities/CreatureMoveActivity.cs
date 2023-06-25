@@ -4,14 +4,14 @@ using UnityEngine;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
-using WindingTale.UI.FieldMap;
-using WindingTale.UI.MapObjects;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
 {
     public class CreatureMoveActivity : ActivityBase
     {
+        /*
+
         private float moveDeltaPerTick = 1.0f / Common.Constants.TICK_PER_FRAME;
 
         private int currentVertex = 0;
@@ -207,6 +207,15 @@ namespace WindingTale.UI.Activities
 
         }
 
+        */
+        public override void Start(IGameInterface gameInterface)
+        {
+            throw new System.NotImplementedException();
+        }
 
+        public override void Update(IGameInterface gameInterface)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
