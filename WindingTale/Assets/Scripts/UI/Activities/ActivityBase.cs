@@ -6,7 +6,7 @@ using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
 {
-    public abstract class ActivityBase
+    public abstract class ActivityBase 
     {
         public bool HasFinished
         {
@@ -18,11 +18,10 @@ namespace WindingTale.UI.Activities
             this.HasFinished = false;
         }
 
-
         // Start is called before the first frame update
-        public abstract void Start(IGameInterface gameInterface);
+        public abstract void Start(GameObject gameInterface);
 
         // Update is called once per frame
-        public abstract void Update(IGameInterface gameInterface);
+        public abstract void Update(GameObject gameInterface);
     }
 }

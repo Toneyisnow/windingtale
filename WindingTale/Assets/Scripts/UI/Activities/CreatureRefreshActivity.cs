@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
@@ -25,7 +26,7 @@ namespace WindingTale.UI.Activities
             this.creatureIds = creatureIds;
         }
 
-        public override void Start(IGameInterface gameInterface)
+        public override void Start(GameObject gameInterface)
         {
             foreach (int creatureId in creatureIds)
             {
@@ -33,7 +34,7 @@ namespace WindingTale.UI.Activities
             }
         }
 
-        public override void Update(IGameInterface gameInterface)
+        public override void Update(GameObject gameInterface)
         {
             this.HasFinished = true;
         }

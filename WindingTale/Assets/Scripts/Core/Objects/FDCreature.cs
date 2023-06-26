@@ -258,9 +258,9 @@ namespace WindingTale.Core.Objects
             this.DefendItemIndex = -1;
         }
 
-        public static FDCreature FromDefinition(int creatureId, CreatureDefinition definition)
+        public static FDCreature FromDefinition(CreatureFaction faction, int creatureId, CreatureDefinition definition)
         {
-            FDCreature creature = new FDCreature(creatureId, CreatureFaction.Friend);
+            FDCreature creature = new FDCreature(creatureId, faction);
             creature.Definition = definition;
 
             creature.Level = definition.InitialLevel;

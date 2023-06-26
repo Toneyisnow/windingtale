@@ -64,7 +64,6 @@ namespace WindingTale.UI.Scenes.Game
             this.TurnType = CreatureFaction.Friend;
         }
 
-        private ActivityManager activityManager = null;
 
         #endregion
 
@@ -74,9 +73,9 @@ namespace WindingTale.UI.Scenes.Game
         /// <summary>
         /// Start a game from the beginning.
         /// </summary>
-        public static GameMain StartNewGame(IGameInterface gameInterface)
+        public static GameMain StartNewGame(IGameInterface gameInterface, ActivityManager activityManager)
         {
-            return StartChapter(gameInterface, 1, null);
+            return StartChapter(gameInterface , activityManager, 1, null);
         }
 
         /// <summary>
@@ -84,21 +83,25 @@ namespace WindingTale.UI.Scenes.Game
         /// </summary>
         /// <param name="chapterId"></param>
         /// <param name="recordId"></param>
-        public static GameMain StartChapter(IGameInterface gameInterface, int chapterId, GameRecord record)
+        public static GameMain StartChapter(IGameInterface gameInterface, ActivityManager activityManager, int chapterId, GameRecord record)
         {
             Instance = new GameMain();
 
             // Load chapter map
+            DefinitionStore.Instance.LoadChapter(chapterId);
             ChapterDefinition chapterDefinition = ChapterLoader.LoadChapter(chapterId);
             Instance.GameMap = GameMap.LoadFromChapter(chapterDefinition, record);
             Instance.GameHandler = new GameHandler(Instance.GameMap);
             Instance.GameInterface = gameInterface;
+            Instance.ActivityManager = activityManager;
 
             // Load chapter creatures from record
 
             // Test
-            FDCreature c = Instance.AddCreature(CreatureFaction.Friend, 2, 2, FDPosition.At(0, 0));
-            Instance.CreatureMove(c, FDMovePath.Create(FDPosition.At(10, 20)));
+            //FDCreature c = Instance.AddCreature(CreatureFaction.Friend, 2, 2, FDPosition.At(0, 0));
+            //Instance.CreatureMove(c, FDMovePath.Create(FDPosition.At(10, 20)));
+
+            Instance.OnNewTurn();
 
             return Instance;
         }
@@ -273,10 +276,10 @@ namespace WindingTale.UI.Scenes.Game
         /// <returns></returns>
         public FDCreature AddCreature(CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItemId = 0)
         {
+            CreatureDefinition definition = DefinitionStore.Instance.GetCreatureDefinition(definitionId);
+            FDCreature creature = FDCreature.FromDefinition(faction, creatureId , definition);
 
-            FDCreature creature = new FDCreature(creatureId, faction);
             creature.Position = position;
-
             this.GameMap.Creatures.Add(creature);
 
             this.GameInterface.AddCreatureUI(creature, position);
@@ -286,7 +289,10 @@ namespace WindingTale.UI.Scenes.Game
 
         public void CreatureMove(FDCreature creature, FDMovePath movePath)
         {
-            this.GameInterface.MoveCreatureUI(creature, movePath);
+            CreatureMoveActivity creatureMove = new CreatureMoveActivity(creature, movePath);
+            PushActivity(creatureMove);
+
+            ////this.GameInterface.MoveCreatureUI(creature, movePath);
         }
 
         public void CreatureMoveCancel(FDCreature creature)

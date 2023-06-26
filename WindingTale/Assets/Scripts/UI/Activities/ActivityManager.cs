@@ -5,19 +5,17 @@ using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
 {
-    public class ActivityManager
+    public class ActivityManager : MonoBehaviour
     {
         private List<ActivityBase> activityQueue = null;
 
-        private IGameInterface gameInterface = null;
 
         private ActivityBase currentActivity = null;
 
         public bool IsIdle { get; private set; }
 
-        public ActivityManager(IGameInterface gameInterface)
+        public ActivityManager()
         {
-            this.gameInterface = gameInterface;
             this.activityQueue = new List<ActivityBase>();
         }
 
@@ -65,13 +63,13 @@ namespace WindingTale.UI.Activities
                     activityQueue.RemoveAt(0);
                     Debug.LogFormat("ActivityManager: Starting activity. type={0}", currentActivity.GetType());
 
-                    currentActivity.Start(gameInterface);
+                    currentActivity.Start(gameObject);
                 }
                 
                 return;
             }
 
-            currentActivity.Update(gameInterface);
+            currentActivity.Update(gameObject);
         }
 
     }

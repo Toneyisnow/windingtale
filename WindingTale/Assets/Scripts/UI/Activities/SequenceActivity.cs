@@ -21,7 +21,7 @@ namespace WindingTale.UI.Activities
             this.activityQueue.Enqueue(a);
         }
 
-        public override void Start(IGameInterface gameInterface)
+        public override void Start(GameObject gameInterface)
         {
             if (currentActivity == null && (activityQueue == null || activityQueue.Count == 0))
             {
@@ -34,7 +34,7 @@ namespace WindingTale.UI.Activities
         }
 
 
-        public override void Update(IGameInterface gameInterface)
+        public override void Update(GameObject gameInterface)
         {
             if (currentActivity == null && (activityQueue == null || activityQueue.Count == 0))
             {

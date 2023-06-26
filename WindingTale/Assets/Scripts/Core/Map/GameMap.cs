@@ -7,6 +7,7 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Definitions.Items;
 using System;
+using WindingTale.Chapters;
 
 namespace WindingTale.Core.Map
 {
@@ -171,8 +172,10 @@ namespace WindingTale.Core.Map
 
         public static GameMap LoadFromChapter(ChapterDefinition chapter, GameRecord record)
         {
-            return new GameMap();
-            /// return null;
+            GameMap map = new GameMap();
+            map.Events = ChapterLoader.LoadEvents(chapter.ChapterId);
+
+            return map;
         }
 
         public static GameMap LoadFromSave(GameMapRecord mapRecord)

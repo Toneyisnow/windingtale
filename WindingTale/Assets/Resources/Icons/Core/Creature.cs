@@ -5,7 +5,7 @@ using WindingTale.Core.Objects;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Algorithms;
 
-public class CreatureIconComp : MonoBehaviour
+public class Creature : MonoBehaviour
 {
     private int moveCount = 0;
     private bool isMoving = false;
@@ -50,9 +50,8 @@ public class CreatureIconComp : MonoBehaviour
         if (isMoving)
         {
             moveCount++;
-            Debug.Log("Update: " + moveCount);
 
-            if (moveCount > 10)
+            if (moveCount > 90)
             {
                 isMoving = false;
                 moveCount = 0;

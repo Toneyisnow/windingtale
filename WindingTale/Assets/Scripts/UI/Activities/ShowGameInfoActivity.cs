@@ -19,13 +19,13 @@ namespace WindingTale.UI.Activities
 
         }
 
-        public override void Start(IGameInterface gameInterface)
+        public override void Start(GameObject gameInterface)
         {
             throw new System.NotImplementedException();
         }
 
 
-        public override void Update(IGameInterface gameInterface)
+        public override void Update(GameObject gameInterface)
         {
             throw new System.NotImplementedException();
         }

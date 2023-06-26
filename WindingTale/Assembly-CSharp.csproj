@@ -192,10 +192,11 @@
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ItemDefinition.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\ClearRangeActivity.cs" />
     <Compile Include="Assets\Scripts\UI\Scenes\GameMapScene.cs" />
-    <Compile Include="Assets\Resources\Icons\Core\ClipComp.cs" />
-    <Compile Include="Assets\Resources\Icons\Core\CreatureIconComp.cs" />
-    <Compile Include="Assets\Scripts\UI\Scenes\Game\NewGameScene.cs" />
+    <Compile Include="Assets\Resources\Icons\Core\CreatureClip.cs" />
+    <Compile Include="Assets\Resources\Icons\Core\Creature.cs" />
     <Compile Include="Assets\Resources\Icons\Core\CreatureWalk.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\GameFieldScene\GameFieldScene.cs" />
+    <Compile Include="Assets\Scripts\UI\Common\MapCoordinate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_24.txt" />

@@ -42,14 +42,14 @@ namespace WindingTale.Chapters
             FDCreature c4 = gameMain.AddCreature(CreatureFaction.Friend, 4, 4, FDPosition.At(12, 23));
 
 
-            List<Tuple<FDCreature, FDMovePath>> walks1 = new List<Tuple<FDCreature, FDMovePath>>
-            {
-                new Tuple<FDCreature, FDMovePath>(c1, FDMovePath.Create(FDPosition.At(8, 15))),
-                new Tuple<FDCreature, FDMovePath>(c2, FDMovePath.Create(FDPosition.At(11, 16))),
-                new Tuple<FDCreature, FDMovePath>(c3, FDMovePath.Create(FDPosition.At(9, 17))),
-                new Tuple<FDCreature, FDMovePath>(c4, FDMovePath.Create(FDPosition.At(12, 18)))
-            };
-            gameMain.CreatureBatchMove(walks1);
+            CreatureMoveActivity move1 = new CreatureMoveActivity(c1, FDMovePath.Create(FDPosition.At(8, 15)));
+            CreatureMoveActivity move2 = new CreatureMoveActivity(c2, FDMovePath.Create(FDPosition.At(11, 16)));
+            CreatureMoveActivity move3 = new CreatureMoveActivity(c3, FDMovePath.Create(FDPosition.At(9, 17)));
+            CreatureMoveActivity move4 = new CreatureMoveActivity(c4, FDMovePath.Create(FDPosition.At(12, 18)));
+
+            BatchActivity batch = new BatchActivity(new ActivityBase[] { move1, move2, move3, move4 });
+            gameMain.ActivityManager.Push(batch);
+
 
             // Talking
             ShowConversations(gameMain, 1, 1, 1, 5);

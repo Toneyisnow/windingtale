@@ -17,7 +17,7 @@ namespace WindingTale.UI.Activities
             this.callback = action;
         }
 
-        public override void Start(IGameInterface gameInterface)
+        public override void Start(GameObject gameInterface)
         {
             if (callback != null && gameInterface != null)
             {
@@ -28,7 +28,7 @@ namespace WindingTale.UI.Activities
         }
 
         // Update is called once per frame
-        public override void Update(IGameInterface gameInterface)
+        public override void Update(GameObject gameInterface)
         {
 
         }

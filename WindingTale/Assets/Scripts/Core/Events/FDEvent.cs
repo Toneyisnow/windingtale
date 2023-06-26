@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using UnityEngine;
 using WindingTale.Core.Map;
 using WindingTale.UI.Scenes.Game;
 
@@ -32,6 +34,9 @@ namespace WindingTale.Core.Events
 
         public void Execute(GameMain game)
         {
+            UnityEngine.Debug.Log("Executed event: " + this.EventId);
+
+
             if (this.Execution != null) {
                 this.Execution(game);
             }

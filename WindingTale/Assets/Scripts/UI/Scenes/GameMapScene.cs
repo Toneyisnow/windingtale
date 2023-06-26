@@ -41,7 +41,7 @@ public class GameMapScene : MonoBehaviour
         AttachIcon(string.Format("Icons/{0}/Icon_{0}_02", StringUtils.Digit3(creature.Definition.AnimationId)), creatureIcon.transform.Find("Clip_02"));
         AttachIcon(string.Format("Icons/{0}/Icon_{0}_03", StringUtils.Digit3(creature.Definition.AnimationId)), creatureIcon.transform.Find("Clip_03"));
 
-        CreatureIconComp comp = creatureIcon.AddComponent<CreatureIconComp>();
+        Creature comp = creatureIcon.AddComponent<Creature>();
         comp.SetCreature(creature);
     }
 

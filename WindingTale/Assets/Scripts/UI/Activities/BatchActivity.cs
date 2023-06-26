@@ -18,12 +18,19 @@ namespace WindingTale.UI.Activities
             this.Activities = new List<ActivityBase>();
         }
 
+
+        public BatchActivity(ActivityBase[] activities)
+        {
+            this.Activities = new List<ActivityBase>();
+            this.Activities.AddRange(activities);
+        }
+
         public void Add(ActivityBase a)
         {
             this.Activities.Add(a);
         }
 
-        public override void Start(IGameInterface gameInterface)
+        public override void Start(GameObject gameInterface)
         {
             foreach(ActivityBase activity in this.Activities)
             {
@@ -31,7 +38,7 @@ namespace WindingTale.UI.Activities
             }
         }
 
-        public override void Update(IGameInterface gameInterface)
+        public override void Update(GameObject gameInterface)
         {
             bool hasFinished = true;
             foreach (ActivityBase activity in this.Activities)

@@ -51,7 +51,7 @@ namespace WindingTale.UI.Activities
             this.MessageId = messageId;
         }
 
-        public override void Start(IGameInterface gameInterface)
+        public override void Start(GameObject gameInterface)
         {
             // Cursor move to the current talking creature, and show talk dialog
 
@@ -67,7 +67,7 @@ namespace WindingTale.UI.Activities
             this.HasFinished = true;
         }
 
-        public override void Update(IGameInterface gameInterface)
+        public override void Update(GameObject gameInterface)
         {
             
         }

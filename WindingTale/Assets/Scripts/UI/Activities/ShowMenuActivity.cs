@@ -21,7 +21,7 @@ namespace WindingTale.UI.Activities
             this.menu = menu;
         }
 
-        public override void Start(IGameInterface gameInterface)
+        public override void Start(GameObject gameInterface)
         {
             /*
             menuItems = new UIMenuItem[4];
@@ -51,7 +51,7 @@ namespace WindingTale.UI.Activities
         }
 
 
-        public override void Update(IGameInterface gameInterface)
+        public override void Update(GameObject gameInterface)
         {
             // Move the menu to target position
 

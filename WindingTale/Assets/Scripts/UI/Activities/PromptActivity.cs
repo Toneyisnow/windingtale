@@ -26,7 +26,7 @@ namespace WindingTale.UI.Activities
             this.callback = callback;
         }
 
-        public override void Start(IGameInterface gameInterface)
+        public override void Start(GameObject gameInterface)
         {
             // gameInterface.ShowPromptDialog(pack.AnimationId, pack.Content);
 
@@ -39,7 +39,7 @@ namespace WindingTale.UI.Activities
             this.HasFinished = true;
         }
 
-        public override void Update(IGameInterface gameInterface)
+        public override void Update(GameObject gameInterface)
         {
 
         }
