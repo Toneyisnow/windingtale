@@ -303,6 +303,10 @@ namespace WindingTale.UI.Scenes.Game
             PushActivity(reset);
         }
 
+        /// <summary>
+        /// @deprecated
+        /// </summary>
+        /// <param name="creatureMoves"></param>
         public void CreatureBatchMove(List<Tuple<FDCreature, FDMovePath>> creatureMoves)
         {
             BatchActivity batchActivity = new BatchActivity();

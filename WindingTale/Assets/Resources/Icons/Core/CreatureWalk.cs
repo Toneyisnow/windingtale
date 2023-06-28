@@ -23,15 +23,17 @@ public class CreatureWalk : MonoBehaviour
     private int pathIndex = 0;
     private int stepCount = 0;
 
+    private int signX = 0;
+    private int signY = 0;
+    private int signZ = 0;
+
 
     public void Init(FDMovePath path)
     {
         this.path = path;
         this.creature = this.gameObject.GetComponent<Creature>().creature;
 
-        currentVector = MapCoordinate.ConvertPosToVec3(creature.Position);
-        FDPosition nextPos = path.Vertexes[pathIndex];
-        nextVector = MapCoordinate.ConvertPosToVec3(nextPos);
+        StartMove(creature.Position, path.Vertexes[0]);
 
         Debug.Log("Creature " + creature.Id + " Init vector3:" + currentVector.ToString());
     }
@@ -45,12 +47,31 @@ public class CreatureWalk : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        bool reached = TakeStep();
+        if (reached)
+        {
+            if (pathIndex < path.Vertexes.Count - 1)
+            {
+                pathIndex++;
+                StartMove(path.Vertexes[pathIndex - 1], path.Vertexes[pathIndex]);
+            }
+            else
+            {
+                // complete
+                FDPosition finalPos = path.Vertexes[pathIndex];
+                Vector3 finalVec = MapCoordinate.ConvertPosToVec3(finalPos);
+                this.gameObject.transform.SetPositionAndRotation(finalVec, Quaternion.identity);
+                Debug.Log("Creature " + creature.Id + " Completed walking: " + finalPos.X + " " + finalPos.Y);
+
+                this.enabled = false;
+                Destroy(this);
+            }
+        }
+    }
+
+    private bool TakeStep()
+    {
         stepCount++;
-
-        float signX = System.Math.Sign(nextVector.x - currentVector.x);
-        float signY = System.Math.Sign(nextVector.y - currentVector.y);
-        float signZ = System.Math.Sign(nextVector.z - currentVector.z);
-
         float deltaX = signX * StepLength * stepCount;
         float deltaY = signY * StepLength * stepCount;
         float deltaZ = signZ * StepLength * stepCount;
@@ -77,17 +98,19 @@ public class CreatureWalk : MonoBehaviour
             reached = true;
         }
 
-
-        if (reached)
-        {
-            // complete
-            FDPosition targetPos = path.Vertexes[pathIndex];
-            Vector3 targetVec = MapCoordinate.ConvertPosToVec3(targetPos);
-            this.gameObject.transform.SetPositionAndRotation(targetVec, Quaternion.identity);
-            Debug.Log("Creature " + creature.Id + " Completed walking: " + targetPos.X + " " + targetPos.Y);
-
-            this.enabled = false;
-            Destroy(this);
-        }
+        return reached;
     }
+
+    private void StartMove(FDPosition curPos, FDPosition nextPos)
+    {
+        currentVector = MapCoordinate.ConvertPosToVec3(curPos);
+        nextVector = MapCoordinate.ConvertPosToVec3(nextPos);
+        stepCount = 0;
+
+        signX = Math.Sign(nextVector.x - currentVector.x);
+        signY = Math.Sign(nextVector.y - currentVector.y);
+        signZ = Math.Sign(nextVector.z - currentVector.z);
+
+    }
+
 }
