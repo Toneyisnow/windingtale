@@ -13,6 +13,8 @@ public class CreatureWalk : MonoBehaviour
 
     private FDMovePath path = null;
 
+    private Animator animator = null;
+
     private int count = 0;
 
     private FDCreature creature = null;
@@ -27,12 +29,14 @@ public class CreatureWalk : MonoBehaviour
     private int signY = 0;
     private int signZ = 0;
 
+    private Quaternion desiredRotation = Quaternion.identity;
 
     public void Init(FDMovePath path)
     {
         this.path = path;
         this.creature = this.gameObject.GetComponent<Creature>().creature;
-
+        animator = gameObject.GetComponent<Animator>();
+        
         StartMove(creature.Position, path.Vertexes[0]);
 
         Debug.Log("Creature " + creature.Id + " Init vector3:" + currentVector.ToString());
@@ -42,6 +46,10 @@ public class CreatureWalk : MonoBehaviour
     void Start()
     {
         Debug.Log("Start walking");
+
+        if (animator != null) {
+            animator.SetInteger("state", 1);
+        }
     }
 
     // Update is called once per frame
@@ -50,8 +58,11 @@ public class CreatureWalk : MonoBehaviour
         bool reached = TakeStep();
         if (reached)
         {
+
             if (pathIndex < path.Vertexes.Count - 1)
             {
+                this.gameObject.transform.SetPositionAndRotation(MapCoordinate.ConvertPosToVec3(path.Vertexes[pathIndex]), desiredRotation);
+
                 pathIndex++;
                 StartMove(path.Vertexes[pathIndex - 1], path.Vertexes[pathIndex]);
             }
@@ -60,10 +71,15 @@ public class CreatureWalk : MonoBehaviour
                 // complete
                 FDPosition finalPos = path.Vertexes[pathIndex];
                 Vector3 finalVec = MapCoordinate.ConvertPosToVec3(finalPos);
-                this.gameObject.transform.SetPositionAndRotation(finalVec, Quaternion.identity);
+                //// this.gameObject.transform.SetPositionAndRotation(finalVec, Quaternion.identity);
                 Debug.Log("Creature " + creature.Id + " Completed walking: " + finalPos.X + " " + finalPos.Y);
 
                 this.enabled = false;
+                desiredRotation = Quaternion.Euler(0, 0, 0);
+                this.gameObject.transform.SetPositionAndRotation(MapCoordinate.ConvertPosToVec3(path.Vertexes[pathIndex]), desiredRotation);
+
+                animator.SetInteger("state", 0);
+
                 Destroy(this);
             }
         }
@@ -79,8 +95,9 @@ public class CreatureWalk : MonoBehaviour
         Vector3 nowVector = new Vector3(currentVector.x + deltaX, currentVector.y + deltaY, currentVector.z + deltaZ);
         Debug.Log("currentVector: " + currentVector.ToString() + " nextVector: " + nextVector.ToString());
         Debug.Log("signs: " + signX + signY + signZ);
-
-        this.gameObject.transform.SetPositionAndRotation(nowVector, Quaternion.identity);
+        
+        ///transform.rotation = Quaternion.RotateTowards(transform.rotation, desiredRotation, 1.5f);
+        this.gameObject.transform.SetPositionAndRotation(nowVector, desiredRotation);
 
         // Check if reached the next position
         bool reached = false;
@@ -111,6 +128,55 @@ public class CreatureWalk : MonoBehaviour
         signY = Math.Sign(nextVector.y - currentVector.y);
         signZ = Math.Sign(nextVector.z - currentVector.z);
 
+        //Vector3 relativeVect = nextVector - currentVector;
+        //Quaternion desiredRotation = Quaternion.LookRotation(Vector3.forward, relativeVect);
+        //desiredRotation = Quaternion.Euler(0, desiredRotation.eulerAngles.y + 90, 0);
+
+        if (nextPos.Y < curPos.Y)
+        {
+            TurnUp();
+        }
+        else if (nextPos.Y > curPos.Y)
+        {
+            TurnDown();
+        }
+        else if (nextPos.X > curPos.X)
+        {
+            TurnRight();
+        }
+        else if (nextPos.X < curPos.X)
+        {
+            TurnLeft();
+        }
     }
+
+    private void TurnUp()
+    {
+        Debug.Log("TurnUp");
+        desiredRotation = Quaternion.Euler(0, 180, 0);
+    }
+
+    private void TurnDown()
+    {
+        Debug.Log("TurnDown");
+        desiredRotation = Quaternion.Euler(0, 0, 0);
+    }
+
+    private void TurnLeft()
+    {
+        Debug.Log("TurnLeft");
+        desiredRotation = Quaternion.Euler(0, 90, 0);
+
+    }
+
+    private void TurnRight()
+    {
+        Debug.Log("TurnRight");
+        desiredRotation = Quaternion.Euler(0, 270, 0);
+    }
+
+
+
+
 
 }

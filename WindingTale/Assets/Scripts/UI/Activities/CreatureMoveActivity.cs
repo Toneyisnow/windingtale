@@ -41,6 +41,9 @@ namespace WindingTale.UI.Activities
 
             CreatureWalk walk = creatureUI.AddComponent<CreatureWalk>();
             walk.Init(movePath);
+
+            Animator animator = creatureUI.GetComponent<Animator>();
+            animator.SetInteger("state", 1);
         }
 
         public override void Update(GameObject gameInterface)
