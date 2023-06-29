@@ -9,7 +9,7 @@ using WindingTale.UI.Common;
 
 public class CreatureWalk : MonoBehaviour
 {
-    private static float StepLength = 0.03f;
+    private static float StepLength = 0.01f;
 
     private FDMovePath path = null;
 
