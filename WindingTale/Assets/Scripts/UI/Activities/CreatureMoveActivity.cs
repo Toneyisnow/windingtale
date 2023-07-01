@@ -36,7 +36,6 @@ namespace WindingTale.UI.Activities
             GameObject mapNode = gameInterface.GetComponent<GameFieldScene>().mapNode;
 
             string creatureName = string.Format("creature_{0}", StringUtils.Digit3(creature.Id));
-            Debug.Log("creatureName: " + creatureName);
             creatureUI = mapNode.transform.Find(creatureName).gameObject;
 
             CreatureWalk walk = creatureUI.AddComponent<CreatureWalk>();

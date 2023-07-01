@@ -17,13 +17,6 @@ public class Creature : MonoBehaviour
         get; private set;
     }
 
-    /*
-    public CreatureIconComp(FDCreature creature)
-    {
-        this.creature = creature;
-    }
-    */
-
     public void SetCreature(FDCreature creature)
     {
         this.creature = creature;
@@ -31,7 +24,6 @@ public class Creature : MonoBehaviour
 
     public void StartMove(FDMovePath path)
     {
-        Debug.Log("start move");
         isMoving = true;
         this.path = path;
 
@@ -57,10 +49,7 @@ public class Creature : MonoBehaviour
                 moveCount = 0;
 
                 // update position
-                Debug.Log("Update position: " + path.Desitination);
-
                 creature.Position = path.Desitination;
-                Debug.Log("Moved to position: " + creature.Position.X + creature.Position.Y);
 
                 // remove component
                 Destroy(gameObject.GetComponent<CreatureWalk>());

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.UI.Scenes;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
@@ -36,6 +37,16 @@ namespace WindingTale.UI.Activities
 
         public void Update()
         {
+            GameFieldScene gameFieldScene = GetComponent<GameFieldScene>();
+            GameCanvas gameCanvas = gameFieldScene.canvas.GetComponent<GameCanvas>();
+
+            if (gameCanvas.HasDialog())
+            {
+                // Don't update activity if Canvas is active
+                return;
+            }
+
+
             if (currentActivity == null && (activityQueue == null || activityQueue.Count == 0))
             {
                 // Nothing to do now
@@ -53,7 +64,7 @@ namespace WindingTale.UI.Activities
             {
                 if (currentActivity != null)
                 {
-                    Debug.LogFormat("ActivityManager: Finished activity. type={0}", currentActivity.GetType());
+                    //// Debug.LogFormat("ActivityManager: Finished activity. type={0}", currentActivity.GetType());
                     currentActivity = null;
                 }
 
@@ -61,7 +72,7 @@ namespace WindingTale.UI.Activities
                 {
                     currentActivity = activityQueue[0];
                     activityQueue.RemoveAt(0);
-                    Debug.LogFormat("ActivityManager: Starting activity. type={0}", currentActivity.GetType());
+                    //// Debug.LogFormat("ActivityManager: Starting activity. type={0}", currentActivity.GetType());
 
                     currentActivity.Start(gameObject);
                 }

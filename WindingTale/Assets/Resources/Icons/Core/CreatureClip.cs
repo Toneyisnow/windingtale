@@ -13,9 +13,10 @@ public class CreatureClip : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        bool enabled = this.gameObject.GetComponent<MeshRenderer>().enabled;
         foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>())
         {
-            renderer.enabled = this.isActiveAndEnabled;
+            renderer.enabled = enabled;
         }
     }
 }

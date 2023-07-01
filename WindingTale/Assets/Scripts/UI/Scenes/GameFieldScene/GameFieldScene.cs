@@ -16,6 +16,8 @@ namespace WindingTale.UI.Scenes
 
         public GameObject mapNode;
 
+        public GameObject canvas;
+        
         private GameMain gameMain;
 
         private Material defaultMaterial = null;

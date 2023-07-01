@@ -58,6 +58,8 @@
   <ItemGroup>
     <Compile Include="Assets\SmartLocalization\Scripts\NGUI\SL_NGUISpriteName.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\MenuItemState.cs" />
+    <Compile Include="Assets\Resources\Icons\Core\Creature.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\GameFieldScene\SyncedTick.cs" />
     <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_PolyWorldTerrain.cs" />
     <Compile Include="Assets\Scripts\Core\Common\Conversation.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\CloseMenuActivity.cs" />
@@ -90,10 +92,12 @@
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedSprite.cs" />
     <Compile Include="Assets\Scripts\Core\Events\FDEvent.cs" />
     <Compile Include="Assets\Scripts\Core\AI\AIHandler.cs" />
-    <Compile Include="Assets\Scripts\Chapters\ChapterEvents.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\GameMapScene.cs" />
     <Compile Include="Assets\Scripts\Core\Events\ReachPositionEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDCreature.cs" />
+    <Compile Include="Assets\Scripts\Chapters\ChapterEvents.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\ShowGameInfoActivity.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\GameFieldScene\GameFieldScene.cs" />
     <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\Utility Scripts\QT_MeshCombineUtility.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\IdleState.cs" />
     <Compile Include="Assets\Scripts\Core\GameHandler.cs" />
@@ -115,6 +119,7 @@
     <Compile Include="Assets\Scripts\Core\Common\FDMessage.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIEscapeDelegate.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizationSystem\SmartCultureInfo.cs" />
+    <Compile Include="Assets\Scripts\UI\Common\MapCoordinate.cs" />
     <Compile Include="Assets\Scripts\Core\Map\GameField.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\ShowCreatureInfoActivity.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDEnemy.cs" />
@@ -123,8 +128,10 @@
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIDefensiveDelegate.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LanguageManager.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\CreatureMoveActivity.cs" />
+    <Compile Include="Assets\Resources\Icons\Core\CreatureSynced.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter3.cs" />
     <Compile Include="Assets\Scripts\Core\Files\ResourceJsonFile.cs" />
+    <Compile Include="Assets\Resources\Icons\Core\CreatureClip.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedAudioSource.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\CreatureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDFriend.cs" />
@@ -181,6 +188,7 @@
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIStandByDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDRange.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedObject.cs" />
+    <Compile Include="Assets\Resources\Icons\Core\CreatureWalk.cs" />
     <Compile Include="Assets\Scripts\Core\Map\GameMap.cs" />
     <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_InteractContainer.cs" />
     <Compile Include="Assets\Scripts\Core\Files\ResourceDataFile.cs" />
@@ -191,12 +199,42 @@
     <Compile Include="Assets\Scripts\Core\Common\StringUtils.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ItemDefinition.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\ClearRangeActivity.cs" />
-    <Compile Include="Assets\Scripts\UI\Scenes\GameMapScene.cs" />
-    <Compile Include="Assets\Resources\Icons\Core\CreatureClip.cs" />
-    <Compile Include="Assets\Resources\Icons\Core\Creature.cs" />
-    <Compile Include="Assets\Resources\Icons\Core\CreatureWalk.cs" />
-    <Compile Include="Assets\Scripts\UI\Scenes\GameFieldScene\GameFieldScene.cs" />
-    <Compile Include="Assets\Scripts\UI\Common\MapCoordinate.cs" />
+    <Compile Include="Assets\Resources\Dialogs\MessageDialog.cs" />
+    <Compile Include="Assets\Scripts\UI\Scenes\GameFieldScene\GameCanvas.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_24.txt" />
@@ -227,12 +265,14 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_20_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_12_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_10_Creature.txt" />
+    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald-Bold - OFL.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_07_Creature.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-12.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_20_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_02.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_17.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Common.txt" />
+    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_06.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-25.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_24_ConversationId.txt" />
@@ -374,6 +414,7 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_19_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_21.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-26.txt" />
+    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Bangers - OFL.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-07.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_25.txt" />
   </ItemGroup>

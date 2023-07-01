@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using WindingTale.Core.Common;
+using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
@@ -53,10 +55,17 @@ namespace WindingTale.UI.Activities
 
         public override void Start(GameObject gameInterface)
         {
-            // Cursor move to the current talking creature, and show talk dialog
+            Debug.Log("Start Talk activity");
 
+            GameFieldScene gameFieldScene = gameInterface.GetComponent<GameFieldScene>();
+            GameCanvas gameCanvas = gameFieldScene.canvas.GetComponent<GameCanvas>();
+            gameCanvas.ShowMessageDialog();
+
+            // Cursor move to the current talking creature, and show talk dialog
             if (this.ConversationId != null)
             {
+
+
                 //// gameInterface.ShowConversationDialog(this.Creature, this.ConversationId);
             }
             else if (this.MessageId != null)

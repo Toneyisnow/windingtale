@@ -9,7 +9,7 @@ using WindingTale.UI.Common;
 
 public class CreatureWalk : MonoBehaviour
 {
-    private static float StepLength = 0.01f;
+    private static float StepLength = 0.03f;
 
     private FDMovePath path = null;
 
@@ -39,14 +39,11 @@ public class CreatureWalk : MonoBehaviour
         
         StartMove(creature.Position, path.Vertexes[0]);
 
-        Debug.Log("Creature " + creature.Id + " Init vector3:" + currentVector.ToString());
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Start walking");
-
         if (animator != null) {
             animator.SetInteger("state", 1);
         }
@@ -71,15 +68,12 @@ public class CreatureWalk : MonoBehaviour
                 // complete
                 FDPosition finalPos = path.Vertexes[pathIndex];
                 Vector3 finalVec = MapCoordinate.ConvertPosToVec3(finalPos);
-                //// this.gameObject.transform.SetPositionAndRotation(finalVec, Quaternion.identity);
-                Debug.Log("Creature " + creature.Id + " Completed walking: " + finalPos.X + " " + finalPos.Y);
-
+                
                 this.enabled = false;
                 desiredRotation = Quaternion.Euler(0, 0, 0);
                 this.gameObject.transform.SetPositionAndRotation(MapCoordinate.ConvertPosToVec3(path.Vertexes[pathIndex]), desiredRotation);
 
                 animator.SetInteger("state", 0);
-
                 Destroy(this);
             }
         }
@@ -93,8 +87,6 @@ public class CreatureWalk : MonoBehaviour
         float deltaZ = signZ * StepLength * stepCount;
 
         Vector3 nowVector = new Vector3(currentVector.x + deltaX, currentVector.y + deltaY, currentVector.z + deltaZ);
-        Debug.Log("currentVector: " + currentVector.ToString() + " nextVector: " + nextVector.ToString());
-        Debug.Log("signs: " + signX + signY + signZ);
         
         ///transform.rotation = Quaternion.RotateTowards(transform.rotation, desiredRotation, 1.5f);
         this.gameObject.transform.SetPositionAndRotation(nowVector, desiredRotation);
@@ -152,31 +144,23 @@ public class CreatureWalk : MonoBehaviour
 
     private void TurnUp()
     {
-        Debug.Log("TurnUp");
         desiredRotation = Quaternion.Euler(0, 180, 0);
     }
 
     private void TurnDown()
     {
-        Debug.Log("TurnDown");
         desiredRotation = Quaternion.Euler(0, 0, 0);
     }
 
     private void TurnLeft()
     {
-        Debug.Log("TurnLeft");
         desiredRotation = Quaternion.Euler(0, 90, 0);
 
     }
 
     private void TurnRight()
     {
-        Debug.Log("TurnRight");
         desiredRotation = Quaternion.Euler(0, 270, 0);
     }
-
-
-
-
 
 }
