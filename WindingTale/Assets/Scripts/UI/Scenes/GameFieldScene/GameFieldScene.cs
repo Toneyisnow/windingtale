@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
+using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
 using WindingTale.UI.Activities;
 using WindingTale.UI.Common;
@@ -29,7 +30,6 @@ namespace WindingTale.UI.Scenes
 
             ActivityManager activityManager = this.gameObject.GetComponent<ActivityManager>();
             gameMain = GameMain.StartNewGame(this, activityManager);
-
 
         }
 

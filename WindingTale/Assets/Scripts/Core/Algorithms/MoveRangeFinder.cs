@@ -118,7 +118,7 @@ namespace WindingTale.Core.Algorithms
 
         private int GetMoveCost(FDPosition position, FDCreature creature)
         {
-            ShapeDefinition targetShape = gameMap.Field.GetShapeAt(position.X, position.Y);
+            ShapeDefinition targetShape = gameMap.Field.GetShapeAt(position);
             if (targetShape == null)
             {
                 return -1;

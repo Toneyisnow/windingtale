@@ -15,6 +15,11 @@ namespace WindingTale.Core.Definitions
 
     public class ShapeDefinition
     {
+        public int Id
+        {
+            get; set;
+        }
+
         [JsonProperty(PropertyName = "Type")]
         public ShapeType Type
         {

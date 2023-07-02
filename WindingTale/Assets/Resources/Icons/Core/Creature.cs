@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using WindingTale.Core.Objects;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Algorithms;
+using WindingTale.UI.Scenes.Game;
 
 public class Creature : MonoBehaviour
 {
@@ -28,6 +30,13 @@ public class Creature : MonoBehaviour
         this.path = path;
 
         gameObject.AddComponent<CreatureWalk>();
+    }
+
+    public void OnClicked()
+    {
+        Debug.Log("OnClicked");
+
+        GameInterface.Instance.OnMapClicked(this.creature.Position);
     }
 
 

@@ -154,11 +154,11 @@ namespace WindingTale.Core
             if (isHit)
             {
                 FDPosition pos = subject.Position;
-                ShapeDefinition shape = field.GetShapeAt(pos.X, pos.Y);
+                ShapeDefinition shape = field.GetShapeAt(pos);
                 int adjustedAp = subject.CalculatedAp * (100 + shape.AdjustedAp) / 100;
 
                 FDPosition targetPos = target.Position;
-                ShapeDefinition targetShape = field.GetShapeAt(targetPos.X, targetPos.Y);
+                ShapeDefinition targetShape = field.GetShapeAt(targetPos);
                 int adjustedDp = target.CalculatedDp * (100 + shape.AdjustedDp) / 100;
 
                 int attackMax = adjustedAp - adjustedDp;

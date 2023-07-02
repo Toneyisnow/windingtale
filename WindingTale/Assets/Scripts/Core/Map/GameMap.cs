@@ -76,9 +76,15 @@ namespace WindingTale.Core.Map
 
         #region Constructors
 
-        public GameMap()
+        public GameMap(ChapterDefinition chapterDefinition)
         {
+            this.Field = new GameField(chapterDefinition);
             this.Creatures = new List<FDCreature>();
+        }
+
+        public void ApplyRecord(GameRecord record)
+        {
+
         }
 
         #endregion
@@ -172,8 +178,9 @@ namespace WindingTale.Core.Map
 
         public static GameMap LoadFromChapter(ChapterDefinition chapter, GameRecord record)
         {
-            GameMap map = new GameMap();
+            GameMap map = new GameMap(chapter);
             map.Events = ChapterLoader.LoadEvents(chapter.ChapterId);
+            map.ApplyRecord(record);
 
             return map;
         }
