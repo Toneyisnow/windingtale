@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using WindingTale.Core.Common;
+using WindingTale.UI.Common;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
@@ -15,7 +18,6 @@ namespace WindingTale.UI.Activities
 
         private FDMenu menu = null;
 
-
         public ShowMenuActivity(FDMenu menu)
         {
             this.menu = menu;
@@ -23,6 +25,19 @@ namespace WindingTale.UI.Activities
 
         public override void Start(GameObject gameInterface)
         {
+            Debug.Log("Show Menu Activity");
+            
+            Transform gameIndicatorRoot = gameInterface.GetComponent<GameInterface>().MapIndicators.transform;
+            Debug.Log("gameIndicatorRoot: " + gameIndicatorRoot != null);
+
+            GameObject menuPrefab = Resources.Load<GameObject>("Menu/Menu");
+            GameObject menuObject = MonoBehaviour.Instantiate(menuPrefab, gameIndicatorRoot);
+
+            menuObject.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(this.menu.Position), Quaternion.identity);
+
+            Menu menuComponent = menuObject.GetComponent<Menu>();
+            menuComponent.Init(this.menu);
+
             /*
             menuItems = new UIMenuItem[4];
             bool hasSelected = false;
@@ -49,7 +64,6 @@ namespace WindingTale.UI.Activities
             }
             */
         }
-
 
         public override void Update(GameObject gameInterface)
         {

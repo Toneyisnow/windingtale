@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\UI\ActionStates\SelectAttackTargetState.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedText.cs" />
+    <Compile Include="Assets\Resources\Menu\Menu.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizationSystem\SmartCultureInfo.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\DefinitionStore.cs" />
     <Compile Include="Assets\Scripts\Core\Common\Conversation.cs" />

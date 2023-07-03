@@ -34,13 +34,6 @@ public class MapField : MonoBehaviour
         }
     }
 
-    public void OnBlockClicked(FDPosition position)
-    {
-        if (!initialized) { return; }
-
-        GameInterface.Instance.OnMapClicked(position);
-    }
-
 
     private void buildField(GameField field)
     {
@@ -55,12 +48,15 @@ public class MapField : MonoBehaviour
                 GameObject shapePrefab = Resources.Load<GameObject>(string.Format("Maps/ShapePanel1/Shape_1_{0}", shapeDef.Id));
                 if (shapePrefab != null)
                 {
-                    GameObject shapeObj = Instantiate(shapePrefab, new Vector3(i, 0, j), Quaternion.identity);
+                    GameObject shapeObj = Instantiate(shapePrefab);
                     shapeObj.transform.SetParent(this.transform);
-                    shapeObj.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(pos), Quaternion.Euler(-90, 0, 0));
+                    shapeObj.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(pos), Quaternion.Euler(90, 0, 0));
                     shapeObj.transform.localScale = new Vector3(0.083f, 0.083f, 0.083f);
 
-                    MeshRenderer renderer = shapeObj.transform.Find("default").GetComponent<MeshRenderer>();
+                    Transform inner = shapeObj.transform.Find("default");
+                    inner.SetLocalPositionAndRotation(new Vector3(24, -24, 0), Quaternion.Euler(180, 0, 0));
+
+                    MeshRenderer renderer = inner.GetComponent<MeshRenderer>();
                     renderer.materials = new Material[1] { defaultMaterial };
 
                     Shape shape = shapeObj.AddComponent<Shape>();

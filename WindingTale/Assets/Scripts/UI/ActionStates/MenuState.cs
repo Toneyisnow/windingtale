@@ -14,11 +14,6 @@ namespace WindingTale.UI.ActionStates
         public FDMenu Menu { get; private set; }
 
 
-        public FDPosition Central
-        {
-            get; private set;
-        }
-
         public FDPosition[] MenuItemPositions
         {
             get; private set;
@@ -48,6 +43,15 @@ namespace WindingTale.UI.ActionStates
         {
             base.OnEnter();
 
+            Debug.Log("Enter Menu State");
+
+            if (GameInterface.Instance.MapIndicators.transform.Find("Menu") != null)
+            {
+                Debug.Log("Already have menu, skip this");
+                return;
+            }
+
+
             // Show Action Menu
             ShowMenuActivity activity = new ShowMenuActivity(this.Menu);
             activityManager.Push(activity);
@@ -55,10 +59,10 @@ namespace WindingTale.UI.ActionStates
 
         public override void OnExit()
         {
-            base.OnExit();
-
+         
             // Close Action Menu
             CloseMenuActivity activity = new CloseMenuActivity();
+            base.OnExit();
         }
 
         protected void SetMenu(int index, MenuItemId menuItemId, bool enabled, Action action)

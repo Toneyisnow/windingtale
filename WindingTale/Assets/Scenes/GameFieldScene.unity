@@ -473,6 +473,7 @@ MonoBehaviour:
   MapObjects: {fileID: 1103346016}
   MapField: {fileID: 1854426326}
   MapIndicators: {fileID: 368880778}
+  DefaultMaterial: {fileID: 2100000, guid: e85d5c3cf2d53d342bcfa53200a535a3, type: 2}
 --- !u!1 &368880778
 GameObject:
   m_ObjectHideFlags: 0

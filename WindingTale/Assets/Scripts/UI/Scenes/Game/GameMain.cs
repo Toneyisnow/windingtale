@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using WindingTale.Chapters;
 using static UnityEditor.Progress;
 using static UnityEngine.GraphicsBuffer;
+using WindingTale.UI.ActionStates;
 
 namespace WindingTale.UI.Scenes.Game
 {
@@ -38,7 +39,10 @@ namespace WindingTale.UI.Scenes.Game
 
         public IGameInterface GameInterface { get; private set; }
 
-        public ActivityManager ActivityManager { get; set; }
+        public ActivityManager ActivityManager { get; private set; }
+
+        public StateDispatcher State { get; private set; }
+
 
         /// TODO: Whether should I use singleton pattern here?
         public static GameMain Instance { get; private set; } = new GameMain();
@@ -94,6 +98,8 @@ namespace WindingTale.UI.Scenes.Game
             Instance.GameHandler = new GameHandler(Instance.GameMap);
             Instance.GameInterface = gameInterface;
             Instance.ActivityManager = activityManager;
+            Instance.State = new StateDispatcher(Instance);
+
 
             // Load chapter creatures from record
 

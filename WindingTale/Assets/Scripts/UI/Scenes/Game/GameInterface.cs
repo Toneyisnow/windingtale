@@ -27,6 +27,10 @@ namespace WindingTale.UI.Scenes.Game
 
         public GameObject MapIndicators;
 
+        public Material DefaultMaterial;
+
+        private static GameInterface instance = null;
+
 
         void Awake()
         {
@@ -43,13 +47,17 @@ namespace WindingTale.UI.Scenes.Game
         }
 
 
-        private static GameInterface instance = new GameInterface();
+        /// <summary>
+        /// /private static GameInterface instance = new GameInterface();
+        /// </summary>
+        /// <param name="position"></param>
 
 
         public void OnMapClicked(FDPosition position)
         {
             Debug.Log("Clicked at : " + position.X + " " + position.Y);
 
+            // Update cursor
             GameObject cursor = MapIndicators.transform.Find("Cursor")?.gameObject;
             if (cursor == null)
             {
@@ -60,8 +68,23 @@ namespace WindingTale.UI.Scenes.Game
 
             cursor.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
 
+
+            // Take action
+            GameMain.Instance.State.OnSelectPosition(position);
+
         }
 
+
+        public void ApplyDefaultMaterial(GameObject gameObject)
+        {
+            MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
+            if (renderer == null)
+            {
+                renderer = gameObject.AddComponent<MeshRenderer>();
+            }
+
+            renderer.materials = new Material[1] { DefaultMaterial };
+        }
     }
 
 
