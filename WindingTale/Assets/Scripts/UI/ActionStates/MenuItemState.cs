@@ -24,10 +24,6 @@ namespace WindingTale.UI.ActionStates
             get; private set;
         }
 
-        public int CreatureId
-        {
-            get; private set;
-        }
 
         private SubActionState subState;
 
@@ -72,7 +68,7 @@ namespace WindingTale.UI.ActionStates
             }
 
             // Near a friend
-            List<FDCreature> adjacentFriends = gameMap.GetAdjacentFriends(this.CreatureId);
+            List<FDCreature> adjacentFriends = gameMap.GetAdjacentFriends(this.Creature.Id);
             return (adjacentFriends != null && adjacentFriends.Count > 0);
         }
 
@@ -100,7 +96,7 @@ namespace WindingTale.UI.ActionStates
             }
 
             // Selete Target Friend
-            SelectItemExchangeTargetState exchangeTargetState = new SelectItemExchangeTargetState(gameMain, stateHandler, this.CreatureId, index);
+            SelectItemExchangeTargetState exchangeTargetState = new SelectItemExchangeTargetState(gameMain, stateHandler, this.Creature.Id, index);
             stateHandler.HandlePushState(exchangeTargetState);
         }
 
@@ -114,7 +110,7 @@ namespace WindingTale.UI.ActionStates
             }
 
             // Selete Target Friend
-            SelectItemUseTargetState selectTargetState = new SelectItemUseTargetState(gameMain, stateHandler, this.CreatureId, index);
+            SelectItemUseTargetState selectTargetState = new SelectItemUseTargetState(gameMain, stateHandler, this.Creature.Id, index);
             stateHandler.HandlePushState(selectTargetState);
         }
         

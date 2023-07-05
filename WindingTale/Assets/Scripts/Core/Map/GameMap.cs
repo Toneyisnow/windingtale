@@ -7,6 +7,7 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Definitions.Items;
 using System;
+using UnityEngine;
 using WindingTale.Chapters;
 
 namespace WindingTale.Core.Map
@@ -109,6 +110,7 @@ namespace WindingTale.Core.Map
         public List<FDCreature> GetAdjacentFriends(int creatureId)
         {
             FDCreature creature = GetCreatureById(creatureId);
+            Debug.Log("creature position: " + creatureId + " " + creature?.Position?.ToString());
 
             List<FDCreature> friends = new List<FDCreature>();
             foreach (FDPosition position in creature.Position.GetAdjacentPositions())

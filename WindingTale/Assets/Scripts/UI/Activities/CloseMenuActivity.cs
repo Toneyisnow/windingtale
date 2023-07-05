@@ -16,10 +16,6 @@ namespace WindingTale.UI.Activities
             }
         }
 
-        public override void Update(GameObject gameInterface)
-        {
-            this.HasFinished = true;
-        }
 
     }
 }

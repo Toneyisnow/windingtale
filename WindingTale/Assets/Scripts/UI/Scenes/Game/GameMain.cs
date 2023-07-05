@@ -297,8 +297,6 @@ namespace WindingTale.UI.Scenes.Game
         {
             CreatureMoveActivity creatureMove = new CreatureMoveActivity(creature, movePath);
             PushActivity(creatureMove);
-
-            ////this.GameInterface.MoveCreatureUI(creature, movePath);
         }
 
         public void CreatureMoveCancel(FDCreature creature)

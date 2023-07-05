@@ -19,11 +19,6 @@ namespace WindingTale.UI.ActionStates
             get; private set;
         }
 
-        public MenuItemId[] MenuItemIds
-        {
-            get; private set;
-        }
-
         public Action[] MenuActions
         {
             get; private set;
@@ -39,15 +34,6 @@ namespace WindingTale.UI.ActionStates
         {
             base.OnEnter();
 
-            Debug.Log("Enter Menu State");
-
-            if (GameInterface.Instance.MapIndicators.transform.Find("Menu") != null)
-            {
-                Debug.Log("Already have menu, skip this");
-                return;
-            }
-
-
             // Show Action Menu
             ShowMenuActivity activity = new ShowMenuActivity(this.Menu);
             activityManager.Push(activity);
@@ -55,10 +41,10 @@ namespace WindingTale.UI.ActionStates
 
         public override void OnExit()
         {
-         
             // Close Action Menu
             CloseMenuActivity activity = new CloseMenuActivity();
             activityManager.Push(activity);
+
             base.OnExit();
         }
 
@@ -83,12 +69,11 @@ namespace WindingTale.UI.ActionStates
                     // Clicked on menu
                     item.Action();
                     return;
-                    //// this.MenuActions[index]();
                 }
             }
 
+            // If not clicked on menu, pop state
             stateHandler.HandlePopState();
         }
-
     }
 }
