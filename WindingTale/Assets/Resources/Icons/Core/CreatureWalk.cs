@@ -11,7 +11,7 @@ public class CreatureWalk : MonoBehaviour
 {
     private static float StepLength = 0.04f;
 
-    private FDMovePath path = null;
+    private FDMovePath movePath = null;
 
     private Animator animator = null;
 
@@ -33,7 +33,7 @@ public class CreatureWalk : MonoBehaviour
 
     public void Init(FDMovePath path)
     {
-        this.path = path;
+        this.movePath = path;
         this.creature = this.gameObject.GetComponent<Creature>().creature;
         animator = gameObject.GetComponent<Animator>();
         
@@ -44,7 +44,7 @@ public class CreatureWalk : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (animator != null) {
+        if (animator != null && movePath.Vertexes.Count > 0) {
             animator.SetInteger("state", 1);
         }
     }
@@ -52,26 +52,34 @@ public class CreatureWalk : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (movePath.Vertexes.Count == 0)
+        {
+            // No need to walk, just return
+            Destroy(this);
+            return;
+        }
+
+
         bool reached = TakeStep();
         if (reached)
         {
 
-            if (pathIndex < path.Vertexes.Count - 1)
+            if (pathIndex < movePath.Vertexes.Count - 1)
             {
-                this.gameObject.transform.SetPositionAndRotation(MapCoordinate.ConvertPosToVec3(path.Vertexes[pathIndex]), desiredRotation);
+                this.gameObject.transform.SetPositionAndRotation(MapCoordinate.ConvertPosToVec3(movePath.Vertexes[pathIndex]), desiredRotation);
 
                 pathIndex++;
-                StartMove(path.Vertexes[pathIndex - 1], path.Vertexes[pathIndex]);
+                StartMove(movePath.Vertexes[pathIndex - 1], movePath.Vertexes[pathIndex]);
             }
             else
             {
                 // complete
-                FDPosition finalPos = path.Vertexes[pathIndex];
+                FDPosition finalPos = movePath.Vertexes[pathIndex];
                 Vector3 finalVec = MapCoordinate.ConvertPosToVec3(finalPos);
                 
                 this.enabled = false;
                 desiredRotation = Quaternion.Euler(0, 0, 0);
-                this.gameObject.transform.SetPositionAndRotation(MapCoordinate.ConvertPosToVec3(path.Vertexes[pathIndex]), desiredRotation);
+                this.gameObject.transform.SetPositionAndRotation(MapCoordinate.ConvertPosToVec3(movePath.Vertexes[pathIndex]), desiredRotation);
 
                 animator.SetInteger("state", 0);
                 Destroy(this);

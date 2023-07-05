@@ -19,19 +19,21 @@ public class Menu : MonoBehaviour
     {
         this.FDMenu = menu;
 
-        LoadMenuItem(1, menu.Items[0].Id.GetHashCode());
-        LoadMenuItem(2, menu.Items[1].Id.GetHashCode());
-        LoadMenuItem(3, menu.Items[2].Id.GetHashCode());
-        LoadMenuItem(4, menu.Items[3].Id.GetHashCode());
+        for (int i = 0; i < 4; i++)
+        {
+            LoadMenuItem(i);
+        }
     }
 
-    public void LoadMenuItem(int itemIndex, int menuItemId)
+    public void LoadMenuItem(int itemIndex)
     {
+        FDMenuItem item = FDMenu.Items[itemIndex];
+        int animIndex = item.Enabled ? 1 : 3;
+
         //// GameObject menuItemPrefab = Resources.Load<GameObject>(string.Format("Menu/Menu_{0}_1", FDMenu.Items[itemIndex - 1].Id));
-        GameObject menuItemPrefab = Resources.Load<GameObject>(string.Format("Menu/Menu_{0}_1", menuItemId));
+        GameObject menuItemPrefab = Resources.Load<GameObject>(string.Format("Menu/Menu_{0}_{1}", item.Id.GetHashCode(), animIndex));
         
         GameObject menuItem = Instantiate(menuItemPrefab, transform.Find(string.Format("Item{0}", itemIndex )));
-
         menuItem.transform.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
         menuItem.transform.localScale = new Vector3(0.08f, 0.08f, 0.08f);
 

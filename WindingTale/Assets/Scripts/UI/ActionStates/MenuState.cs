@@ -32,6 +32,7 @@ namespace WindingTale.UI.ActionStates
         public MenuState(GameMain gameMain, IStateResultHandler stateHandler, FDPosition central) : base(gameMain, stateHandler)
         {
             this.Menu = new FDMenu(central);
+            this.MenuItemPositions = FDMenu.GetItemPositions(central);
         }
 
         public override void OnEnter()
@@ -69,25 +70,7 @@ namespace WindingTale.UI.ActionStates
             }
 
             FDPosition central = this.Menu.Position;
-            FDPosition itemPosition = central;
-            switch(index)
-            {
-                case 0:
-                    itemPosition = FDPosition.At(central.X, central.Y - 1);
-                    break;
-                case 1:
-                    itemPosition = FDPosition.At(central.X + 1, central.Y);
-                    break;
-                case 2:
-                    itemPosition = FDPosition.At(central.X, central.Y + 1);
-                    break;
-                case 3:
-                    itemPosition = FDPosition.At(central.X - 1, central.Y);
-                    break;
-                default:
-                    break;
-            }
-            this.Menu.Items[index] = new FDMenuItem(menuItemId, enabled, action, itemPosition, this.Menu);
+            this.Menu.Items[index] = new FDMenuItem(menuItemId, enabled, action, MenuItemPositions[index], this.Menu);
         }
 
         public override void OnSelectPosition(FDPosition position)

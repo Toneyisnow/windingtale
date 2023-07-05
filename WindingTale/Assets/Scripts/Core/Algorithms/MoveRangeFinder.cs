@@ -27,7 +27,6 @@ namespace WindingTale.Core.Algorithms
         {
             int movePoint = creature.CalculatedMv;
             DirectedPosition central = new DirectedPosition(creature.Position, movePoint, null);
-
             FDMoveRange range = new FDMoveRange(central);
 
             Queue<DirectedPosition> positionQueue = new Queue<DirectedPosition>();

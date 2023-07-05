@@ -50,8 +50,11 @@ namespace WindingTale.UI.Activities
                 this.HasFinished = true;
 
                 // Update the object to the final position
-                Creature creatureObj = creatureUI.GetComponent<Creature>();
-                creatureObj.creature.Position = movePath.Vertexes[movePath.Vertexes.Count - 1];
+                if (movePath.Vertexes.Count > 0)
+                {
+                    Creature creatureObj = creatureUI.GetComponent<Creature>();
+                    creatureObj.creature.Position = movePath.Vertexes[movePath.Vertexes.Count - 1];
+                }
             }
         }
 

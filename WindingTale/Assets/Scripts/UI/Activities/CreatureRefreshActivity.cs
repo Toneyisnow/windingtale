@@ -32,8 +32,6 @@ namespace WindingTale.UI.Activities
 
         public override void Start(GameObject gameInterface)
         {
-            Debug.Log("CreatureRefreshActivity started: " + creatureIds[0]);
-
             Transform mapObjects = gameInterface.GetComponent<GameInterface>().MapObjects.transform;
             foreach (int creatureId in creatureIds)
             {
