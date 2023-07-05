@@ -109,12 +109,15 @@ namespace WindingTale.UI.ActionStates
 
         public void HandlePopState()
         {
+            Debug.Log("HandlePopState");
             ActionState currentState = GetCurrentState();
             
             currentState.OnExit();
             actionStateStack.Pop();
             currentState = actionStateStack.Peek();
             currentState.OnEnter();
+
+            Debug.Log("Current state: " + currentState.GetType());
         }
 
         public void HandleClearStates()

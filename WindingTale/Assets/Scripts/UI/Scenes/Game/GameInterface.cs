@@ -63,15 +63,22 @@ namespace WindingTale.UI.Scenes.Game
             {
                 cursor = Instantiate(Resources.Load<GameObject>("Others/Cursor"));
                 cursor.name = "Cursor";
+                Cursor c = cursor.AddComponent<Cursor>();
+                c.Position = position;
+
                 cursor.transform.SetParent(MapIndicators.transform);
+                cursor.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
             }
-
-            cursor.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
-
-
-            // Take action
-            GameMain.Instance.State.OnSelectPosition(position);
-
+            else if (!cursor.GetComponent<Cursor>().Position.AreSame(position))
+            {
+                cursor.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
+                cursor.GetComponent<Cursor>().Position = position;
+            }
+            else
+            {
+                // Take action
+                GameMain.Instance.State.OnSelectPosition(position);
+            }
         }
 
 

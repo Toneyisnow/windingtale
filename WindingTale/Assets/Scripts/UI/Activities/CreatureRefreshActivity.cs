@@ -4,7 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using WindingTale.Core.Common;
+using WindingTale.Core.Objects;
+using WindingTale.UI.Common;
 using WindingTale.UI.Scenes.Game;
+using static UnityEditor.PlayerSettings;
 
 namespace WindingTale.UI.Activities
 {
@@ -28,16 +32,21 @@ namespace WindingTale.UI.Activities
 
         public override void Start(GameObject gameInterface)
         {
+            Debug.Log("CreatureRefreshActivity started: " + creatureIds[0]);
+
+            Transform mapObjects = gameInterface.GetComponent<GameInterface>().MapObjects.transform;
             foreach (int creatureId in creatureIds)
             {
-                //// UICreature creature = gameInterface.GetUICreature(creatureId);
+                GameObject creatureObj = mapObjects.Find(string.Format("creature_{0}",  StringUtils.Digit3(creatureId))).gameObject;
+                if (creatureObj != null)
+                {
+                    Creature creatureData = creatureObj.GetComponent<Creature>();
+                    creatureObj.transform.SetPositionAndRotation(MapCoordinate.ConvertPosToVec3(creatureData.creature.Position), Quaternion.identity);
+
+                }
             }
         }
 
-        public override void Update(GameObject gameInterface)
-        {
-            this.HasFinished = true;
-        }
 
     }
 }

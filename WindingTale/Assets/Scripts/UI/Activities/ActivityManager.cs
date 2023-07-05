@@ -46,8 +46,14 @@ namespace WindingTale.UI.Activities
                 return;
             }
 
+            ////Debug.Log("currentActivity: " + currentActivity?.GetType());
+            ////Debug.Log("activityQueue: " + activityQueue.Count);
+            if (activityQueue.Count > 0)
+            {
+                Debug.Log("activityQueue: " + activityQueue[0].GetType() + " current: " + currentActivity?.GetType());
+            }
 
-            if (currentActivity == null && (activityQueue == null || activityQueue.Count == 0))
+            if (currentActivity == null && activityQueue.Count == 0)
             {
                 // Nothing to do now
                 if (!IsIdle)
@@ -64,15 +70,15 @@ namespace WindingTale.UI.Activities
             {
                 if (currentActivity != null)
                 {
-                    //// Debug.LogFormat("ActivityManager: Finished activity. type={0}", currentActivity.GetType());
+                    Debug.LogFormat("ActivityManager: Finished activity. type={0}", currentActivity.GetType());
                     currentActivity = null;
                 }
 
-                if (activityQueue != null && activityQueue.Count > 0)
+                if (activityQueue.Count > 0)
                 {
                     currentActivity = activityQueue[0];
                     activityQueue.RemoveAt(0);
-                    //// Debug.LogFormat("ActivityManager: Starting activity. type={0}", currentActivity.GetType());
+                    Debug.LogFormat("ActivityManager: Starting activity. type={0}", currentActivity.GetType());
 
                     currentActivity.Start(gameObject);
                 }

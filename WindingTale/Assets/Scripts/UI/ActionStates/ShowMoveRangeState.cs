@@ -26,7 +26,18 @@ namespace WindingTale.UI.ActionStates
 
         public override void OnEnter()
         {
+
+            Debug.Log("ShowMoveRangeState: OnEnter PrePosition: " + creature.PrePosition?.ToString() + " Position: " + creature.Position.ToString());
+
             base.OnEnter();
+
+            // Reset creature to pre position
+            if (creature.PrePosition != null && !creature.PrePosition.AreSame(creature.Position))
+            {
+                creature.Position = creature.PrePosition;
+                CreatureRefreshActivity refreshActivity = new CreatureRefreshActivity(new List<int>() { creature.Id });
+                activityManager.Push(refreshActivity);
+            }
 
             // Calculcate the moving scopes and save it in cache
             if (moveRange == null)
@@ -36,17 +47,22 @@ namespace WindingTale.UI.ActionStates
             }
 
             // Send move range to UI
-            ShowRangeActivity activity = new ShowRangeActivity(gameMain, moveRange.ToList());
+            ShowRangeActivity activity = new ShowRangeActivity(moveRange.ToList());
             activityManager.Push(activity);
         }
 
         public override void OnExit()
         {
-            base.OnExit();
+            Debug.Log("ShowMoveRangeState: OnExit");
 
+            
             // Clear move range on UI
             ClearRangeActivity activity = new ClearRangeActivity();
             activityManager.Push(activity);
+           
+
+
+            base.OnExit();
         }
 
         public override void OnSelectPosition(FDPosition position)
@@ -59,7 +75,9 @@ namespace WindingTale.UI.ActionStates
 
                 gameMain.CreatureMove(creature, movePath);
 
-                var nextState = new MenuActionState(gameMain, stateHandler, creature);
+                // Save the current position
+                creature.PrePosition = creature.Position;
+                var nextState = new MenuActionState(gameMain, stateHandler, creature, position);
                 stateHandler.HandlePushState(nextState);
             }
             else

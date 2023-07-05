@@ -31,7 +31,7 @@ namespace WindingTale.Core.Algorithms
         /// <returns></returns>
         public FDRange CalculateRange()
         {
-            FDRange range = new FDRange(central);
+            FDRange range = new FDRange();
 
             //// range.AddPosition(central);
             for (int k = this.innerLength; k <= this.outterLength; k++)

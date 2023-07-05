@@ -43,7 +43,6 @@ public class MapField : MonoBehaviour
             {
                 FDPosition pos = FDPosition.At(i, j);
                 ShapeDefinition shapeDef = field.GetShapeAt(pos);
-                Debug.Log("get shape " + i + "," + j + " - " + shapeDef.Id);
                 
                 GameObject shapePrefab = Resources.Load<GameObject>(string.Format("Maps/ShapePanel1/Shape_1_{0}", shapeDef.Id));
                 if (shapePrefab != null)

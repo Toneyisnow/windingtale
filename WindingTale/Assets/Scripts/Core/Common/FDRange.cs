@@ -6,13 +6,17 @@ namespace WindingTale.Core.Common
     public class FDRange
     {
         private HashSet<FDPosition> range = null;
-
-        public FDPosition central = null;
-
-        public FDRange(FDPosition central)
+        
+        public FDRange(FDPosition initial)
         {
-            range = new HashSet<FDPosition> { central };
+            range = new HashSet<FDPosition> { initial };
         }
+
+        public FDRange()
+        {
+            range = new HashSet<FDPosition> { };
+        }
+
 
         public void Add(FDPosition pos)
         {

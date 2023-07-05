@@ -27,13 +27,12 @@ namespace WindingTale.UI.ActionStates
         private FDTreasure treasure = null;
 
         private ItemDefinition treasureItem = null;
-        private SubActionState subState = SubActionState.SelectMagic;
 
-        public MenuActionState(GameMain gameMain, IStateResultHandler stateHandler, FDCreature creature)
-            : base(gameMain, stateHandler, creature.Position)
+        public MenuActionState(GameMain gameMain, IStateResultHandler stateHandler, FDCreature creature, FDPosition targetPos)
+            : base(gameMain, stateHandler, targetPos)
         {
             this.creature = creature;
-            this.treasure = gameMap.GetTreatureAt(creature.Position);
+            this.treasure = gameMap.GetTreatureAt(targetPos);
 
             // Magic
             this.SetMenu(0, MenuItemId.ActionMagic, IsMenuMagicEnabled(), () =>
@@ -45,6 +44,7 @@ namespace WindingTale.UI.ActionStates
             // Attack
             this.SetMenu(1, MenuItemId.ActionAttack, IsMenuAttackEnabled(), () =>
             {
+                Debug.Log("Attack clicked");
                 SelectAttackTargetState attackState = new SelectAttackTargetState(gameMain, stateHandler, creature);
                 stateHandler.HandlePushState(attackState);
             });

@@ -32,11 +32,12 @@ namespace WindingTale.UI.Activities
 
             GameObject menuPrefab = Resources.Load<GameObject>("Menu/Menu");
             GameObject menuObject = MonoBehaviour.Instantiate(menuPrefab, gameIndicatorRoot);
+            menuObject.name = "Menu";
 
-            menuObject.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(this.menu.Position), Quaternion.identity);
+            menuObject.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(menu.Position), Quaternion.identity);
 
             Menu menuComponent = menuObject.GetComponent<Menu>();
-            menuComponent.Init(this.menu);
+            menuComponent.Init(menu);
 
             /*
             menuItems = new UIMenuItem[4];
@@ -65,12 +66,6 @@ namespace WindingTale.UI.Activities
             */
         }
 
-        public override void Update(GameObject gameInterface)
-        {
-            // Move the menu to target position
-
-            this.HasFinished = true;
-        }
 
     }
 }

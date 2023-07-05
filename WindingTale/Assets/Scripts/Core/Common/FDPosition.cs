@@ -67,6 +67,11 @@ namespace WindingTale.Core.Common
             return X * 100 + Y;
         }
 
+        public override string ToString()
+        {
+            return string.Format("[X: {0}, Y: {1}]", X, Y);
+        }
+
         public static FDPosition At(int x, int y)
         {
             return new FDPosition(x, y);

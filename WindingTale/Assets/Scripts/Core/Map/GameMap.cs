@@ -80,6 +80,9 @@ namespace WindingTale.Core.Map
         {
             this.Field = new GameField(chapterDefinition);
             this.Creatures = new List<FDCreature>();
+            this.DeadCreatures = new List<FDCreature>();
+            this.Events = new List<FDEvent>();
+            this.Treasures = new List<FDTreasure>();
         }
 
         public void ApplyRecord(GameRecord record)

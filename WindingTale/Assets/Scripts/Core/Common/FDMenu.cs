@@ -99,12 +99,13 @@ namespace WindingTale.Core.Common
 
         public FDPosition Position { get; set; }
 
-        public FDMenuItem(MenuItemId menuItemId, bool enabled, Action action, FDMenu menu)
+        public FDMenuItem(MenuItemId menuItemId, bool enabled, Action action, FDPosition position, FDMenu menu)
         {
             this.Id = menuItemId;
             this.Enabled = enabled;
             this.Action = action;
             this.Selected = false;
+            this.Position = position;
             this.Menu = menu;
         }
     }

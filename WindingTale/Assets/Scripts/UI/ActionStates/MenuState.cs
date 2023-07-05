@@ -24,11 +24,6 @@ namespace WindingTale.UI.ActionStates
             get; private set;
         }
 
-        public bool[] MenuItemEnabled
-        {
-            get; private set;
-        }
-
         public Action[] MenuActions
         {
             get; private set;
@@ -62,6 +57,7 @@ namespace WindingTale.UI.ActionStates
          
             // Close Action Menu
             CloseMenuActivity activity = new CloseMenuActivity();
+            activityManager.Push(activity);
             base.OnExit();
         }
 
@@ -72,17 +68,39 @@ namespace WindingTale.UI.ActionStates
                 return;
             }
 
-            this.Menu.Items[index] = new FDMenuItem(menuItemId, enabled, action, this.Menu);
+            FDPosition central = this.Menu.Position;
+            FDPosition itemPosition = central;
+            switch(index)
+            {
+                case 0:
+                    itemPosition = FDPosition.At(central.X, central.Y - 1);
+                    break;
+                case 1:
+                    itemPosition = FDPosition.At(central.X + 1, central.Y);
+                    break;
+                case 2:
+                    itemPosition = FDPosition.At(central.X, central.Y + 1);
+                    break;
+                case 3:
+                    itemPosition = FDPosition.At(central.X - 1, central.Y);
+                    break;
+                default:
+                    break;
+            }
+            this.Menu.Items[index] = new FDMenuItem(menuItemId, enabled, action, itemPosition, this.Menu);
         }
 
         public override void OnSelectPosition(FDPosition position)
         {
             for(int index = 0; index < 4; index++)
             {
-                if (this.MenuItemEnabled[index] && this.Menu.Items[index].Position.AreSame(position))
+                FDMenuItem item = this.Menu.Items[index];
+                if (item.Position != null && item.Position.AreSame(position))
                 {
                     // Clicked on menu
-                    this.MenuActions[index]();
+                    item.Action();
+                    return;
+                    //// this.MenuActions[index]();
                 }
             }
 

@@ -39,7 +39,6 @@ public class Creature : MonoBehaviour
         GameInterface.Instance.OnMapClicked(this.creature.Position);
     }
 
-
     // Start is called before the first frame update
     void Start()
     {

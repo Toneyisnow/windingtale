@@ -42,21 +42,25 @@ namespace WindingTale.UI.ActionStates
                 }
                 
                 FDSpan span = attackItem.AttackScope;
+                Debug.Log("AttackScope: " + span.Min + " " + span.Max);
+
+
                 DirectRangeFinder finder = new DirectRangeFinder(gameMap.Field, this.Creature.Position, span.Max, span.Min);
                 this.AttackRange = finder.CalculateRange();
             }
 
             // Display the attack range on the UI.
-            ShowRangeActivity activity = new ShowRangeActivity(gameMain, this.AttackRange.ToList());
+            ShowRangeActivity activity = new ShowRangeActivity(this.AttackRange.ToList());
             activityManager.Push(activity);
         }
 
         public override void OnExit()
         {
-            base.OnExit();
             
             ClearRangeActivity activity = new ClearRangeActivity();
             activityManager.Push(activity);
+
+            base.OnExit();
         }
 
         public override void OnSelectPosition(FDPosition position)

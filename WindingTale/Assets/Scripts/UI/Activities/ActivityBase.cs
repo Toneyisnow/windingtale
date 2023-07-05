@@ -19,9 +19,15 @@ namespace WindingTale.UI.Activities
         }
 
         // Start is called before the first frame update
-        public abstract void Start(GameObject gameInterface);
+        public virtual void Start(GameObject gameInterface)
+        {
+
+        }
 
         // Update is called once per frame
-        public abstract void Update(GameObject gameInterface);
+        public virtual void Update(GameObject gameInterface)
+        {
+            this.HasFinished = true;
+        }
     }
 }

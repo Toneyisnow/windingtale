@@ -148,6 +148,7 @@
     <Compile Include="Assets\Scripts\Core\Map\GameMap.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\CreatureDefinition.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\NGUI\SL_NGUISpriteAtlas.cs" />
+    <Compile Include="Assets\Resources\Others\BlockIndicator\BlockIndicator.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\ShowMenuActivity.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
@@ -221,6 +222,7 @@
     <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\Utility Scripts\MeshCombineUtility.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\SpecialItemDefinition.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
+    <Compile Include="Assets\Resources\Others\Cursor.cs" />
     <Compile Include="Assets\Scripts\Core\Files\GameMapRecord.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\ShowCreatureInfoActivity.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\StateResult.cs" />

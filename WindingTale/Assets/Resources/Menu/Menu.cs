@@ -19,10 +19,10 @@ public class Menu : MonoBehaviour
     {
         this.FDMenu = menu;
 
-        LoadMenuItem(1, 110);
-        LoadMenuItem(2, 111);
-        LoadMenuItem(3, 112);
-        LoadMenuItem(4, 113);
+        LoadMenuItem(1, menu.Items[0].Id.GetHashCode());
+        LoadMenuItem(2, menu.Items[1].Id.GetHashCode());
+        LoadMenuItem(3, menu.Items[2].Id.GetHashCode());
+        LoadMenuItem(4, menu.Items[3].Id.GetHashCode());
     }
 
     public void LoadMenuItem(int itemIndex, int menuItemId)

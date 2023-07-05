@@ -59,7 +59,7 @@ namespace WindingTale.UI.ActionStates
                 DirectRangeFinder finder = new DirectRangeFinder(gameMap.Field, this.Creature.Position, 1, 1);
                 range = finder.CalculateRange();
             }
-            ShowRangeActivity showRange = new ShowRangeActivity(gameMain, range.ToList());
+            ShowRangeActivity showRange = new ShowRangeActivity(range.ToList());
             activityManager.Push(showRange);
         }
 

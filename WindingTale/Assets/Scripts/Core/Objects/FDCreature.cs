@@ -506,7 +506,7 @@ namespace WindingTale.Core.Objects
 
         public bool HasMoved()
         {
-            return this.PrePosition.AreSame(this.Position);
+            return this.PrePosition != null && this.PrePosition.AreSame(this.Position);
         }
 
         public bool IsDead()

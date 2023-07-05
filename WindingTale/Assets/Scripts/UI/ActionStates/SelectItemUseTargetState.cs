@@ -51,7 +51,7 @@ namespace WindingTale.UI.ActionStates
             }
 
             // Display the attack range on the UI.
-            ShowRangeActivity activity = new ShowRangeActivity(gameMain, itemRange.ToList());
+            ShowRangeActivity activity = new ShowRangeActivity(itemRange.ToList());
             activityManager.Push(activity);
         }
 

@@ -8,7 +8,12 @@ namespace WindingTale.UI.Activities
 
         public override void Start(GameObject gameInterface)
         {
-            throw new System.NotImplementedException();
+            Transform gameIndicatorRoot = gameInterface.GetComponent<GameInterface>().MapIndicators.transform;
+            Transform menu = gameIndicatorRoot.Find("Menu");
+            if (menu != null)
+            {
+                MonoBehaviour.Destroy(menu.gameObject);
+            }
         }
 
         public override void Update(GameObject gameInterface)

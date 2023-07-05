@@ -54,7 +54,7 @@ namespace WindingTale.UI.ActionStates
                 magicRange = rangeFinder.CalculateRange();
             }
 
-            ShowRangeActivity activity = new ShowRangeActivity(gameMain, magicRange.ToList());
+            ShowRangeActivity activity = new ShowRangeActivity(magicRange.ToList());
             activityManager.Push(activity);
         }
 
