@@ -35,7 +35,7 @@ public class Menu : MonoBehaviour
         
         GameObject menuItem = Instantiate(menuItemPrefab, transform.Find(string.Format("Item{0}", itemIndex )));
         menuItem.transform.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
-        menuItem.transform.localScale = new Vector3(0.08f, 0.08f, 0.08f);
+        menuItem.transform.localScale = new Vector3(0.08f, 0.09f, 0.08f);
 
         GameInterface.Instance.ApplyDefaultMaterial(menuItem.transform.Find("default").gameObject);
     }

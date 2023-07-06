@@ -61,8 +61,9 @@ namespace WindingTale.UI.Scenes.Game
             GameObject cursor = MapIndicators.transform.Find("Cursor")?.gameObject;
             if (cursor == null)
             {
-                cursor = Instantiate(Resources.Load<GameObject>("Others/Cursor"));
+                cursor = Instantiate(Resources.Load<GameObject>("Others/Cursor/CursorPrefab"));
                 cursor.name = "Cursor";
+
                 Cursor c = cursor.AddComponent<Cursor>();
                 c.Position = position;
 

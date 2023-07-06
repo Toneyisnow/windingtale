@@ -38,32 +38,6 @@ namespace WindingTale.UI.Activities
 
             Menu menuComponent = menuObject.GetComponent<Menu>();
             menuComponent.Init(menu);
-
-            /*
-            menuItems = new UIMenuItem[4];
-            bool hasSelected = false;
-            for (int i = 0; i < 4; i++)
-            {
-                FDMenuItem item = menu.Items[i];
-                bool isSelected = false;
-                if (item.Enabled && !item.Selected)
-                {
-                    isSelected = true;
-                    hasSelected = true;
-                }
-
-                // Place the Menu on map
-                FDPosition position = item.Position;
-                
-                ////menuItems[i] = gameInterface.PlaceMenuItem(itemId, , pos, enabled, isSelected);
-
-            }
-
-            for (int i = 0; i < 4; i++)
-            {
-                menuItems[i].RelatedMenuItems = menuItems;
-            }
-            */
         }
 
 
