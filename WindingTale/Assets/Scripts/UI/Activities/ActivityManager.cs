@@ -50,7 +50,7 @@ namespace WindingTale.UI.Activities
             ////Debug.Log("activityQueue: " + activityQueue.Count);
             if (activityQueue.Count > 0)
             {
-                Debug.Log("activityQueue: " + activityQueue[0].GetType() + " current: " + currentActivity?.GetType());
+                //// Debug.Log("activityQueue: " + activityQueue[0].GetType() + " current: " + currentActivity?.GetType());
             }
 
             if (currentActivity == null && activityQueue.Count == 0)

@@ -12,6 +12,7 @@ namespace WindingTale.UI.Activities
     {
         private List<int> creatureIds = null;
 
+        private int counter = 0;
 
         public CreatureDeadActivity(List<int> creatureIds)
         {
@@ -44,6 +45,11 @@ namespace WindingTale.UI.Activities
                 {
                     allGone = false;
                 }
+            }
+
+            if (counter ++ > 60)
+            {
+                this.HasFinished = true;
             }
 
             if (allGone)

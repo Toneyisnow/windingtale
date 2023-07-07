@@ -6,20 +6,17 @@ namespace WindingTale.UI.Activities
 {
     public class CreatureRecoverActivity : ActivityBase
     {
+        private FDCreature creature = null;
 
         public CreatureRecoverActivity(FDCreature creature)
         {
+            this.creature = creature;
         }
 
 
         public override void Start(GameObject gameInterface)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Update(GameObject gameInterface)
-        {
-            throw new System.NotImplementedException();
+            Debug.Log("CreatureRecoverActivity started.");
         }
     }
 }

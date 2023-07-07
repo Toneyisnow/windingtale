@@ -29,6 +29,8 @@ namespace WindingTale.UI.Scenes.Game
 
         public Material DefaultMaterial;
 
+        public Material DefaultGreyMaterial;
+
         private static GameInterface instance = null;
 
 
@@ -46,17 +48,8 @@ namespace WindingTale.UI.Scenes.Game
             }
         }
 
-
-        /// <summary>
-        /// /private static GameInterface instance = new GameInterface();
-        /// </summary>
-        /// <param name="position"></param>
-
-
         public void OnMapClicked(FDPosition position)
         {
-            Debug.Log("Clicked at : " + position.X + " " + position.Y);
-
             // Update cursor
             GameObject cursor = MapIndicators.transform.Find("Cursor")?.gameObject;
             if (cursor == null)
@@ -92,6 +85,16 @@ namespace WindingTale.UI.Scenes.Game
             }
 
             renderer.materials = new Material[1] { DefaultMaterial };
+        }
+
+        public void ApplyDefaultGreyMaterial(GameObject gameObject)
+        {
+            MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
+            if (renderer == null)
+            {
+                renderer = gameObject.AddComponent<MeshRenderer>();
+            }
+            renderer.materials = new Material[1] { DefaultGreyMaterial };
         }
     }
 

@@ -52,7 +52,7 @@ namespace WindingTale.Core.Algorithms
 
         public List<FDPosition> ToList()
         {
-            return range.ToList<FDPosition>();
+            return range.Where(pos => !pos.IsSkipped).ToList<FDPosition>();
         }
 
     }

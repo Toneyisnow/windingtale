@@ -49,7 +49,7 @@ namespace WindingTale.Chapters
                     new CreatureMoveActivity(c4, FDMovePath.Create(FDPosition.At(12, 18))) })
                 );
 
-            /*
+            
             // Talking
             ShowConversations(gameMain, 1, 1, 1, 5);
 
@@ -91,7 +91,7 @@ namespace WindingTale.Chapters
 
             // Talking
             ShowConversations(gameMain, 1, 1, 8, 19);
-            */
+            
 
         };
 

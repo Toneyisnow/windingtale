@@ -138,7 +138,7 @@ namespace WindingTale.Core.Map
             return creatures;
         }
 
-        public FDCreature GetPreferredAttackTargetInRange(FDCreature creature)
+        public FDCreature GetPreferredAttackTargetInRange(FDCreature creature, FDPosition position = null)
         {
             AttackItemDefinition attackItem = creature.GetAttackItem();
             if (attackItem == null)
@@ -147,13 +147,24 @@ namespace WindingTale.Core.Map
             }
 
             FDSpan span = attackItem.AttackScope;
-            DirectRangeFinder finder = new DirectRangeFinder(this.Field, creature.Position, span.Max, span.Min);
+            Debug.Log("AttackScope: " + span.ToString());
+
+            DirectRangeFinder finder = new DirectRangeFinder(this.Field, position ?? creature.Position, span.Max, span.Min);
             FDRange range = finder.CalculateRange();
+            foreach(FDPosition pos in range.ToList())
+            {
+                Debug.Log("AttackScope range: " + pos.ToString());
+            }
+
+            foreach(FDCreature c in this.Enemies)
+            {
+                Debug.Log("Enemy: " + c.Position.ToString());
+            }
 
             // Get a preferred target in range
-            foreach (FDPosition position in range.ToList())
+            foreach (FDPosition pos in range.ToList())
             {
-                FDCreature target = this.GetCreatureAt(position);
+                FDCreature target = this.GetCreatureAt(pos);
                 if (target != null && target.Faction == CreatureFaction.Enemy)
                 {
                     return target;

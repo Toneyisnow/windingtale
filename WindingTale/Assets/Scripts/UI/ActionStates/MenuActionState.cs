@@ -24,6 +24,8 @@ namespace WindingTale.UI.ActionStates
 
         private FDCreature creature = null;
 
+        private FDPosition targetPosition = null;
+
         private FDTreasure treasure = null;
 
         private ItemDefinition treasureItem = null;
@@ -32,6 +34,7 @@ namespace WindingTale.UI.ActionStates
             : base(gameMain, stateHandler, targetPos)
         {
             this.creature = creature;
+            this.targetPosition = targetPos;
             this.treasure = gameMap.GetTreatureAt(targetPos);
 
             // Magic
@@ -79,7 +82,7 @@ namespace WindingTale.UI.ActionStates
         private bool IsMenuAttackEnabled()
         {
             bool canAttack = this.creature.CanAttack();
-            FDCreature target = gameMap.GetPreferredAttackTargetInRange(this.creature);
+            FDCreature target = gameMap.GetPreferredAttackTargetInRange(this.creature, this.targetPosition);
             return canAttack && (target != null);
         }
 

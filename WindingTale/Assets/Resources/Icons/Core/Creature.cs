@@ -39,6 +39,26 @@ public class Creature : MonoBehaviour
         GameInterface.Instance.OnMapClicked(this.creature.Position);
     }
 
+    public void SetGreyout(bool greyout)
+    {
+        GameObject obj1 = gameObject.transform.Find("Clip_01").GetChild(0).Find("default").gameObject;
+        GameObject obj2 = gameObject.transform.Find("Clip_02").GetChild(0).Find("default").gameObject;
+        GameObject obj3 = gameObject.transform.Find("Clip_03").GetChild(0).Find("default").gameObject;
+
+        if (greyout)
+        {
+            GameInterface.Instance.ApplyDefaultGreyMaterial(obj1);
+            GameInterface.Instance.ApplyDefaultGreyMaterial(obj2);
+            GameInterface.Instance.ApplyDefaultGreyMaterial(obj3);
+        }
+        else
+        {
+            GameInterface.Instance.ApplyDefaultMaterial(obj1);
+            GameInterface.Instance.ApplyDefaultMaterial(obj2);
+            GameInterface.Instance.ApplyDefaultMaterial(obj3);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {

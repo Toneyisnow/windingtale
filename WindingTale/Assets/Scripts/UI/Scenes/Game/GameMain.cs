@@ -20,6 +20,7 @@ using WindingTale.Chapters;
 using static UnityEditor.Progress;
 using static UnityEngine.GraphicsBuffer;
 using WindingTale.UI.ActionStates;
+using System.Diagnostics;
 
 namespace WindingTale.UI.Scenes.Game
 {
@@ -149,7 +150,13 @@ namespace WindingTale.UI.Scenes.Game
         private void OnPlayerEndTurn()
         {
             // Set all player creatures to active
-
+            BatchActivity batch = new BatchActivity();
+            foreach(FDCreature c in this.GameMap.Friends)
+            {
+                c.HasActioned = false;
+                batch.Add(new CreatureRefreshActivity(c.Id));
+            }
+            this.ActivityManager.Push(batch);
         }
 
         private void OnNpcTurn()
@@ -168,6 +175,13 @@ namespace WindingTale.UI.Scenes.Game
         private void OnNpcEndTurn()
         {
             // Set all npc creatures to active
+            BatchActivity batch = new BatchActivity();
+            foreach (FDCreature c in this.GameMap.Npcs)
+            {
+                c.HasActioned = false;
+                batch.Add(new CreatureRefreshActivity(c.Id));
+            }
+            this.ActivityManager.Push(batch);
         }
 
         private void OnEnemyTurn()
@@ -179,12 +193,24 @@ namespace WindingTale.UI.Scenes.Game
         private void OnEnemyEndTurn()
         {
             // Set all enemy creatures to active
+            BatchActivity batch = new BatchActivity();
+            foreach (FDCreature c in this.GameMap.Enemies)
+            {
+                c.HasActioned = false;
+                batch.Add(new CreatureRefreshActivity(c.Id));
+            }
+            this.ActivityManager.Push(batch);
         }
 
         private void OnCreatureDone(FDCreature creature)
         {
+            UnityEngine.Debug.Log("OnCreatureDone !!! creature=" + creature.Id);
+
             // Set the creature to inactive
             creature.HasActioned = true;
+            creature.PrePosition = creature.Position;
+            CreatureRefreshActivity refresh = new CreatureRefreshActivity(creature.Id);
+            this.ActivityManager.Push(refresh);
 
             // Check if all creatures are inactive, then end turn
 

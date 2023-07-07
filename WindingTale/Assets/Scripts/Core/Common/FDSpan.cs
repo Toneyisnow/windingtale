@@ -27,5 +27,10 @@ namespace WindingTale.Core.Common
         {
             return val >= Min && val <= Max;
         }
+
+        public override string ToString()
+        {
+            return string.Format("[{0}, {1}]", this.Min, this.Max);
+        }
     }
 }
