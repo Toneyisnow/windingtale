@@ -18,14 +18,20 @@ public class GameCanvas : MonoBehaviour
 
     public bool HasDialog()
     {
-        return transform.Find("MessageDialog") != null;
+        return transform.Find("MessageDialog") != null || transform.Find("CreatureDialog") != null;
     }
 
     public void ShowMessageDialog()
     {
         GameObject dialogPrefab = Resources.Load<GameObject>("Dialogs/MessageDialog");
+        GameObject dialog = Instantiate(dialogPrefab, transform);
+        dialog.name = "MessageDialog";
+    }
 
-        GameObject messageDialog = Instantiate(dialogPrefab, transform);
-        messageDialog.name = "MessageDialog";
+    public void ShowCreatureDialog()
+    {
+        GameObject dialogPrefab = Resources.Load<GameObject>("Dialogs/CreatureDialog");
+        GameObject dialog = Instantiate(dialogPrefab, transform);
+        dialog.name = "CreatureDialog";
     }
 }

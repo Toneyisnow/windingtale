@@ -158,6 +158,7 @@
     <Compile Include="Assets\Scripts\UI\ActionStates\MenuSystemState.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIEscapeDelegate.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Resources\Dialogs\CreatureDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\MoveRangeFinder.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\MenuRecordState.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />

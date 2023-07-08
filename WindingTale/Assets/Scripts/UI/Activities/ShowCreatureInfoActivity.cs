@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Components;
 using WindingTale.Core.Objects;
+using WindingTale.UI.Scenes;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
@@ -34,7 +35,21 @@ namespace WindingTale.UI.Activities
 
         public override void Start(GameObject gameInterface)
         {
-            Debug.Log("Showing Creature Info");
+            GameFieldScene gameFieldScene = gameInterface.GetComponent<GameFieldScene>();
+            GameCanvas gameCanvas = gameFieldScene.canvas.GetComponent<GameCanvas>();
+            gameCanvas.ShowCreatureDialog();
+
+        }
+
+        public override void Update(GameObject gameInterface)
+        {
+            GameFieldScene gameFieldScene = gameInterface.GetComponent<GameFieldScene>();
+            GameCanvas gameCanvas = gameFieldScene.canvas.GetComponent<GameCanvas>();
+            if (gameCanvas.transform.Find("CreatureDialog") == null)
+            {
+                this.HasFinished = true;
+                this.callback(0);
+            }
         }
 
     }
