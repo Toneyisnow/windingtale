@@ -51,7 +51,8 @@ namespace WindingTale.Chapters
 
             
             // Talking
-            ShowConversations(gameMain, 1, 1, 1, 5);
+            ShowConversations(gameMain, 1, 1, 1, 1);
+            ////ShowConversations(gameMain, 1, 1, 1, 5);
 
             // Enemy Group1 appear
             FDCreature e1 = gameMain.CreatureAdd(CreatureFaction.Enemy, 11, 50101, FDPosition.At(2, 22));
@@ -90,7 +91,8 @@ namespace WindingTale.Chapters
             gameMain.CreatureDispose(14);
 
             // Talking
-            ShowConversations(gameMain, 1, 1, 8, 19);
+            ShowConversations(gameMain, 1, 1, 8, 9);
+            ////ShowConversations(gameMain, 1, 1, 8, 19);
             
 
         };

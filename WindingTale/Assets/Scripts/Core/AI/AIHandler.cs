@@ -7,6 +7,7 @@ using WindingTale.Core.Definitions;
 using WindingTale.AI.Delegates;
 using WindingTale.Core.Objects;
 using WindingTale.UI.Scenes.Game;
+using System.Diagnostics;
 
 namespace WindingTale.AI
 {
@@ -23,19 +24,32 @@ namespace WindingTale.AI
 
         private GameMain gameMain = null;
 
-        private List<FDAICreature> creatureList = null;
+        private List<FDCreature> creatures = null;
 
         public AIHandler(GameMain gameMain, CreatureFaction faction)
         {
             this.gameMain = gameMain;
             this.Faction = faction;
+
+            
         }
 
-        public void IsNotified()
+        public void Notified()
         {
-            FDAICreature selectedCreature = null;
+            UnityEngine.Debug.Log("AIHandler Notified");
 
-            foreach (FDAICreature creature in creatureList)
+            List<FDCreature> creatures = null;
+            if (this.Faction == CreatureFaction.Enemy)
+            {
+                creatures = gameMain.GameMap.Enemies;
+            }
+            else if (this.Faction == CreatureFaction.Npc)
+            {
+                creatures = gameMain.GameMap.Npcs;
+            }
+
+            FDCreature selectedCreature = null;
+            foreach (FDCreature creature in creatures)
             {
                 if (creature.HasActioned || creature.HasEffect(CreatureEffects.Frozen))
                 {
@@ -53,7 +67,10 @@ namespace WindingTale.AI
                 return;
             }
 
-            RunAIDelegate(selectedCreature);
+            UnityEngine.Debug.Log("AIHandler Found creature");
+            RunAIDelegate(selectedCreature as FDAICreature);
+
+            return;
         }
 
         private void RunAIDelegate(FDAICreature creature)

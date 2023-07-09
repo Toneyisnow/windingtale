@@ -22,6 +22,7 @@ using static UnityEngine.GraphicsBuffer;
 using WindingTale.UI.ActionStates;
 using System.Diagnostics;
 using UnityEngine.UIElements;
+using WindingTale.AI;
 
 namespace WindingTale.UI.Scenes.Game
 {
@@ -42,6 +43,11 @@ namespace WindingTale.UI.Scenes.Game
         public IGameInterface GameInterface { get; private set; }
 
         public ActivityManager ActivityManager { get; private set; }
+
+        public AIHandler EnemyAIHandler { get; private set; }
+
+        public AIHandler NpcAIHandler { get; private set; }
+
 
         public StateDispatcher State { get; private set; }
 
@@ -100,6 +106,9 @@ namespace WindingTale.UI.Scenes.Game
             Instance.GameHandler = new GameHandler(Instance.GameMap);
             Instance.GameInterface = gameInterface;
             Instance.ActivityManager = activityManager;
+            Instance.EnemyAIHandler = new AIHandler(Instance, CreatureFaction.Enemy);
+            Instance.NpcAIHandler = new AIHandler(Instance, CreatureFaction.Npc);
+
             Instance.State = new StateDispatcher(Instance);
 
 
@@ -169,8 +178,17 @@ namespace WindingTale.UI.Scenes.Game
             }
 
             this.TurnType = CreatureFaction.Npc;
+            foreach (FDCreature c in this.GameMap.Npcs)
+            {
+                c.HasActioned = false;
+            }
             CheckTurnEvents();
 
+            CallbackActivity callback = new CallbackActivity(() =>
+            {
+                this.NpcAIHandler.Notified();
+            });
+            PushActivity(callback);
         }
 
         private void OnNpcEndTurn()
@@ -187,12 +205,26 @@ namespace WindingTale.UI.Scenes.Game
 
         private void OnEnemyTurn()
         {
+            UnityEngine.Debug.Log("OnEnemyTurn");
             this.TurnType = CreatureFaction.Enemy;
+            foreach (FDCreature c in this.GameMap.Enemies)
+            {
+                c.HasActioned = false;
+            }
+
             CheckTurnEvents();
+
+            CallbackActivity callback = new CallbackActivity(() =>
+            {
+                this.EnemyAIHandler.Notified();
+            });
+            PushActivity(callback);
         }
 
         private void OnEnemyEndTurn()
         {
+            UnityEngine.Debug.Log("OnEnemyEndTurn");
+
             // Set all enemy creatures to active
             BatchActivity batch = new BatchActivity();
             foreach (FDCreature c in this.GameMap.Enemies)
@@ -200,7 +232,7 @@ namespace WindingTale.UI.Scenes.Game
                 c.HasActioned = false;
                 batch.Add(new CreatureRefreshActivity(c.Id));
             }
-            this.ActivityManager.Push(batch);
+            PushActivity(batch);
         }
 
         private void OnCreatureDone(FDCreature creature)
@@ -220,15 +252,29 @@ namespace WindingTale.UI.Scenes.Game
                 PushCallbackActivity(() => this.OnPlayerEndTurn());
                 PushCallbackActivity(() => this.OnNpcTurn());
             }
-            else if (creature.Faction == CreatureFaction.Npc && this.GameMap.Npcs.Find(c => !c.HasActioned) == null)
+            else if (creature.Faction == CreatureFaction.Npc)
             {
-                PushCallbackActivity(() => this.OnNpcEndTurn());
-                PushCallbackActivity(() => this.OnEnemyTurn());
+                if (this.GameMap.Npcs.Find(c => !c.HasActioned) == null)
+                {
+                    PushCallbackActivity(() => this.OnNpcEndTurn());
+                    PushCallbackActivity(() => this.OnEnemyTurn());
+                }
+                else
+                {
+                    this.NpcAIHandler.Notified();
+                }
             }
-            else if (creature.Faction == CreatureFaction.Enemy && this.GameMap.Enemies.Find(c => !c.HasActioned) == null)
+            else if (creature.Faction == CreatureFaction.Enemy)
             {
-                PushCallbackActivity(() => this.OnEnemyEndTurn());
-                PushCallbackActivity(() => this.OnNewTurn());
+                if (this.GameMap.Enemies.Find(c => !c.HasActioned) == null)
+                {
+                    PushCallbackActivity(() => this.OnEnemyEndTurn());
+                    PushCallbackActivity(() => this.OnNewTurn());
+                }
+                else
+                {
+                    this.EnemyAIHandler.Notified();
+                }
             }
         }
 
@@ -307,10 +353,12 @@ namespace WindingTale.UI.Scenes.Game
         /// <param name="definitionId"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public FDCreature CreatureAdd(CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItemId = 0)
+        public FDCreature CreatureAdd(CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItemId = 0, AITypes aiType = AITypes.AIType_Aggressive)
         {
             CreatureDefinition definition = DefinitionStore.Instance.GetCreatureDefinition(definitionId);
-            FDCreature creature = FDCreature.FromDefinition(faction, creatureId , definition);
+            FDCreature creature = faction == CreatureFaction.Friend ? 
+                 new FDCreature(creatureId , definition, faction) :
+                 new FDAICreature(creatureId, definition, faction, aiType);
 
             creature.Position = position;
             this.GameMap.Creatures.Add(creature);

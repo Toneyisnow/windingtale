@@ -4,6 +4,7 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Components.Algorithms;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
+using static System.Collections.Specialized.BitVector32;
 using static WindingTale.Core.Objects.FDNpc;
 
 namespace WindingTale.Core.Objects
@@ -35,12 +36,17 @@ namespace WindingTale.Core.Objects
         AIType_UnNoticable = 6,     // This one is special, that is set on AI target objects
     }
 
-    public abstract class FDAICreature: FDCreature
+    public class FDAICreature: FDCreature
     {
         public AITypes AIType { get; private set; }
 
-        protected FDAICreature(int id, CreatureFaction faction) : base(id, faction)
+        protected FDAICreature(int creatureId, CreatureFaction faction) : base(creatureId, faction)
         {
+        }
+
+        public FDAICreature(int creatureId, CreatureDefinition definition, CreatureFaction faction, AITypes aiType) : base(creatureId, definition, faction)
+        {
+            this.AIType = aiType;
         }
 
     }
@@ -258,45 +264,42 @@ namespace WindingTale.Core.Objects
             this.DefendItemIndex = -1;
         }
 
-        public static FDCreature FromDefinition(CreatureFaction faction, int creatureId, CreatureDefinition definition)
+        public FDCreature(int creatureId, CreatureDefinition definition, CreatureFaction faction): this(creatureId, faction)
         {
-            FDCreature creature = new FDCreature(creatureId, faction);
-            creature.Id = creatureId;
-            creature.Definition = definition;
+            this.Id = creatureId;
+            this.Definition = definition;
 
-            creature.Level = definition.InitialLevel;
-            creature.Hp = creature.HpMax = definition.InitialHp;
-            creature.Mp = creature.MpMax = definition.InitialMp;
+            this.Level = definition.InitialLevel;
+            this.Hp = this.HpMax = definition.InitialHp;
+            this.Mp = this.MpMax = definition.InitialMp;
 
-            creature.Ap = definition.InitialAp;
-            creature.Dp = definition.InitialDp;
-            creature.Dx = definition.InitialDx;
-            creature.Mv = definition.InitialMv;
-            creature.Exp = definition.InitialEx;
+            this.Ap = definition.InitialAp;
+            this.Dp = definition.InitialDp;
+            this.Dx = definition.InitialDx;
+            this.Mv = definition.InitialMv;
+            this.Exp = definition.InitialEx;
 
-            creature.Items = definition.Items;
-            creature.Magics = definition.Magics;
+            this.Items = definition.Items;
+            this.Magics = definition.Magics;
 
             // Get Equiped items
-            creature.AttackItemIndex = -1;
-            creature.DefendItemIndex = -1;
-            for (int i = 0; i < creature.Items.Count; i++)
+            this.AttackItemIndex = -1;
+            this.DefendItemIndex = -1;
+            for (int i = 0; i < this.Items.Count; i++)
             {
-                int itemId = creature.Items[i];
+                int itemId = this.Items[i];
                 ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
                 if (item != null && item is AttackItemDefinition)
                 {
-                    creature.AttackItemIndex = i;
+                    this.AttackItemIndex = i;
                 }
                 if (item != null && item is DefendItemDefinition)
                 {
-                    creature.DefendItemIndex = i;
+                    this.DefendItemIndex = i;
                 }
             }
 
-            creature.Effects = new HashSet<CreatureEffects>();
-
-            return creature;
+            this.Effects = new HashSet<CreatureEffects>();
         }
 
         #endregion

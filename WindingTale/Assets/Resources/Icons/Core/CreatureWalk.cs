@@ -36,9 +36,11 @@ public class CreatureWalk : MonoBehaviour
         this.movePath = path;
         this.creature = this.gameObject.GetComponent<Creature>().creature;
         animator = gameObject.GetComponent<Animator>();
-        
-        StartMove(creature.Position, path.Vertexes[0]);
 
+        if (path.Vertexes.Count > 0)
+        {
+            StartMove(creature.Position, path.Vertexes[0]);
+        }
     }
 
     // Start is called before the first frame update
