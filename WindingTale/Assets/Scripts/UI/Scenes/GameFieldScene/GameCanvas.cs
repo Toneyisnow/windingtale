@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,10 +29,13 @@ public class GameCanvas : MonoBehaviour
         dialog.name = "MessageDialog";
     }
 
-    public void ShowCreatureDialog()
+    public void ShowCreatureDialog(Action<int> callback)
     {
         GameObject dialogPrefab = Resources.Load<GameObject>("Dialogs/CreatureDialog");
         GameObject dialog = Instantiate(dialogPrefab, transform);
         dialog.name = "CreatureDialog";
+
+        CreatureDialog creatureDialog = dialog.GetComponent<CreatureDialog>();
+        creatureDialog.Init(callback);
     }
 }

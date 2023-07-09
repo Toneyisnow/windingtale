@@ -91,7 +91,7 @@ namespace WindingTale.UI.ActionStates
         {
             if (index < 0)
             {
-                stateHandler.HandlePopState();
+                // Cancel the selection
                 return;
             }
 
@@ -102,6 +102,12 @@ namespace WindingTale.UI.ActionStates
 
         private void OnSelectedUseItem(int index)
         {
+            if (index < 0)
+            {
+                // Cancel the selection
+                return;
+            }
+
             int itemId = this.Creature.GetItemAt(index);
             if (itemId < 0)
             {
@@ -132,6 +138,12 @@ namespace WindingTale.UI.ActionStates
 
         private void OnSelectedDiscardItem(int index)
         {
+            if (index < 0)
+            {
+                // Cancel the selection
+                return;
+            }
+
             // Discard the item
             this.Creature.RemoveItemAt(index);
         }

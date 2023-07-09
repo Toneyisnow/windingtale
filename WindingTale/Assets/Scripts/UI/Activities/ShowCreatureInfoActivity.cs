@@ -37,19 +37,8 @@ namespace WindingTale.UI.Activities
         {
             GameFieldScene gameFieldScene = gameInterface.GetComponent<GameFieldScene>();
             GameCanvas gameCanvas = gameFieldScene.canvas.GetComponent<GameCanvas>();
-            gameCanvas.ShowCreatureDialog();
+            gameCanvas.ShowCreatureDialog(this.callback);
 
-        }
-
-        public override void Update(GameObject gameInterface)
-        {
-            GameFieldScene gameFieldScene = gameInterface.GetComponent<GameFieldScene>();
-            GameCanvas gameCanvas = gameFieldScene.canvas.GetComponent<GameCanvas>();
-            if (gameCanvas.transform.Find("CreatureDialog") == null)
-            {
-                this.HasFinished = true;
-                this.callback(0);
-            }
         }
 
     }

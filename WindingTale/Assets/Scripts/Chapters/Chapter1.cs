@@ -36,10 +36,10 @@ namespace WindingTale.Chapters
         private Action<GameMain> turn1 = (gameMain) =>
         {
             // Friends appear
-            FDCreature c1 = gameMain.AddCreature(CreatureFaction.Friend, 1, 1, FDPosition.At(8, 20));
-            FDCreature c2 = gameMain.AddCreature(CreatureFaction.Friend, 2, 2, FDPosition.At(11, 21));
-            FDCreature c3 = gameMain.AddCreature(CreatureFaction.Friend, 3, 3, FDPosition.At(9, 22));
-            FDCreature c4 = gameMain.AddCreature(CreatureFaction.Friend, 4, 4, FDPosition.At(12, 23));
+            FDCreature c1 = gameMain.CreatureAdd(CreatureFaction.Friend, 1, 1, FDPosition.At(8, 20));
+            FDCreature c2 = gameMain.CreatureAdd(CreatureFaction.Friend, 2, 2, FDPosition.At(11, 21));
+            FDCreature c3 = gameMain.CreatureAdd(CreatureFaction.Friend, 3, 3, FDPosition.At(9, 22));
+            FDCreature c4 = gameMain.CreatureAdd(CreatureFaction.Friend, 4, 4, FDPosition.At(12, 23));
 
             gameMain.ActivityManager.Push(new BatchActivity(
                 new ActivityBase[] {
@@ -54,10 +54,10 @@ namespace WindingTale.Chapters
             ShowConversations(gameMain, 1, 1, 1, 5);
 
             // Enemy Group1 appear
-            FDCreature e1 = gameMain.AddCreature(CreatureFaction.Enemy, 11, 50101, FDPosition.At(2, 22));
-            FDCreature e2 = gameMain.AddCreature(CreatureFaction.Enemy, 12, 50101, FDPosition.At(3, 22), 101);
-            FDCreature e3 = gameMain.AddCreature(CreatureFaction.Enemy, 13, 50101, FDPosition.At(4, 23));
-            FDCreature e4 = gameMain.AddCreature(CreatureFaction.Enemy, 14, 50101, FDPosition.At(5, 23));
+            FDCreature e1 = gameMain.CreatureAdd(CreatureFaction.Enemy, 11, 50101, FDPosition.At(2, 22));
+            FDCreature e2 = gameMain.CreatureAdd(CreatureFaction.Enemy, 12, 50101, FDPosition.At(3, 22), 101);
+            FDCreature e3 = gameMain.CreatureAdd(CreatureFaction.Enemy, 13, 50101, FDPosition.At(4, 23));
+            FDCreature e4 = gameMain.CreatureAdd(CreatureFaction.Enemy, 14, 50101, FDPosition.At(5, 23));
 
             gameMain.ActivityManager.Push(new BatchActivity(
                 new ActivityBase[] {
@@ -68,10 +68,10 @@ namespace WindingTale.Chapters
                 );
 
             // Enemy Group2 appear
-            FDCreature e5 = gameMain.AddCreature(CreatureFaction.Enemy, 15, 50101, FDPosition.At(4, 2), 101);
-            FDCreature e6 = gameMain.AddCreature(CreatureFaction.Enemy, 16, 50101, FDPosition.At(3, 2));
-            FDCreature e7 = gameMain.AddCreature(CreatureFaction.Enemy, 17, 50101, FDPosition.At(2, 3), 101);
-            FDCreature e8 = gameMain.AddCreature(CreatureFaction.Enemy, 18, 50101, FDPosition.At(2, 3));
+            FDCreature e5 = gameMain.CreatureAdd(CreatureFaction.Enemy, 15, 50101, FDPosition.At(4, 2), 101);
+            FDCreature e6 = gameMain.CreatureAdd(CreatureFaction.Enemy, 16, 50101, FDPosition.At(3, 2));
+            FDCreature e7 = gameMain.CreatureAdd(CreatureFaction.Enemy, 17, 50101, FDPosition.At(2, 3), 101);
+            FDCreature e8 = gameMain.CreatureAdd(CreatureFaction.Enemy, 18, 50101, FDPosition.At(2, 3));
 
             gameMain.ActivityManager.Push(new BatchActivity(
                 new ActivityBase[] {
@@ -87,7 +87,7 @@ namespace WindingTale.Chapters
 
             // One Enemy move away
             gameMain.CreatureMove(e4, FDMovePath.Create(FDPosition.At(8, 20), FDPosition.At(8, 24)));
-            //// gameMain.DisposeCreature(14);
+            gameMain.CreatureDispose(14);
 
             // Talking
             ShowConversations(gameMain, 1, 1, 8, 19);

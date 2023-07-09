@@ -16,7 +16,10 @@ namespace WindingTale.UI.Scenes.Game
 
         public void AddCreatureUI(FDCreature creature, FDPosition position);
 
-        public void MoveCreatureUI(FDCreature creature, FDMovePath path);
+        public void RemoveCreatureUI(FDCreature creature);
+
+        /// Seems not useful
+        //// public void MoveCreatureUI(FDCreature creature, FDMovePath path);
     }
 
     public class GameInterface : MonoBehaviour

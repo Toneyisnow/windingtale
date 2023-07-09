@@ -21,6 +21,7 @@ using static UnityEditor.Progress;
 using static UnityEngine.GraphicsBuffer;
 using WindingTale.UI.ActionStates;
 using System.Diagnostics;
+using UnityEngine.UIElements;
 
 namespace WindingTale.UI.Scenes.Game
 {
@@ -306,7 +307,7 @@ namespace WindingTale.UI.Scenes.Game
         /// <param name="definitionId"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public FDCreature AddCreature(CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItemId = 0)
+        public FDCreature CreatureAdd(CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItemId = 0)
         {
             CreatureDefinition definition = DefinitionStore.Instance.GetCreatureDefinition(definitionId);
             FDCreature creature = FDCreature.FromDefinition(faction, creatureId , definition);
@@ -314,9 +315,22 @@ namespace WindingTale.UI.Scenes.Game
             creature.Position = position;
             this.GameMap.Creatures.Add(creature);
 
-            this.GameInterface.AddCreatureUI(creature, position);
+            CallbackActivity callback = new CallbackActivity(() => this.GameInterface.AddCreatureUI(creature, position));
+            PushActivity(callback);
 
             return creature;
+        }
+
+        public void CreatureDispose(int creatureId)
+        {
+            FDCreature creature = this.GameMap.GetCreatureById(creatureId);
+            if (creature != null)
+            {
+                this.GameMap.Creatures.Remove(creature);
+
+                CallbackActivity callback = new CallbackActivity(() => this.GameInterface.RemoveCreatureUI(creature));
+                PushActivity(callback);
+            }
         }
 
         public void CreatureMove(FDCreature creature, FDMovePath movePath)
@@ -522,6 +536,9 @@ namespace WindingTale.UI.Scenes.Game
 
             PushCallbackActivity(() => OnCreatureDone(creature));
         }
+
+
+
 
         public void EndAllFriendsTurn()
         {

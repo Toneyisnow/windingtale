@@ -41,8 +41,6 @@ namespace WindingTale.UI.Scenes
 
         public void AddCreatureUI(FDCreature creature, FDPosition pos)
         {
-            Debug.Log("Add Creature: " + pos.X + " " + pos.Y);
-
             GameObject creatureIcon = Instantiate(creatureIconPrefab);
 
             creatureIcon.name = string.Format("creature_{0}", StringUtils.Digit3(creature.Id));
@@ -59,16 +57,27 @@ namespace WindingTale.UI.Scenes
             creature.Position = pos;
         }
 
+        public void RemoveCreatureUI(FDCreature creature)
+        {
+            GameObject creatureObject = mapNode.transform.Find(string.Format("creature_{0}", StringUtils.Digit3(creature.Id)))?.gameObject;
+            if (creatureObject != null)
+            {
+                Destroy(creatureObject);
+            }
+        }
+
+
+        /*
         public void MoveCreatureUI(FDCreature creature, FDMovePath path)
         {
-            GameObject creatureObject = transform.Find(string.Format("creature_{0}", creature.Id)).gameObject;
+            GameObject creatureObject = mapNode.transform.Find(string.Format("creature_{0}", StringUtils.Digit3(creature.Id))).gameObject;
 
             Creature creatureComp = creatureObject.GetComponent<Creature>();
             creatureComp.SetCreature(creature);
             creatureComp.StartMove(path);
 
         }
-
+        */
 
         #region Private Methods
 
