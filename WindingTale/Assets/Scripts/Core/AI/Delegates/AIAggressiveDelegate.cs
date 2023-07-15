@@ -27,6 +27,12 @@ namespace WindingTale.AI.Delegates
                 return;
             }
 
+            foreach(FDCreature en in this.gameMain.GameMap.Enemies)
+            {
+                Debug.Log("TakeAction: enemy position: " + en.Position.ToString());
+            }
+
+
             // Get target 
             FDCreature target = this.LookForAggressiveTarget();
 
@@ -35,6 +41,8 @@ namespace WindingTale.AI.Delegates
 
             // Do the walk
             this.gameMain.CreatureMove(creature, movePath);
+
+            Debug.Log("AI Aggressive: creature=" + creature.Id + " position=" + creature.Position + " target pos=" + movePath?.Desitination?.ToString());
 
             FDPosition destination = movePath.Desitination ?? this.creature.Position;
 

@@ -251,6 +251,7 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_99_ConversationId.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_15.txt" />
+    <None Include="Assets\Resources\Materials\GreyoutShader.shader" />
     <None Include="Assets\Resources\Data\Item.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Race.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_16_Creature.txt" />

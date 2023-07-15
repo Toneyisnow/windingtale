@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using WindingTale.Core.Common;
+using WindingTale.UI.Scenes;
 using WindingTale.UI.Scenes.Game;
 
 namespace WindingTale.UI.Activities
@@ -26,8 +28,15 @@ namespace WindingTale.UI.Activities
 
         public override void Start(GameObject gameInterface)
         {
+            GameObject mapNode = gameInterface.GetComponent<GameFieldScene>().mapNode;
+
             foreach (int creatureId in creatureIds)
             {
+                GameObject creature = mapNode.transform.Find(string.Format("creature_{0}", StringUtils.Digit3(creatureId))).gameObject;
+                if (creature != null)
+                {
+                    GameObject.Destroy(creature);
+                }
                 ////UICreature creature = gameInterface.GetUICreature(creatureId);
                 ////creature.SetAnimateState(UICreature.AnimateStates.Dying);
             }

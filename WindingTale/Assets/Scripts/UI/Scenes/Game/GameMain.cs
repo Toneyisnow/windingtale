@@ -310,7 +310,11 @@ namespace WindingTale.UI.Scenes.Game
 
         private void PushActivities(List<ActivityBase> activities)
         {
-            this.ActivityManager.Insert(activities);
+            foreach (ActivityBase activity in activities)
+            {
+                this.ActivityManager.Push(activity);
+            }
+
         }
 
         private void PushActivity(ActivityBase activity)
@@ -419,6 +423,7 @@ namespace WindingTale.UI.Scenes.Game
             // 1. Apply the attack result to subject and target
             result.Damages.ForEach(damage => target.ApplyDamage(damage));
             result.BackDamages.ForEach(backDamage => creature.ApplyDamage(backDamage));
+            UnityEngine.Debug.Log("CreatureAttack: target left HP: " + target.Hp);
 
             CheckConditionEvents();
 
@@ -426,10 +431,12 @@ namespace WindingTale.UI.Scenes.Game
             List<int> deadCreatureIds = new List<int>();
             if (creature.IsDead())
             {
+                UnityEngine.Debug.Log("Found Dead creature");
                 deadCreatureIds.Add(creature.Id);
             }
             if (target.IsDead())
             {
+                UnityEngine.Debug.Log("Found Dead creature");
                 deadCreatureIds.Add(target.Id);
             }
 
