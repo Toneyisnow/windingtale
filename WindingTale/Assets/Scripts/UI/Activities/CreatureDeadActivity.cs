@@ -15,6 +15,7 @@ namespace WindingTale.UI.Activities
         private List<int> creatureIds = null;
 
         private int counter = 0;
+        private GameObject mapNode = null;
 
         public CreatureDeadActivity(List<int> creatureIds)
         {
@@ -28,37 +29,37 @@ namespace WindingTale.UI.Activities
 
         public override void Start(GameObject gameInterface)
         {
-            GameObject mapNode = gameInterface.GetComponent<GameFieldScene>().mapNode;
-
+            mapNode = gameInterface.GetComponent<GameFieldScene>().mapNode;
             foreach (int creatureId in creatureIds)
             {
                 GameObject creature = mapNode.transform.Find(string.Format("creature_{0}", StringUtils.Digit3(creatureId))).gameObject;
                 if (creature != null)
                 {
-                    GameObject.Destroy(creature);
+                    creature.AddComponent<CreatureDying>();
                 }
-                ////UICreature creature = gameInterface.GetUICreature(creatureId);
-                ////creature.SetAnimateState(UICreature.AnimateStates.Dying);
             }
         }
-
 
 
         public override void Update(GameObject gameInterface)
         {
             bool allGone = true;
-            foreach (int creatureId in creatureIds)
+            if (counter < 10)
             {
-                ////UICreature creature = gameInterface.GetUICreature(creatureId);
-                ////if (creature != null)
-                {
-                    allGone = false;
-                }
+                counter++;
+                return;
             }
 
-            if (counter ++ > 60)
+            foreach (int creatureId in creatureIds)
             {
-                this.HasFinished = true;
+                GameObject creature = mapNode.transform.Find(string.Format("creature_{0}", StringUtils.Digit3(creatureId))).gameObject;
+                if (creature != null && creature.GetComponent<CreatureDying>() != null)
+                {
+                    allGone = false;
+                    break;
+                }
+
+                GameObject.Destroy(creature);
             }
 
             if (allGone)
@@ -66,6 +67,5 @@ namespace WindingTale.UI.Activities
                 this.HasFinished = true;
             }
         }
-
     }
 }
