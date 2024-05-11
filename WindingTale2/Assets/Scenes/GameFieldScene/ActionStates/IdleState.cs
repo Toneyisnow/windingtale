@@ -1,21 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.Common;
+using WindingTale.Core.Definitions;
+using WindingTale.Core.Objects;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
-    public class IdleState : MonoBehaviour
+    public class IdleState : IActionState
     {
-        // Start is called before the first frame update
-        void Start()
-        {
+        public IdleState(GameMain gameMain): base(gameMain) { }
 
+        public override void onEnter()
+        {
+            // Nothing
         }
 
-        // Update is called once per frame
-        void Update()
+        public override void onExit()
         {
+            // Nothing
+        }
 
+        public override IActionState onSelectedPosition(FDPosition position)
+        {
+            FDCreature creature = this.map.GetCreatureAt(position);
+
+            if (creature != null )
+            {
+                if (creature.Faction == CreatureFaction.Friend)
+                {
+
+                }
+            }
+
+            return this;
+        }
+
+        public override IActionState onUserCancelled()
+        {
+            // Nothing to do here
+            return this;
         }
     }
 }

@@ -6,25 +6,29 @@ using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 
-public class CreatureDying : MonoBehaviour
+
+namespace WindingTale.MapObjects.CreatureIcon
 {
-    private float rotateSpeed = 1.0f;
-
-    private Vector3 rotationDirection = new Vector3(1, 0, 0);
-
-    private int count = 0;
-
-    // Start is called before the first frame update
-    void Start()
+    public class CreatureDying : MonoBehaviour
     {
-        count = 1;
-    }
+        private float rotateSpeed = 1.0f;
 
-    // Update is called once per frame
-    void Update()
-    {
-        transform.Rotate(rotateSpeed * rotationDirection * Time.deltaTime);
-        
-    }
+        private Vector3 rotationDirection = new Vector3(1, 0, 0);
 
+        private int count = 0;
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            count = 1;
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            transform.Rotate(rotateSpeed * rotationDirection * Time.deltaTime);
+
+        }
+
+    }
 }

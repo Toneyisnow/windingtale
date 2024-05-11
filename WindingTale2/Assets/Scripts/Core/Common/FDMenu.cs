@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Unity.VisualScripting;
 
 namespace WindingTale.Core.Common
 {
@@ -57,7 +58,33 @@ namespace WindingTale.Core.Common
 
         public void SetSelected(int index)
         {
+            foreach(FDMenuItem item in this.Items)
+            {
+                item.Selected = false;
+            }
 
+            this.Items[index].Selected = true;
+
+        }
+
+        /// <summary>
+        /// Menu Item directions: 0-Left, 1-Top, 2-Right, 3-Bottom
+        /// </summary>
+        public FDPosition GetItemPosition(int index)
+        {
+            switch(index)
+            {
+                case 0:
+                    return FDPosition.At(this.Position.X - 1, this.Position.Y);
+                 case 1:
+                    return FDPosition.At(this.Position.X, this.Position.Y - 1);
+                 case 2:
+                    return FDPosition.At(this.Position.X + 1, this.Position.Y);
+                 case 3:
+                    return FDPosition.At(this.Position.X, this.Position.Y + 1);
+                default:
+                    return this.Position;
+            }
         }
 
         public static FDPosition[] GetItemPositions(FDPosition central)

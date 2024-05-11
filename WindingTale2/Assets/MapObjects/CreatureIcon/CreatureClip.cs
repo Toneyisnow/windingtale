@@ -2,21 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreatureClip : MonoBehaviour
+namespace WindingTale.MapObjects.CreatureIcon
 {
-    // Start is called before the first frame update
-    void Start()
+    public class CreatureClip : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        bool enabled = this.gameObject.GetComponent<MeshRenderer>().enabled;
-        foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>())
+        // Start is called before the first frame update
+        void Start()
         {
-            renderer.enabled = enabled;
+
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            bool enabled = this.gameObject.GetComponent<MeshRenderer>().enabled;
+            foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>())
+            {
+                renderer.enabled = enabled;
+            }
         }
     }
 }

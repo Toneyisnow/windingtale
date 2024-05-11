@@ -49,6 +49,18 @@ namespace WindingTale.Chapters
             this.AllEvents.Add(condition);
         }
 
+        public static FDCreature AddCreatureToMap(GameMain gameMain, CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItemId = 0, AITypes aiType = AITypes.AIType_Aggressive)
+        {
+            CreatureDefinition definition = DefinitionStore.Instance.GetCreatureDefinition(definitionId);
+            FDCreature creature = faction == CreatureFaction.Friend ?
+                 new FDCreature(creatureId, definition, faction) :
+                 new FDAICreature(creatureId, definition, faction, aiType);
+
+            gameMain.gameMap.AddCreature(creature, position);
+
+            return creature;
+        }
+
 
         public static void ShowConversations(GameMain gameMain, int chapterId, int sequenceId, int min, int max)
         {

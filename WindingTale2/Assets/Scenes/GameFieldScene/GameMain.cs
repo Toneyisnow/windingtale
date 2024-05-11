@@ -4,6 +4,8 @@ using UnityEngine;
 using WindingTale.Chapters;
 using WindingTale.Core.Common;
 using WindingTale.Core.Events;
+using WindingTale.Core.Objects;
+using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.MapObjects.GameMap;
 
 namespace WindingTale.Scenes.GameFieldScene
@@ -59,6 +61,11 @@ namespace WindingTale.Scenes.GameFieldScene
             mapComponent.Initialize(chapterId);
             List<FDEvent> chapterEvents = ChapterLoader.LoadEvents(this, chapterId);
             eventHandler = new EventHandler(chapterEvents, this);
+
+            this.gameMap.Map.TurnNo = 1;
+            this.gameMap.Map.TurnType = Core.Definitions.CreatureFaction.Friend;
+
+            eventHandler.notifyTurnEvents();
         }
 
         public void onQuit()
@@ -80,22 +87,22 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Creature Related Operation
 
-        public void creatureMove(Creature creature, FDPosition pos)
+        public void creatureMove(FDCreature creature, FDPosition pos)
         {
 
         }
 
-        public void creatureAttack(Creature creature, Creature target)
+        public void creatureAttack(FDCreature creature, FDCreature target)
         {
 
         }
 
-        public void creatureMagic(Creature creature, FDPosition pos, int magicId)
+        public void creatureMagic(FDCreature creature, FDPosition pos, int magicId)
         {
 
         }
 
-        public void creatureRest(Creature creature)
+        public void creatureRest(FDCreature creature)
         {
             // Check Treasure
 

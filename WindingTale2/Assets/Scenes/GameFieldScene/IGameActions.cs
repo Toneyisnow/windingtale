@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
+using WindingTale.MapObjects.CreatureIcon;
 
 namespace WindingTale.Scenes.GameFieldScene
 {
@@ -29,13 +30,13 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Creature Related Operation
 
-        void creatureMove(Creature creature, FDPosition pos);
+        void creatureMove(FDCreature creature, FDPosition pos);
 
-        void creatureAttack(Creature creature, Creature target);
+        void creatureAttack(FDCreature creature, FDCreature target);
 
-        void creatureMagic(Creature creature, FDPosition pos, int magicId);
+        void creatureMagic(FDCreature creature, FDPosition pos, int magicId);
 
-        void creatureRest(Creature creature);
+        void creatureRest(FDCreature creature);
 
         void endTurnForAll();
 

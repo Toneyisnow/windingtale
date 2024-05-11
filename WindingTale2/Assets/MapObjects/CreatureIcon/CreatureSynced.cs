@@ -2,47 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreatureSynced : MonoBehaviour
+
+namespace WindingTale.MapObjects.CreatureIcon
 {
-    public GameObject mapObject = null;
 
-    private GameObject clip01 = null;
-    private GameObject clip02 = null;
-    private GameObject clip03 = null;
-
-
-    // Start is called before the first frame update
-    void Start()
+    public class CreatureSynced : MonoBehaviour
     {
-        clip01 = this.transform.Find("Clip_01").gameObject;
-        clip02 = this.transform.Find("Clip_02").gameObject;
-        clip03 = this.transform.Find("Clip_03").gameObject;
-    }
+        public GameObject mapObject = null;
 
-    // Update is called once per frame
-    void Update()
-    {
-        Creature[] creatures = mapObject.transform.GetComponentsInChildren<Creature>();
+        private GameObject clip01 = null;
+        private GameObject clip02 = null;
+        private GameObject clip03 = null;
 
-        foreach (Creature c in creatures)
+
+        // Start is called before the first frame update
+        void Start()
         {
-            Animator animator = c.GetComponent<Animator>();
+            clip01 = this.transform.Find("Clip_01").gameObject;
+            clip02 = this.transform.Find("Clip_02").gameObject;
+            clip03 = this.transform.Find("Clip_03").gameObject;
+        }
 
-            GameObject c1 = c.transform.Find("Clip_01").gameObject;
-            GameObject c2 = c.transform.Find("Clip_02").gameObject;
-            GameObject c3 = c.transform.Find("Clip_03").gameObject;
+        // Update is called once per frame
+        void Update()
+        {
+            Creature[] creatures = mapObject.transform.GetComponentsInChildren<Creature>();
 
-            if (animator != null && animator.GetInteger("state") == 0)
+            foreach (Creature c in creatures)
             {
-                c1.GetComponent<MeshRenderer>().enabled = clip01.activeSelf;
-                c2.GetComponent<MeshRenderer>().enabled = clip02.activeSelf;
-                c3.GetComponent<MeshRenderer>().enabled= clip03.activeSelf;
-            }
-            else
-            {
-                c1.GetComponent<MeshRenderer>().enabled = true;
-                c2.GetComponent<MeshRenderer>().enabled = true;
-                c3.GetComponent<MeshRenderer>().enabled= true;
+                Animator animator = c.GetComponent<Animator>();
+
+                GameObject c1 = c.transform.Find("Clip_01").gameObject;
+                GameObject c2 = c.transform.Find("Clip_02").gameObject;
+                GameObject c3 = c.transform.Find("Clip_03").gameObject;
+
+                if (animator != null && animator.GetInteger("state") == 0)
+                {
+                    c1.GetComponent<MeshRenderer>().enabled = clip01.activeSelf;
+                    c2.GetComponent<MeshRenderer>().enabled = clip02.activeSelf;
+                    c3.GetComponent<MeshRenderer>().enabled = clip03.activeSelf;
+                }
+                else
+                {
+                    c1.GetComponent<MeshRenderer>().enabled = true;
+                    c2.GetComponent<MeshRenderer>().enabled = true;
+                    c3.GetComponent<MeshRenderer>().enabled = true;
+                }
             }
         }
     }

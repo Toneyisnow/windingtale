@@ -694,8 +694,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33b81abf935ff534a860816e2346edad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  creatureIconPrefab: {fileID: 4847480602289709846, guid: 3532ee40628348a40827b2cfa5001228, type: 3}
   fieldLayer: {fileID: 361556400}
   creaturesLayer: {fileID: 80937138}
+  indicatorsLayer: {fileID: 2109618527}
 --- !u!1 &2057688228
 GameObject:
   m_ObjectHideFlags: 0
@@ -706,6 +708,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2057688229}
   - component: {fileID: 2057688230}
+  - component: {fileID: 2057688231}
   m_Layer: 0
   m_Name: GameRoot
   m_TagString: Untagged
@@ -741,6 +744,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapObject: {fileID: 1721112120}
+--- !u!114 &2057688231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2057688228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a98770bf632f8be418547154e10b93ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DefaultMaterial: {fileID: 2100000, guid: f2f829cac4bd31743bb24ca7f02e7e8d, type: 2}
+  DefaultGreyMaterial: {fileID: 2100000, guid: aea69d51bf045c74dad468787f887d50, type: 2}
 --- !u!1 &2080578391
 GameObject:
   m_ObjectHideFlags: 0
