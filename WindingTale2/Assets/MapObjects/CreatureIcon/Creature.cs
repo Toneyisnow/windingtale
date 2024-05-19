@@ -6,12 +6,13 @@ using WindingTale.Core.Objects;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Algorithms;
 using WindingTale.Scenes.GameFieldScene;
+using UnityEngine.EventSystems;
 
 namespace WindingTale.MapObjects.CreatureIcon
 {
 
 
-    public class Creature : MonoBehaviour
+    public class Creature : MonoBehaviour, IPointerClickHandler
     {
         private int moveCount = 0;
         private bool isMoving = false;
@@ -36,12 +37,6 @@ namespace WindingTale.MapObjects.CreatureIcon
             gameObject.AddComponent<CreatureWalk>();
         }
 
-        public void OnClicked()
-        {
-            Debug.Log("OnClicked");
-
-            //// GameInterface.Instance.OnMapClicked(this.creature.Position);
-        }
 
         public void SetGreyout(bool greyout)
         {
@@ -88,6 +83,14 @@ namespace WindingTale.MapObjects.CreatureIcon
                 }
             }
 
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            Debug.Log("OnPointerClick");
+
+            PlayerInterface playerInterface = GameObject.Find("GameRoot").GetComponent<PlayerInterface>();
+            playerInterface.onSelectedPosition(this.creature.Position);
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Map;
-using WindingTale.MapObjects.MapBlocks;
+using WindingTale.MapObjects.Blocks;
 using WindingTale.Scenes.GameFieldScene;
 
 namespace WindingTale.MapObjects.GameMap

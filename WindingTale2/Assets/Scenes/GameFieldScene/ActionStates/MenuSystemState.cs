@@ -7,11 +7,12 @@ using WindingTale.Core.Common;
 using WindingTale.Scenes.GameFieldScene.ActionStates;
 using WindingTale.Scenes.GameFieldScene;
 
-namespace WindingTale.UI.ActionStates
+namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
     public class MenuSystemState : MenuState
     {
-        public MenuSystemState(GameMain gameMain, FDPosition central) : base(gameMain, central)
+        public MenuSystemState(GameMain gameMain, FDPosition central)
+            : base(gameMain, central, new IdleState(gameMain))
         {
             // Matching
             this.SetMenu(0, MenuItemId.SystemMatching, false, () =>

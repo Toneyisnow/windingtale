@@ -47,7 +47,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         /// <param name="gameAction"></param>
         public SelectItemExchangeTargetState(GameMain gameMain, int creatureId, int itemIndex) : base(gameMain)
         {
-            this.Creature = map.GetCreatureById(creatureId);
+            this.Creature = fdMap.GetCreatureById(creatureId);
             this.SelectedItemIndex = itemIndex;
         }
 
@@ -56,7 +56,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
             if (range == null)
             {
-                DirectRangeFinder finder = new DirectRangeFinder(map.Field, this.Creature.Position, 1, 1);
+                DirectRangeFinder finder = new DirectRangeFinder(fdMap.Field, this.Creature.Position, 1, 1);
                 range = finder.CalculateRange();
             }
             //ShowRangeActivity showRange = new ShowRangeActivity(range.ToList());
@@ -78,7 +78,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
 
             // No creature or not a friend/NPC
-            FDCreature targetCreature = map.GetCreatureAt(position);
+            FDCreature targetCreature = fdMap.GetCreatureAt(position);
             if (targetCreature == null || targetCreature.Faction != CreatureFaction.Friend)
             {
                 return this;
@@ -99,6 +99,11 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
 
             return this;
+        }
+
+        public override IActionState onUserCancelled()
+        {
+            throw new System.NotImplementedException();
         }
 
         private void OnSelectBackItem(int index)

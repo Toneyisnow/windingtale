@@ -15,7 +15,7 @@ using WindingTale.Core.Objects;
 using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
-
+using WindingTale.UI.Dialogs;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -39,32 +39,32 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         private ItemDefinition treasureItem = null;
 
         public MenuActionState(GameMain gameMain, FDCreature creature, FDPosition targetPos)
-            : base(gameMain, targetPos)
+            : base(gameMain, targetPos, new ShowMoveRangeState(gameMain, creature))
         {
             this.creature = creature;
             this.targetPosition = targetPos;
-            this.treasure = map.GetTreasureAt(targetPos);
+            this.treasure = fdMap.GetTreasureAt(targetPos);
 
             // Magic
             this.SetMenu(0, MenuItemId.ActionMagic, IsMenuMagicEnabled(), () =>
             {
-                //ShowCreatureInfoActivity activity = new ShowCreatureInfoActivity(gameMain, creature, CreatureInfoType.SelectMagic, OnMagicSelected);
-                //activityManager.Push(activity);
+                gameMain.PushActivity(gameMain =>
+                {
+                    gameMain.ShowCreatureInfoDialog(creature, CreatureInfoType.SelectMagic, OnMagicSelected);
+                });
             });
 
             // Attack
             this.SetMenu(1, MenuItemId.ActionAttack, IsMenuAttackEnabled(), () =>
             {
                 Debug.Log("Attack clicked");
-                //SelectAttackTargetState attackState = new SelectAttackTargetState(gameMain, stateHandler, creature);
-                //stateHandler.HandlePushState(attackState);
+                nextState = new SelectAttackTargetState(gameMain, creature);
             });
 
             // Item
             this.SetMenu(2, MenuItemId.ActionItems, IsMenuItemEnabled(), () =>
             {
-                //MenuItemState itemState = new MenuItemState(gameMain, stateHandler, creature);
-                //stateHandler.HandlePushState(itemState);
+                nextState = new MenuItemState(gameMain, creature);
             });
 
             // Rest
@@ -73,40 +73,42 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 if (treasure == null || !treasure.HasOpened)
                 {
                     gameMain.creatureRest(creature);
-                    // stateHandler.HandleClearStates();
+                    nextState = new IdleState(gameMain);
                 }
                 else
                 {
                     // 发现宝箱，需要打开吗
                     FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 2);
-                    //PromptActivity prompt = new PromptActivity(message, OnPickTreasureConfirmed, creature);
-                    //activityManager.Push(prompt);
+                    gameMain.PushActivity(gameMain =>
+                    {
+                        gameMain.ShowPromptDialog(creature);
+                    });
+
+                    nextState = this;
                 }
-
-
             });
         }
 
         #region Public Methods
 
-        public override IActionState onSelectedPosition(FDPosition position)
-        {
+        //public override IActionState onSelectedPosition(FDPosition position)
+        //{
 
 
-            return this;
-        }
+        //    return this;
+        //}
 
-        public override IActionState onUserCancelled()
-        {
-            return new ShowMoveRangeState(gameMain, creature);
-        }
+        //public override IActionState onUserCancelled()
+        //{
+        //    return new ShowMoveRangeState(gameMain, creature);
+        //}
 
         #endregion
 
         private bool IsMenuAttackEnabled()
         {
             bool canAttack = this.creature.CanAttack();
-            FDCreature target = map.GetPreferredAttackTargetInRange(this.creature, this.targetPosition);
+            FDCreature target = fdMap.GetPreferredAttackTargetInRange(this.creature, this.targetPosition);
             return canAttack && (target != null);
         }
 
@@ -247,12 +249,15 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         public override void onEnter()
         {
             // Show the Menu Buttons
+            Debug.Log("MenuActionState: onEnter");
+
+            base.onEnter();
         }
 
         public override void onExit()
         {
             // Close the Menu Buttons
-
+            base.onExit();
         }
 
     }

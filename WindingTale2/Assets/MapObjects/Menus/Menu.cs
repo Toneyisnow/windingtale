@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using WindingTale.Core.Common;
+using WindingTale.MapObjects.GameMap;
 
 public class Menu : MonoBehaviour
 {
     public FDMenu FDMenu { get; private set;  }
+
+    private GameObject parentLayer;
 
     /// <summary>
     /// /public FDPosition Position { get; private set; }
@@ -29,14 +32,12 @@ public class Menu : MonoBehaviour
         FDMenuItem item = FDMenu.Items[itemIndex];
         int animIndex = item.Enabled ? 1 : 3;
 
-        //// GameObject menuItemPrefab = Resources.Load<GameObject>(string.Format("Menu/Menu_{0}_1", FDMenu.Items[itemIndex - 1].Id));
-        GameObject menuItemPrefab = Resources.Load<GameObject>(string.Format("Menu/Menu_{0}_{1}", item.Id.GetHashCode(), animIndex));
+        GameObject menuItemPrefab = Resources.Load<GameObject>(string.Format("Menus/Menu_{0}_{1}", item.Id.GetHashCode(), animIndex));
         
-        GameObject menuItem = Instantiate(menuItemPrefab, transform.Find(string.Format("Item{0}", itemIndex )));
-        menuItem.transform.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
+        GameObject menuItem = Instantiate(menuItemPrefab, this.transform);
+        menuItem.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(item.Position), Quaternion.Euler(-90, 0, 0));
         menuItem.transform.localScale = new Vector3(0.08f, 0.09f, 0.08f);
-
-        //// GameInterface.Instance.ApplyDefaultMaterial(menuItem.transform.Find("default").gameObject);
+        
     }
 
 }

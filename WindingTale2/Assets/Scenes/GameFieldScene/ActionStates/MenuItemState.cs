@@ -9,7 +9,7 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene;
 
-namespace WindingTale.UI.ActionStates
+namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
     public class MenuItemState : MenuState
     {
@@ -27,10 +27,10 @@ namespace WindingTale.UI.ActionStates
             get; private set;
         }
 
-
         private SubActionState subState;
 
-        public MenuItemState(GameMain gameMain, FDCreature creature) : base(gameMain, creature.Position)
+        public MenuItemState(GameMain gameMain, FDCreature creature) 
+            : base(gameMain, creature.Position, new MenuActionState(gameMain, creature, creature.Position))
         {
             this.Creature = creature;
 
@@ -75,7 +75,7 @@ namespace WindingTale.UI.ActionStates
             }
 
             // Near a friend
-            List<FDCreature> adjacentFriends = map.GetAdjacentFriends(this.Creature);
+            List<FDCreature> adjacentFriends = fdMap.GetAdjacentFriends(this.Creature);
             return (adjacentFriends != null && adjacentFriends.Count > 0);
         }
 

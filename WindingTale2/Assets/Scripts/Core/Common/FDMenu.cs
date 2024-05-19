@@ -70,7 +70,7 @@ namespace WindingTale.Core.Common
         /// <summary>
         /// Menu Item directions: 0-Left, 1-Top, 2-Right, 3-Bottom
         /// </summary>
-        public FDPosition GetItemPosition(int index)
+        public FDPosition GetItemPosition0(int index)
         {
             switch(index)
             {
@@ -86,6 +86,24 @@ namespace WindingTale.Core.Common
                     return this.Position;
             }
         }
+
+        public FDPosition GetItemPosition(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return FDPosition.At( - 1, 0);
+                case 1:
+                    return FDPosition.At(0, - 1);
+                case 2:
+                    return FDPosition.At(1, 0);
+                case 3:
+                    return FDPosition.At(0, 1);
+                default:
+                    return this.Position;
+            }
+        }
+
 
         public static FDPosition[] GetItemPositions(FDPosition central)
         {

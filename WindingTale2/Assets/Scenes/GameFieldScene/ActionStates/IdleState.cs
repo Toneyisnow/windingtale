@@ -23,13 +23,13 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         public override IActionState onSelectedPosition(FDPosition position)
         {
-            FDCreature creature = this.map.GetCreatureAt(position);
+            FDCreature creature = this.fdMap.GetCreatureAt(position);
 
             if (creature != null )
             {
                 if (creature.Faction == CreatureFaction.Friend)
                 {
-
+                    return new ShowMoveRangeState(gameMain, creature);
                 }
             }
 

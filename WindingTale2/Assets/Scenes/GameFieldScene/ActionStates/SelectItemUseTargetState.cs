@@ -38,7 +38,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         public SelectItemUseTargetState(GameMain gameMain, int creatureId, int itemIndex) : base(gameMain)
         {
             this.CreatureId = creatureId;
-            this.Creature = map.GetCreatureById(creatureId);
+            this.Creature = fdMap.GetCreatureById(creatureId);
             this.SelectedItemIndex = itemIndex;
         }
 
@@ -46,7 +46,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         {
             if (itemRange == null)
             {
-                DirectRangeFinder rangeFinder = new DirectRangeFinder(map.Field, this.Creature.Position, 1);
+                DirectRangeFinder rangeFinder = new DirectRangeFinder(fdMap.Field, this.Creature.Position, 1);
                 itemRange = rangeFinder.CalculateRange();
             }
 
@@ -71,7 +71,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
 
             // No creature or not a friend/NPC
-            FDCreature targetCreature = map.GetCreatureAt(position);
+            FDCreature targetCreature = fdMap.GetCreatureAt(position);
             if (targetCreature == null || targetCreature.Faction == CreatureFaction.Enemy)
             {
                 return this;

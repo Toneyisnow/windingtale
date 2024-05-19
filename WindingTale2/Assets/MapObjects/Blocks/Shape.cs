@@ -5,8 +5,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
+using WindingTale.Scenes.GameFieldScene;
 
-namespace WindingTale.MapObjects.MapBlocks
+namespace WindingTale.MapObjects.Blocks
 {
 
     public class Shape : MonoBehaviour
@@ -41,7 +42,7 @@ namespace WindingTale.MapObjects.MapBlocks
         public void OnPointerDownDelegate(PointerEventData data)
         {
             Debug.Log("OnPointerDownDelegate called.");
-            //// GameInterface.Instance.OnMapClicked(this.Position);
+            PlayerInterface.getDefault().onSelectedPosition(this.Position);
         }
     }
 }

@@ -1,29 +1,57 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using WindingTale.Chapters;
+using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Events;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.MapObjects.GameMap;
+using WindingTale.Scenes.GameFieldScene.Activities;
+using WindingTale.UI.Dialogs;
 
 namespace WindingTale.Scenes.GameFieldScene
 {
 
     public class GameMain : MonoBehaviour, IGameActions
     {
+        #region Properties
+
         public GameObject mapObject;
+
+        public static GameMain getDefault()
+        {
+            GameMain game = GameObject.Find("GameRoot").GetComponent<GameMain>();
+            if (game == null)
+            {
+                throw new MissingComponentException("Cannot find component GameMain");
+            }
+
+            return game;
+        }
 
         public GameMap gameMap
         {
             get { return mapObject.GetComponent<GameMap>(); }
         }
 
-        private int chapterId = 0;
+        public ActivityQueue activityQueue
+        {
+            get
+            {
+                return gameObject.GetComponent<ActivityQueue>();
+            }
+        }
+
+        
         private EventHandler eventHandler = null;
 
+        #endregion
 
+        private int chapterId = 0;
 
         // Start is called before the first frame update
         void Start()
@@ -56,9 +84,8 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void onStart()
         {
-            GameMap mapComponent = this.gameMap.GetComponent<GameMap>();
 
-            mapComponent.Initialize(chapterId);
+            gameMap.Initialize(chapterId);
             List<FDEvent> chapterEvents = ChapterLoader.LoadEvents(this, chapterId);
             eventHandler = new EventHandler(chapterEvents, this);
 
@@ -87,9 +114,9 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Creature Related Operation
 
-        public void creatureMove(FDCreature creature, FDPosition pos)
+        public void creatureMove(FDCreature creature, FDMovePath path)
         {
-
+            gameMap.MoveCreature(creature, path.Desitination);
         }
 
         public void creatureAttack(FDCreature creature, FDCreature target)
@@ -112,6 +139,40 @@ namespace WindingTale.Scenes.GameFieldScene
         public void endTurnForAll()
         {
 
+        }
+
+        #endregion
+
+
+        #region Internal Functions
+
+        public void ShowCreatureInfoDialog(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected)
+        {
+
+        }
+
+        public void ShowPromptDialog(FDCreature creature)
+        {
+
+        }
+
+
+        public void PushActivity(Action<GameMain> action)
+        {
+            SimpleActivity activity = new SimpleActivity(action);
+            activityQueue.Push(activity);
+        }
+
+        public void InsertActivity(Action<GameMain> action)
+        {
+            SimpleActivity activity = new SimpleActivity(action);
+            activityQueue.Insert(activity);
+        }
+
+        public void InsertActivities(List<Action<GameMain>> actions)
+        {
+            List<ActivityBase> activities = actions.Select(action => { return new SimpleActivity(action); }).ToList<ActivityBase>();
+            activityQueue.Insert(activities);
         }
 
         #endregion

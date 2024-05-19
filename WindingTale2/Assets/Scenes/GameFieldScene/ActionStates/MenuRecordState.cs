@@ -10,7 +10,7 @@ using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
 
-namespace WindingTale.UI.ActionStates
+namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
     public class MenuRecordState : MenuState
     {
@@ -21,10 +21,11 @@ namespace WindingTale.UI.ActionStates
             QuitGame = 3,
         }
 
-        public MenuRecordState(GameMain gameMain, FDPosition position) : base(gameMain, position)
+        public MenuRecordState(GameMain gameMain, FDPosition position) 
+            : base(gameMain, position, new MenuSystemState(gameMain, position))
         {
             // Save Game
-            this.SetMenu(0, MenuItemId.RecordSave, map.CanSaveGame(), () =>
+            this.SetMenu(0, MenuItemId.RecordSave, fdMap.CanSaveGame(), () =>
             {
                 // 是否保存当前游戏？
                 FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 5);

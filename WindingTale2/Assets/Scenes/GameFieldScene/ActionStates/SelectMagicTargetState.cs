@@ -49,7 +49,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         {
             if (magicRange == null)
             {
-                DirectRangeFinder rangeFinder = new DirectRangeFinder(map.Field, this.Creature.Position, this.Magic.EffectRange);
+                DirectRangeFinder rangeFinder = new DirectRangeFinder(fdMap.Field, this.Creature.Position, this.Magic.EffectRange);
                 magicRange = rangeFinder.CalculateRange();
             }
 
@@ -74,10 +74,10 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
             if (this.magicRange.Contains(position))
             {
-                DirectRangeFinder rangeFinder = new DirectRangeFinder(map.Field, position, this.Magic.EffectScope);
+                DirectRangeFinder rangeFinder = new DirectRangeFinder(fdMap.Field, position, this.Magic.EffectScope);
                 FDRange magicScope = rangeFinder.CalculateRange();
 
-                List<FDCreature> targets = map.GetCreaturesInRange(magicScope.ToList(), CreatureFaction.Enemy);
+                List<FDCreature> targets = fdMap.GetCreaturesInRange(magicScope.ToList(), CreatureFaction.Enemy);
                 if (targets == null || targets.Count == 0)
                 {
                     // Cannot spell on that position, do nothing

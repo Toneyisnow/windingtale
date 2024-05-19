@@ -48,7 +48,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 Debug.Log("AttackScope: " + span.Min + " " + span.Max);
 
 
-                DirectRangeFinder finder = new DirectRangeFinder(map.Field, this.Creature.Position, span.Max, span.Min);
+                DirectRangeFinder finder = new DirectRangeFinder(fdMap.Field, this.Creature.Position, span.Max, span.Min);
                 this.AttackRange = finder.CalculateRange();
             }
 
@@ -67,7 +67,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         {
             if (this.AttackRange != null && this.AttackRange.Contains(position))
             {
-                FDCreature target = map.GetCreatureAt(position);
+                FDCreature target = fdMap.GetCreatureAt(position);
                 if (target != null && target.Faction == CreatureFaction.Enemy)
                 {
                     // Do the attack

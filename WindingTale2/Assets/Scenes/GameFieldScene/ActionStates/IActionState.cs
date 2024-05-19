@@ -10,14 +10,18 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
     {
         protected GameMain gameMain;
 
-        protected FDMap map;
+        protected FDMap fdMap
+        {
+            get
+            {
+                return this.gameMain.gameMap.Map;
+            }
+        }
 
 
         public IActionState(GameMain game)
         {
             this.gameMain = game;
-
-            this.map = this.gameMain.gameMap.Map;
         }
 
         public abstract void onEnter();

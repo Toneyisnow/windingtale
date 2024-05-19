@@ -74,6 +74,7 @@ namespace WindingTale.Core.Map
 
         public static FDMap loadFromChapter(int chapterId)
         {
+            Debug.Log("FDMap loadFromChapter");
             var map = new FDMap();
 
             DefinitionStore.Instance.LoadChapter(chapterId);
@@ -95,12 +96,12 @@ namespace WindingTale.Core.Map
 
         public FDCreature GetCreatureById(int creatureId)
         {
-            return null;
+            return Creatures.Find(creature => creature.Id == creatureId);
         }
 
         public FDCreature GetCreatureAt(FDPosition position)
         {
-            return null;
+            return Creatures.Find(creature => creature.Position.AreSame(position));
         }
 
 
@@ -148,7 +149,17 @@ namespace WindingTale.Core.Map
 
         public List<FDCreature> GetCreaturesInRange(List<FDPosition> range, CreatureFaction faction)
         {
-            return null;
+            List<FDCreature> results = new List<FDCreature>();
+
+            foreach(FDCreature creature in this.Creatures)
+            {
+                if (range.Find(pos => pos.AreSame(creature.Position)) != null && creature.Faction == faction)
+                {
+                    results.Add(creature);
+                }
+            }
+
+            return results;
         }
 
         public List<FDCreature> GetOppositeCreatures(FDCreature  creature)

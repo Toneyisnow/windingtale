@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.CreatureIcon;
@@ -30,7 +31,7 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Creature Related Operation
 
-        void creatureMove(FDCreature creature, FDPosition pos);
+        void creatureMove(FDCreature creature, FDMovePath path);
 
         void creatureAttack(FDCreature creature, FDCreature target);
 

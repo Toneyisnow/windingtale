@@ -12,5 +12,10 @@ namespace WindingTale.MapObjects.GameMap
             return new Vector3(-pos.X * 2, 0, pos.Y * 2);
         }
 
+        public static Vector3 ConvertCreaturePosToVec3(FDPosition pos)
+        {
+            return new Vector3(-pos.X * 2, 2, pos.Y * 2);
+
+        }
     }
 }
