@@ -22,6 +22,9 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public GameObject mapObject;
 
+        public GameObject canvasObject;
+
+
         public static GameMain getDefault()
         {
             GameMain game = GameObject.Find("GameRoot").GetComponent<GameMain>();
@@ -36,6 +39,11 @@ namespace WindingTale.Scenes.GameFieldScene
         public GameMap gameMap
         {
             get { return mapObject.GetComponent<GameMap>(); }
+        }
+
+        public GameCanvas gameCanvas
+        {
+            get { return canvasObject.GetComponent<GameCanvas>(); }
         }
 
         public ActivityQueue activityQueue
@@ -148,7 +156,7 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void ShowCreatureInfoDialog(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected)
         {
-
+            gameCanvas.ShowDialog(creature, infoType, onSelected);
         }
 
         public void ShowPromptDialog(FDCreature creature)

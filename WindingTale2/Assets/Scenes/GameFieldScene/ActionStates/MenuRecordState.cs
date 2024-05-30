@@ -31,6 +31,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 5);
                 //PromptActivity prompt = new PromptActivity(message, OnSaveGameConfirmed);
                 //activityManager.Push(prompt);
+                return this;
             });
 
             // Game Info
@@ -38,6 +39,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             {
                 //ShowGameInfoActivity info = new ShowGameInfoActivity(gameMain);
                 //activityManager.Push(info);
+                return this;
             });
 
             // Load Game
@@ -47,6 +49,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 4);
                 //PromptActivity prompt = new PromptActivity(message, OnLoadGameConfirmed);
                 //activityManager.Push(prompt);
+                return this;
             });
 
             // Quit Game
@@ -55,6 +58,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 6);
                 //PromptActivity prompt = new PromptActivity(message, OnQuitGameConfirmed);
                 //activityManager.Push(prompt);
+                return this;
             });
         }
 

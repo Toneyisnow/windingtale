@@ -62,7 +62,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             Debug.Log("ShowMoveRangeState: onSelectedPosition");
 
             // If position is in range
-            if (moveRange.Contains(position))
+            if (moveRange != null && moveRange.Contains(position))
             {
                 MovePathFinder movePathFinder = new MovePathFinder(moveRange);
                 FDMovePath movePath = movePathFinder.GetPath(position);

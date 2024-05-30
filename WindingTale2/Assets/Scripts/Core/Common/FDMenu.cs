@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Unity.VisualScripting;
+using WindingTale.Scenes.GameFieldScene.ActionStates;
 
 namespace WindingTale.Core.Common
 {
@@ -70,7 +71,7 @@ namespace WindingTale.Core.Common
         /// <summary>
         /// Menu Item directions: 0-Left, 1-Top, 2-Right, 3-Bottom
         /// </summary>
-        public FDPosition GetItemPosition0(int index)
+        public FDPosition GetItemPosition(int index)
         {
             switch(index)
             {
@@ -87,7 +88,7 @@ namespace WindingTale.Core.Common
             }
         }
 
-        public FDPosition GetItemPosition(int index)
+        public FDPosition GetItemPosition2(int index)
         {
             switch (index)
             {
@@ -122,6 +123,11 @@ namespace WindingTale.Core.Common
 
         public FDMenu Menu { get; private set; }
 
+        public int Index
+        {
+            get; private set;
+        }
+
         public MenuItemId Id
         {
             get;
@@ -140,11 +146,11 @@ namespace WindingTale.Core.Common
             set;
         }
 
-        public Action Action { get; set; }
+        public Func<IActionState> Action { get; set; }
 
         public FDPosition Position { get; set; }
 
-        public FDMenuItem(MenuItemId menuItemId, bool enabled, Action action, FDPosition position, FDMenu menu)
+        public FDMenuItem(MenuItemId menuItemId, bool enabled, Func<IActionState> action, FDPosition position, FDMenu menu)
         {
             this.Id = menuItemId;
             this.Enabled = enabled;

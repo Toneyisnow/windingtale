@@ -87,10 +87,9 @@ namespace WindingTale.MapObjects.CreatureIcon
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log("OnPointerClick");
+            Debug.Log("OnPointerClick " + this.creature.Position.ToString());
 
-            PlayerInterface playerInterface = GameObject.Find("GameRoot").GetComponent<PlayerInterface>();
-            playerInterface.onSelectedPosition(this.creature.Position);
+            PlayerInterface.getDefault().onSelectedPosition(this.creature.Position);
         }
     }
 }

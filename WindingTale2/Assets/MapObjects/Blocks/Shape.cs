@@ -30,7 +30,7 @@ namespace WindingTale.MapObjects.Blocks
 
             BoxCollider boxCollider = this.gameObject.AddComponent<BoxCollider>();
             boxCollider.size = new Vector3(24, 24, 1);
-            boxCollider.center = new Vector3(12, -32, -24);
+            boxCollider.center = new Vector3(12, -36, -24);
         }
 
         // Update is called once per frame
@@ -41,7 +41,7 @@ namespace WindingTale.MapObjects.Blocks
 
         public void OnPointerDownDelegate(PointerEventData data)
         {
-            Debug.Log("OnPointerDownDelegate called.");
+            Debug.Log("OnPointerDownDelegate called. " + Position.ToString());
             PlayerInterface.getDefault().onSelectedPosition(this.Position);
         }
     }

@@ -8,6 +8,7 @@ using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.UI.Dialogs;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -37,35 +38,44 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Exchange
             this.SetMenu(0, MenuItemId.ItemExchange, IsMenuExchangeEnabled(), () =>
             {
-                //ShowCreatureInfoActivity dialog = new ShowCreatureInfoActivity(gameMain, this.Creature, CreatureInfoType.SelectAllItem, OnSelectedExchangeItem);
-                //activityManager.Push(dialog);
+                gameMain.PushActivity(gameMain =>
+                {
+                    gameMain.ShowCreatureInfoDialog(creature, CreatureInfoType.SelectAllItem, OnSelectedExchangeItem);
+                });
+
+                return this;
             });
 
             // Use
             this.SetMenu(1, MenuItemId.ItemUse, IsMenuUseEnabled(), () =>
             {
-                //ShowCreatureInfoActivity dialog = new ShowCreatureInfoActivity(gameMain, this.Creature, CreatureInfoType.SelectUseItem, OnSelectedUseItem);
-                //activityManager.Push(dialog);
+                gameMain.PushActivity(gameMain =>
+                {
+                    gameMain.ShowCreatureInfoDialog(creature, CreatureInfoType.SelectUseItem, OnSelectedUseItem);
+                });
+                return this;
             });
 
             // Equip
             this.SetMenu(2, MenuItemId.ItemEquip, IsMenuEquipEnabled(), () =>
             {
-                //ShowCreatureInfoActivity dialog = new ShowCreatureInfoActivity(gameMain, this.Creature, CreatureInfoType.SelectEquipItem, OnSelectedEquipItem);
-                //activityManager.Push(dialog);
+                gameMain.PushActivity(gameMain =>
+                {
+                    gameMain.ShowCreatureInfoDialog(creature, CreatureInfoType.SelectEquipItem, OnSelectedEquipItem);
+                });
+                return this;
             });
 
             // Discard
             this.SetMenu(3, MenuItemId.ItemDiscard, IsMenuDiscardEnabled(), () =>
             {
-                //ShowCreatureInfoActivity dialog = new ShowCreatureInfoActivity(gameMain, this.Creature, CreatureInfoType.SelectAllItem, OnSelectedDiscardItem);
-                //activityManager.Push(dialog);
+                gameMain.PushActivity(gameMain =>
+                {
+                    gameMain.ShowCreatureInfoDialog(creature, CreatureInfoType.SelectAllItem, OnSelectedDiscardItem);
+                });
+                return this;
             });
         }
-
-
-
-
 
         private bool IsMenuExchangeEnabled()
         {

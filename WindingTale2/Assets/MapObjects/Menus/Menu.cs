@@ -9,7 +9,7 @@ public class Menu : MonoBehaviour
 {
     public FDMenu FDMenu { get; private set;  }
 
-    private GameObject parentLayer;
+    public GameObject centerObject;
 
     /// <summary>
     /// /public FDPosition Position { get; private set; }
@@ -34,10 +34,26 @@ public class Menu : MonoBehaviour
 
         GameObject menuItemPrefab = Resources.Load<GameObject>(string.Format("Menus/Menu_{0}_{1}", item.Id.GetHashCode(), animIndex));
         
-        GameObject menuItem = Instantiate(menuItemPrefab, this.transform);
-        menuItem.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(item.Position), Quaternion.Euler(-90, 0, 0));
-        menuItem.transform.localScale = new Vector3(0.08f, 0.09f, 0.08f);
-        
+        GameObject menuItemObj = Instantiate(menuItemPrefab, centerObject.transform);
+        menuItemObj.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(getItemPosition(itemIndex)), Quaternion.Euler(-90, 0, 0));
+        menuItemObj.transform.localScale = new Vector3(0.08f, 0.09f, 0.08f);
+        MenuItem menuItem = menuItemObj.AddComponent<MenuItem>();
+        menuItem.Init(item);
     }
 
+    private FDPosition getItemPosition(int itemIndex)
+    {
+        switch (itemIndex)
+        {
+            case 0:
+                return FDPosition.At(-1, 0);
+                case 1: 
+                return FDPosition.At(0, -1);
+                case 2:
+                return FDPosition.At(1, 0);
+                case 3:
+                return FDPosition.At(0, 1);
+            default: return null;
+        }
+    }
 }

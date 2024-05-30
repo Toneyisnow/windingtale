@@ -10,6 +10,8 @@ using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
 using System;
+using UnityEngine.TestTools;
+using WindingTale.MapObjects.CreatureIcon;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -55,13 +57,18 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
             //ShowRangeActivity activity = new ShowRangeActivity(magicRange.ToList());
             //activityManager.Push(activity);
+
+            // Send move range to UI
+            gameMain.PushActivity((gameMain) =>
+            {
+                gameMain.gameMap.showAttackRange(this.Creature, magicRange);
+            });
         }
 
         public override void onExit()
         {
-
-            //ClearRangeActivity activity = new ClearRangeActivity();
-            //activityManager.Push(activity);
+            // Clear move range on UI
+            gameMain.gameMap.clearAllIndicators();
         }
 
         public override IActionState onSelectedPosition(FDPosition position)
@@ -81,20 +88,21 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 if (targets == null || targets.Count == 0)
                 {
                     // Cannot spell on that position, do nothing
+                    return this;
                 }
                 else
                 {
                     gameMain.creatureMagic(this.Creature, position, this.Magic.MagicId);
-                    //// stateHandler.HandleClearStates();
+                    return new IdleState(gameMain);
                 }
             }
             else
             {
                 // Cancel the magic
                 //// stateHandler.HandlePopState();
+                return new MenuActionState(gameMain, this.Creature, position);
             }
 
-            return this;
         }
 
         public override IActionState onUserCancelled()

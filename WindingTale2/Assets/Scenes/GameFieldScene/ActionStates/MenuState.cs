@@ -36,6 +36,7 @@ public class MenuState : IActionState
 
     public override void onEnter()
     {
+        Debug.Log("MenuState: onEnter");
         gameMain.gameMap.ShowMenu(fdMenu);
 
         // Set default active
@@ -43,6 +44,7 @@ public class MenuState : IActionState
 
     public override void onExit()
     {
+        Debug.Log("MenuState: onExit");
         // Close Action Menu
         gameMain.gameMap.CloseMenu(fdMenu);
 
@@ -50,6 +52,8 @@ public class MenuState : IActionState
 
     public override IActionState onSelectedPosition(FDPosition position)
     {
+        Debug.Log("MenuState: onSelectedPosition" + position.ToString());
+
         for (int index = 0; index < 4; index++)
         {
             FDMenuItem item = this.fdMenu.Items[index];
@@ -69,8 +73,7 @@ public class MenuState : IActionState
                 }
 
                 // Clicked on menu
-                item.Action();
-                return nextState;
+                return item.Action();
             }
         }
 
@@ -83,7 +86,7 @@ public class MenuState : IActionState
     }
 
 
-    protected void SetMenu(int index, MenuItemId menuItemId, bool enabled, Action action)
+    protected void SetMenu(int index, MenuItemId menuItemId, bool enabled, Func<IActionState> action)
     {
         if (index < 0 || index >= 4)
         {

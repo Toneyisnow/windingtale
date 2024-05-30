@@ -18,6 +18,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             this.SetMenu(0, MenuItemId.SystemMatching, false, () =>
             {
                 // TODO
+                return this;
             });
 
             // Record
@@ -25,6 +26,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             {
                 //ActionState nextState = new MenuRecordState(gameMain, stateHandler, central);
                 //stateHandler.HandlePushState(nextState);
+                return this;
             });
 
             // Settings
@@ -32,6 +34,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             {
                 //ActionState nextState = new MenuSettingsState(gameMain, stateHandler, central);
                 //stateHandler.HandlePushState(nextState);
+                return this;
             });
 
             // Rest All
@@ -48,6 +51,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 //    }
                 //});
 
+                return this;
                 //activityManager.Push(prompt);
             });
         }

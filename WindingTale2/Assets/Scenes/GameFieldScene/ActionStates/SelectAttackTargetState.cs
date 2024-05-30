@@ -12,6 +12,8 @@ using WindingTale.Core.Definitions.Items;
 using WindingTale.Core.Objects;
 using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
+using UnityEngine.TestTools;
+using WindingTale.MapObjects.CreatureIcon;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -35,7 +37,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         public override void onEnter()
         {
-
             if (this.AttackRange == null)
             {
                 AttackItemDefinition attackItem = this.Creature.GetAttackItem();
@@ -53,14 +54,17 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
 
             // Display the attack range on the UI.
-            //ShowRangeActivity activity = new ShowRangeActivity(this.AttackRange.ToList());
-            //activityManager.Push(activity);
+            
+            gameMain.PushActivity((gameMain) =>
+            {
+                gameMain.gameMap.showAttackRange(this.Creature, AttackRange);
+            });
         }
 
         public override void onExit()
         {
-            //ClearRangeActivity activity = new ClearRangeActivity();
-            //activityManager.Push(activity);
+            // Clear move range on UI
+            gameMain.gameMap.clearAllIndicators();
         }
 
         public override IActionState onSelectedPosition(FDPosition position)
@@ -71,21 +75,21 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 if (target != null && target.Faction == CreatureFaction.Enemy)
                 {
                     // Do the attack
-                    //this.gameMain.CreatureAttack(this.Creature, target);
+                    this.gameMain.creatureAttack(this.Creature, target);
+                    return new IdleState(gameMain);
                     //stateHandler.HandleClearStates();
                 }
                 else
                 {
                     // Clicked in the range, but no target, let the player to click again
+                    return this;
                 }
             }
             else
             {
-                // Clicked out of range, cancel
-                //// stateHandler.HandlePopState();
+                // Cancel
+                return new IdleState(gameMain);
             }
-
-            return this;
 
         }
 

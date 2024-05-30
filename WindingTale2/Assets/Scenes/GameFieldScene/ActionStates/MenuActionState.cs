@@ -52,24 +52,27 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 {
                     gameMain.ShowCreatureInfoDialog(creature, CreatureInfoType.SelectMagic, OnMagicSelected);
                 });
+                return this;
             });
 
             // Attack
             this.SetMenu(1, MenuItemId.ActionAttack, IsMenuAttackEnabled(), () =>
             {
                 Debug.Log("Attack clicked");
-                nextState = new SelectAttackTargetState(gameMain, creature);
+                return new SelectAttackTargetState(gameMain, creature);
             });
 
             // Item
             this.SetMenu(2, MenuItemId.ActionItems, IsMenuItemEnabled(), () =>
             {
-                nextState = new MenuItemState(gameMain, creature);
+                return new MenuItemState(gameMain, creature);
             });
 
             // Rest
             this.SetMenu(3, MenuItemId.ActionRest, true, () =>
             {
+                Debug.Log("Rest action.");
+                IActionState nextState;
                 if (treasure == null || !treasure.HasOpened)
                 {
                     gameMain.creatureRest(creature);
@@ -86,17 +89,12 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
                     nextState = this;
                 }
+                return nextState;
             });
         }
 
         #region Public Methods
 
-        //public override IActionState onSelectedPosition(FDPosition position)
-        //{
-
-
-        //    return this;
-        //}
 
         //public override IActionState onUserCancelled()
         //{
@@ -126,7 +124,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         private void OnMagicSelected(int index)
         {
-            Debug.Log("MenuActionState: OnMagicSelected.");
+            Debug.Log("MenuActionState: OnMagicSelected. Index = " + index);
             if (index < 0 || index >= creature.Magics.Count)
             {
                 // Cancelled
@@ -140,7 +138,9 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             if (magicDefinition != null && creature.CanSpellMagic() && magicDefinition.MpCost <= creature.Mp)
             {
                 // Enough MP to spell
-                //SelecteMagicTargetState magicTargetState = new SelecteMagicTargetState(gameMain, stateHandler, creature, magicDefinition);
+                SelecteMagicTargetState magicTargetState = new SelecteMagicTargetState(gameMain, creature, magicDefinition);
+                PlayerInterface.getDefault().onUpdateState(magicTargetState);
+
                 //stateHandler.HandlePushState(magicTargetState);
             }
             else

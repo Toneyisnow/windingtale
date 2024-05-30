@@ -44,6 +44,11 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void onSelectedPosition(FDPosition position)
         {
+            if (gameMain.gameCanvas.IsDialogOpened())
+            {
+                return;
+            }
+
             FDPosition cursorPos = gameMain.gameMap.GetCursorPosition();
             if (!cursorPos.AreSame(position))
             {
@@ -61,9 +66,9 @@ namespace WindingTale.Scenes.GameFieldScene
             onUpdateState(nextState);
         }
 
-        private void onUpdateState(IActionState nextState)
+        public void onUpdateState(IActionState nextState)
         {
-            Debug.Log("PlayerInterface.onUpdateState");
+            Debug.LogFormat("PlayerInterface.onUpdateState. [{0}] => [{1}]", actionState.GetType(), nextState.GetType());
 
             if (nextState != actionState)
             {

@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Core\Events\ReachPositionEvent.cs" />
+    <Compile Include="Assets\UI\Dialogs\SampleDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TransferDefinition.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\IActionState.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Assets\Scripts\Core\Map\FDMap.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
     <Compile Include="Assets\MapObjects\Cursors\Cursor.cs" />
+    <Compile Include="Assets\Scenes\GameFieldScene\GameCanvas.cs" />
     <Compile Include="Assets\Scripts\Core\Game\GameHandler.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\CreatureDefinition.cs" />
@@ -204,6 +206,7 @@
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalAggressiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Files\ResourceDataFile.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\SequencedActivity.cs" />
+    <Compile Include="Assets\MapObjects\Menus\MenuItem.cs" />
     <Compile Include="Assets\Scripts\Core\Common\DirectedPosition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\IGameActions.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />

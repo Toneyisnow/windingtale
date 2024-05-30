@@ -116,6 +116,19 @@ namespace WindingTale.MapObjects.GameMap
             }
         }
 
+        public void showAttackRange(FDCreature creature, FDRange attackRange)
+        {
+            Debug.Log("showAttackRange");
+
+            GameObject indicatorPrefab = Resources.Load<GameObject>("Others/Cursors/MoveIndicator");
+            foreach (FDPosition position in attackRange.ToList())
+            {
+                GameObject indicator = MonoBehaviour.Instantiate(indicatorPrefab, indicatorsLayer.transform);
+                indicator.name = "move_indicator";
+                indicator.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
+            }
+        }
+
         public void clearAllIndicators()
         {
             foreach(Transform child in this.indicatorsLayer.transform)
@@ -150,6 +163,7 @@ namespace WindingTale.MapObjects.GameMap
         public void MoveCreature(FDCreature creature, FDPosition position)
         {
             string creatureName = string.Format("creature_{0}", StringUtils.Digit3(creature.Id));
+            creature.Position = position;
 
             Transform creatureIcon = this.creaturesLayer.transform.Find(creatureName);
             if (creatureIcon != null)
