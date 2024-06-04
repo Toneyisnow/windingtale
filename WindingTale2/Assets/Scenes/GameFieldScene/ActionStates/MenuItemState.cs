@@ -9,6 +9,8 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene;
 using WindingTale.UI.Dialogs;
+using WindingTale.MapObjects.CreatureIcon;
+using WindingTale.Core.Definitions;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -28,7 +30,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             get; private set;
         }
 
-        private SubActionState subState;
 
         public MenuItemState(GameMain gameMain, FDCreature creature) 
             : base(gameMain, creature.Position, new MenuActionState(gameMain, creature, creature.Position))
@@ -130,11 +131,20 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             {
                 // Item not found, should not reach here
                 //// stateHandler.HandleClearStates();
+                return;
+            }
+
+            ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
+            if (!item.IsUsable())
+            {
+                //// Item is not usable item, should not reach here
+                return;
             }
 
             // Selete Target Friend
-            //SelectItemUseTargetState selectTargetState = new SelectItemUseTargetState(gameMain, stateHandler, this.Creature.Id, index);
-            //stateHandler.HandlePushState(selectTargetState);
+            SelectItemUseTargetState selectTargetState = new SelectItemUseTargetState(gameMain, this.Creature.Id, index);
+            PlayerInterface.getDefault().onUpdateState(selectTargetState);
+
         }
 
         private void OnSelectedEquipItem(int index)
@@ -148,9 +158,10 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             this.Creature.EquipItemAt(index);
 
             // Reopen the item dialog
-            //ShowCreatureInfoActivity pack = new ShowCreatureInfoActivity(gameMain, this.Creature, CreatureInfoType.SelectEquipItem, OnSelectedEquipItem);
-            //activityManager.Push(pack);
-
+            gameMain.PushActivity(gameMain =>
+            {
+                gameMain.ShowCreatureInfoDialog(this.Creature, CreatureInfoType.SelectEquipItem, OnSelectedEquipItem);
+            });
         }
 
         private void OnSelectedDiscardItem(int index)

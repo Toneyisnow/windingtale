@@ -61,7 +61,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Send move range to UI
             gameMain.PushActivity((gameMain) =>
             {
-                gameMain.gameMap.showAttackRange(this.Creature, magicRange);
+                gameMain.gameMap.showActionTargetRange(this.Creature, magicRange);
             });
         }
 

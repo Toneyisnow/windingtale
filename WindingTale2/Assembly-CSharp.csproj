@@ -143,6 +143,7 @@
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDefensiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\FDMovePath.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDPosition.cs" />
+    <Compile Include="Assets\Scenes\GameFieldScene\MainCamera.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\MoneyItemDefinition.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />

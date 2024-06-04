@@ -6,6 +6,8 @@ using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Scenes.GameFieldScene.ActionStates;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.MapObjects.CreatureIcon;
+using WindingTale.UI.Dialogs;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -24,17 +26,15 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Record
             this.SetMenu(1, MenuItemId.SystemRecord, true, () =>
             {
-                //ActionState nextState = new MenuRecordState(gameMain, stateHandler, central);
-                //stateHandler.HandlePushState(nextState);
-                return this;
+                IActionState nextState = new MenuRecordState(gameMain, central);
+                return nextState;
             });
 
             // Settings
             this.SetMenu(2, MenuItemId.SystemSettings, true, () =>
             {
-                //ActionState nextState = new MenuSettingsState(gameMain, stateHandler, central);
-                //stateHandler.HandlePushState(nextState);
-                return this;
+                IActionState nextState = new MenuSettingsState(gameMain, central);
+                return nextState;
             });
 
             // Rest All

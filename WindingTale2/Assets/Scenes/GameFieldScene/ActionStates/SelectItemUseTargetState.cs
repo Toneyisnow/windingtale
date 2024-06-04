@@ -9,6 +9,7 @@ using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene.ActionStates;
 using WindingTale.Scenes.GameFieldScene;
+using static UnityEngine.GraphicsBuffer;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -50,15 +51,18 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 itemRange = rangeFinder.CalculateRange();
             }
 
-            // Display the attack range on the UI.
-            //ShowRangeActivity activity = new ShowRangeActivity(itemRange.ToList());
-            //activityManager.Push(activity);
+
+            // Display the usage range on the UI.
+            gameMain.PushActivity((gameMain) =>
+            {
+                gameMain.gameMap.showActionTargetRange(this.Creature, itemRange);
+            });
         }
 
         public override void onExit()
         {
-            //ClearRangeActivity clear = new ClearRangeActivity();
-            //activityManager.Push(clear);
+            // Clear move range on UI
+            gameMain.gameMap.clearAllIndicators();
         }
 
         public override IActionState onSelectedPosition(FDPosition position)
@@ -66,7 +70,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Selecte position must be included in the range
             if (!itemRange.Contains(position))
             {
-                /// stateHandler.HandlePopState();
                 return this;
             }
 
@@ -77,15 +80,14 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 return this;
             }
 
-            //gameMain.CreatureUseItem(this.Creature, this.SelectedItemIndex, position);
-            //stateHandler.HandleClearStates();
-
-            return this;
+            // Do the use item action
+            this.gameMain.creatureUseItem(this.Creature, SelectedItemIndex, targetCreature);
+            return new IdleState(gameMain);
         }
 
         public override IActionState onUserCancelled()
         {
-            throw new System.NotImplementedException();
+            return new MenuItemState(gameMain, this.Creature);
         }
     }
 }

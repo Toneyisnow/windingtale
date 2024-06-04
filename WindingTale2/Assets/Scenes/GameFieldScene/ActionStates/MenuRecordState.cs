@@ -14,13 +14,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
     public class MenuRecordState : MenuState
     {
-        public enum SubRecordState
-        {
-            SaveGame = 1,
-            LoadGame = 2,
-            QuitGame = 3,
-        }
-
         public MenuRecordState(GameMain gameMain, FDPosition position) 
             : base(gameMain, position, new MenuSystemState(gameMain, position))
         {

@@ -54,10 +54,9 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
 
             // Display the attack range on the UI.
-            
             gameMain.PushActivity((gameMain) =>
             {
-                gameMain.gameMap.showAttackRange(this.Creature, AttackRange);
+                gameMain.gameMap.showActionTargetRange(this.Creature, AttackRange);
             });
         }
 
@@ -77,7 +76,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                     // Do the attack
                     this.gameMain.creatureAttack(this.Creature, target);
                     return new IdleState(gameMain);
-                    //stateHandler.HandleClearStates();
                 }
                 else
                 {
@@ -97,7 +95,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         public override IActionState onUserCancelled()
         {
-            return this;
+            return new MenuActionState(gameMain, this.Creature, this.Creature.Position);
         }
     }
 }

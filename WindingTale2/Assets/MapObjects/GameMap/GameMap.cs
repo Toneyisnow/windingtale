@@ -116,12 +116,12 @@ namespace WindingTale.MapObjects.GameMap
             }
         }
 
-        public void showAttackRange(FDCreature creature, FDRange attackRange)
+        public void showActionTargetRange(FDCreature creature, FDRange targetRange)
         {
             Debug.Log("showAttackRange");
 
             GameObject indicatorPrefab = Resources.Load<GameObject>("Others/Cursors/MoveIndicator");
-            foreach (FDPosition position in attackRange.ToList())
+            foreach (FDPosition position in targetRange.ToList())
             {
                 GameObject indicator = MonoBehaviour.Instantiate(indicatorPrefab, indicatorsLayer.transform);
                 indicator.name = "move_indicator";

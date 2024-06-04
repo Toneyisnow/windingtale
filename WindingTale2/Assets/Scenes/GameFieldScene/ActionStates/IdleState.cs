@@ -33,7 +33,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 }
             }
 
-            return this;
+            return new MenuSystemState(gameMain, position);
         }
 
         public override IActionState onUserCancelled()

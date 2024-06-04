@@ -129,12 +129,17 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void creatureAttack(FDCreature creature, FDCreature target)
         {
-
+            Debug.Log("creatureAttack!!!");
         }
 
         public void creatureMagic(FDCreature creature, FDPosition pos, int magicId)
         {
+            Debug.Log("creatureMagic!!!");
+        }
 
+        public void creatureUseItem(FDCreature creature, int itemIndex, FDCreature target)
+        {
+            Debug.Log("creatureUseItem!!!");
         }
 
         public void creatureRest(FDCreature creature)

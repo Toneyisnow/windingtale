@@ -11,6 +11,29 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         public MenuSettingsState(GameMain gameMain, FDPosition position) 
             : base(gameMain, position, new MenuSystemState(gameMain, position))
         {
+            // Sound
+            this.SetMenu(0, MenuItemId.SettingsSound, true, () =>
+            {
+                return this;
+            });
+
+            // Music
+            this.SetMenu(1, MenuItemId.SettingsMusic, true, () =>
+            {
+                return this;
+            });
+
+            // Fight Animation On/Off
+            this.SetMenu(2, MenuItemId.SettingsFight, true, () =>
+            {
+                return this;
+            });
+
+            // Information
+            this.SetMenu(3, MenuItemId.SettingsInfo, true, () =>
+            {
+                return this;
+            });
 
         }
 
