@@ -4,6 +4,7 @@ using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
+using WindingTale.UI.Dialogs;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -30,6 +31,15 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 if (creature.Faction == CreatureFaction.Friend)
                 {
                     return new ShowMoveRangeState(gameMain, creature);
+                }
+                else 
+                {
+                    // Show creature info
+                    gameMain.gameCanvas.ShowDialog(creature, CreatureInfoType.View, (int selected) =>
+                    {
+                        gameMain.gameCanvas.CloseDialog();
+                    });
+                    return this;
                 }
             }
 

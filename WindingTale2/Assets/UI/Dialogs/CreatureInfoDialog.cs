@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Scenes.GameFieldScene;
 
 namespace WindingTale.UI.Dialogs
 {
@@ -15,7 +17,7 @@ namespace WindingTale.UI.Dialogs
 
     public class CreatureInfoDialog : MonoBehaviour
     {
-        
+        private Action<int> onSelected = null;
 
         // Start is called before the first frame update
         void Start()
@@ -28,5 +30,44 @@ namespace WindingTale.UI.Dialogs
         {
 
         }
+
+
+        public void Init(Action<int> onSelected)
+        {
+            this.onSelected = onSelected;
+        }
+
+
+        public void onSelected0()
+        {
+            this.onSelected(0);
+            GameMain.getDefault().gameCanvas.CloseDialog();
+        }
+
+        public void onSelected1()
+        {
+            this.onSelected(1);
+            GameMain.getDefault().gameCanvas.CloseDialog();
+        }
+
+        public void onSelected2()
+        {
+            this.onSelected(2);
+            GameMain.getDefault().gameCanvas.CloseDialog();
+        }
+
+        public void onSelected3()
+        {
+            this.onSelected(3);
+            GameMain.getDefault().gameCanvas.CloseDialog();
+        }
+
+
+        public void onCancel()
+        {
+            this.onSelected(-1);
+            GameMain.getDefault().gameCanvas.CloseDialog();
+        }
+
     }
 }

@@ -13,8 +13,6 @@ namespace WindingTale.Scenes.GameFieldScene
     {
         public GameObject dialog = null;
 
-        public bool isOpened = false;
-
         // Start is called before the first frame update
         void Start()
         {
@@ -29,23 +27,21 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void ShowDialog(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected)
         {
-            dialog = this.transform.Find("sampleDialog").gameObject;
+            dialog = this.transform.Find("creatureInfoDialog").gameObject;
             dialog.SetActive(true);
-            SampleDialog sDialog = dialog.GetComponent<SampleDialog>();
+            CreatureInfoDialog sDialog = dialog.GetComponent<CreatureInfoDialog>();
             sDialog.Init(onSelected);
 
-            isOpened = true;
         }
 
         public void CloseDialog()
         {
             dialog.SetActive(false);
-            isOpened = false;
         }
 
         public bool IsDialogOpened()
         {
-            return isOpened;
+            return dialog.activeSelf;
         }
 
 

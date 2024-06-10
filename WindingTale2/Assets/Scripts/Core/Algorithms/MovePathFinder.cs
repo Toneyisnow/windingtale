@@ -49,6 +49,8 @@ namespace WindingTale.Core.Algorithms
                 next = current.FromDirection;
             }
 
+            path.InsertToHead(current);
+
             return path;
         }
     }

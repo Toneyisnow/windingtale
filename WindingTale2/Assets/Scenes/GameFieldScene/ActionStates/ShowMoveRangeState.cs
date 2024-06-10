@@ -59,7 +59,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         public override IActionState onSelectedPosition(FDPosition position)
         {
-            Debug.Log("ShowMoveRangeState: onSelectedPosition");
+            //// Debug.Log("ShowMoveRangeState: onSelectedPosition");
 
             // If position is in range
             if (moveRange != null && moveRange.Contains(position))

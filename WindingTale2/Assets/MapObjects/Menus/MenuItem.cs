@@ -9,11 +9,16 @@ using WindingTale.Scenes.GameFieldScene;
 public class MenuItem : MonoBehaviour
 {
     private FDMenuItem fDMenuItem = null;
+    private Material defaultMaterial = null;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        defaultMaterial = Resources.Load<Material>("Materials/material-fd2-palette");
+        Transform inner = this.transform.Find("default");
+        MeshRenderer renderer = inner.GetComponent<MeshRenderer>();
+        renderer.materials = new Material[1] { defaultMaterial };
+
     }
 
     // Update is called once per frame

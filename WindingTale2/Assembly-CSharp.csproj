@@ -117,6 +117,7 @@
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuState.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TreasureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Map\FDMap.cs" />
+    <Compile Include="Assets\UI\Dialogs\ConfirmDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
     <Compile Include="Assets\MapObjects\Cursors\Cursor.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\GameCanvas.cs" />
