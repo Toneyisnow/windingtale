@@ -11,6 +11,7 @@ using WindingTale.Core.Definitions;
 using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.CreatureIcon;
+using WindingTale.Scenes.GameFieldScene;
 using static UnityEditor.PlayerSettings;
 
 namespace WindingTale.MapObjects.GameMap
@@ -83,6 +84,18 @@ namespace WindingTale.MapObjects.GameMap
 
         }
 
+        public Creature GetCreature(FDCreature creature)
+        {
+            string creatureName = string.Format("creature_{0}", StringUtils.Digit3(creature.Id));
+            Transform creatureIcon = this.creaturesLayer.transform.Find(creatureName);
+            if (creatureIcon != null)
+            {
+                return creatureIcon.GetComponent<Creature>();
+            }
+
+            return null;
+        }
+
         public void ShowMenu(FDMenu menu)
         {
             GameObject menuObject = Instantiate(menuPrefab, indicatorsLayer.transform);
@@ -143,6 +156,8 @@ namespace WindingTale.MapObjects.GameMap
 
         public void ResetCreaturePosition(FDCreature creature, FDPosition position)
         {
+            creature.ResetPosition();
+            this.MoveCreature(creature, creature.Position);
 
         }
 

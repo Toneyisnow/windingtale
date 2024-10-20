@@ -14,6 +14,8 @@ namespace WindingTale.MapObjects.CreatureIcon
 
     public class Creature : MonoBehaviour, IPointerClickHandler
     {
+        private bool isInitialized = false;
+
         private int moveCount = 0;
         private bool isMoving = false;
 
@@ -27,6 +29,16 @@ namespace WindingTale.MapObjects.CreatureIcon
         public void SetCreature(FDCreature creature)
         {
             this.creature = creature;
+            isInitialized = true;
+        }
+
+        /// <summary>
+        /// Reset to initial state when a new turn starts
+        /// </summary>
+        public void ResetTurnState()
+        {
+            this.SetActioned(false);
+            this.creature.PrePosition = null;
         }
 
         public void StartMove(FDMovePath path)
@@ -90,6 +102,19 @@ namespace WindingTale.MapObjects.CreatureIcon
             Debug.Log("OnPointerClick " + this.creature.Position.ToString());
 
             PlayerInterface.getDefault().onSelectedPosition(this.creature.Position);
+        }
+
+        public void SetActioned(bool actioned)
+        {
+            creature.HasActioned = actioned;
+            if (actioned)
+            {
+                SetGreyout(true);
+            }
+            else
+            {
+                SetGreyout(false);
+            }
         }
     }
 }

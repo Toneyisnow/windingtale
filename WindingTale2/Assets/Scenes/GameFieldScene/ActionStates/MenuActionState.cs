@@ -96,10 +96,10 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         #region Public Methods
 
 
-        //public override IActionState onUserCancelled()
-        //{
-        //    return new ShowMoveRangeState(gameMain, creature);
-        //}
+        public override IActionState onUserCancelled()
+        {
+            return new ShowMoveRangeState(gameMain, creature);
+        }
 
         #endregion
 
@@ -258,6 +258,8 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         {
             // Close the Menu Buttons
             base.onExit();
+
+            
         }
 
     }

@@ -18,6 +18,14 @@ namespace WindingTale.Scenes.GameFieldScene
         {
             get
             {
+                if (instance == null)
+                {
+                    instance = GameObject.Find("GameRoot").GetComponent<GameRenderer>();
+                    if (instance == null)
+                    {
+                        throw new MissingComponentException("Cannot find component GameRenderer");
+                    }
+                }
                 return instance;
             }
         }

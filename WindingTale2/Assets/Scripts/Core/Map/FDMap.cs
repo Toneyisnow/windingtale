@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using WindingTale.Chapters;
 using WindingTale.Core.Algorithms;
@@ -170,6 +171,11 @@ namespace WindingTale.Core.Map
         public List<FDCreature> GetAdjacentFriends(FDCreature creature)
         {
             return null;
+        }
+
+        public bool HasAllCreaturesActioned(CreatureFaction faction)
+        {
+            return !this.Creatures.Any(creature => creature.Faction == faction && !creature.HasActioned);
         }
 
 

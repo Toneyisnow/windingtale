@@ -30,6 +30,10 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         public abstract IActionState onSelectedPosition(FDPosition position);
 
+        /// <summary>
+        ///  Not used in current version
+        /// </summary>
+        /// <returns></returns>
         public abstract IActionState onUserCancelled();
     }
 }

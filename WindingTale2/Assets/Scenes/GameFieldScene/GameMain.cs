@@ -6,6 +6,7 @@ using UnityEngine;
 using WindingTale.Chapters;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
+using WindingTale.Core.Definitions;
 using WindingTale.Core.Events;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.CreatureIcon;
@@ -65,7 +66,7 @@ namespace WindingTale.Scenes.GameFieldScene
         void Start()
         {
             chapterId = 1;
-            onStart();
+            onStartLoop();
         }
 
         #region Game Cycles
@@ -90,18 +91,6 @@ namespace WindingTale.Scenes.GameFieldScene
 
         }
 
-        public void onStart()
-        {
-
-            gameMap.Initialize(chapterId);
-            List<FDEvent> chapterEvents = ChapterLoader.LoadEvents(this, chapterId);
-            eventHandler = new EventHandler(chapterEvents, this);
-
-            this.gameMap.Map.TurnNo = 1;
-            this.gameMap.Map.TurnType = Core.Definitions.CreatureFaction.Friend;
-
-            eventHandler.notifyTurnEvents();
-        }
 
         public void onQuit()
         {
@@ -130,23 +119,36 @@ namespace WindingTale.Scenes.GameFieldScene
         public void creatureAttack(FDCreature creature, FDCreature target)
         {
             Debug.Log("creatureAttack!!!");
+
+            Creature c = gameMap.GetCreature(creature);
+            c.SetActioned(true);
+
+            onCreatureEndTurn(creature);
         }
 
         public void creatureMagic(FDCreature creature, FDPosition pos, int magicId)
         {
             Debug.Log("creatureMagic!!!");
+
+            Creature c = gameMap.GetCreature(creature);
+            c.SetActioned(true);
+            onCreatureEndTurn(creature);
         }
 
         public void creatureUseItem(FDCreature creature, int itemIndex, FDCreature target)
         {
             Debug.Log("creatureUseItem!!!");
+
+            Creature c = gameMap.GetCreature(creature);
+            c.SetActioned(true);
+            onCreatureEndTurn(creature);
         }
 
         public void creatureRest(FDCreature creature)
         {
             // Check Treasure
 
-            onCreatureEndTurn();
+            onCreatureEndTurn(creature);
         }
 
         public void endTurnForAll()
@@ -191,37 +193,130 @@ namespace WindingTale.Scenes.GameFieldScene
         #endregion
 
 
-        #region Private Methods
+        #region Game Loops Functions
 
-        private void onNewTurn()
+        private void onStartLoop()
         {
 
+            gameMap.Initialize(chapterId);
+            List<FDEvent> chapterEvents = ChapterLoader.LoadEvents(this, chapterId);
+            eventHandler = new EventHandler(chapterEvents, this);
+
+            this.gameMap.Map.TurnNo = 0;
+            this.gameMap.Map.TurnType = CreatureFaction.Enemy;
+
+            onStartNextTurn();
+        }
+
+        private void onStartNextTurn()
+        {
+            // Update the turn type and turn number
+            switch(this.gameMap.Map.TurnType)
+            {
+                case CreatureFaction.Friend:
+                    this.gameMap.Map.TurnType = CreatureFaction.Npc;
+                    break;
+                case CreatureFaction.Npc:
+                    this.gameMap.Map.TurnType = CreatureFaction.Enemy;
+                    break;
+                case CreatureFaction.Enemy:
+                    this.gameMap.Map.TurnNo++;
+                    this.gameMap.Map.TurnType = CreatureFaction.Friend;
+                    break;
+            }
+
+            //// Main entry to notify the turn events
+            eventHandler.notifyTurnEvents();
+
+            if (this.gameMap.Map.TurnType == CreatureFaction.Friend)
+            {
+                onPlayerTurn();
+            }
+            else if (this.gameMap.Map.TurnType == CreatureFaction.Npc)
+            {
+                onNpcTurn();
+            }
+            else if (this.gameMap.Map.TurnType == CreatureFaction.Enemy)
+            {
+                onEnemyTurn();
+            }
         }
 
         private void onPlayerTurn()
         {
+            // Reactivate all the creatures
+            gameMap.Map.Creatures.ForEach(creature =>
+            {
+                Creature c = gameMap.GetCreature(creature);
+                c.ResetTurnState();
+            });
 
+            // Show the Player turn dialog
+            this.PushActivity((game) =>
+            {
+                //// gameCanvas.ShowNewTurnDialog(gameMap.Map.TurnNo, gameMap.Map.TurnType);
+            });
         }
 
         private void onNpcTurn()
         {
-
+            if (gameMap.Map.Npcs.Count > 0)
+            {
+                //// Start AI Handler to process the NPC turn
+            }
+            else
+            {
+                onStartNextTurn();
+            }
         }
 
         private void onEnemyTurn()
         {
+            // Reactivate all the creatures
+            gameMap.Map.Creatures.ForEach(creature =>
+            {
+                Creature c = gameMap.GetCreature(creature);
+                c.ResetTurnState();
+            });
 
+            // Show the Enemy turn dialog
+            this.PushActivity((game) =>
+            {
+                //// gameCanvas.ShowNewTurnDialog(gameMap.Map.TurnNo, gameMap.Map.TurnType);
+            });
+
+            if (gameMap.Map.Enemies.Count > 0)
+            {
+                //// Start AI Handler to process the NPC turn
+                onStartNextTurn();
+            }
+            else
+            {
+                onStartNextTurn();
+            }
         }
 
-        private void onCreatureEndTurn()
+        private void onCreatureEndTurn(FDCreature creature)
         {
             // If creature not moved/actioned, recharge, may need activity
+            if ( !creature.HasMoved() && !creature.HasActioned)
+            {
 
-        }
 
-        private void checkEvents()
-        {
-            eventHandler.notifyTurnEvents();
+            }
+
+            Creature c = gameMap.GetCreature(creature);
+            c.SetActioned(true);
+
+            eventHandler.notifyTriggeredEvents();
+
+            if (gameMap.Map.HasAllCreaturesActioned(creature.Faction))
+            {
+                this.PushActivity((game) =>
+                {
+                    game.onStartNextTurn();
+                });
+            }
         }
 
         #endregion
