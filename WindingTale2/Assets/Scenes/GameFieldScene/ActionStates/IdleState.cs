@@ -25,17 +25,16 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         public override IActionState onSelectedPosition(FDPosition position)
         {
             FDCreature creature = this.fdMap.GetCreatureAt(position);
-
-            if (creature != null )
+            if (creature != null)
             {
-                if (creature.Faction == CreatureFaction.Friend)
+                if (creature.Faction == CreatureFaction.Friend && !creature.HasActioned)
                 {
                     return new ShowMoveRangeState(gameMain, creature);
                 }
                 else 
                 {
                     // Show creature info
-                    gameMain.gameCanvas.ShowDialog(creature, CreatureInfoType.View, (int selected) =>
+                    gameMain.gameCanvas.ShowCreatureDialog(creature, CreatureInfoType.View, (int selected) =>
                     {
                         gameMain.gameCanvas.CloseDialog();
                     });

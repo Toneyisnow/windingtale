@@ -30,10 +30,10 @@ namespace WindingTale.Core.Definitions.Items
 
     public class ConsumableItemDefinition : ItemDefinition
     {
-        public static ConsumableItemDefinition ReadFromFile(ResourceDataFile fileReader)
+        public static ConsumableItemDefinition ReadFromFile(ResourceDataFile fileReader, StringsDefinition stringsDefinition)
         {
             ConsumableItemDefinition def = new ConsumableItemDefinition();
-
+            
             def.ItemId = fileReader.ReadInt();
             def.Price = fileReader.ReadInt();
             def.SellPrice = fileReader.ReadInt();
@@ -41,6 +41,8 @@ namespace WindingTale.Core.Definitions.Items
             def.UseType = (ItemUseType)fileReader.ReadInt();
             def.Quantity = fileReader.ReadInt();
             def.IsReusable = (fileReader.ReadInt() == 1);
+
+            def.Name = stringsDefinition.GetString(def.ItemId.ToString());
 
             return def;
         }

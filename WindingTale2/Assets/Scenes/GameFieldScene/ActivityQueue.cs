@@ -32,7 +32,8 @@ namespace WindingTale.Scenes.GameFieldScene
 
             public void Push(ActivityBase activity)
             {
-                activityList.Add(activity);
+                if (activityList != null && activity != null)
+                    activityList.Add(activity);
             }
 
             public void Insert(ActivityBase activity)

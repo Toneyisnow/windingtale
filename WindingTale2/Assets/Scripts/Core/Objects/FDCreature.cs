@@ -306,7 +306,7 @@ namespace WindingTale.Core.Objects
 
         #region Public Methods
 
-        public bool IsActionable()
+        public bool CanTakeAction()
         {
             if (this.Hp <= 0)
             {
@@ -326,14 +326,38 @@ namespace WindingTale.Core.Objects
             return true;
         }
 
+        public bool CanAttack()
+        {
+            if (this.Hp <= 0)
+            {
+                return false;
+            }
+
+            if (this.HasActioned)
+            {
+                return false;
+            }
+
+            if (this.Effects.Contains(CreatureEffects.Frozen))
+            {
+                return false;
+            }
+
+            if (!this.HasEquipItem())
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Has some equip items to equip, other than the current equip items
         /// </summary>
         /// <returns></returns>
         public bool HasEquipItem()
         {
-            // TODO
-            return true;
+            return this.AttackItemIndex >= 0;
         }
 
         public bool IsItemsFull()
@@ -488,11 +512,6 @@ namespace WindingTale.Core.Objects
             }
 
             return false;
-        }
-
-        public bool CanAttack()
-        {
-            return this.AttackItemIndex >= 0;
         }
 
         public void AddMagic(int magicId)

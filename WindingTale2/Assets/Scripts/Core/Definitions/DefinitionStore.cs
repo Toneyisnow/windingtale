@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Mime;
@@ -99,41 +100,49 @@ namespace WindingTale.Core.Definitions
 
         private void LoadItemDefinitions()
         {
+            // Load Strings file
+            StringsDefinition stringsDefinition = ResourceJsonFile.Load<StringsDefinition>("Strings/Item.strings");
+            if (stringsDefinition == null)
+            {
+                throw new Exception("Cannot find definition for items.");
+            }
+
+
             itemDefinitions = new Dictionary<int, ItemDefinition>();
             ResourceDataFile fileReader = new ResourceDataFile(@"Data/Item");
 
             int usableItemCount = fileReader.ReadInt();
             for (int i = 0; i < usableItemCount; i++)
             {
-                ConsumableItemDefinition def = ConsumableItemDefinition.ReadFromFile(fileReader);
+                ConsumableItemDefinition def = ConsumableItemDefinition.ReadFromFile(fileReader, stringsDefinition);
                 itemDefinitions[def.ItemId] = def;
             }
 
             int attackItemCount = fileReader.ReadInt();
             for (int i = 0; i < attackItemCount; i++)
             {
-                AttackItemDefinition def = AttackItemDefinition.ReadFromFile(fileReader);
+                AttackItemDefinition def = AttackItemDefinition.ReadFromFile(fileReader, stringsDefinition);
                 itemDefinitions[def.ItemId] = def;
             }
 
             int defendItemCount = fileReader.ReadInt();
             for (int i = 0; i < defendItemCount; i++)
             {
-                DefendItemDefinition def = DefendItemDefinition.ReadFromFile(fileReader);
+                DefendItemDefinition def = DefendItemDefinition.ReadFromFile(fileReader, stringsDefinition);
                 itemDefinitions[def.ItemId] = def;
             }
 
             int specialItemCount = fileReader.ReadInt();
             for (int i = 0; i < specialItemCount; i++)
             {
-                SpecialItemDefinition def = SpecialItemDefinition.ReadFromFile(fileReader);
+                SpecialItemDefinition def = SpecialItemDefinition.ReadFromFile(fileReader, stringsDefinition);
                 itemDefinitions[def.ItemId] = def;
             }
 
             int moneyItemCount = fileReader.ReadInt();
             for (int i = 0; i < moneyItemCount; i++)
             {
-                MoneyItemDefinition def = MoneyItemDefinition.ReadFromFile(fileReader);
+                MoneyItemDefinition def = MoneyItemDefinition.ReadFromFile(fileReader, stringsDefinition);
                 itemDefinitions[def.ItemId] = def;
             }
         }

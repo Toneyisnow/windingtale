@@ -21,7 +21,7 @@ namespace WindingTale.AI.Delegates
         {
             if (this.NeedAndCanRecover())
             {
-                //// this.gameMain.creatureRest(this.creature);
+                gameMain.creatureRest(this.creature);
                 return;
             }
 
@@ -38,7 +38,7 @@ namespace WindingTale.AI.Delegates
             FDMovePath movePath = this.DecidePositionAndPath(target.Position);
 
             // Do the walk
-            //// this.gameMain.creatureMove(creature, movePath);
+            gameMain.creatureMove(creature, movePath);
 
             Debug.Log("AI Aggressive: creature=" + creature.Id + " position=" + creature.Position + " target pos=" + movePath?.Desitination?.ToString());
 
@@ -47,18 +47,20 @@ namespace WindingTale.AI.Delegates
             AttackItemDefinition item = this.creature.GetAttackItem();
             if (item != null)
             {
-                //// FDSpan span = item.AttackScope;
-                //// DirectRangeFinder finder = new DirectRangeFinder(this.gameMain.GameMap.Field, destination, span.Max, span.Min);
-                //// FDRange range = finder.CalculateRange();
-                //// if (range.Contains(target.Position))
-                //// {
-                ////     // If in attack range, attack the target
-                ////     this.gameMain.CreatureAttack(this.creature, target);
-                ////     return;
-                //// }
+                FDSpan span = item.AttackScope;
+                DirectRangeFinder finder = new DirectRangeFinder(this.gameMain.gameMap.Map.Field, destination, span.Max, span.Min);
+                FDRange range = finder.CalculateRange();
+                if (range.Contains(target.Position))
+                {
+                    // If in attack range, attack the target
+                    this.gameMain.creatureAttack(this.creature, target);
+                    return;
+                }
             }
-
-            //// this.gameMain.creatureRest(this.creature);
+            else
+            {
+                this.gameMain.creatureRest(this.creature);
+            }
         }
     }
 }

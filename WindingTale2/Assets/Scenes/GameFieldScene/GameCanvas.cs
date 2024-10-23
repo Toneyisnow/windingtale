@@ -25,12 +25,13 @@ namespace WindingTale.Scenes.GameFieldScene
 
         }
 
-        public void ShowDialog(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected)
+        public void ShowCreatureDialog(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected)
         {
-            dialog = this.transform.Find("creatureInfoDialog").gameObject;
+            dialog = this.transform.Find("CreatureInfoDialog").gameObject;
             dialog.SetActive(true);
             CreatureInfoDialog sDialog = dialog.GetComponent<CreatureInfoDialog>();
-            sDialog.Init(onSelected);
+
+            sDialog.Init(creature, infoType, onSelected);
 
         }
 

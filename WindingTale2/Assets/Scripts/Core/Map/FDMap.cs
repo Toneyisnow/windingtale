@@ -165,12 +165,17 @@ namespace WindingTale.Core.Map
 
         public List<FDCreature> GetOppositeCreatures(FDCreature  creature)
         {
-            return null;
+            if (creature.Faction == CreatureFaction.Enemy) {
+                return this.Creatures.FindAll(c => c.Faction == CreatureFaction.Friend || c.Faction == CreatureFaction.Npc);
+            }
+
+            return this.Enemies;
         }
 
         public List<FDCreature> GetAdjacentFriends(FDCreature creature)
         {
-            return null;
+            List<FDCreature> candidates = this.Creatures.FindAll(c => c.Faction == CreatureFaction.Friend || c.Faction == CreatureFaction.Npc);
+            return candidates.FindAll(c => c.Position.IsNextTo(creature.Position));
         }
 
         public bool HasAllCreaturesActioned(CreatureFaction faction)

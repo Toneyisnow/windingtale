@@ -8,7 +8,7 @@ namespace WindingTale.Core.Definitions.Items
     public class SpecialItemDefinition : ItemDefinition
     {
 
-        public static SpecialItemDefinition ReadFromFile(ResourceDataFile fileReader)
+        public static SpecialItemDefinition ReadFromFile(ResourceDataFile fileReader, StringsDefinition stringsDefinition)
         {
             SpecialItemDefinition def = new SpecialItemDefinition();
 
@@ -16,6 +16,7 @@ namespace WindingTale.Core.Definitions.Items
             def.Price = fileReader.ReadInt();
             def.SellPrice = fileReader.ReadInt();
 
+            def.Name = stringsDefinition.GetString(def.ItemId.ToString());
             return def;
         }
 

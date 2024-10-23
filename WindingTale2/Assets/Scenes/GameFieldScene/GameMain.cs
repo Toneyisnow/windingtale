@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using WindingTale.AI;
 using WindingTale.Chapters;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
@@ -58,6 +59,12 @@ namespace WindingTale.Scenes.GameFieldScene
         
         private EventHandler eventHandler = null;
 
+        private AIHandler enemyAIHandler = null;
+
+        private AIHandler npcAIHandler = null;
+
+
+
         #endregion
 
         private int chapterId = 0;
@@ -66,7 +73,7 @@ namespace WindingTale.Scenes.GameFieldScene
         void Start()
         {
             chapterId = 1;
-            onStartLoop();
+            onInitialize();
         }
 
         #region Game Cycles
@@ -163,14 +170,13 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void ShowCreatureInfoDialog(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected)
         {
-            gameCanvas.ShowDialog(creature, infoType, onSelected);
+            gameCanvas.ShowCreatureDialog(creature, infoType, onSelected);
         }
 
         public void ShowPromptDialog(FDCreature creature)
         {
 
         }
-
 
         public void PushActivity(Action<GameMain> action)
         {
@@ -195,12 +201,15 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Game Loops Functions
 
-        private void onStartLoop()
+        private void onInitialize()
         {
 
             gameMap.Initialize(chapterId);
             List<FDEvent> chapterEvents = ChapterLoader.LoadEvents(this, chapterId);
             eventHandler = new EventHandler(chapterEvents, this);
+            enemyAIHandler = new AIHandler(this, CreatureFaction.Enemy);
+            npcAIHandler = new AIHandler(this, CreatureFaction.Npc);
+
 
             this.gameMap.Map.TurnNo = 0;
             this.gameMap.Map.TurnType = CreatureFaction.Enemy;
@@ -263,6 +272,7 @@ namespace WindingTale.Scenes.GameFieldScene
             if (gameMap.Map.Npcs.Count > 0)
             {
                 //// Start AI Handler to process the NPC turn
+                npcAIHandler.Notified();
             }
             else
             {
@@ -288,10 +298,11 @@ namespace WindingTale.Scenes.GameFieldScene
             if (gameMap.Map.Enemies.Count > 0)
             {
                 //// Start AI Handler to process the NPC turn
-                onStartNextTurn();
+                enemyAIHandler.Notified();
             }
             else
             {
+                // Not going to happen, since all enemies are eliminated, so game should be ended
                 onStartNextTurn();
             }
         }
@@ -316,6 +327,16 @@ namespace WindingTale.Scenes.GameFieldScene
                 {
                     game.onStartNextTurn();
                 });
+
+                return;
+            }
+
+            if (this.gameMap.Map.TurnType == CreatureFaction.Enemy)
+            {
+                enemyAIHandler.Notified();
+            } else if (this.gameMap.Map.TurnType == CreatureFaction.Npc)
+            {
+                npcAIHandler.Notified();
             }
         }
 
