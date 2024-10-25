@@ -45,6 +45,11 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        public string RaceName
+        {
+            get; set;
+        }
+
         public int Occupation
         {
             get; set;

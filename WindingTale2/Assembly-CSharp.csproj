@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Core\Events\ReachPositionEvent.cs" />
-    <Compile Include="Assets\UI\Dialogs\SampleDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TransferDefinition.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\IActionState.cs" />
@@ -103,7 +102,6 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIDelegate.cs" />
-    <Compile Include="Assets\UI\Dialogs\CreatureInfoDialog.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuItemState.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\Creature.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDObject.cs" />
@@ -117,7 +115,6 @@
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuState.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TreasureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Map\FDMap.cs" />
-    <Compile Include="Assets\UI\Dialogs\ConfirmDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
     <Compile Include="Assets\MapObjects\Cursors\Cursor.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\GameCanvas.cs" />
@@ -129,6 +126,8 @@
     <Compile Include="Assets\MapObjects\GameMap\GameMap.cs" />
     <Compile Include="Assets\MapObjects\GameMap\MapCoordinate.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
+    <Compile Include="Assets\Scripts\UI\Dialogs\CreatureInfoDialog.cs" />
+    <Compile Include="Assets\Scripts\UI\Dialogs\ConfirmDialog.cs" />
     <Compile Include="Assets\MapObjects\BlockIndicator\BlockIndicator.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActivityQueue.cs" />
     <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
@@ -204,6 +203,7 @@
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ParallelActivity.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\FightAnimation.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ConsumableItemDefinition.cs" />
+    <Compile Include="Assets\Scripts\UI\Dialogs\SampleDialog.cs" />
     <Compile Include="Assets\MapObjects\Blocks\MapBlock.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDTreasure.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalAggressiveDelegate.cs" />
@@ -272,9 +272,11 @@
     <None Include="Assets\Resources\Data\Transfer.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_03.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_10_ConversationId.txt" />
+    <None Include="Assets\Resources\Strings\Common.strings.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_13_Creature.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-11.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_20_ConversationId.txt" />
+    <None Include="Assets\Resources\Strings\Race.strings.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-06.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-31.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_09_Creature.txt" />
@@ -282,6 +284,7 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_31_ConversationId.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Message.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
+    <None Include="Assets\Resources\Strings\Message.strings.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_19_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_19.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Item.txt" />
@@ -323,6 +326,7 @@
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_17_Creature.txt" />
     <None Include="Assets\Resources\Materials\GreyoutShader.shader" />
+    <None Include="Assets\Resources\Strings\Creature.strings.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_22_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_11_ConversationId.txt" />
@@ -372,6 +376,7 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_07_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_29_Creature.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\Resources\Strings\Occupation.strings.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_32_Creature.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-21.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-16.txt" />
@@ -389,12 +394,14 @@
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-02.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_02_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_26_ConversationId.txt" />
+    <None Include="Assets\Resources\Strings\Village.strings.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-14.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-22.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_18_Creature.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-26.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_23_ConversationId.txt" />
+    <None Include="Assets\Resources\Strings\Magic.strings.txt" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Bangers - OFL.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_26_Creature.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-07.txt" />
@@ -1374,6 +1381,10 @@
     <ProjectReference Include="Unity.Performance.Profile-Analyzer.Editor.csproj">
       <Project>{2863FF84-3992-33D3-AC79-B376CC798BA9}</Project>
       <Name>Unity.Performance.Profile-Analyzer.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.2D.Sprite.Editor.csproj">
+      <Project>{A4ACD736-4313-1EB9-717B-D7C7F8B17EA7}</Project>
+      <Name>Unity.2D.Sprite.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.VisualScripting.Shared.Editor.csproj">
       <Project>{968C258D-82FB-C131-463F-A0B9C6BCC47B}</Project>

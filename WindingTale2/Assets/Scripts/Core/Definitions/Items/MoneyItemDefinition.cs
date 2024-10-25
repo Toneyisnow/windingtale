@@ -7,14 +7,12 @@ namespace WindingTale.Core.Definitions.Items
 {
     public class MoneyItemDefinition : ItemDefinition
     {
-        public static MoneyItemDefinition ReadFromFile(ResourceDataFile fileReader, StringsDefinition stringsDefinition)
+        public static MoneyItemDefinition ReadFromFile(ResourceDataFile fileReader)
         {
             MoneyItemDefinition def = new MoneyItemDefinition();
 
             def.ItemId = fileReader.ReadInt();
             def.Amount = fileReader.ReadInt();
-
-            def.Name = stringsDefinition.GetString(def.ItemId.ToString());
             return def;
         }
 

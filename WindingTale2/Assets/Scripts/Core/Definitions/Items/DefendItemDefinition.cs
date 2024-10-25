@@ -10,7 +10,7 @@ namespace WindingTale.Core.Definitions.Items
     /// </summary>
     public class DefendItemDefinition : ItemDefinition
     {
-        public static DefendItemDefinition ReadFromFile(ResourceDataFile fileReader, StringsDefinition stringsDefinition)
+        public static DefendItemDefinition ReadFromFile(ResourceDataFile fileReader)
         {
             DefendItemDefinition def = new DefendItemDefinition();
             
@@ -19,7 +19,6 @@ namespace WindingTale.Core.Definitions.Items
             def.Price = fileReader.ReadInt();
             def.SellPrice = fileReader.ReadInt();
 
-            def.Name = stringsDefinition.GetString(def.ItemId.ToString());
             def.Dp = fileReader.ReadInt();
             def.Ev = fileReader.ReadInt();
 

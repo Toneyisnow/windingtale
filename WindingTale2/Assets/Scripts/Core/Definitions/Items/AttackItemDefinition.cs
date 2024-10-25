@@ -20,14 +20,12 @@ namespace WindingTale.Core.Definitions.Items
 
         }
 
-        public static AttackItemDefinition ReadFromFile(ResourceDataFile fileReader, StringsDefinition stringsDefinition)
+        public static AttackItemDefinition ReadFromFile(ResourceDataFile fileReader)
         {
             AttackItemDefinition def = new AttackItemDefinition();
 
             def.ItemId = fileReader.ReadInt();
             def.Category = (ItemCategory)fileReader.ReadInt();
-
-            def.Name = stringsDefinition.GetString(def.ItemId.ToString());
 
 
             def.Price = fileReader.ReadInt();

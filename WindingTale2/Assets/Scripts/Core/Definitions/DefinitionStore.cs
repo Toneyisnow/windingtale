@@ -73,6 +73,18 @@ namespace WindingTale.Core.Definitions
 
         private void LoadCreatureDefinitions()
         {
+            // Load Strings file
+            StringsDefinition creatureNames = ResourceJsonFile.Load<StringsDefinition>("Strings/Creature.strings");
+            if (creatureNames == null)
+            {
+                throw new Exception("Cannot find strings for creatures.");
+            }
+            StringsDefinition creatureRaces = ResourceJsonFile.Load<StringsDefinition>("Strings/Race.strings");
+            if (creatureRaces == null)
+            {
+                throw new Exception("Cannot find strings for creatures.");
+            }
+
             creatureDefinitions = new Dictionary<int, CreatureDefinition>();
 
             ResourceDataFile fileReader = new ResourceDataFile(@"Data/Creature");
@@ -81,6 +93,8 @@ namespace WindingTale.Core.Definitions
             for(int i = 0; i < creatureCount; i++)
             {
                 CreatureDefinition def = CreatureDefinition.ReadFromFile(fileReader);
+                def.Name = creatureNames.GetString(StringUtils.Digit3(def.DefinitionId));
+                def.RaceName = creatureRaces.GetString(StringUtils.Digit3(def.Race));
                 creatureDefinitions[def.DefinitionId] = def;
             }
 
@@ -92,6 +106,7 @@ namespace WindingTale.Core.Definitions
             for (int i = 0; i < creatureBaseCount; i++)
             {
                 CreatureDefinition def = CreatureDefinition.ReadBaseFromFile(fileReader2);
+                def.Name = creatureNames.GetString(StringUtils.Digit3(def.DefinitionId));
                 creatureBaseDefinitions[def.DefinitionId] = def;
             }
 
@@ -114,35 +129,41 @@ namespace WindingTale.Core.Definitions
             int usableItemCount = fileReader.ReadInt();
             for (int i = 0; i < usableItemCount; i++)
             {
-                ConsumableItemDefinition def = ConsumableItemDefinition.ReadFromFile(fileReader, stringsDefinition);
+                ConsumableItemDefinition def = ConsumableItemDefinition.ReadFromFile(fileReader);
+                def.Name = stringsDefinition.GetString(def.ItemId.ToString());
+
                 itemDefinitions[def.ItemId] = def;
             }
 
             int attackItemCount = fileReader.ReadInt();
             for (int i = 0; i < attackItemCount; i++)
             {
-                AttackItemDefinition def = AttackItemDefinition.ReadFromFile(fileReader, stringsDefinition);
+                AttackItemDefinition def = AttackItemDefinition.ReadFromFile(fileReader);
+                def.Name = stringsDefinition.GetString(def.ItemId.ToString());
                 itemDefinitions[def.ItemId] = def;
             }
 
             int defendItemCount = fileReader.ReadInt();
             for (int i = 0; i < defendItemCount; i++)
             {
-                DefendItemDefinition def = DefendItemDefinition.ReadFromFile(fileReader, stringsDefinition);
+                DefendItemDefinition def = DefendItemDefinition.ReadFromFile(fileReader);
+                def.Name = stringsDefinition.GetString(def.ItemId.ToString());
                 itemDefinitions[def.ItemId] = def;
             }
 
             int specialItemCount = fileReader.ReadInt();
             for (int i = 0; i < specialItemCount; i++)
             {
-                SpecialItemDefinition def = SpecialItemDefinition.ReadFromFile(fileReader, stringsDefinition);
+                SpecialItemDefinition def = SpecialItemDefinition.ReadFromFile(fileReader);
+                def.Name = stringsDefinition.GetString(def.ItemId.ToString());
                 itemDefinitions[def.ItemId] = def;
             }
 
             int moneyItemCount = fileReader.ReadInt();
             for (int i = 0; i < moneyItemCount; i++)
             {
-                MoneyItemDefinition def = MoneyItemDefinition.ReadFromFile(fileReader, stringsDefinition);
+                MoneyItemDefinition def = MoneyItemDefinition.ReadFromFile(fileReader);
+                def.Name = stringsDefinition.GetString(def.ItemId.ToString());
                 itemDefinitions[def.ItemId] = def;
             }
         }
@@ -162,13 +183,20 @@ namespace WindingTale.Core.Definitions
 
         private void LoadOccupationDefinitions()
         {
+            // Load Strings file
+            StringsDefinition stringsDefinition = ResourceJsonFile.Load<StringsDefinition>("Strings/Occupation.strings");
+            if (stringsDefinition == null)
+            {
+                throw new Exception("Cannot find strins file for occupations.");
+            }
+
             occupationDefinitions = new Dictionary<int, OccupationDefinition>();
             ResourceDataFile fileReader = new ResourceDataFile(@"Data/Occupation");
             int count = fileReader.ReadInt();
 
             for (int i = 0; i < count; i++)
             {
-                OccupationDefinition def = OccupationDefinition.ReadFromFile(fileReader);
+                OccupationDefinition def = OccupationDefinition.ReadFromFile(fileReader, stringsDefinition);
                 occupationDefinitions[def.OccupationId] = def;
             }
         }

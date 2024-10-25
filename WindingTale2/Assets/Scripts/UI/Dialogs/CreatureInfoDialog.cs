@@ -30,6 +30,19 @@ namespace WindingTale.UI.Dialogs
         public GameObject selectable_6;
         public GameObject selectable_7;
 
+        public GameObject nameLabel;
+        public GameObject raceLabel;
+        public GameObject occupationLabel;
+
+        public GameObject levelLabel;
+        public GameObject hpLabel;  
+        public GameObject mpLabel;
+        public GameObject apLabel;
+        public GameObject dpLabel;
+        public GameObject dxLabel;
+        public GameObject expLabel;
+
+
 
         private FDCreature creature = null;
         private CreatureInfoType infoType = CreatureInfoType.View;
@@ -53,6 +66,18 @@ namespace WindingTale.UI.Dialogs
             this.creature = creature;
             this.infoType = infoType;
             this.onSelected = onSelected;
+
+            // Name
+            this.nameLabel.GetComponent<TextMeshProUGUI>().text = creature.Definition.Name;
+
+            // Race
+            int raceId = creature.Definition.Race;
+            this.raceLabel.GetComponent<TextMeshProUGUI>().text = creature.Definition.RaceName;
+
+            int occupationId = creature.Definition.Occupation;
+            OccupationDefinition occupation = DefinitionStore.Instance.GetOccupationDefinition(occupationId);
+            this.occupationLabel.GetComponent<TextMeshProUGUI>().text = occupation.Name;
+
 
             if (infoType != CreatureInfoType.SelectMagic)
             {
@@ -86,31 +111,6 @@ namespace WindingTale.UI.Dialogs
 
 
 
-        }
-
-
-        public void onSelected0()
-        {
-            this.onSelected(0);
-            GameMain.getDefault().gameCanvas.CloseDialog();
-        }
-
-        public void onSelected1()
-        {
-            this.onSelected(1);
-            GameMain.getDefault().gameCanvas.CloseDialog();
-        }
-
-        public void onSelected2()
-        {
-            this.onSelected(2);
-            GameMain.getDefault().gameCanvas.CloseDialog();
-        }
-
-        public void onSelected3()
-        {
-            this.onSelected(3);
-            GameMain.getDefault().gameCanvas.CloseDialog();
         }
 
 

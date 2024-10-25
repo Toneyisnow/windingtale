@@ -12,6 +12,11 @@ namespace WindingTale.Core.Definitions
             get; private set;
         }
 
+        public string Name
+        {
+            get; private set;
+        }
+
         public List<int> AttackItemCategories
         {
             get; private set;
@@ -27,11 +32,14 @@ namespace WindingTale.Core.Definitions
             get; private set;
         }
 
-        public static OccupationDefinition ReadFromFile(ResourceDataFile reader)
+        public static OccupationDefinition ReadFromFile(ResourceDataFile reader, StringsDefinition stringsDefinition)
         {
             OccupationDefinition def = new OccupationDefinition();
 
             def.OccupationId = reader.ReadInt();
+
+            def.Name = stringsDefinition.GetString(def.OccupationId.ToString());
+
 
             int count = reader.ReadInt();
             def.AttackItemCategories = new List<int>();

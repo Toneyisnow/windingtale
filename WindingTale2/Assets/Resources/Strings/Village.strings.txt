@@ -1,0 +1,10 @@
+{
+  "data": [
+    { "key": "VillagePosition-0", "value": "出 口" },
+    { "key": "VillagePosition-1", "value": "道具店" },
+    { "key": "VillagePosition-2", "value": "教 会" },
+    { "key": "VillagePosition-3", "value": "酒 店" },
+    { "key": "VillagePosition-4", "value": "武器店" },
+    { "key": "VillagePosition-5", "value": "？？？" }
+  ]
+}

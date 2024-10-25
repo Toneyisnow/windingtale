@@ -40,7 +40,7 @@ namespace WindingTale.Core.Definitions
         /// </summary>
         public string Name
         {
-            get; protected set;
+            get; set;
         }
 
         public abstract bool IsEquipment();
