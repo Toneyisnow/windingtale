@@ -120,7 +120,7 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void creatureMove(FDCreature creature, FDMovePath path)
         {
-            gameMap.MoveCreature(creature, path.Desitination);
+            gameMap.MoveCreature(creature, path);
         }
 
         public void creatureAttack(FDCreature creature, FDCreature target)
@@ -181,6 +181,17 @@ namespace WindingTale.Scenes.GameFieldScene
         public void PushActivity(Action<GameMain> action)
         {
             SimpleActivity activity = new SimpleActivity(action);
+            activityQueue.Push(activity);
+        }
+
+        public void PushActivity(Action<GameMain> startAction, Func<GameMain, bool> checkEnd)
+        {
+            DurationActivity activity = new DurationActivity(startAction, checkEnd);
+            PushActivity(activity);
+        }
+
+        public void PushActivity(DurationActivity activity)
+        {
             activityQueue.Push(activity);
         }
 

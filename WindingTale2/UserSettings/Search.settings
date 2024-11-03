@@ -11,6 +11,16 @@ scopes = {
 	"last_search.5A656512" = "ref=\"Assets/Plugins\""
 	"OpenInspectorPreview.5A656512" = "0"
 	"currentGroup.5A656512" = "asset"
+	"picker_window_position_offset.45F317DD" = "198;263;320;550"
+	"picker_search_text.45F317DD" = "st:"
+	"last_search.45F317DD" = "st:"
+	"OpenInspectorPreview.45F317DD" = "0"
+	"currentGroup.45F317DD" = null
+	"picker_window_position_offset.0B486DF2" = "493;240;320;550"
+	"picker_search_text.0B486DF2" = ""
+	"last_search.0B486DF2" = ""
+	"OpenInspectorPreview.0B486DF2" = "0"
+	"currentGroup.0B486DF2" = null
 }
 providers = {
 	asset = {
@@ -63,10 +73,21 @@ providers = {
 		priority = -10
 		defaultAction = null
 	}
+	st = {
+		active = true
+		priority = 100
+		defaultAction = null
+	}
+	at = {
+		active = true
+		priority = 100
+		defaultAction = null
+	}
 }
 objectSelectors = {
 }
 recentSearches = [
+	""
 ]
 searchItemFavorites = [
 ]

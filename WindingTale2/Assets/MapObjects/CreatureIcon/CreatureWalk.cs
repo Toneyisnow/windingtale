@@ -5,7 +5,7 @@ using UnityEngine;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
-
+using WindingTale.MapObjects.GameMap;
 
 namespace WindingTale.MapObjects.CreatureIcon
 {
@@ -40,9 +40,11 @@ namespace WindingTale.MapObjects.CreatureIcon
             this.creature = this.gameObject.GetComponent<Creature>().creature;
             animator = gameObject.GetComponent<Animator>();
 
-            if (path.Vertexes.Count > 0)
+            this.currentVector = gameObject.transform.position;
+            if (path.Vertexes.Count > 1)
             {
-                StartMove(creature.Position, path.Vertexes[0]);
+                pathIndex = 1;
+                StartMove(path.Vertexes[0], path.Vertexes[1]);
             }
         }
 
@@ -61,6 +63,7 @@ namespace WindingTale.MapObjects.CreatureIcon
             if (movePath.Vertexes.Count == 0)
             {
                 // No need to walk, just return
+                animator.SetInteger("state", 0);
                 Destroy(this);
                 return;
             }
@@ -69,10 +72,9 @@ namespace WindingTale.MapObjects.CreatureIcon
             bool reached = TakeStep();
             if (reached)
             {
-
                 if (pathIndex < movePath.Vertexes.Count - 1)
                 {
-                    //// this.gameObject.transform.SetPositionAndRotation(MapCoordinate.ConvertPosToVec3(movePath.Vertexes[pathIndex]), desiredRotation);
+                    //// this.gameObject.transform.SetPositionAndRotation(MapCoordinate.ConvertCreaturePosToVec3(movePath.Vertexes[pathIndex]), desiredRotation);
 
                     pathIndex++;
                     StartMove(movePath.Vertexes[pathIndex - 1], movePath.Vertexes[pathIndex]);
@@ -81,11 +83,11 @@ namespace WindingTale.MapObjects.CreatureIcon
                 {
                     // complete
                     FDPosition finalPos = movePath.Vertexes[pathIndex];
-                    //// Vector3 finalVec = MapCoordinate.ConvertPosToVec3(finalPos);
+                    Vector3 finalVec = MapCoordinate.ConvertCreaturePosToVec3(finalPos);
 
                     this.enabled = false;
                     desiredRotation = Quaternion.Euler(0, 0, 0);
-                    //// this.gameObject.transform.SetPositionAndRotation(MapCoordinate.ConvertPosToVec3(movePath.Vertexes[pathIndex]), desiredRotation);
+                    this.gameObject.transform.SetPositionAndRotation(MapCoordinate.ConvertCreaturePosToVec3(movePath.Vertexes[pathIndex]), desiredRotation);
 
                     animator.SetInteger("state", 0);
                     Destroy(this);
@@ -101,22 +103,22 @@ namespace WindingTale.MapObjects.CreatureIcon
             float deltaZ = signZ * StepLength * stepCount;
 
             Vector3 nowVector = new Vector3(currentVector.x + deltaX, currentVector.y + deltaY, currentVector.z + deltaZ);
-
+           
             ///transform.rotation = Quaternion.RotateTowards(transform.rotation, desiredRotation, 1.5f);
-            this.gameObject.transform.SetPositionAndRotation(nowVector, desiredRotation);
+            this.transform.SetPositionAndRotation(nowVector, desiredRotation);
+            //// this.transform.position = nowVector;
 
             // Check if reached the next position
             bool reached = false;
-            if (signX != 0 && (nowVector.x == nextVector.x || System.Math.Sign(nowVector.x - nextVector.x) * signX > 0))
+            if (signX != 0 && (nowVector.x == nextVector.x || Math.Sign(nowVector.x - nextVector.x) * signX > 0))
             {
                 reached = true;
             }
-            if (signY != 0 && (nowVector.y == nextVector.y || System.Math.Sign(nowVector.y - nextVector.y) * signY > 0))
+            if (signY != 0 && (nowVector.y == nextVector.y || Math.Sign(nowVector.y - nextVector.y) * signY > 0))
             {
                 reached = true;
             }
-
-            if (signZ != 0 && (nowVector.z == nextVector.z || System.Math.Sign(nowVector.z - nextVector.z) * signZ > 0))
+            if (signZ != 0 && (nowVector.z == nextVector.z || Math.Sign(nowVector.z - nextVector.z) * signZ > 0))
             {
                 reached = true;
             }
@@ -126,8 +128,8 @@ namespace WindingTale.MapObjects.CreatureIcon
 
         private void StartMove(FDPosition curPos, FDPosition nextPos)
         {
-            //// currentVector = MapCoordinate.ConvertPosToVec3(curPos);
-            ////nextVector = MapCoordinate.ConvertPosToVec3(nextPos);
+            currentVector = MapCoordinate.ConvertCreaturePosToVec3(curPos);
+            nextVector = MapCoordinate.ConvertCreaturePosToVec3(nextPos);
             stepCount = 0;
 
             signX = Math.Sign(nextVector.x - currentVector.x);

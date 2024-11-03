@@ -9,18 +9,18 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
     public class SimpleActivity : ActivityBase
     {
         //// private Action<IGameInterface> callbackAction = null;
-        private Action<GameMain> callback = null;
+        private Action<GameMain> takeAction = null;
 
         public SimpleActivity(Action<GameMain> action)
         {
-            this.callback = action;
+            this.takeAction = action;
         }
 
         public override void Start(GameMain gameMain)
         {
-            if (callback != null && gameMain != null)
+            if (takeAction != null && gameMain != null)
             {
-                callback(gameMain);
+                takeAction(gameMain);
             }
 
             this.HasFinished = true;

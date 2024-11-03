@@ -8,6 +8,14 @@
     { "key": "Confirm-06", "value": "要离开战场吗？" },
     { "key": "Confirm-07", "value": "身上的物品满了，要交换吗？" },
     { "key": "Confirm-08", "value": "确定要进入战场吗？" },
+    { "key": "Confirm-51", "value": "确定要保存游戏吗？" },
+    { "key": "Confirm-52", "value": "确定要读取游戏吗？" },
+    { "key": "Confirm-53", "value": "要离开战场吗？" },
+    { "key": "Confirm-54", "value": "这个%@，#%d元，要不要啊？" },
+    { "key": "Confirm-55", "value": "这个%@，#%d元，卖不卖啊？" },
+    { "key": "Confirm-56", "value": "要装备上去吗？" },
+    { "key": "Confirm-57", "value": "复活%@，#需要%d元，确定要复活吗？" },
+    { "key": "Confirm-58", "value": "%@转职为%@，#需要%d元，确定要转职吗？" },
     { "key": "Message-01", "value": "好的。#就结束本回合的行动吧！" },
     { "key": "Message-02", "value": "是吗？那么就不要了。" },
     { "key": "Message-03", "value": "打开宝箱，发现%@！" },
@@ -45,14 +53,6 @@
     { "key": "Message-71", "value": "请选择出场的队员：%02d / %02d" },
     { "key": "Message-50001", "value": "敌全灭" },
     { "key": "Message-60001", "value": "索尔死亡" },
-    { "key": "Message-60002", "value": "村民全部死亡" },
-    { "key": "Confirm-51", "value": "确定要保存游戏吗？" },
-    { "key": "Confirm-52", "value": "确定要读取游戏吗？" },
-    { "key": "Confirm-53", "value": "要离开战场吗？" },
-    { "key": "Confirm-54", "value": "这个%@，#%d元，要不要啊？" },
-    { "key": "Confirm-55", "value": "这个%@，#%d元，卖不卖啊？" },
-    { "key": "Confirm-56", "value": "要装备上去吗？" },
-    { "key": "Confirm-57", "value": "复活%@，#需要%d元，确定要复活吗？" },
-    { "key": "Confirm-58", "value": "%@转职为%@，#需要%d元，确定要转职吗？" }
+    { "key": "Message-60002", "value": "村民全部死亡" }
   ]
 }

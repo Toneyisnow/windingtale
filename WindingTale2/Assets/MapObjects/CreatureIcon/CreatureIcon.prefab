@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4028206573613026165}
   - component: {fileID: 8163587415869538375}
   - component: {fileID: 477544543644868600}
+  - component: {fileID: 4703382685825331070}
   m_Layer: 0
   m_Name: CreatureIcon
   m_TagString: Untagged
@@ -106,6 +107,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d2cae4c67eef384f833e98d2a8a2f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4703382685825331070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4847480602289709846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea799ab8419c0864a8e3d4681068dd5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapObject: {fileID: 0}
 --- !u!1 &4847480602530025647
 GameObject:
   m_ObjectHideFlags: 0

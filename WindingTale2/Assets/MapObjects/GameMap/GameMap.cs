@@ -156,8 +156,13 @@ namespace WindingTale.MapObjects.GameMap
 
         public void ResetCreaturePosition(FDCreature creature, FDPosition position)
         {
-            creature.ResetPosition();
-            this.MoveCreature(creature, creature.Position);
+            creature.ResetPosition(); 
+            creature.Position = position;
+            Transform creatureIcon = getCreatureObjectById(creature.Id);
+            if (creatureIcon != null)
+            {
+                creatureIcon.SetPositionAndRotation(MapCoordinate.ConvertCreaturePosToVec3(position), Quaternion.identity);
+            }
 
         }
 
@@ -175,18 +180,30 @@ namespace WindingTale.MapObjects.GameMap
             AddCreatureUI(creature, position);
         }
 
-        public void MoveCreature(FDCreature creature, FDPosition position)
+        public void MoveCreature0(FDCreature creature, FDPosition position)
         {
             creature.Position = position;
-
-            string creatureName = string.Format("creature_{0}", StringUtils.Digit3(creature.Id));
-            Transform creatureIcon = this.creaturesLayer.transform.Find(creatureName);
+            Transform creatureIcon = getCreatureObjectById(creature.Id);
             if (creatureIcon != null)
             {
                 creatureIcon.SetPositionAndRotation(MapCoordinate.ConvertCreaturePosToVec3(position), Quaternion.identity);
             }
         }
 
+        public void MoveCreature(FDCreature creature, FDMovePath movePath)
+        {
+            //// creature.Position = position;
+
+            string creatureName = string.Format("creature_{0}", StringUtils.Digit3(creature.Id));
+            Transform creatureIcon = this.creaturesLayer.transform.Find(creatureName);
+            if (creatureIcon != null)
+            {
+                CreatureWalk walk = creatureIcon.AddComponent<CreatureWalk>();
+                walk.Init(movePath);
+
+                //// creatureIcon.SetPositionAndRotation(MapCoordinate.ConvertCreaturePosToVec3(position), Quaternion.identity);
+            }
+        }
 
         #region Private Methods
 
@@ -218,6 +235,13 @@ namespace WindingTale.MapObjects.GameMap
             GameObject icon = Instantiate(prefab);
             icon.transform.SetParent(parent);
             icon.transform.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
+        }
+
+        private Transform getCreatureObjectById(int creatureId)
+        {
+            string creatureName = string.Format("creature_{0}", StringUtils.Digit3(creatureId));
+            Transform creatureIcon = this.creaturesLayer.transform.Find(creatureName);
+            return creatureIcon;
         }
 
         #endregion

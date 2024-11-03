@@ -6,7 +6,9 @@ using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
+using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.MapObjects.GameMap;
+using WindingTale.Scenes.GameFieldScene.Activities;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -67,12 +69,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 MovePathFinder movePathFinder = new MovePathFinder(moveRange);
                 FDMovePath movePath = movePathFinder.GetPath(position);
 
-                gameMain.PushActivity(gameMain =>
-                {
-                    // Save the current position
-                    creature.PrePosition = creature.Position;
-                    gameMain.creatureMove(creature, movePath);
-                });
+                gameMain.PushActivity(ActivityFactory.CreatureWalkActivity(creature, movePath));
 
                 return new MenuActionState(gameMain, creature, position);
             }

@@ -10,8 +10,6 @@ using UnityEngine.EventSystems;
 
 namespace WindingTale.MapObjects.CreatureIcon
 {
-
-
     public class Creature : MonoBehaviour, IPointerClickHandler
     {
         private bool isInitialized = false;
@@ -41,15 +39,6 @@ namespace WindingTale.MapObjects.CreatureIcon
             this.creature.PrePosition = null;
         }
 
-        public void StartMove(FDMovePath path)
-        {
-            isMoving = true;
-            this.path = path;
-
-            gameObject.AddComponent<CreatureWalk>();
-        }
-
-
         public void SetGreyout(bool greyout)
         {
             GameObject obj1 = gameObject.transform.Find("Clip_01").GetChild(0).Find("default").gameObject;
@@ -78,22 +67,22 @@ namespace WindingTale.MapObjects.CreatureIcon
         // Update is called once per frame
         void Update()
         {
-            if (isMoving)
-            {
-                moveCount++;
+            //if (isMoving)
+            //{
+            //    moveCount++;
 
-                if (moveCount > 90)
-                {
-                    isMoving = false;
-                    moveCount = 0;
+            //    if (moveCount > 90)
+            //    {
+            //        isMoving = false;
+            //        moveCount = 0;
 
-                    // update position
-                    creature.Position = path.Desitination;
+            //        // update position
+            //        creature.Position = path.Desitination;
 
-                    // remove component
-                    Destroy(gameObject.GetComponent<CreatureWalk>());
-                }
-            }
+            //        // remove component
+            //        Destroy(gameObject.GetComponent<CreatureWalk>());
+            //    }
+            //}
 
         }
 

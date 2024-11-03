@@ -27,6 +27,8 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        public string Name { get; set; }
+
         public int MpCost
         {
             get; set;

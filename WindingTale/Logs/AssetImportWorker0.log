@@ -187,3 +187,83 @@ Received Import Request.
 Start importing Assets/Resources/Materials/GreyoutShader.shader using Guid(b0027a58b5296594bb60923b7cd799e2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cafbbe2bda288c40854777bd1dc982ff') in 0.011575 seconds
 Number of updated asset objects reloaded before import = 0
 Number of asset objects unloaded after import = 0
+========================================================================
+Received Import Request.
+  Time since last request: 404070.554975 seconds.
+  path: Assets/Resources/Fonts/FontAssets
+  artifactKey: Guid(cc47e9ad69f18a14cb4d252ced2654e0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Fonts/FontAssets using Guid(cc47e9ad69f18a14cb4d252ced2654e0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '19dca0e06ed50034d8f76250e1b1e954') in 0.012474 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 0
+========================================================================
+Received Import Request.
+  Time since last request: 2.067417 seconds.
+  path: Assets/Resources/Fonts/CharacterList
+  artifactKey: Guid(ba7612a1b31df8247a08ddc400dc7ec7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Fonts/CharacterList using Guid(ba7612a1b31df8247a08ddc400dc7ec7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fd3703c9f2a09c19e517aa6edb5f650a') in 0.001885 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 0
+========================================================================
+Received Import Request.
+  Time since last request: 3.649597 seconds.
+  path: Assets/Resources/Fonts/CharacterList/CharacterList_Common.txt
+  artifactKey: Guid(63c6319396d436b45a73ee751b3bb642) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Fonts/CharacterList/CharacterList_Common.txt using Guid(63c6319396d436b45a73ee751b3bb642) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2505a108297571a54fdc047064cccb5a') in 0.021748 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 1
+========================================================================
+Received Import Request.
+  Time since last request: 377.396588 seconds.
+  path: Assets/Resources/Fonts/CharacterList/CharacterList_Creature.txt
+  artifactKey: Guid(3abe2a3a5b165d84c9347fc540928ebe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Fonts/CharacterList/CharacterList_Creature.txt using Guid(3abe2a3a5b165d84c9347fc540928ebe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1b08222cc7816945cf1bb5c914ba21c1') in 0.002226 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 1
+========================================================================
+Received Import Request.
+  Time since last request: 3.068131 seconds.
+  path: Assets/Resources/Fonts/CharacterList/CharacterList_Item.txt
+  artifactKey: Guid(c55e509ae41b3e34ab21cc1e7b2c8d39) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Fonts/CharacterList/CharacterList_Item.txt using Guid(c55e509ae41b3e34ab21cc1e7b2c8d39) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3c6defa4d752a89e80e3cf02153c0eb8') in 0.001274 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 1
+========================================================================
+Received Import Request.
+  Time since last request: 2.594037 seconds.
+  path: Assets/Resources/Fonts/CharacterList/CharacterList_Magic.txt
+  artifactKey: Guid(9dca15735b5ab9e479fff70a73b09398) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Fonts/CharacterList/CharacterList_Magic.txt using Guid(9dca15735b5ab9e479fff70a73b09398) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9c7574b3cfcf0f41d80bd95260572702') in 0.001400 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 1
+========================================================================
+Received Import Request.
+  Time since last request: 2.145033 seconds.
+  path: Assets/Resources/Fonts/CharacterList/CharacterList_Message.txt
+  artifactKey: Guid(652428942c1dd0845aa8c91a96b598b9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Fonts/CharacterList/CharacterList_Message.txt using Guid(652428942c1dd0845aa8c91a96b598b9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '465ff9db5934a6ed2a85d74f36b6142b') in 0.001191 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 1
+========================================================================
+Received Import Request.
+  Time since last request: 0.392956 seconds.
+  path: Assets/Resources/Fonts/CharacterList/CharacterList_Occupation.txt
+  artifactKey: Guid(2e60e2b07e0dffe48b161d47e9f51f1e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Fonts/CharacterList/CharacterList_Occupation.txt using Guid(2e60e2b07e0dffe48b161d47e9f51f1e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c59a608c0088dbca04f2cca445f72bc2') in 0.001710 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 1
+========================================================================
+Received Import Request.
+  Time since last request: 0.567081 seconds.
+  path: Assets/Resources/Fonts/CharacterList/CharacterList_Race.txt
+  artifactKey: Guid(8107f70a04318fa4496cd682203597bb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Fonts/CharacterList/CharacterList_Race.txt using Guid(8107f70a04318fa4496cd682203597bb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fcf642468a8e35e0b9bebc2936553e42') in 0.001366 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 1
+========================================================================
+Received Import Request.
+  Time since last request: 0.387493 seconds.
+  path: Assets/Resources/Fonts/CharacterList/CharacterList_Village.txt
+  artifactKey: Guid(5e35518253155104e8159fe43316dffe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Fonts/CharacterList/CharacterList_Village.txt using Guid(5e35518253155104e8159fe43316dffe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'eb917abe8f7abce614b80e5f00be6c9b') in 0.001035 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 1

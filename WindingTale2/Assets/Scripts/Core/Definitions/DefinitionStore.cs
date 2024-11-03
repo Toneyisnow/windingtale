@@ -170,6 +170,13 @@ namespace WindingTale.Core.Definitions
 
         private void LoadMagicDefinitions()
         {
+            // Load Strings file
+            StringsDefinition stringsDefinition = ResourceJsonFile.Load<StringsDefinition>("Strings/Magic.strings");
+            if (stringsDefinition == null)
+            {
+                throw new Exception("Cannot find strins file for magics.");
+            }
+
             magicDefinitions = new Dictionary<int, MagicDefinition>();
             ResourceDataFile fileReader = new ResourceDataFile(@"Data/Magic");
             int magicCount = fileReader.ReadInt();
@@ -177,6 +184,7 @@ namespace WindingTale.Core.Definitions
             for (int i = 0; i < magicCount; i++)
             {
                 MagicDefinition def = MagicDefinition.ReadFromFile(fileReader);
+                def.Name = stringsDefinition.GetString(def.MagicId.ToString());
                 magicDefinitions[def.MagicId] = def;
             }
         }
