@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace WindingTale.Scenes.GameFieldScene.Activities
@@ -15,6 +16,11 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         public ParallelActivity(List<ActivityBase> activities)
         {
             this.activities = activities;
+        }
+
+        public ParallelActivity(ActivityBase[] activities)
+        {
+            this.activities = activities.ToList();
         }
 
         public override void Start(GameMain gameMain)
@@ -37,6 +43,8 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         // Update is called once per frame
         public override void Update(GameMain gameMain)
         {
+            Debug.Log("ParallelActivity Update ======");
+
             bool allFinished = true;
             foreach (ActivityBase activity in activities)
             {

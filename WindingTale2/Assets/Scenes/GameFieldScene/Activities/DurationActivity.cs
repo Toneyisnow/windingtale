@@ -11,12 +11,16 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         //// private Action<IGameInterface> callbackAction = null;
         private Action<GameMain> startAction = null;
 
+        private Action<GameMain> endAction = null;
+
+
         private Func<GameMain, bool> checkEnd = null;
 
-        public DurationActivity(Action<GameMain> startAction, Func<GameMain, bool> checkEnd)
+        public DurationActivity(Action<GameMain> startAction, Func<GameMain, bool> checkEnd, Action<GameMain> endAction = null)
         {
             this.startAction = startAction;
             this.checkEnd = checkEnd;
+            this.endAction = endAction;
         }
 
         public override void Start(GameMain gameMain)
@@ -41,6 +45,11 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             if (hasFinished)
             {
                 this.HasFinished = true;
+
+                if (endAction != null)
+                {
+                    endAction(gameMain);
+                }
             }
         }
 

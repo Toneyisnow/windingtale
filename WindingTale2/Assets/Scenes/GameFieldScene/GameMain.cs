@@ -26,6 +26,7 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public GameObject canvasObject;
 
+        public ActivityQueue activityQueue = null;
 
         public static GameMain getDefault()
         {
@@ -48,14 +49,6 @@ namespace WindingTale.Scenes.GameFieldScene
             get { return canvasObject.GetComponent<GameCanvas>(); }
         }
 
-        public ActivityQueue activityQueue
-        {
-            get
-            {
-                return gameObject.GetComponent<ActivityQueue>();
-            }
-        }
-
         
         private EventHandler eventHandler = null;
 
@@ -74,6 +67,11 @@ namespace WindingTale.Scenes.GameFieldScene
         {
             chapterId = 1;
             onInitialize();
+        }
+
+        void Update()
+        {
+            activityQueue.Update();
         }
 
         #region Game Cycles
@@ -118,9 +116,9 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Creature Related Operation
 
-        public void creatureMove(FDCreature creature, FDMovePath path)
+        public void creatureMoveAndWait(FDCreature creature, FDMovePath movePath)
         {
-            gameMap.MoveCreature(creature, path);
+            this.PushActivity(ActivityFactory.CreatureWalkActivity(creature, movePath));
         }
 
         public void creatureAttack(FDCreature creature, FDCreature target)
@@ -178,10 +176,15 @@ namespace WindingTale.Scenes.GameFieldScene
 
         }
 
+        public void PushActivity(ActivityBase activity)
+        {
+            activityQueue.Push(activity);
+        }
+
         public void PushActivity(Action<GameMain> action)
         {
             SimpleActivity activity = new SimpleActivity(action);
-            activityQueue.Push(activity);
+            PushActivity(activity);
         }
 
         public void PushActivity(Action<GameMain> startAction, Func<GameMain, bool> checkEnd)
@@ -190,10 +193,6 @@ namespace WindingTale.Scenes.GameFieldScene
             PushActivity(activity);
         }
 
-        public void PushActivity(DurationActivity activity)
-        {
-            activityQueue.Push(activity);
-        }
 
         public void InsertActivity(Action<GameMain> action)
         {
@@ -220,7 +219,7 @@ namespace WindingTale.Scenes.GameFieldScene
             eventHandler = new EventHandler(chapterEvents, this);
             enemyAIHandler = new AIHandler(this, CreatureFaction.Enemy);
             npcAIHandler = new AIHandler(this, CreatureFaction.Npc);
-
+            activityQueue = new ActivityQueue(this);
 
             this.gameMap.Map.TurnNo = 0;
             this.gameMap.Map.TurnType = CreatureFaction.Enemy;
@@ -250,15 +249,15 @@ namespace WindingTale.Scenes.GameFieldScene
 
             if (this.gameMap.Map.TurnType == CreatureFaction.Friend)
             {
-                onPlayerTurn();
+                PushActivity(gameMain => onPlayerTurn());
             }
             else if (this.gameMap.Map.TurnType == CreatureFaction.Npc)
             {
-                onNpcTurn();
+                PushActivity(gameMain => onNpcTurn());
             }
             else if (this.gameMap.Map.TurnType == CreatureFaction.Enemy)
             {
-                onEnemyTurn();
+                PushActivity(gameMain => onEnemyTurn());
             }
         }
 
@@ -329,6 +328,7 @@ namespace WindingTale.Scenes.GameFieldScene
 
             Creature c = gameMap.GetCreature(creature);
             c.SetActioned(true);
+            c.creature.PrePosition = null;
 
             eventHandler.notifyTriggeredEvents();
 
@@ -344,10 +344,12 @@ namespace WindingTale.Scenes.GameFieldScene
 
             if (this.gameMap.Map.TurnType == CreatureFaction.Enemy)
             {
-                enemyAIHandler.Notified();
+                bool aiActioned = enemyAIHandler.Notified();
+                
             } else if (this.gameMap.Map.TurnType == CreatureFaction.Npc)
             {
-                npcAIHandler.Notified();
+                bool aiActioned = npcAIHandler.Notified();
+                
             }
         }
 

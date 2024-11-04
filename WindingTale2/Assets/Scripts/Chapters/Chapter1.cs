@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
@@ -7,6 +8,7 @@ using WindingTale.Core.Events;
 using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.Scenes.GameFieldScene.Activities;
 
 namespace WindingTale.Chapters
 {
@@ -36,28 +38,30 @@ namespace WindingTale.Chapters
         {
 
             // Friends appear
-            //FDCreature c1 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 1, 1, FDPosition.At(8, 20));
-            //FDCreature c2 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 2, 2, FDPosition.At(11, 21));
-            //FDCreature c3 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 3, 3, FDPosition.At(9, 22));
-            //FDCreature c4 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 4, 4, FDPosition.At(12, 23));
+            FDCreature c1 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 1, 1, FDPosition.At(8, 20));
+            FDCreature c2 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 2, 2, FDPosition.At(11, 21));
+            FDCreature c3 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 3, 3, FDPosition.At(9, 22));
+            FDCreature c4 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 4, 4, FDPosition.At(12, 23));
 
-            FDCreature c1 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 1, 1, FDPosition.At(4, 11));
-            FDCreature c2 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 2, 2, FDPosition.At(4, 8));
-            FDCreature c3 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 3, 3, FDPosition.At(5, 9));
-            FDCreature c4 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 4, 4, FDPosition.At(6, 7));
+            //FDCreature c1 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 1, 1, FDPosition.At(4, 11));
+            //FDCreature c2 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 2, 2, FDPosition.At(4, 8));
+            //FDCreature c3 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 3, 3, FDPosition.At(5, 9));
+            //FDCreature c4 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 4, 4, FDPosition.At(6, 7));
 
             FDCreature e1 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 11, 50101, FDPosition.At(5, 6));
             FDCreature e2 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 12, 50101, FDPosition.At(3, 7), 101);
 
-            /*
-            gameMain.ActivityManager.Push(new BatchActivity(
-                new ActivityBase[] {
-                    new CreatureMoveActivity(c1, FDMovePath.Create(FDPosition.At(8, 15))),
-                    new CreatureMoveActivity(c2, FDMovePath.Create(FDPosition.At(11, 16))),
-                    new CreatureMoveActivity(c3, FDMovePath.Create(FDPosition.At(9, 17))),
-                    new CreatureMoveActivity(c4, FDMovePath.Create(FDPosition.At(12, 18))) })
-                );
+            gameMain.PushActivity(new ParallelActivity(
+            new ActivityBase[] {
+                ActivityFactory.CreatureWalkActivity(c1, FDMovePath.Create(FDPosition.At(8, 20), FDPosition.At(8, 15))),
+                ActivityFactory.CreatureWalkActivity(c2, FDMovePath.Create(FDPosition.At(11, 21), FDPosition.At(11, 16))),
+                ActivityFactory.CreatureWalkActivity(c3, FDMovePath.Create(FDPosition.At(9, 22), FDPosition.At(9, 17))),
+                ActivityFactory.CreatureWalkActivity(c4, FDMovePath.Create(FDPosition.At(12, 23), FDPosition.At(12, 18)))
+                }
+            ));
+                
 
+            /*
             
             // Talking
             ShowConversations(gameMain, 1, 1, 1, 1);

@@ -192,8 +192,6 @@ namespace WindingTale.MapObjects.GameMap
 
         public void MoveCreature(FDCreature creature, FDMovePath movePath)
         {
-            //// creature.Position = position;
-
             string creatureName = string.Format("creature_{0}", StringUtils.Digit3(creature.Id));
             Transform creatureIcon = this.creaturesLayer.transform.Find(creatureName);
             if (creatureIcon != null)

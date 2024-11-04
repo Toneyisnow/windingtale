@@ -38,7 +38,7 @@ namespace WindingTale.AI.Delegates
             FDMovePath movePath = this.DecidePositionAndPath(target.Position);
 
             // Do the walk
-            gameMain.creatureMove(creature, movePath);
+            gameMain.creatureMoveAndWait(creature, movePath);
 
             Debug.Log("AI Aggressive: creature=" + creature.Id + " position=" + creature.Position + " target pos=" + movePath?.Desitination?.ToString());
 
@@ -53,14 +53,27 @@ namespace WindingTale.AI.Delegates
                 if (range.Contains(target.Position))
                 {
                     // If in attack range, attack the target
-                    this.gameMain.creatureAttack(this.creature, target);
+                    gameMain.PushActivity((gameMain) =>
+                    {
+                        gameMain.creatureAttack(this.creature, target);
+                    });
                     return;
+                } else
+                {
+                    gameMain.PushActivity((gameMain) =>
+                    {
+                        gameMain.creatureRest(this.creature);
+                    });
                 }
             }
             else
             {
-                this.gameMain.creatureRest(this.creature);
+                gameMain.PushActivity((gameMain) =>
+                {
+                    gameMain.creatureRest(this.creature);
+                });
             }
         }
+
     }
 }

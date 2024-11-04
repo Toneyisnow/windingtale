@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
+using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene;
@@ -19,6 +20,7 @@ namespace WindingTale.UI.Dialogs
         SelectAllItem = 3,
         SelectMagic = 4,
         View = 5,
+        ViewMagic = 6,
     }
 
     public class CreatureInfoDialog : MonoBehaviour
@@ -28,9 +30,13 @@ namespace WindingTale.UI.Dialogs
         public GameObject raceLabel;
         public GameObject occupationLabel;
 
+        public GameObject hpCurrentLabel;
+        public GameObject hpMaxLabel;
+        public GameObject mpCurrentLabel;
+        public GameObject mpMaxLabel;
+
+
         public GameObject levelLabel;
-        public GameObject hpLabel;
-        public GameObject mpLabel;
         public GameObject apLabel;
         public GameObject dpLabel;
         public GameObject dxLabel;
@@ -87,8 +93,9 @@ namespace WindingTale.UI.Dialogs
             this.infoType = infoType;
             this.onSelected = onSelected;
 
-            itemsContainer.SetActive(infoType != CreatureInfoType.SelectMagic);
-            magicContainer.SetActive(infoType == CreatureInfoType.SelectMagic);
+            bool isMagic = infoType == CreatureInfoType.SelectMagic || infoType == CreatureInfoType.ViewMagic;
+            itemsContainer.SetActive(!isMagic);
+            magicContainer.SetActive(isMagic);
 
             // Name
             this.nameLabel.GetComponent<TextMeshProUGUI>().text = creature.Definition.Name;
@@ -101,6 +108,10 @@ namespace WindingTale.UI.Dialogs
             OccupationDefinition occupation = DefinitionStore.Instance.GetOccupationDefinition(occupationId);
             this.occupationLabel.GetComponent<TextMeshProUGUI>().text = occupation.Name;
 
+            this.hpCurrentLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.Hp);
+            this.hpMaxLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.HpMax);
+            this.mpCurrentLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.Mp);
+            this.mpMaxLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.MpMax);
 
             if (infoType != CreatureInfoType.SelectMagic)
             {

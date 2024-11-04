@@ -19,7 +19,7 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             {
                 // Save the current position
                 creature.PrePosition = creature.Position;
-                gameMain.creatureMove(creature, movePath);
+                gameMain.gameMap.MoveCreature(creature, movePath);
             };
 
             Func<GameMain, bool> checkEnd = 
@@ -28,8 +28,13 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
                     Creature creatureObj = gameMain.gameMap.GetCreature(creature);
                     return creatureObj.GetComponent<CreatureWalk>() == null;
                 };
+            Action<GameMain> endAction = gameMain =>
+            {
+                creature.Position = movePath.Desitination;
+            };
 
-            return new DurationActivity(startAction, checkEnd);
+
+            return new DurationActivity(startAction, checkEnd, endAction);
         }
     }
 

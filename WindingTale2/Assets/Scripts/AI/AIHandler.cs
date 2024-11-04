@@ -54,7 +54,7 @@ namespace WindingTale.AI
             FDCreature selectedCreature = null;
             foreach (FDCreature creature in creatures)
             {
-                if (creature.HasActioned || creature.HasEffect(CreatureEffects.Frozen))
+                if (!creature.CanTakeAction())
                 {
                     continue;
                 }
@@ -67,6 +67,7 @@ namespace WindingTale.AI
 
             if (selectedCreature == null)
             {
+                // No creature can take action, end the turn
                 return false;
             }
 

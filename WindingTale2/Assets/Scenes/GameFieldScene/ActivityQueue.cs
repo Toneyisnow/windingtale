@@ -7,7 +7,7 @@ using UnityEngine;
 namespace WindingTale.Scenes.GameFieldScene
 {
 
-        public class ActivityQueue: MonoBehaviour
+        public class ActivityQueue
         {
             private List<ActivityBase> activityList = null;
 
@@ -19,14 +19,9 @@ namespace WindingTale.Scenes.GameFieldScene
 
             public bool IsIdle { get; private set; }
 
-            public ActivityQueue()
+            public ActivityQueue(GameMain gameMain)
             {
-                
-            }
-
-            public void Start()
-            {
-                this.gameMain = this.gameObject.GetComponent<GameMain>();
+                this.gameMain = gameMain;
                 this.activityList = new List<ActivityBase>();
             }
 

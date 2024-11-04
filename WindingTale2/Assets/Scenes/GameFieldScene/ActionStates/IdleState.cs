@@ -37,6 +37,17 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                     gameMain.gameCanvas.ShowCreatureDialog(creature, CreatureInfoType.View, (int selected) =>
                     {
                         gameMain.gameCanvas.CloseDialog();
+
+                        if (creature.HasMagic())
+                        {
+                            gameMain.PushActivity((gameMain) =>
+                            {
+                                gameMain.gameCanvas.ShowCreatureDialog(creature, CreatureInfoType.ViewMagic, (int selected) =>
+                                {
+                                    gameMain.gameCanvas.CloseDialog();
+                                });
+                            });
+                        }
                     });
                     return this;
                 }

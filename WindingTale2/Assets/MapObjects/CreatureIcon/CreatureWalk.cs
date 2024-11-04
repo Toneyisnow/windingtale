@@ -60,7 +60,7 @@ namespace WindingTale.MapObjects.CreatureIcon
         // Update is called once per frame
         void Update()
         {
-            if (movePath.Vertexes.Count == 0)
+            if (movePath.Vertexes.Count <= 1)
             {
                 // No need to walk, just return
                 animator.SetInteger("state", 0);
