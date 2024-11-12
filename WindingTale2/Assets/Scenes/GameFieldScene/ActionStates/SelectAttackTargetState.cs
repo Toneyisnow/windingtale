@@ -74,7 +74,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 if (target != null && target.Faction == CreatureFaction.Enemy)
                 {
                     // Do the attack
-                    this.gameMain.creatureAttack(this.Creature, target);
+                    this.gameMain.creatureAttackAsync(this.Creature, target);
                     return new IdleState(gameMain);
                 }
                 else

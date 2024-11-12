@@ -69,7 +69,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 MovePathFinder movePathFinder = new MovePathFinder(moveRange);
                 FDMovePath movePath = movePathFinder.GetPath(position);
 
-                gameMain.creatureMoveAndWait(creature, movePath);
+                gameMain.creatureMoveAsync(creature, movePath);
 
                 return new MenuActionState(gameMain, creature, position);
             }

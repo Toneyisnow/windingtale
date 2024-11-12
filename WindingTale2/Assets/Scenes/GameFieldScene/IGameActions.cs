@@ -31,9 +31,9 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Creature Related Operation
 
-        void creatureMoveAndWait(FDCreature creature, FDMovePath path);
+        void creatureMoveAsync(FDCreature creature, FDMovePath path);
 
-        void creatureAttack(FDCreature creature, FDCreature target);
+        void creatureAttackAsync(FDCreature creature, FDCreature target);
 
         void creatureMagic(FDCreature creature, FDPosition pos, int magicId);
 

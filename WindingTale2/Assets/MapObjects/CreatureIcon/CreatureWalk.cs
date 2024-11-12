@@ -9,7 +9,6 @@ using WindingTale.MapObjects.GameMap;
 
 namespace WindingTale.MapObjects.CreatureIcon
 {
-
     public class CreatureWalk : MonoBehaviour
     {
         private static float StepLength = 0.06f;

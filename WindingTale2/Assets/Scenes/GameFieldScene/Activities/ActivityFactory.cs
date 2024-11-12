@@ -36,6 +36,60 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
 
             return new DurationActivity(startAction, checkEnd, endAction);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="creature"></param>
+        /// <param name="movePath"></param>
+        /// <returns></returns>
+        public static DurationActivity CreatureDyingActivity(FDCreature creature)
+        {
+            DateTime startTime = DateTime.Now;
+            Action<GameMain> startAction = gameMain =>
+            {
+                startTime = DateTime.Now;
+            };
+
+            Func<GameMain, bool> checkEnd = gameMain =>
+            {
+                DateTime nowTime = DateTime.Now;
+                if (nowTime > startTime.AddSeconds(2))
+                {
+                    return true;
+                }
+                return false;
+            };
+
+            return new DurationActivity(startAction, checkEnd);
+        }
+
+        /// <summary>
+        /// Show the animation of a creature resting and recovering
+        /// </summary>
+        /// <param name="creature"></param>
+        /// <param name="movePath"></param>
+        /// <returns></returns>
+        public static DurationActivity CreatureRestRecoverActivity(FDCreature creature)
+        {
+            DateTime startTime = DateTime.Now;
+            Action<GameMain> startAction = gameMain =>
+            {
+                startTime = DateTime.Now;
+            };
+
+            Func<GameMain, bool> checkEnd = gameMain =>
+            {
+                DateTime nowTime = DateTime.Now;
+                if (nowTime > startTime.AddSeconds(2))
+                {
+                    return true;
+                }
+                return false;
+            };
+
+            return new DurationActivity(startAction, checkEnd);
+        }
     }
 
 }

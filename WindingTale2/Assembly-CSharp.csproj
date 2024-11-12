@@ -218,6 +218,7 @@
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\DurationActivity.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
     <Compile Include="Assets\MapObjects\Menus\Menu.cs" />
+    <Compile Include="Assets\Scripts\Core\Algorithms\BattleHandler.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDRange.cs" />
   </ItemGroup>
   <ItemGroup>

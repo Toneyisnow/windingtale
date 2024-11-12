@@ -532,6 +532,11 @@ namespace WindingTale.Core.Objects
             return this.PrePosition != null && this.PrePosition.AreSame(this.Position);
         }
 
+        /// <summary>
+        /// Used for dying event.
+        /// After the creature is dead, it will be moved to Dead Creatures list.
+        /// </summary>
+        /// <returns></returns>
         public bool IsDead()
         {
             return this.Hp <= 0;

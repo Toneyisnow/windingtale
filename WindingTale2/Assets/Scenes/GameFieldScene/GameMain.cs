@@ -9,6 +9,7 @@ using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Events;
+using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.MapObjects.GameMap;
@@ -116,28 +117,92 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Creature Related Operation
 
-        public void creatureMoveAndWait(FDCreature creature, FDMovePath movePath)
+        public void creatureMoveAsync(FDCreature creature, FDMovePath movePath)
         {
             this.PushActivity(ActivityFactory.CreatureWalkActivity(creature, movePath));
         }
 
-        public void creatureAttack(FDCreature creature, FDCreature target)
+        public void creatureAttackAsync(FDCreature creature, FDCreature target)
         {
             Debug.Log("creatureAttack!!!");
 
             Creature c = gameMap.GetCreature(creature);
-            c.SetActioned(true);
 
-            onCreatureEndTurn(creature);
+            AttackResult result = BattleHandler.HandleCreatureAttack(creature, target, gameMap.Map.Field);
+            
+            // Play attack animation
+
+
+            // Apply the results
+            this.PushActivity((gameMain) =>
+            {
+                c.SetActioned(true);
+
+                BattleHandler.ApplyDamage(target, result.Damages.Last());
+                if (result.BackDamages.Count > 0)
+                {
+                    BattleHandler.ApplyDamage(creature, result.BackDamages.Last());
+                }
+            });
+
+            // Check if the target is dead
+            this.PushActivity((gameMain) =>
+            {
+                List<ActivityBase> dyingActivities = new List<ActivityBase>();
+                if (target.IsDead())
+                {
+                    dyingActivities.Add(ActivityFactory.CreatureDyingActivity(target));
+                }
+
+                if (creature.IsDead())
+                {
+                    dyingActivities.Add(ActivityFactory.CreatureDyingActivity(creature));
+                }
+
+                if (dyingActivities.Count > 0)
+                {
+                    // Play dying animation
+                    gameMain.InsertActivity(new ParallelActivity(dyingActivities));
+                }
+            });
+
+            // Say about experience
+            this.PushActivity((gameMain) =>
+            {
+                if (result.Experience > 0)
+                {
+                    this.InsertActivity(gameMain =>
+                    {
+                        // Show experience dialog
+                    });
+                }
+            });
+
+
+            this.PushActivity((gameMain) =>
+            {
+                onCreatureEndTurn(creature);
+            });
         }
 
-        public void creatureMagic(FDCreature creature, FDPosition pos, int magicId)
+        public void creatureMagic(FDCreature creature, FDPosition position, int magicId)
         {
             Debug.Log("creatureMagic!!!");
 
             Creature c = gameMap.GetCreature(creature);
+            MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
+
+            DirectRangeFinder directRangeFinder = new DirectRangeFinder(gameMap.Map.Field, position, magic.EffectRange);
+            FDRange range = directRangeFinder.CalculateRange();
+            List<FDCreature> targetList = gameMap.Map.GetCreaturesInRange(range.ToList(), CreatureFaction.Enemy);
+
+            MagicResult result = BattleHandler.HandleCreatureMagic(creature, targetList, position, magic, gameMap.Map.Field);
             c.SetActioned(true);
-            onCreatureEndTurn(creature);
+
+            this.PushActivity((gameMain) =>
+            {
+                onCreatureEndTurn(creature);
+            });
         }
 
         public void creatureUseItem(FDCreature creature, int itemIndex, FDCreature target)
@@ -146,14 +211,25 @@ namespace WindingTale.Scenes.GameFieldScene
 
             Creature c = gameMap.GetCreature(creature);
             c.SetActioned(true);
-            onCreatureEndTurn(creature);
+
+            this.PushActivity((gameMain) =>
+            {
+                onCreatureEndTurn(creature);
+            });
         }
 
         public void creatureRest(FDCreature creature)
         {
             // Check Treasure
 
-            onCreatureEndTurn(creature);
+            Creature c = gameMap.GetCreature(creature);
+            c.SetActioned(true);
+
+
+            this.PushActivity((gameMain) =>
+            {
+                onCreatureEndTurn(creature);
+            });
         }
 
         public void endTurnForAll()
@@ -193,11 +269,15 @@ namespace WindingTale.Scenes.GameFieldScene
             PushActivity(activity);
         }
 
+        public void InsertActivity(ActivityBase activity)
+        {
+            activityQueue.Insert(activity);
+        }
 
         public void InsertActivity(Action<GameMain> action)
         {
             SimpleActivity activity = new SimpleActivity(action);
-            activityQueue.Insert(activity);
+            InsertActivity(activity);
         }
 
         public void InsertActivities(List<Action<GameMain>> actions)
@@ -322,8 +402,8 @@ namespace WindingTale.Scenes.GameFieldScene
             // If creature not moved/actioned, recharge, may need activity
             if ( !creature.HasMoved() && !creature.HasActioned)
             {
-
-
+                // Show animation for rest recovery
+                this.InsertActivity(ActivityFactory.CreatureRestRecoverActivity(creature));
             }
 
             Creature c = gameMap.GetCreature(creature);
@@ -338,7 +418,6 @@ namespace WindingTale.Scenes.GameFieldScene
                 {
                     game.onStartNextTurn();
                 });
-
                 return;
             }
 
@@ -349,7 +428,6 @@ namespace WindingTale.Scenes.GameFieldScene
             } else if (this.gameMap.Map.TurnType == CreatureFaction.Npc)
             {
                 bool aiActioned = npcAIHandler.Notified();
-                
             }
         }
 
