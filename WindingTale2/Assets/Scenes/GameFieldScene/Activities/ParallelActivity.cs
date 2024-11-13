@@ -25,6 +25,8 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
 
         public override void Start(GameMain gameMain)
         {
+            this.HasFinished = false;
+
             if (activities == null || gameMain == null || activities.Count == 0)
             {
                 this.HasFinished = true;
@@ -59,7 +61,6 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             {
                 this.HasFinished = true;
             }
-
         }
 
     }

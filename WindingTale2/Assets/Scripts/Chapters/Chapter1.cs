@@ -55,7 +55,8 @@ namespace WindingTale.Chapters
             new ActivityBase[] {
                 ActivityFactory.CreatureWalkActivity(c1, FDMovePath.Create(FDPosition.At(8, 20), FDPosition.At(8, 15))),
                 ActivityFactory.CreatureWalkActivity(c2, FDMovePath.Create(FDPosition.At(11, 21), FDPosition.At(11, 16))),
-                ActivityFactory.CreatureWalkActivity(c3, FDMovePath.Create(FDPosition.At(9, 22), FDPosition.At(9, 17))),
+                /// ActivityFactory.CreatureWalkActivity(c3, FDMovePath.Create(FDPosition.At(9, 22), FDPosition.At(9, 17))),
+                ActivityFactory.CreatureWalkActivity(c3, FDMovePath.Create(FDPosition.At(9, 22), FDPosition.At(9, 8), FDPosition.At(6, 8))),
                 ActivityFactory.CreatureWalkActivity(c4, FDMovePath.Create(FDPosition.At(12, 23), FDPosition.At(12, 18)))
                 }
             ));

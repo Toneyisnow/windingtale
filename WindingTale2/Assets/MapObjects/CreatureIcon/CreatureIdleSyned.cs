@@ -26,6 +26,11 @@ namespace WindingTale.MapObjects.CreatureIcon
         // Update is called once per frame
         void Update()
         {
+            if (this.gameObject.GetComponent<CreatureDying>() != null)
+            {
+                return;
+            }
+
 
             int timeDouble = (int)(Time.fixedTime * 100) / this.Speed;
             int frame = timeDouble % 4;

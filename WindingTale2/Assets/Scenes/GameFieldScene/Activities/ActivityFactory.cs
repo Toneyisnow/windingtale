@@ -48,20 +48,21 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             DateTime startTime = DateTime.Now;
             Action<GameMain> startAction = gameMain =>
             {
-                startTime = DateTime.Now;
+                Creature creatureObj = gameMain.gameMap.GetCreature(creature);
+                creatureObj.gameObject.AddComponent<CreatureDying>();
             };
 
             Func<GameMain, bool> checkEnd = gameMain =>
             {
-                DateTime nowTime = DateTime.Now;
-                if (nowTime > startTime.AddSeconds(2))
-                {
-                    return true;
-                }
-                return false;
+                Creature creatureObj = gameMain.gameMap.GetCreature(creature);
+                return creatureObj.GetComponent<CreatureDying>() == null;
+            };
+            Action<GameMain> endAction = gameMain =>
+            {
+                gameMain.gameMap.DeleteDeadCreature(creature);
             };
 
-            return new DurationActivity(startAction, checkEnd);
+            return new DurationActivity(startAction, checkEnd, endAction);
         }
 
         /// <summary>
