@@ -199,6 +199,67 @@ namespace WindingTale.Scenes.GameFieldScene
             MagicResult result = BattleHandler.HandleCreatureMagic(creature, targetList, position, magic, gameMap.Map.Field);
             c.SetActioned(true);
 
+            // Play attack animation
+
+
+            // Apply the results
+            this.PushActivity((gameMain) =>
+            {
+                c.SetActioned(true);
+
+                foreach (var resultPair in result.Results)
+                {
+                    int targetCreatureId = resultPair.Key;
+                    FDCreature target = targetList.Find(t => t.Id == targetCreatureId);
+                    var soleResult = resultPair.Value;
+                    if (soleResult.ResultType == SoloResultType.Damage)
+                    {
+                        DamageResult damageResult = (DamageResult)soleResult;
+                        BattleHandler.ApplyDamage(target, damageResult);
+                    }
+                };
+            });
+
+            // Check dying events
+            this.PushActivity((gameMain) =>
+            {
+                gameMain.eventHandler.notifyTriggeredEvents();
+            });
+                
+            // Check if the target is dead
+            this.PushActivity((gameMain) =>
+            {
+                List<ActivityBase> dyingActivities = new List<ActivityBase>();
+                foreach (var magicResult in result.Results)
+                {
+                    int targetCreatureId = magicResult.Key;
+                    FDCreature target = targetList.Find(t => t.Id == targetCreatureId);
+                    if (target.IsDead())
+                    {
+                        dyingActivities.Add(ActivityFactory.CreatureDyingActivity(target));
+                    }
+                };
+
+                if (dyingActivities.Count > 0)
+                {
+                    // Play dying animation
+                    gameMain.InsertActivity(new ParallelActivity(dyingActivities));
+                }
+            });
+
+            // Say about experience
+            this.PushActivity((gameMain) =>
+            {
+                if (result.Experience > 0)
+                {
+                    this.InsertActivity(gameMain =>
+                    {
+                        // Show experience dialog
+                    });
+                }
+            });
+
+
             this.PushActivity((gameMain) =>
             {
                 onCreatureEndTurn(creature);
