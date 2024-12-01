@@ -119,7 +119,7 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void creatureMoveAsync(FDCreature creature, FDMovePath movePath)
         {
-            this.PushActivity(ActivityFactory.CreatureWalkActivity(creature, movePath));
+            this.PushActivity(ActivityFactory.CreatureWalkActivity(creature.Id, movePath));
         }
 
         public void creatureAttackAsync(FDCreature creature, FDCreature target)
@@ -302,16 +302,6 @@ namespace WindingTale.Scenes.GameFieldScene
 
 
         #region Internal Functions
-
-        public void ShowCreatureInfoDialog(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected)
-        {
-            gameCanvas.ShowCreatureDialog(creature, infoType, onSelected);
-        }
-
-        public void ShowPromptDialog(FDCreature creature)
-        {
-
-        }
 
         public void PushActivity(ActivityBase activity)
         {

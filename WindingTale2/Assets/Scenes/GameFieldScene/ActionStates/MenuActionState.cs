@@ -16,6 +16,7 @@ using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
 using WindingTale.UI.Dialogs;
+using WindingTale.Scenes.GameFieldScene.Activities;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -50,7 +51,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             {
                 gameMain.PushActivity(gameMain =>
                 {
-                    gameMain.ShowCreatureInfoDialog(creature, CreatureInfoType.SelectMagic, OnMagicSelected);
+                    gameMain.gameCanvas.ShowCreatureDialog(creature, CreatureInfoType.SelectMagic, OnMagicSelected);
                 });
                 return this;
             });
@@ -82,11 +83,24 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 {
                     // 发现宝箱，需要打开吗
                     FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 2);
-                    gameMain.PushActivity(gameMain =>
+                    gameMain.PushActivity(new TalkActivity(message, creature, (result) =>
                     {
-                        gameMain.ShowPromptDialog(creature);
-                    });
+                        if (result == 1)
+                        {
+                            // Open
+                            // TODO: Open the treasure
 
+                            FDMessage yes = FDMessage.Create(FDMessage.MessageTypes.Information, 3);
+                            gameMain.InsertActivity(new TalkActivity(yes, creature));
+                        }
+                        else
+                        {
+                            // No
+                            FDMessage no = FDMessage.Create(FDMessage.MessageTypes.Information, 2);
+                            gameMain.InsertActivity(new TalkActivity(no, creature));
+                        }
+
+                    }));
                     nextState = this;
                 }
                 return nextState;

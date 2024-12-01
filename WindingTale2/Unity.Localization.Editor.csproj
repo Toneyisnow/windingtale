@@ -120,8 +120,8 @@
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Settings\StringTableCollection.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\DrivenPropertyDrawer.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Plugins\TextMesh Pro\LocalizeComponent_TMP.cs" />
-    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\CharacterSet\CharacterSetMenuItems.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Addressables\AnalyzeRuleBase.cs" />
+    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\CharacterSet\CharacterSetMenuItems.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Platform\Utility\FallbackLocaleHelper.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Settings\Locale\LocaleGeneratorWindow.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Settings\LocalizationEditorSettings.cs" />
@@ -143,8 +143,8 @@
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Utility\MetadataReorderableList.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Search\QueryBuilder\Blocks\CollectionGroupFilterBlock.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Platform\Android\GradleProjectSettings.cs" />
-    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Addressables\AssetTableAnalyzeRule.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Property Variants\ContextualPropertyMenu.cs" />
+    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Addressables\AssetTableAnalyzeRule.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Reporting\ProgressReporter.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Settings\LocalizationSettingsProvider.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Utility\HelpBoxFactory.cs" />
@@ -192,8 +192,8 @@
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Settings\LocalizationPreferencesProvider.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Plugins\Device Simulator\LocalizationDeviceSimulatorPlugin.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Plugins\Google\Columns\LocaleMetadataColumn.cs" />
-    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Plugins\Google\Columns\SheetColumn.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Utility\PropertyDrawerExtended.cs" />
+    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Plugins\Google\Columns\SheetColumn.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Smart Format\SmartFormatField.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Plugins\Device Simulator\PackageLanguageMenu.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Tables\GenericAssetTableListView.cs" />
@@ -208,8 +208,8 @@
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Addressables\AddressableGroupRules.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\AddressableEntryNotFoundException.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Localized Reference\TableTreeView.cs" />
-    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Metadata\FallbackLocalePropertyDrawer.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Resources.cs" />
+    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Metadata\FallbackLocalePropertyDrawer.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Utility\TypeUtility.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\UI\Utility\ReorderableList.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Editor\Extension Methods\SerializedPropertyExtensionMethods.cs" />

@@ -6,6 +6,7 @@ using WindingTale.Core.Definitions;
 using WindingTale.Core.Events;
 using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.Scenes.GameFieldScene.Activities;
 
 namespace WindingTale.Chapters
 {
@@ -62,9 +63,9 @@ namespace WindingTale.Chapters
         }
 
 
-        public static void ShowConversations(GameMain gameMain, int chapterId, int sequenceId, int min, int max)
+        public static void ShowConversations(GameMain gameMain, int chapterId, int sequenceId, int start, int end)
         {
-            for(int index = min; index <= max; index++)
+            for(int index = start; index <= end; index++)
             {
                 Conversation conversation = Conversation.Create(chapterId, sequenceId, index);
 
@@ -72,7 +73,7 @@ namespace WindingTale.Chapters
                 int creatureId = 1;
                 FDCreature creature = gameMain.gameMap.Map.GetCreatureById(creatureId);
 
-                //// gameMain.ActivityManager.Push(new TalkActivity(conversation, creature));
+                gameMain.PushActivity(new TalkActivity(conversation, creature ));
             }
 
         }

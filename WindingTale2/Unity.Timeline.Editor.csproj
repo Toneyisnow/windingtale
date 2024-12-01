@@ -178,8 +178,8 @@
     <Compile Include="Library\PackageCache\com.unity.timeline@1.8.6\Editor\Attributes\ShortcutAttribute.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.8.6\Editor\inspectors\TrackAssetInspector.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.8.6\Editor\Utilities\Scopes\PropertyScope.cs" />
-    <Compile Include="Library\PackageCache\com.unity.timeline@1.8.6\Editor\treeview\TimelineDragging.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.8.6\Editor\inspectors\TimelineInspectorUtility.cs" />
+    <Compile Include="Library\PackageCache\com.unity.timeline@1.8.6\Editor\treeview\TimelineDragging.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.8.6\Editor\Manipulators\TimelineClipGroup.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.8.6\Editor\inspectors\AnimationPlayableAssetInspector.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.8.6\Editor\treeview\Snapping\SnapEngine.cs" />

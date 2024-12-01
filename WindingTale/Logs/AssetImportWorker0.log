@@ -283,3 +283,13 @@ Received Import Request.
 Start importing Assets/Resources/Fonts/CharacterList/CharacterList_Chapter-01.txt using Guid(b36b4fa350e50c44dba80819ba7fac84) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6c2727f49fbf8cd1be739abedfb42535') in 0.002197 seconds
 Number of updated asset objects reloaded before import = 0
 Number of asset objects unloaded after import = 1
+========================================================================
+Received Import Request.
+  Time since last request: 1495830.559778 seconds.
+  path: Assets/Scripts/Core/Common/Callbacks.cs
+  artifactKey: Guid(866ebd31b1de69a4baf0e29f07b459ae) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/Core/Common/Callbacks.cs using Guid(866ebd31b1de69a4baf0e29f07b459ae) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c166afe007fcccc848c1a8f2ef40026a') in 0.016324 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 0
+TcpMessagingSession - receive error
+AssetImportWorkerClient::OnTransportError - code=10054 error=An existing connection was forcibly closed by the remote host.

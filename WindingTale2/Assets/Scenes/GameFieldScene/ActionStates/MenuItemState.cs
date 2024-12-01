@@ -41,7 +41,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             {
                 gameMain.PushActivity(gameMain =>
                 {
-                    gameMain.ShowCreatureInfoDialog(creature, CreatureInfoType.SelectAllItem, OnSelectedExchangeItem);
+                    gameMain.gameCanvas.ShowCreatureDialog(creature, CreatureInfoType.SelectAllItem, OnSelectedExchangeItem);
                 });
 
                 return this;
@@ -52,7 +52,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             {
                 gameMain.PushActivity(gameMain =>
                 {
-                    gameMain.ShowCreatureInfoDialog(creature, CreatureInfoType.SelectUseItem, OnSelectedUseItem);
+                    gameMain.gameCanvas.ShowCreatureDialog(creature, CreatureInfoType.SelectUseItem, OnSelectedUseItem);
                 });
                 return this;
             });
@@ -62,7 +62,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             {
                 gameMain.PushActivity(gameMain =>
                 {
-                    gameMain.ShowCreatureInfoDialog(creature, CreatureInfoType.SelectEquipItem, OnSelectedEquipItem);
+                    gameMain.gameCanvas.ShowCreatureDialog(creature, CreatureInfoType.SelectEquipItem, OnSelectedEquipItem);
                 });
                 return this;
             });
@@ -72,7 +72,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             {
                 gameMain.PushActivity(gameMain =>
                 {
-                    gameMain.ShowCreatureInfoDialog(creature, CreatureInfoType.SelectAllItem, OnSelectedDiscardItem);
+                    gameMain.gameCanvas.ShowCreatureDialog(creature, CreatureInfoType.SelectAllItem, OnSelectedDiscardItem);
                 });
                 return this;
             });
@@ -160,7 +160,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Reopen the item dialog
             gameMain.PushActivity(gameMain =>
             {
-                gameMain.ShowCreatureInfoDialog(this.Creature, CreatureInfoType.SelectEquipItem, OnSelectedEquipItem);
+                gameMain.gameCanvas.ShowCreatureDialog(this.Creature, CreatureInfoType.SelectEquipItem, OnSelectedEquipItem);
             });
         }
 

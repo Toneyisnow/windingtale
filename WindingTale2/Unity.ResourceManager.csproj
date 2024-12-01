@@ -74,8 +74,8 @@
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Runtime\ResourceManager\AsyncOperations\ChainOperation.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Runtime\ResourceManager\Util\Exceptions.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Runtime\ResourceManager\Diagnostics\DiagnosticEvent.cs" />
-    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Runtime\ResourceManager\ResourceProviders\InstanceProvider.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Runtime\ResourceManager\ResourceProviders\SceneProvider.cs" />
+    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Runtime\ResourceManager\ResourceProviders\InstanceProvider.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Runtime\ResourceManager\ResourceLocations\IResourceLocation.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Runtime\ResourceManager\ResourceProviders\TextDataProvider.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Runtime\ResourceManager\Diagnostics\Profiling\IProfilerEmitter.cs" />

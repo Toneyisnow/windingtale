@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Scenes.GameFieldScene;
 
-public class ConfirmDialog : MonoBehaviour
+public class TalkDialog : MonoBehaviour
 {
 
     private Action<int> onSelected = null;

@@ -180,6 +180,23 @@ namespace WindingTale.MapObjects.GameMap
             AddCreatureUI(creature, position);
         }
 
+        /// <summary>
+        /// Directly remove the creature from the map
+        /// </summary>
+        /// <param name="creature"></param>
+        public void RemoveCreature(int creatureId)
+        {
+            string creatureKey = string.Format("creature_{0}", StringUtils.Digit3(creatureId));
+            Transform creatureIcon = this.creaturesLayer.transform.Find(creatureKey);
+            if (creatureIcon != null)
+            {
+                Destroy(creatureIcon.gameObject);
+            }
+
+            FDCreature creature = this.Map.Creatures.Find(c => c.Id == creatureId);
+            this.Map.Creatures.Remove(creature);
+        }
+
         public void MoveCreature(FDCreature creature, FDMovePath movePath)
         {
             string creatureName = string.Format("creature_{0}", StringUtils.Digit3(creature.Id));
@@ -193,17 +210,6 @@ namespace WindingTale.MapObjects.GameMap
             }
         }
 
-        public void DeleteDeadCreature(FDCreature creature)
-        {
-            string creatureName = string.Format("creature_{0}", StringUtils.Digit3(creature.Id));
-            Transform creatureIcon = this.creaturesLayer.transform.Find(creatureName);
-            if (creatureIcon != null)
-            {
-                Destroy(creatureIcon.gameObject);
-            }
-            this.Map.Creatures.Remove(creature);
-            this.Map.DeadCreatures.Add(creature);
-        }
 
         #region Private Methods
 

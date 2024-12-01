@@ -61,8 +61,8 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2023.2.3f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\Profiler\AddressablesProfilerViewController.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\GUI\GUIElements\DocumentationButton.cs" />
+    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\Profiler\AddressablesProfilerViewController.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\GUI\AddressableAssetsSettingsGroupTreeView.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Settings\AssetReferenceDrawerUtilities.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\GUI\AssetPublishEditor.cs" />
@@ -143,9 +143,9 @@
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\GUI\HostingServicesListTreeView.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\Profiler\BuildLayoutsManager.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\GUI\GUIElements\GUIUtility.cs" />
-    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\HostingServices\IHostingServiceConfigurationProvider.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Build\AddressablesDataBuilderInput.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\Profiler\AddressablesProfilerDetailsTreeView.cs" />
+    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\HostingServices\IHostingServiceConfigurationProvider.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\GUI\AddressableAssetsSettingsGroupEditorBuildMenu.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Build\AnalyzeRules\CheckBundleDupeDependencies.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\GUI\ProfileDataSourceDropdownWindow.cs" />
@@ -159,15 +159,15 @@
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\HostingServices\HttpHostingService.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\Profiler\UXML\TreeColumnNames.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\GUI\GUIElements\VisualElementsWrapper.cs" />
-    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Build\Layout\BuildLayoutPrinter.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\BuildReportVisualizer\Utility\DetailsSummaryBuilder.cs" />
+    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Build\Layout\BuildLayoutPrinter.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\GUI\GraphColors.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\GUI\Graph\GraphLayerBackground.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Build\MonoScriptBundleNaming.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Settings\ProjectConfigData.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Build\ShaderBundleNaming.cs" />
-    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\BuildReportVisualizer\IAddressableView.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\Data\EventDataStream.cs" />
+    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\BuildReportVisualizer\IAddressableView.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Settings\AddressablesFileEnumeration.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\Profiler\ProfilerDetailsTreeViewItemData.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Settings\AddressableAssetGroupSchemaTemplate.cs" />
@@ -226,8 +226,8 @@
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\Profiler\UXML\InspectorPane.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\GUI\EventViewerWindow.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\GUI\EventListView.cs" />
-    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Settings\AddressableAssetGroupTemplate.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\GUI\AssetLabelReferenceDrawer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Settings\AddressableAssetGroupTemplate.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\BuildReportVisualizer\MainPanelSummaryTab.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Build\AnalyzeRules\AnalyzeRule.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.2\Editor\Diagnostics\Profiler\FrameDataViewRef.cs" />

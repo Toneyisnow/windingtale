@@ -17,6 +17,8 @@ namespace WindingTale.Core.Definitions
     {
         private static DefinitionStore instance = null;
 
+        #region Private Definitions
+
         private Dictionary<int, CreatureDefinition> creatureDefinitions = null;
         private Dictionary<int, CreatureDefinition> creatureBaseDefinitions = null;
         private Dictionary<int, CreatureDefinition> creatureChapterDefinitions = null;
@@ -39,6 +41,8 @@ namespace WindingTale.Core.Definitions
 
         private Dictionary<int, FightAnimation> fightAnimations = null;
 
+        #endregion
+
         private DefinitionStore()
         {
 
@@ -56,6 +60,9 @@ namespace WindingTale.Core.Definitions
                 return instance;
             }
         }
+
+
+        #region Loading Functions
 
         private void LoadAll()
         {
@@ -272,6 +279,10 @@ namespace WindingTale.Core.Definitions
             }
         }
 
+        #endregion
+
+        #region Public Functions
+
         /// <summary>
         /// Load two files: chapter_N.dat for json, chapter_N_data.dat for plain text
         /// </summary>
@@ -400,6 +411,11 @@ namespace WindingTale.Core.Definitions
             }
             return null;
         }
+
+
+
+
+        #endregion
 
 
     }

@@ -13,10 +13,12 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
 {
     public class ActivityFactory
     {
-        public static DurationActivity CreatureWalkActivity(FDCreature creature, FDMovePath movePath)
+        public static DurationActivity CreatureWalkActivity(int creatureId, FDMovePath movePath)
         {
             Action<GameMain> startAction = gameMain =>
             {
+                FDCreature creature = gameMain.gameMap.Map.GetCreatureById(creatureId);
+
                 // Save the current position
                 creature.PrePosition = creature.Position;
                 gameMain.gameMap.MoveCreature(creature, movePath);
@@ -25,11 +27,14 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             Func<GameMain, bool> checkEnd = 
                 gameMain =>
                 {
+                    FDCreature creature = gameMain.gameMap.Map.GetCreatureById(creatureId);
+
                     Creature creatureObj = gameMain.gameMap.GetCreature(creature);
                     return creatureObj.GetComponent<CreatureWalk>() == null;
                 };
             Action<GameMain> endAction = gameMain =>
             {
+                FDCreature creature = gameMain.gameMap.Map.GetCreatureById(creatureId);
                 creature.Position = movePath.Desitination;
             };
 
@@ -59,7 +64,8 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             };
             Action<GameMain> endAction = gameMain =>
             {
-                gameMain.gameMap.DeleteDeadCreature(creature);
+                gameMain.gameMap.RemoveCreature(creature.Id);
+                gameMain.gameMap.Map.DeadCreatures.Add(creature);
             };
 
             return new DurationActivity(startAction, checkEnd, endAction);

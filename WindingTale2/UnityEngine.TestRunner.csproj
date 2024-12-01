@@ -85,8 +85,8 @@
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\TestRunner\Callbacks\TestResultRenderer.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestMustExpectAllLogsAttribute.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\Utils\AssemblyProvider\IAssemblyWrapper.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\AssemblyInfo.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\NUnitExtensions\Filters\CategoryFilterExtended.cs" />
+    <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\AssemblyInfo.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\TestRunner\ITestRunnerListener.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\UnityTestProtocol\TestFinishMessage.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\TestRunner\Callbacks\RemoteTestResultSender.cs" />
@@ -103,8 +103,8 @@
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\TestRunner\TestPlatform.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\NUnitExtensions\Commands\BeforeAfterTestCommandState.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\Utils\TestRunCallbackListener.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\TestRunner\Callbacks\TestResultRendererCallback.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\UnityTestProtocol\TestState.cs" />
+    <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\TestRunner\Callbacks\TestResultRendererCallback.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\NUnitExtensions\Runner\IEnumerableTestMethodCommand.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\TestRunner\Messages\IEditModeTestYieldInstruction.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEngine.TestRunner\Utils\Vector2ComparerWithEqualsOperator.cs" />

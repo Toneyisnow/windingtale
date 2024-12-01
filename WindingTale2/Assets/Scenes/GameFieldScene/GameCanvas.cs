@@ -8,9 +8,14 @@ using WindingTale.UI.Dialogs;
 
 namespace WindingTale.Scenes.GameFieldScene
 {
-
     public class GameCanvas : MonoBehaviour
     {
+        public enum DialogPosition
+        {
+            Top = 0,
+            Bottom = 1,
+        }
+
         public GameObject dialog = null;
 
         // Start is called before the first frame update
@@ -33,6 +38,22 @@ namespace WindingTale.Scenes.GameFieldScene
 
             sDialog.Init(creature, infoType, onSelected);
 
+        }
+
+        /// <summary>
+        /// Show talk dialog, if creatureAnimationid is zero, then it is a system dialog from narrator
+        /// </summary>
+        /// <param name="creatureAnimationid"></param>
+        /// <param name="rawText"></param>
+        /// <param name="needConfirm"></param>
+        /// <param name="dialogPosition"></param>
+        /// <param name="onSelected"></param>
+        public void ShowTalkDialog(int creatureAnimationid, string rawText, bool needConfirm, DialogPosition dialogPosition, Action<int> onSelected)
+        {
+            dialog = this.transform.Find("TalkDialog").gameObject;
+            dialog.SetActive(true);
+            TalkDialog sDialog = dialog.GetComponent<TalkDialog>();
+            sDialog.Init(onSelected);
         }
 
         public void CloseDialog()

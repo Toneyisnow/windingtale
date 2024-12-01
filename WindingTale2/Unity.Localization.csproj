@@ -131,8 +131,8 @@
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Pseudo\TypicalCharacterSets.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Smart Format\Extensions\IsMatchFormatter.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Component Localizers\LocalizeTextureEvent.cs" />
-    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Tables\LocalizationTable.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Utilities\ObjectPool\IObjectPool.cs" />
+    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Tables\LocalizationTable.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Pseudo\PseudoLocale.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Smart Format\Core\Parsing\LiteralText.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Property Variants\GameObjectLocalizer.cs" />
@@ -153,8 +153,8 @@
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Property Variants\Tracked Objects\TrackedTMP.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Tables\DetailedLocalizationTable.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Smart Format\Core\Extensions\FormatterBase.cs" />
-    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Settings\Startup Selectors\SpecificLocaleSelector.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Localized Reference\LocalizedAsset.deprecated.cs" />
+    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Settings\Startup Selectors\SpecificLocaleSelector.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Component Localizers\LocalizeStringEvent.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Utilities\StringExtensionMethods.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Metadata\ExcludeEntryFromExport.cs" />
@@ -226,8 +226,8 @@
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Utilities\ObjectPool\ObjectPools.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Smart Format\Smart.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Plugins\UITK\PersistentVariables.databinding.cs" />
-    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Localized Reference\LocalizedReference.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Settings\Database\LocalizedDatabase.cs" />
+    <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Localized Reference\LocalizedReference.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Metadata\AssetTypeMetadata.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Localized Reference\LocalizedString.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@1.5.3\Runtime\Utilities\ObjectPool\PooledObject.cs" />

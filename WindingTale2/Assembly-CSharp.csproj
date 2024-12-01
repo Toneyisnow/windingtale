@@ -81,6 +81,7 @@
     <Compile Include="Assets\MapObjects\Cursors\MoveIndicator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ActivityFactory.cs" />
+    <Compile Include="Assets\Scripts\UI\Dialogs\TalkDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\MoveRangeFinder.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
@@ -114,8 +115,8 @@
     <Compile Include="Assets\Scenes\GameFieldScene\GameRenderer.cs" />
     <Compile Include="Assets\Scripts\UI\Utils\LocalizationManager.cs" />
     <Compile Include="Assets\Scripts\Core\Events\CreatureDyingEvent.cs" />
-    <Compile Include="Assets\Scripts\Core\Definitions\MagicDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuState.cs" />
+    <Compile Include="Assets\Scripts\Core\Definitions\MagicDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TreasureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Map\FDMap.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
@@ -130,7 +131,7 @@
     <Compile Include="Assets\MapObjects\GameMap\MapCoordinate.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\CreatureInfoDialog.cs" />
-    <Compile Include="Assets\Scripts\UI\Dialogs\ConfirmDialog.cs" />
+    <Compile Include="Assets\Scenes\GameFieldScene\Activities\TalkActivity.cs" />
     <Compile Include="Assets\MapObjects\BlockIndicator\BlockIndicator.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActivityQueue.cs" />
     <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
@@ -1444,13 +1445,13 @@
       <Project>{05256F8C-107F-5FC8-CB5B-C8F4AD7CEBB5}</Project>
       <Name>Unity.Timeline</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.VisualScripting.State.Editor.csproj">
-      <Project>{5B20CDA1-8DB6-AF4A-D896-C991C5A062FA}</Project>
-      <Name>Unity.VisualScripting.State.Editor</Name>
-    </ProjectReference>
     <ProjectReference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.csproj">
       <Project>{4DC2874A-A844-713A-1263-5CC7B8AC9AAF}</Project>
       <Name>Unity.TestTools.CodeCoverage.Editor.OpenCover.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.VisualScripting.State.Editor.csproj">
+      <Project>{5B20CDA1-8DB6-AF4A-D896-C991C5A062FA}</Project>
+      <Name>Unity.VisualScripting.State.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="UnityEngine.UI.csproj">
       <Project>{90BD5D7E-8F3A-E811-8FB0-75DD5CF7B91C}</Project>
@@ -1496,13 +1497,13 @@
       <Project>{B88F671C-D65A-2C93-3738-3761CDA18E72}</Project>
       <Name>Unity.VisualStudio.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.Addressables.csproj">
-      <Project>{51A4A3D0-670D-9FA3-9F24-D2FDCCFCA28A}</Project>
-      <Name>Unity.Addressables</Name>
-    </ProjectReference>
     <ProjectReference Include="Unity.VisualScripting.Flow.csproj">
       <Project>{0E03DC5E-F4A4-74BD-BAEB-BC38FADCDB22}</Project>
       <Name>Unity.VisualScripting.Flow</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Addressables.csproj">
+      <Project>{51A4A3D0-670D-9FA3-9F24-D2FDCCFCA28A}</Project>
+      <Name>Unity.Addressables</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Localization.csproj">
       <Project>{EEEF4E3C-C3C2-DAA3-0AE2-78303A3E2549}</Project>

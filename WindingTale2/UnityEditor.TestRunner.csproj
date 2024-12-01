@@ -84,8 +84,8 @@
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEditor.TestRunner\GUI\GuiHelper.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEditor.TestRunner\TestRun\Tasks\FileCleanupVerifierTaskBase.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEditor.TestRunner\TestLaunchers\PlatformSetup\XboxOnePlatformSetup.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEditor.TestRunner\CommandLineTest\ResultsSavingCallbacks.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEditor.TestRunner\Api\Filter.cs" />
+    <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEditor.TestRunner\CommandLineTest\ResultsSavingCallbacks.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEditor.TestRunner\RequirePlatformSupportAttribute.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEditor.TestRunner\TestRun\Tasks\EditModeRunTask.cs" />
     <Compile Include="Library\PackageCache\com.unity.test-framework@1.3.9\UnityEditor.TestRunner\TestLaunchers\Helpers\PostbuildCleanupAttributeFinder.cs" />

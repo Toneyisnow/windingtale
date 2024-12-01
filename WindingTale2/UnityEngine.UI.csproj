@@ -91,8 +91,8 @@
     <Compile Include="Library\PackageCache\com.unity.ugui@2.0.0\Runtime\UGUI\UI\Core\IGraphicEnabledDisabled.cs" />
     <Compile Include="Library\PackageCache\com.unity.ugui@2.0.0\Runtime\UGUI\EventSystem\InputModules\BaseInput.cs" />
     <Compile Include="Library\PackageCache\com.unity.ugui@2.0.0\Runtime\UGUI\UI\Core\VertexModifiers\IMeshModifier.cs" />
-    <Compile Include="Library\PackageCache\com.unity.ugui@2.0.0\Runtime\UGUI\UI\Core\Text.cs" />
     <Compile Include="Library\PackageCache\com.unity.ugui@2.0.0\Runtime\UGUI\UI\Core\RawImage.cs" />
+    <Compile Include="Library\PackageCache\com.unity.ugui@2.0.0\Runtime\UGUI\UI\Core\Text.cs" />
     <Compile Include="Library\PackageCache\com.unity.ugui@2.0.0\Runtime\UGUI\UI\Core\Layout\AspectRatioFitter.cs" />
     <Compile Include="Library\PackageCache\com.unity.ugui@2.0.0\Runtime\UGUI\UI\Core\ScrollRect.cs" />
     <Compile Include="Library\PackageCache\com.unity.ugui@2.0.0\Runtime\UGUI\EventSystem\InputModules\TouchInputModule.cs" />
