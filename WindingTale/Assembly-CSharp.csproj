@@ -156,6 +156,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\CreatureDeadActivity.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_RenderBaseMap.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpMagicDefinition.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\MenuSystemState.cs" />
     <Compile Include="Assets\Scripts\Core\AI\Delegates\AIEscapeDelegate.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="Assets\Scripts\UI\Activities\ActivityManager.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\CallbackActivity.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\LocalizedItems\LocalizedImage.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Scripts\QT_SurfaceNoise.cs" />
     <Compile Include="Assets\Scripts\UI\ActionStates\IdleState.cs" />
     <Compile Include="Assets\Scripts\Core\Files\ResourceDataFile.cs" />
     <Compile Include="Assets\Scripts\UI\Activities\ShowRangeActivity.cs" />
@@ -277,11 +279,14 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_20_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_12_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_10_Creature.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexColorsIBLReflective.shader" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald-Bold - OFL.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_07_Creature.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexColorsIBLDiffuse.shader" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-12.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_20_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_02.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexColorsDiffuseTexUnity5_Linear.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_17.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Common.txt" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />
@@ -308,6 +313,7 @@
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-31.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\Resources\Data\Occupation.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexLitIBL.cginc" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Message.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_30_Creature.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Item.txt" />
@@ -317,6 +323,7 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_11.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_15_Creature.txt" />
     <None Include="Assets\Resources\Data\FightAnimation.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexColorsEmissiveUnity5_Linear.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_03_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_31.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_32_Creature.txt" />
@@ -347,7 +354,9 @@
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-24.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_18_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_01_ConversationId.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\VertexLitVertexColors.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_12_Creature.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\QT_Cubemaps.cginc" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_27.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-20.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_18.txt" />
@@ -376,13 +385,16 @@
     <None Include="Assets\Resources\Data\LevelUpMagic.txt" />
     <None Include="Assets\Resources\Data\Magic.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_08_ConversationId.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexColorsIBLEmissive.shader" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-08.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_06_Creature.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-13.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexColorsDiffuseTexUnity5.shader" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-10.txt" />
     <None Include="Assets\SmartLocalization\Resources\EmptyResourceHeader.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_22_Creature.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexColorsIBLDiffuseTex.shader" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-27.txt" />
     <None Include="Assets\Resources\Data\Shop.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_01.txt" />
@@ -392,6 +404,8 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_04.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_20.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_06_ConversationId.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexColorsReflectiveUnity5.shader" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexColorsReflectiveUnity5_Linear.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_03.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
@@ -402,9 +416,11 @@
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-21.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_04_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_07_ConversationId.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexColorsEmissiveUnity5.shader" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-16.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_12.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Occupation.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexColorsUnity5_Linear.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_21_ConversationId.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Village.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_02_ConversationId.txt" />
@@ -425,6 +441,7 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_08_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_19_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_21.txt" />
+    <None Include="Assets\Quantum Theory\Polyworld\Shaders\VertexColors\IBL\VertexColorsUnity5.shader" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-26.txt" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Bangers - OFL.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-07.txt" />

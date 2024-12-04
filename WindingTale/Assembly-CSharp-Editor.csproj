@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\SmartLocalizationWindow.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\Utility\LocalizedKeySelector.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Editor\QT_SurfaceNoiseEditor.cs" />
     <Compile Include="Assets\Editor\StringUtils.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\InspectorScripts\LocalizedAudioSourceInspector.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\Translation\IAutomaticTranslator.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Assets\Editor\CreateFightAnimators.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\LanguageExportWindow.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\EditRootLanguageFileWindow.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Editor\QT_ExportTerrain.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\ReorderableListGUI.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\SettingsListAdaptor.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\Internal\ReorderableListResources.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\MiniJSON.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\EditorWindows\ListControls\CreateLanguageMenuControl.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\Utility\LanguageDictionaryHelper.cs" />
+    <Compile Include="Assets\Quantum Theory\Polyworld\Editor\QT_ModelProcessor.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\ThirdParty\Rotorz\Reorderable List Field\Editor\Internal\GUIHelper.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\InspectorScripts\LocalizedTextInspector.cs" />
     <Compile Include="Assets\SmartLocalization\Scripts\Editor\Utility\SmartCultureInfoEx.cs" />

@@ -1,8 +1,9 @@
 ﻿/*
- * QT_ConvertMesh
+ * QT_ConvertMesh v1.71
  * 
  * Known Issues:
- * - Blendshapes not supported yet 
+ * - Unity doesn't give access to blendshape mesh data. Blendshapes can not be converted until support is added: http://feedback.unity3d.com/suggestions/expose-blend-shape-vertex-data
+ * - as a result, gameobjects with skinnesmeshrender components that have blendshapes but no boneweights get converted to simple props (meshrenderer and meshfilter component-based). 
  * - Prefab hierarchies which contain meshes of the same name will create problems when "Overwrite Exported Data" is checked. 
 
 */
@@ -18,26 +19,20 @@ public class QT_ConvertMesh : EditorWindow
 
     static void Init()
     {
-        
         QT_ConvertMesh window = (QT_ConvertMesh)EditorWindow.GetWindow(typeof(QT_ConvertMesh));
+        window.title = "PolyWorld Mesher";
+        window.maxSize = new Vector2(300, 305);
+        window.minSize = window.maxSize;
         window.Show();
-       
         
     }
 
-    void OnEnable()
-    {
-        this.maxSize = new Vector2(300, 305);
-        this.minSize = this.maxSize;        
-        this.titleContent = new GUIContent("PolyWorld Mesher");
-        WorldIcon = (Texture)Resources.Load("QT_PolyWorld-icon");
-        exportWindowsFolder = Application.dataPath;
-    }
+
     private GameObject[] SourceGOs;
     private Color brightenColor = Color.black;
     private string HelpMessage;
-
-    Texture WorldIcon;
+    
+    Texture WorldIcon = (Texture)AssetDatabase.LoadAssetAtPath("Assets/Quantum Theory/Polyworld/Editor/QT_PolyWorld-icon.png", typeof(Texture));
 
 
     private bool filterBilinear = true;
@@ -45,7 +40,7 @@ public class QT_ConvertMesh : EditorWindow
     BlurAmount blurAmount = BlurAmount.None;
     int mipLevel = 0;
     private string exportAssetFolder = "Assets"; //contains the folder where we'll export all the assets
-    private string exportWindowsFolder;//contains complete path to the exportAssetFolder
+    private string exportWindowsFolder = Application.dataPath;//contains complete path to the exportAssetFolder
     private string tempExportFolder = "Assets";
     private bool overwriteMeshes = true; //if meshes of the same name are found, overwrite them.
     private bool recalcLMUVs = false; //useful for when multiple meshes get combined.
@@ -61,12 +56,6 @@ public class QT_ConvertMesh : EditorWindow
 
     public void OnGUI()
     {
-#if UNITY_IOS
-        GUILayout.BeginVertical(GUI.skin.box);
-        GUILayout.Label("iOS Platform Warning:\n\nWhile PolyWorld's content is compatible on iOS,\nPolyWorld Mesh color generation is not\ncompatible due to iOS's texture compression\nscheme.\n\nPlease switch back to PC/Standalone to create\nPolyWorld terrains, then back to iOS to make\nyour build.");
-        GUILayout.EndVertical();
-        EditorGUILayout.Space();
-#else
         EditorGUI.DrawPreviewTexture(new Rect(10, 10, 280, 60), WorldIcon);
         GUILayout.BeginArea(new Rect(10, 70, 280, 220));
         if (Selection.gameObjects.Length > 0)
@@ -193,8 +182,8 @@ public class QT_ConvertMesh : EditorWindow
         }
 
 
-
-#endif
+ 
+       
     }
     private List<string> CheckforPrefab(GameObject[] SourceGOs)
     {
@@ -423,7 +412,7 @@ public class QT_ConvertMesh : EditorWindow
             * */
             if(recalcLMUVs)
                 Unwrapping.GenerateSecondaryUVSet(newVCMesh);
-            ;
+            newVCMesh.Optimize();
             newVCMesh.RecalculateNormals(); //recalc normals breaks normals along uv seams.. 
 
             //remove bad mesh characters here and add suffix

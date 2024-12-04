@@ -1,0 +1,30 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# https://assetstore.unity.com/packages/tools/sprite-management/texturepacker-importer-16641
+#
+# created with Free texture packer v0.6.7
+# http://free-tex-packer.com
+#
+:format=40300
+:texture=Fight-208.png
+:size=2048x4096
+:pivotpoints=enabled
+:borders=disabled
+
+Fight-208-2-06.png;0;3428;424;668; 0.5;0.5; 0;0;0;0
+Fight-208-2-05.png;424;3432;424;664; 0.5;0.5; 0;0;0;0
+Fight-208-2-04.png;0;2772;456;656; 0.5;0.5; 0;0;0;0
+Fight-208-2-03.png;848;3540;444;556; 0.5;0.5; 0;0;0;0
+Fight-208-2-07.png;456;2928;548;504; 0.5;0.5; 0;0;0;0
+Fight-208-2-11.png;1292;3592;544;504; 0.5;0.5; 0;0;0;0
+Fight-208-2-10.png;1292;3088;544;504; 0.5;0.5; 0;0;0;0
+Fight-208-2-09.png;0;2268;544;504; 0.5;0.5; 0;0;0;0
+Fight-208-2-08.png;544;2424;544;504; 0.5;0.5; 0;0;0;0
+Fight-208-1-03.png;1088;2548;340;540; 0.5;0.5; 0;0;0;0
+Fight-208-1-02.png;1428;2552;340;536; 0.5;0.5; 0;0;0;0
+Fight-208-1-04.png;0;1732;340;536; 0.5;0.5; 0;0;0;0
+Fight-208-2-02.png;340;1736;396;532; 0.5;0.5; 0;0;0;0
+Fight-208-2-01.png;1428;2020;340;532; 0.5;0.5; 0;0;0;0
+Fight-208-1-01.png;1088;2016;340;532; 0.5;0.5; 0;0;0;0

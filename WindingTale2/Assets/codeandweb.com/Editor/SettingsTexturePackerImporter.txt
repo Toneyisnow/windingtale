@@ -1,0 +1,194 @@
+version: 2
+tpsheetFileNames:
+- Assets/codeandweb.com/Example/SpriteSheet/sprites.tpsheet
+- Assets/Resources/Fights/001/Fight-001.tpsheet
+- Assets/Resources/Fights/002/Fight-002.tpsheet
+- Assets/Resources/Fights/003/Fight-003.tpsheet
+- Assets/Resources/Fights/004/Fight-004.tpsheet
+- Assets/Resources/Fights/005/Fight-005.tpsheet
+- Assets/Resources/Fights/006/Fight-006.tpsheet
+- Assets/Resources/Fights/007/Fight-007.tpsheet
+- Assets/Resources/Fights/008/Fight-008.tpsheet
+- Assets/Resources/Fights/009/Fight-009.tpsheet
+- Assets/Resources/Fights/010/Fight-010.tpsheet
+- Assets/Resources/Fights/011/Fight-011.tpsheet
+- Assets/Resources/Fights/012/Fight-012.tpsheet
+- Assets/Resources/Fights/013/Fight-013.tpsheet
+- Assets/Resources/Fights/014/Fight-014.tpsheet
+- Assets/Resources/Fights/015/Fight-015.tpsheet
+- Assets/Resources/Fights/016/Fight-016.tpsheet
+- Assets/Resources/Fights/017/Fight-017.tpsheet
+- Assets/Resources/Fights/018/Fight-018.tpsheet
+- Assets/Resources/Fights/019/Fight-019.tpsheet
+- Assets/Resources/Fights/020/Fight-020.tpsheet
+- Assets/Resources/Fights/021/Fight-021.tpsheet
+- Assets/Resources/Fights/022/Fight-022.tpsheet
+- Assets/Resources/Fights/023/Fight-023.tpsheet
+- Assets/Resources/Fights/024/Fight-024.tpsheet
+- Assets/Resources/Fights/025/Fight-025.tpsheet
+- Assets/Resources/Fights/026/Fight-026.tpsheet
+- Assets/Resources/Fights/027/Fight-027.tpsheet
+- Assets/Resources/Fights/028/Fight-028.tpsheet
+- Assets/Resources/Fights/029/Fight-029.tpsheet
+- Assets/Resources/Fights/030/Fight-030.tpsheet
+- Assets/Resources/Fights/031/Fight-031.tpsheet
+- Assets/Resources/Fights/032/Fight-032.tpsheet
+- Assets/Resources/Fights/101/Fight-101.tpsheet
+- Assets/Resources/Fights/102/Fight-102.tpsheet
+- Assets/Resources/Fights/103/Fight-103.tpsheet
+- Assets/Resources/Fights/105/Fight-105.tpsheet
+- Assets/Resources/Fights/106/Fight-106.tpsheet
+- Assets/Resources/Fights/107/Fight-107.tpsheet
+- Assets/Resources/Fights/108/Fight-108.tpsheet
+- Assets/Resources/Fights/109/Fight-109.tpsheet
+- Assets/Resources/Fights/110/Fight-110.tpsheet
+- Assets/Resources/Fights/111/Fight-111.tpsheet
+- Assets/Resources/Fights/112/Fight-112.tpsheet
+- Assets/Resources/Fights/113/Fight-113.tpsheet
+- Assets/Resources/Fights/114/Fight-114.tpsheet
+- Assets/Resources/Fights/115/Fight-115.tpsheet
+- Assets/Resources/Fights/116/Fight-116.tpsheet
+- Assets/Resources/Fights/117/Fight-117.tpsheet
+- Assets/Resources/Fights/201/Fight-201.tpsheet
+- Assets/Resources/Fights/202/Fight-202.tpsheet
+- Assets/Resources/Fights/203/Fight-203.tpsheet
+- Assets/Resources/Fights/205/Fight-205.tpsheet
+- Assets/Resources/Fights/206/Fight-206.tpsheet
+- Assets/Resources/Fights/208/Fight-208.tpsheet
+- Assets/Resources/Fights/209/Fight-209.tpsheet
+- Assets/Resources/Fights/210/Fight-210.tpsheet
+- Assets/Resources/Fights/211/Fight-211.tpsheet
+- Assets/Resources/Fights/212/Fight-212.tpsheet
+- Assets/Resources/Fights/213/Fight-213.tpsheet
+- Assets/Resources/Fights/214/Fight-214.tpsheet
+- Assets/Resources/Fights/216/Fight-216.tpsheet
+- Assets/Resources/Fights/217/Fight-217.tpsheet
+textureFileNames:
+- Assets/codeandweb.com/Example/SpriteSheet/sprites.png
+- Assets/Resources/Fights/001/Fight-001.png
+- Assets/Resources/Fights/002/Fight-002.png
+- Assets/Resources/Fights/003/Fight-003.png
+- Assets/Resources/Fights/004/Fight-004.png
+- Assets/Resources/Fights/005/Fight-005.png
+- Assets/Resources/Fights/006/Fight-006.png
+- Assets/Resources/Fights/007/Fight-007.png
+- Assets/Resources/Fights/008/Fight-008.png
+- Assets/Resources/Fights/009/Fight-009.png
+- Assets/Resources/Fights/010/Fight-010.png
+- Assets/Resources/Fights/011/Fight-011.png
+- Assets/Resources/Fights/012/Fight-012.png
+- Assets/Resources/Fights/013/Fight-013.png
+- Assets/Resources/Fights/014/Fight-014.png
+- Assets/Resources/Fights/015/Fight-015.png
+- Assets/Resources/Fights/016/Fight-016.png
+- Assets/Resources/Fights/017/Fight-017.png
+- Assets/Resources/Fights/018/Fight-018.png
+- Assets/Resources/Fights/019/Fight-019.png
+- Assets/Resources/Fights/020/Fight-020.png
+- Assets/Resources/Fights/021/Fight-021.png
+- Assets/Resources/Fights/022/Fight-022.png
+- Assets/Resources/Fights/023/Fight-023.png
+- Assets/Resources/Fights/024/Fight-024.png
+- Assets/Resources/Fights/025/Fight-025.png
+- Assets/Resources/Fights/026/Fight-026.png
+- Assets/Resources/Fights/027/Fight-027.png
+- Assets/Resources/Fights/028/Fight-028.png
+- Assets/Resources/Fights/029/Fight-029.png
+- Assets/Resources/Fights/030/Fight-030.png
+- Assets/Resources/Fights/031/Fight-031.png
+- Assets/Resources/Fights/032/Fight-032.png
+- Assets/Resources/Fights/101/Fight-101.png
+- Assets/Resources/Fights/102/Fight-102.png
+- Assets/Resources/Fights/103/Fight-103.png
+- Assets/Resources/Fights/105/Fight-105.png
+- Assets/Resources/Fights/106/Fight-106.png
+- Assets/Resources/Fights/107/Fight-107.png
+- Assets/Resources/Fights/108/Fight-108.png
+- Assets/Resources/Fights/109/Fight-109.png
+- Assets/Resources/Fights/110/Fight-110.png
+- Assets/Resources/Fights/111/Fight-111.png
+- Assets/Resources/Fights/112/Fight-112.png
+- Assets/Resources/Fights/113/Fight-113.png
+- Assets/Resources/Fights/114/Fight-114.png
+- Assets/Resources/Fights/115/Fight-115.png
+- Assets/Resources/Fights/116/Fight-116.png
+- Assets/Resources/Fights/117/Fight-117.png
+- Assets/Resources/Fights/201/Fight-201.png
+- Assets/Resources/Fights/202/Fight-202.png
+- Assets/Resources/Fights/203/Fight-203.png
+- Assets/Resources/Fights/205/Fight-205.png
+- Assets/Resources/Fights/206/Fight-206.png
+- Assets/Resources/Fights/208/Fight-208.png
+- Assets/Resources/Fights/209/Fight-209.png
+- Assets/Resources/Fights/210/Fight-210.png
+- Assets/Resources/Fights/211/Fight-211.png
+- Assets/Resources/Fights/212/Fight-212.png
+- Assets/Resources/Fights/213/Fight-213.png
+- Assets/Resources/Fights/214/Fight-214.png
+- Assets/Resources/Fights/216/Fight-216.png
+- Assets/Resources/Fights/217/Fight-217.png
+normalmapFileNames:
+- Assets/codeandweb.com/Example/SpriteSheet/sprites_n.png
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+enableDebugOutput: 0

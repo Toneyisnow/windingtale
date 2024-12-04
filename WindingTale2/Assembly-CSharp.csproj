@@ -396,6 +396,7 @@
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-10.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-27.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\codeandweb.com\Readme.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-07.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-17.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-23.txt" />

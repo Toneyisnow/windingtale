@@ -25,18 +25,14 @@ public class QT_CombineMeshes : EditorWindow
 
     [MenuItem("Window/Quantum Theory/Combine Meshes")]
     static void Init()
-    {        
+    {
         QT_CombineMeshes window = (QT_CombineMeshes)EditorWindow.GetWindow(typeof(QT_CombineMeshes));
         window.Show();
-    }
+        window.title = "Combiner";
+        window.maxSize = new Vector2(460, 205);
+        window.minSize = window.maxSize;
 
-    void OnEnable()
-    {
-        this.titleContent = new GUIContent("Combiner");
-        this.maxSize = new Vector2(460, 205);
-        this.minSize = this.maxSize;
     }
-
     //private static string targetFolder = "Assets/CombinedMesh_Prefabs/";
     public bool destroyAfterOptimized = false;
     private bool AutoName = true;
