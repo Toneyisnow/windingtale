@@ -1,0 +1,25 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# https://assetstore.unity.com/packages/tools/sprite-management/texturepacker-importer-16641
+#
+# created with Free texture packer v0.6.7
+# http://free-tex-packer.com
+#
+:format=40300
+:texture=Fight-723.png
+:size=4096x4096
+:pivotpoints=enabled
+:borders=disabled
+
+Fight-723-1-01.png;0;3296;1280;800; 0.5;0.5; 0;0;0;0
+Fight-723-2-01.png;0;2496;1280;800; 0.5;0.5; 0;0;0;0
+Fight-723-2-02.png;1280;3296;1280;800; 0.5;0.5; 0;0;0;0
+Fight-723-2-03.png;1280;2496;1280;800; 0.5;0.5; 0;0;0;0
+Fight-723-2-04.png;0;1696;1280;800; 0.5;0.5; 0;0;0;0
+Fight-723-2-06.png;1280;1696;1280;800; 0.5;0.5; 0;0;0;0
+Fight-723-2-07.png;0;896;1280;800; 0.5;0.5; 0;0;0;0
+Fight-723-2-08.png;1280;896;1280;800; 0.5;0.5; 0;0;0;0
+Fight-723-2-09.png;2560;3296;1280;800; 0.5;0.5; 0;0;0;0
+Fight-723-2-05.png;1280;2496;1280;800; 0.5;0.5; 0;0;0;0

@@ -1169,3 +1169,11 @@ AssetImportParameters requested are different than current active one (requested
   custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
   custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
   custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+========================================================================
+Received Import Request.
+  Time since last request: 108933.060695 seconds.
+  path: Assets/Quantum Theory/Polyworld/Scenes/Demo_Woodland.unity
+  artifactKey: Guid(9c9724405297bb443b46d5f94109af35) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Quantum Theory/Polyworld/Scenes/Demo_Woodland.unity using Guid(9c9724405297bb443b46d5f94109af35) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '20d5c17f58bbb719642edb2c0896167b') in 0.831451 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 0

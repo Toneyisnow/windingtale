@@ -1,0 +1,28 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# https://assetstore.unity.com/packages/tools/sprite-management/texturepacker-importer-16641
+#
+# created with Free texture packer v0.6.7
+# http://free-tex-packer.com
+#
+:format=40300
+:texture=Fight-704.png
+:size=4096x4096
+:pivotpoints=enabled
+:borders=disabled
+
+Fight-704-2-03.png;0;3256;1280;840; 0.5;0.5; 0;0;0;0
+Fight-704-1-01.png;0;2416;1280;840; 0.5;0.5; 0;0;0;0
+Fight-704-1-04.png;1280;3256;1280;840; 0.5;0.5; 0;0;0;0
+Fight-704-2-01.png;1280;2416;1280;840; 0.5;0.5; 0;0;0;0
+Fight-704-2-02.png;0;1576;1280;840; 0.5;0.5; 0;0;0;0
+Fight-704-1-02.png;1280;1576;1280;840; 0.5;0.5; 0;0;0;0
+Fight-704-2-04.png;0;736;1280;840; 0.5;0.5; 0;0;0;0
+Fight-704-2-05.png;1280;736;1280;840; 0.5;0.5; 0;0;0;0
+Fight-704-2-07.png;2560;3256;1280;840; 0.5;0.5; 0;0;0;0
+Fight-704-2-08.png;2560;2416;1280;840; 0.5;0.5; 0;0;0;0
+Fight-704-2-09.png;2560;1576;1280;840; 0.5;0.5; 0;0;0;0
+Fight-704-1-03.png;0;2416;1280;840; 0.5;0.5; 0;0;0;0
+Fight-704-2-06.png;1280;736;1280;840; 0.5;0.5; 0;0;0;0

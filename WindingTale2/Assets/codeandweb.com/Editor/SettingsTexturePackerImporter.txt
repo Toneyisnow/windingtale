@@ -63,6 +63,68 @@ tpsheetFileNames:
 - Assets/Resources/Fights/214/Fight-214.tpsheet
 - Assets/Resources/Fights/216/Fight-216.tpsheet
 - Assets/Resources/Fights/217/Fight-217.tpsheet
+- Assets/Resources/Fights/302/Fight-302.tpsheet
+- Assets/Resources/Fights/701/Fight-701.tpsheet
+- Assets/Resources/Fights/702/Fight-702.tpsheet
+- Assets/Resources/Fights/703/Fight-703.tpsheet
+- Assets/Resources/Fights/704/Fight-704.tpsheet
+- Assets/Resources/Fights/705/Fight-705.tpsheet
+- Assets/Resources/Fights/706/Fight-706.tpsheet
+- Assets/Resources/Fights/707/Fight-707.tpsheet
+- Assets/Resources/Fights/708/Fight-708.tpsheet
+- Assets/Resources/Fights/709/Fight-709.tpsheet
+- Assets/Resources/Fights/710/Fight-710.tpsheet
+- Assets/Resources/Fights/711/Fight-711.tpsheet
+- Assets/Resources/Fights/712/Fight-712.tpsheet
+- Assets/Resources/Fights/713/Fight-713.tpsheet
+- Assets/Resources/Fights/714/Fight-714.tpsheet
+- Assets/Resources/Fights/715/Fight-715.tpsheet
+- Assets/Resources/Fights/716/Fight-716.tpsheet
+- Assets/Resources/Fights/717/Fight-717.tpsheet
+- Assets/Resources/Fights/719/Fight-719.tpsheet
+- Assets/Resources/Fights/720/Fight-720.tpsheet
+- Assets/Resources/Fights/721/Fight-721.tpsheet
+- Assets/Resources/Fights/722/Fight-722.tpsheet
+- Assets/Resources/Fights/723/Fight-723.tpsheet
+- Assets/Resources/Fights/724/Fight-724.tpsheet
+- Assets/Resources/Fights/725/Fight-725.tpsheet
+- Assets/Resources/Fights/726/Fight-726.tpsheet
+- Assets/Resources/Fights/727/Fight-727.tpsheet
+- Assets/Resources/Fights/728/Fight-728.tpsheet
+- Assets/Resources/Fights/729/Fight-729.tpsheet
+- Assets/Resources/Fights/730/Fight-730.tpsheet
+- Assets/Resources/Fights/732/Fight-732.tpsheet
+- Assets/Resources/Fights/733/Fight-733.tpsheet
+- Assets/Resources/Fights/734/Fight-734.tpsheet
+- Assets/Resources/Fights/735/Fight-735.tpsheet
+- Assets/Resources/Fights/736/Fight-736.tpsheet
+- Assets/Resources/Fights/737/Fight-737.tpsheet
+- Assets/Resources/Fights/738/Fight-738.tpsheet
+- Assets/Resources/Fights/739/Fight-739.tpsheet
+- Assets/Resources/Fights/740/Fight-740.tpsheet
+- Assets/Resources/Fights/741/Fight-741.tpsheet
+- Assets/Resources/Fights/742/Fight-742.tpsheet
+- Assets/Resources/Fights/743/Fight-743.tpsheet
+- Assets/Resources/Fights/744/Fight-744.tpsheet
+- Assets/Resources/Fights/745/Fight-745.tpsheet
+- Assets/Resources/Fights/746/Fight-746.tpsheet
+- Assets/Resources/Fights/747/Fight-747.tpsheet
+- Assets/Resources/Fights/748/Fight748.tpsheet
+- Assets/Resources/Fights/749/Fight-749.tpsheet
+- Assets/Resources/Fights/750/Fight-750.tpsheet
+- Assets/Resources/Fights/751/Fight-751.tpsheet
+- Assets/Resources/Fights/752/Fight-752.tpsheet
+- Assets/Resources/Fights/753/Fight-753.tpsheet
+- Assets/Resources/Fights/754/Fight-754.tpsheet
+- Assets/Resources/Fights/755/Fight-755.tpsheet
+- Assets/Resources/Fights/756/Fight-756.tpsheet
+- Assets/Resources/Fights/757/Fight-757.tpsheet
+- Assets/Resources/Fights/758/Fight-758.tpsheet
+- Assets/Resources/Fights/759/Fight-759.tpsheet
+- Assets/Resources/Fights/760/Fight-760.tpsheet
+- Assets/Resources/Fights/761/Fight-761.tpsheet
+- Assets/Resources/Fights/763/Fight-763.tpsheet
+- Assets/Resources/Fights/901/Fight-901.tpsheet
 textureFileNames:
 - Assets/codeandweb.com/Example/SpriteSheet/sprites.png
 - Assets/Resources/Fights/001/Fight-001.png
@@ -127,8 +189,132 @@ textureFileNames:
 - Assets/Resources/Fights/214/Fight-214.png
 - Assets/Resources/Fights/216/Fight-216.png
 - Assets/Resources/Fights/217/Fight-217.png
+- Assets/Resources/Fights/302/Fight-302.png
+- Assets/Resources/Fights/701/Fight-701.png
+- Assets/Resources/Fights/702/Fight-702.png
+- Assets/Resources/Fights/703/Fight-703.png
+- Assets/Resources/Fights/704/Fight-704.png
+- Assets/Resources/Fights/705/Fight-705.png
+- Assets/Resources/Fights/706/Fight-706.png
+- Assets/Resources/Fights/707/Fight-707.png
+- Assets/Resources/Fights/708/Fight-708.png
+- Assets/Resources/Fights/709/Fight-709.png
+- Assets/Resources/Fights/710/Fight-710.png
+- Assets/Resources/Fights/711/Fight-711.png
+- Assets/Resources/Fights/712/Fight-712.png
+- Assets/Resources/Fights/713/Fight-713.png
+- Assets/Resources/Fights/714/Fight-714.png
+- Assets/Resources/Fights/715/Fight-715.png
+- Assets/Resources/Fights/716/Fight-716.png
+- Assets/Resources/Fights/717/Fight-717.png
+- Assets/Resources/Fights/719/Fight-719.png
+- Assets/Resources/Fights/720/Fight-720.png
+- Assets/Resources/Fights/721/Fight-721.png
+- Assets/Resources/Fights/722/Fight-722.png
+- Assets/Resources/Fights/723/Fight-723.png
+- Assets/Resources/Fights/724/Fight-724.png
+- Assets/Resources/Fights/725/Fight-725.png
+- Assets/Resources/Fights/726/Fight-726.png
+- Assets/Resources/Fights/727/Fight-727.png
+- Assets/Resources/Fights/728/Fight-728.png
+- Assets/Resources/Fights/729/Fight-729.png
+- Assets/Resources/Fights/730/Fight-730.png
+- Assets/Resources/Fights/732/Fight-732.png
+- Assets/Resources/Fights/733/Fight-733.png
+- Assets/Resources/Fights/734/Fight-734.png
+- Assets/Resources/Fights/735/Fight-735.png
+- Assets/Resources/Fights/736/Fight-736.png
+- Assets/Resources/Fights/737/Fight-737.png
+- Assets/Resources/Fights/738/Fight-738.png
+- Assets/Resources/Fights/739/Fight-739.png
+- Assets/Resources/Fights/740/Fight-740.png
+- Assets/Resources/Fights/741/Fight-741.png
+- Assets/Resources/Fights/742/Fight-742.png
+- Assets/Resources/Fights/743/Fight-743.png
+- Assets/Resources/Fights/744/Fight-744.png
+- Assets/Resources/Fights/745/Fight-745.png
+- Assets/Resources/Fights/746/Fight-746.png
+- Assets/Resources/Fights/747/Fight-747.png
+- Assets/Resources/Fights/748/Fight-748.png
+- Assets/Resources/Fights/749/Fight-749.png
+- Assets/Resources/Fights/750/Fight-750.png
+- Assets/Resources/Fights/751/Fight-751.png
+- Assets/Resources/Fights/752/Fight-752.png
+- Assets/Resources/Fights/753/Fight-753.png
+- Assets/Resources/Fights/754/Fight-754.png
+- Assets/Resources/Fights/755/Fight-755.png
+- Assets/Resources/Fights/756/Fight-756.png
+- Assets/Resources/Fights/757/Fight-757.png
+- Assets/Resources/Fights/758/Fight-758.png
+- Assets/Resources/Fights/759/Fight-759.png
+- Assets/Resources/Fights/760/Fight-760.png
+- Assets/Resources/Fights/761/Fight-761.png
+- Assets/Resources/Fights/763/Fight-763.png
+- Assets/Resources/Fights/901/Fight-901.png
 normalmapFileNames:
 - Assets/codeandweb.com/Example/SpriteSheet/sprites_n.png
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
 - 
 - 
 - 
