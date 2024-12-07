@@ -171,6 +171,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\OccupationDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Events\FDTurnEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDMenu.cs" />
+    <Compile Include="Assets\Scripts\Plugins\CreateFightAnimations.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalGuardDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\SpecialItemDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Files\GameMapRecord.cs" />

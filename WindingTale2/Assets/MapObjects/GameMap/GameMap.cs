@@ -30,12 +30,15 @@ namespace WindingTale.MapObjects.GameMap
 
         public GameObject menuPrefab;
 
+        public GameObject sampleFight;
+
 
         private Material defaultMaterial = null;
 
         private GameObject cursorObject = null;
         private Cursor cursor = null;
 
+        
 
         public FDMap Map { get; private set; }
 
@@ -49,6 +52,9 @@ namespace WindingTale.MapObjects.GameMap
             cursor = cursorObject.GetComponent<Cursor>();
 
             SetCursorTo(FDPosition.At(8, 12));
+
+            var animator = sampleFight.GetComponent<Animator>();
+            animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Fights/746/animator_746.controller");
         }
 
         public void Initialize(int chapterId)

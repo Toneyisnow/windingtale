@@ -15,7 +15,7 @@ namespace WindingTale.Core.Definitions
             get; private set;
         }
 
-        public bool HasSkillAnimation
+        public bool HasSpellAnimation
         {
             get; private set;
         }
@@ -30,7 +30,7 @@ namespace WindingTale.Core.Definitions
             get; private set;
         }
 
-        public int SkillFrameCount
+        public int SpellFrameCount
         {
             get; private set;
         }
