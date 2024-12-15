@@ -1177,3 +1177,19 @@ Received Import Request.
 Start importing Assets/Quantum Theory/Polyworld/Scenes/Demo_Woodland.unity using Guid(9c9724405297bb443b46d5f94109af35) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '20d5c17f58bbb719642edb2c0896167b') in 0.831451 seconds
 Number of updated asset objects reloaded before import = 0
 Number of asset objects unloaded after import = 0
+========================================================================
+Received Import Request.
+  Time since last request: 215810.014245 seconds.
+  path: Assets/Resources/Animations/first.fbx
+  artifactKey: Guid(933354cbd40b3744c90bca2a2efa24ac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Animations/first.fbx using Guid(933354cbd40b3744c90bca2a2efa24ac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cd59e57c5e28af50d16a5ec2ed04992d') in 13.114254 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 24
+========================================================================
+Received Import Request.
+  Time since last request: 71.610980 seconds.
+  path: Assets/Editor
+  artifactKey: Guid(5a6f3d539800d584fab287433da1ed9d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Editor using Guid(5a6f3d539800d584fab287433da1ed9d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2317b2a098945d66d245b1a476299818') in 0.020283 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 0

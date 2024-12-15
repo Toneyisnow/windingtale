@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UIElements;
 using WindingTale.Chapters;
@@ -54,7 +55,14 @@ namespace WindingTale.MapObjects.GameMap
             SetCursorTo(FDPosition.At(8, 12));
 
             var animator = sampleFight.GetComponent<Animator>();
-            animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Fights/746/animator_746.controller");
+            //// var controller = Resources.Load<AnimatorController>("Fights/734/animator_734");
+
+            //// AnimatorController.SetAnimatorController(animator, controller);
+
+            animator.runtimeAnimatorController = Resources.Load<AnimatorController>("Fights/734/animator_734");
+
+            animator.SetInteger("actionState", 1);
+
         }
 
         public void Initialize(int chapterId)

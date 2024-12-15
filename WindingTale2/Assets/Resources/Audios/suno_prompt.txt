@@ -1,0 +1,20 @@
+Battle music:
+
+Game background music, beating and fighting, Keep original main melody, keep the same beat rating from begin to end, rhythm should be a little slower than original sound. Only beating on grave accent.
+
+
+End music:
+
+Game background music, beating and happy peaceful. Keep original main melody, keep the same beat rating from begin to end. Only beating on grave accent.
+
+
+
+Shop Bar:
+
+Game background music, beating and happy peaceful. Keep original main melody, add two long chorus and try different instruments, keep the same beat rating FROM START TO END. Don't accelerate
+
+
+Shop Church:
+
+Game background music, slow and peaceful. Keep original main melody, add two chorus and try different instruments, keep the same beat rating FROM START TO END. Don't accelerate
+
