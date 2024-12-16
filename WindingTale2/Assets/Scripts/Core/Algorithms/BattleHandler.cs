@@ -29,7 +29,7 @@ namespace WindingTale.Core.Algorithms
         /// <returns></returns>
         public static AttackResult HandleCreatureAttack(FDCreature subject, FDCreature target, FDField field)
         {
-            AttackResult result = new AttackResult();
+            AttackResult result = new AttackResult(subject, target);
 
             DamageResult damage1 = DamageFrom(subject, target, field);
             result.Experience = CalculateDamageExp(subject, target, damage1);
@@ -75,7 +75,7 @@ namespace WindingTale.Core.Algorithms
             {
                 return null;
             }
-            MagicResult result = new MagicResult();
+            MagicResult result = new MagicResult(subject, targetList);
             if (subject == null || targetList == null || targetList.Count == 0)
             {
                 // From previous steps, there should be at least one target

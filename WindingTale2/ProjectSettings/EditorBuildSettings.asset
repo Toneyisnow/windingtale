@@ -4,7 +4,13 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/GameFieldScene/GameFieldScene.unity
+    guid: 8da25208c83bd614bbdb1612f03b800a
+  - enabled: 1
+    path: Assets/Scenes/GameBattleScene/GameBattleScene.unity
+    guid: 5b97495190d38fd4da991f03fabf3720
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: a74496f36fa7a024fa4410f8326dfce0, type: 2}
     com.unity.localization.settings: {fileID: 11400000, guid: 22516b659d2814040865da8a08352c67, type: 2}

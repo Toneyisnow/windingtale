@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using WindingTale.AI;
 using WindingTale.Chapters;
 using WindingTale.Core.Algorithms;
@@ -15,6 +16,7 @@ using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene.Activities;
 using WindingTale.UI.Dialogs;
+using WindingTale.UI.Utils;
 
 namespace WindingTale.Scenes.GameFieldScene
 {
@@ -131,6 +133,8 @@ namespace WindingTale.Scenes.GameFieldScene
             AttackResult result = BattleHandler.HandleCreatureAttack(creature, target, gameMap.Map.Field);
             
             // Play attack animation
+            GlobalVariables.Set("AttackResult", result);
+            SceneManager.LoadScene("GameBattleScene", LoadSceneMode.Single);
 
 
             // Apply the results

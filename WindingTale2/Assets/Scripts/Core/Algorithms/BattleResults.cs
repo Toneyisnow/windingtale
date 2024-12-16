@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.XPath;
 using WindingTale.Core.Common;
+using WindingTale.Core.Objects;
 
 namespace WindingTale.Core.Algorithms
 {
@@ -112,6 +113,8 @@ namespace WindingTale.Core.Algorithms
 
     public abstract class BattleResult
     {
+        public FDCreature Subject { get; private set; }
+
         public int Experience { get; set; }
 
         public List<int> GainedItems { get; set; }
@@ -119,8 +122,10 @@ namespace WindingTale.Core.Algorithms
 
         public LevelUpInfo LevelUp { get; set; }
 
-        public BattleResult()
+        public BattleResult(FDCreature subject)
         {
+            this.Subject = subject;
+
             this.Experience = 0;
             this.GainedItems = new List<int>();
             this.LevelUp = null;
@@ -133,12 +138,16 @@ namespace WindingTale.Core.Algorithms
     /// </summary>
     public class AttackResult : BattleResult
     {
+        public FDCreature Target { get; private set; }
+
         public List<DamageResult> Damages;
 
         public List<DamageResult> BackDamages;
 
-        public AttackResult() : base()
+        public AttackResult(FDCreature subject, FDCreature target) : base(subject)
         {
+            this.Target = target;
+
             this.Damages = new List<DamageResult>();
             this.BackDamages = new List<DamageResult>();
         }
@@ -149,14 +158,17 @@ namespace WindingTale.Core.Algorithms
     /// </summary>
     public class MagicResult : BattleResult
     {
+        public List<FDCreature> Targets { get; private set; }
+
         /// <summary>
         /// Results has format of <CreatureId, SoloResult>
         /// </summary>
         public Dictionary<int, SoloResult> Results;
 
-        public MagicResult() : base()
+        public MagicResult(FDCreature subject, List<FDCreature> targets) : base(subject)
         {
             this.Results = new Dictionary<int, SoloResult>();
+            this.Targets = targets;
         }
     }
 

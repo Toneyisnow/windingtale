@@ -130,6 +130,7 @@
     <Compile Include="Assets\MapObjects\GameMap\GameMap.cs" />
     <Compile Include="Assets\MapObjects\GameMap\MapCoordinate.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
+    <Compile Include="Assets\Scenes\GameBattleScene\GameBattle.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\CreatureInfoDialog.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\TalkActivity.cs" />
     <Compile Include="Assets\MapObjects\BlockIndicator\BlockIndicator.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Assets\Scripts\Core\Common\FDMessage.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDefensiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\FDMovePath.cs" />
+    <Compile Include="Assets\Scripts\UI\Utils\GlobalVariables.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDPosition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\MainCamera.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\MoneyItemDefinition.cs" />
@@ -409,6 +411,7 @@
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-99.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_12.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-13.txt" />
+    <None Include="Assets\Resources\Audios\suno_prompt.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Magic.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_07_ConversationId.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-08.txt" />
