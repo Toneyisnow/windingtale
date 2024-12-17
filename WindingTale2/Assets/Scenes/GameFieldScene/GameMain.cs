@@ -134,7 +134,7 @@ namespace WindingTale.Scenes.GameFieldScene
             
             // Play attack animation
             GlobalVariables.Set("AttackResult", result);
-            SceneManager.LoadScene("GameBattleScene", LoadSceneMode.Single);
+            SceneManager.LoadScene("GameBattleScene", LoadSceneMode.Additive);
 
 
             // Apply the results

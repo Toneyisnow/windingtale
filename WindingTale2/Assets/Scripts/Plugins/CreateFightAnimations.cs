@@ -26,7 +26,7 @@ namespace WindingTale.Editor
         [UnityEditor.MenuItem("Assets/Create Fight Animations")]
         static void CreateFightAnimator()
         {
-            for (int aniId = 1; aniId < 999; aniId++)
+            for (int aniId = 1; aniId < 9; aniId++)
             {
                 Sprite[] sprites = Resources.LoadAll<Sprite>(string.Format("Fights/{0}/Fight-{0}", StringUtils.Digit3(aniId)));
                 if (sprites == null || sprites.Length == 0)

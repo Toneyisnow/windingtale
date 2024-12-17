@@ -59,7 +59,10 @@ namespace WindingTale.MapObjects.GameMap
 
             //// AnimatorController.SetAnimatorController(animator, controller);
 
-            animator.runtimeAnimatorController = Resources.Load<AnimatorController>("Fights/734/animator_734");
+            var anim = 9;
+            animator.runtimeAnimatorController = Resources.Load<AnimatorController>(
+                string.Format("Fights/{0}/animator_{0}", StringUtils.Digit3(anim))
+            );
 
             animator.SetInteger("actionState", 1);
 

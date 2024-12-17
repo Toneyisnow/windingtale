@@ -25,6 +25,7 @@ namespace WindingTale.Scenes.GameBattleScene
             if (attackResult != null)
             {
                 var subjectAniId = attackResult.Subject.Definition.AnimationId;
+                // var subjectAniId = 701;
 
                 // Load the animation
                 var animator = subjectBody.GetComponent<Animator>();
