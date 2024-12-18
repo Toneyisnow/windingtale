@@ -12,6 +12,7 @@ namespace WindingTale.Scenes.GameBattleScene
     public class GameBattle : MonoBehaviour
     {
         public GameObject subjectBody;
+        public GameObject targetBody;
 
         private AttackResult attackResult;
 
@@ -32,6 +33,17 @@ namespace WindingTale.Scenes.GameBattleScene
                 animator.runtimeAnimatorController = Resources.Load<AnimatorController>(
                     string.Format("Fights/{0}/animator_{0}", StringUtils.Digit3(subjectAniId)));
                 animator.SetInteger("actionState", 1);
+
+
+                var targetAniId = attackResult.Target.Definition.AnimationId;
+
+                // Load the animation
+                animator = targetBody.GetComponent<Animator>();
+                animator.runtimeAnimatorController = Resources.Load<AnimatorController>(
+                    string.Format("Fights/{0}/animator_{0}", StringUtils.Digit3(targetAniId)));
+
+
+
             }
         }
 
