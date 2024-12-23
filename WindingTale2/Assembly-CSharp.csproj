@@ -94,6 +94,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ItemDefinition.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIAggressiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\DefendItemDefinition.cs" />
+    <Compile Include="Assets\FightObjects\FightBody.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ShapeDefinition.cs" />
@@ -125,12 +126,12 @@
     <Compile Include="Assets\Scripts\Core\Game\GameHandler.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\CreatureDefinition.cs" />
+    <Compile Include="Assets\Scenes\GameBattleScene\BattleLoader.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpMagicDefinition.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\MapObjects\GameMap\GameMap.cs" />
     <Compile Include="Assets\MapObjects\GameMap\MapCoordinate.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
-    <Compile Include="Assets\Scenes\GameBattleScene\GameBattle.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\CreatureInfoDialog.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\TalkActivity.cs" />
     <Compile Include="Assets\MapObjects\BlockIndicator\BlockIndicator.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\StringsDefinition.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
+    <Compile Include="Assets\FightObjects\MonoBehaviourUtils.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter1.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\OccupationDefinition.cs" />

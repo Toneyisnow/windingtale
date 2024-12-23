@@ -326,14 +326,13 @@ namespace WindingTale.Core.Objects
             return true;
         }
 
+        /// <summary>
+        /// Check whether this creature has Attack item, and not frozen
+        /// </summary>
+        /// <returns></returns>
         public bool CanAttack()
         {
             if (this.Hp <= 0)
-            {
-                return false;
-            }
-
-            if (this.HasActioned)
             {
                 return false;
             }
@@ -343,7 +342,7 @@ namespace WindingTale.Core.Objects
                 return false;
             }
 
-            if (!this.HasEquipItem())
+            if (this.AttackItemIndex < 0)
             {
                 return false;
             }
@@ -357,7 +356,7 @@ namespace WindingTale.Core.Objects
         /// <returns></returns>
         public bool HasEquipItem()
         {
-            return this.AttackItemIndex >= 0;
+            return true;
         }
 
         public bool IsItemsFull()
@@ -608,6 +607,11 @@ namespace WindingTale.Core.Objects
             }
         }
 
+        /// <summary>
+        /// Called by AI Agent, make sure the creature is able to attack the target.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
         public bool IsAbleToAttack(FDCreature target)
         {
             if (target == null)
@@ -615,7 +619,7 @@ namespace WindingTale.Core.Objects
                 return false;
             }
 
-            if (this.AttackItemIndex < 0)
+            if (!this.CanAttack())
             {
                 return false;
             }

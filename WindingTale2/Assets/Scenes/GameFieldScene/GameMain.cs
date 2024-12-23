@@ -74,6 +74,11 @@ namespace WindingTale.Scenes.GameFieldScene
 
         void Update()
         {
+            if (SceneManager.loadedSceneCount > 1)
+            {
+                return;
+            }
+
             activityQueue.Update();
         }
 
@@ -462,8 +467,11 @@ namespace WindingTale.Scenes.GameFieldScene
             }
 
             Creature c = gameMap.GetCreature(creature);
-            c.SetActioned(true);
-            c.creature.PrePosition = null;
+            if (c != null)
+            {
+                c.SetActioned(true);
+                c.creature.PrePosition = null;
+            }
 
             eventHandler.notifyTriggeredEvents();
 

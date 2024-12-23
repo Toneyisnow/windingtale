@@ -31,8 +31,6 @@ namespace WindingTale.MapObjects.GameMap
 
         public GameObject menuPrefab;
 
-        public GameObject sampleFight;
-
 
         private Material defaultMaterial = null;
 
@@ -54,17 +52,17 @@ namespace WindingTale.MapObjects.GameMap
 
             SetCursorTo(FDPosition.At(8, 12));
 
-            var animator = sampleFight.GetComponent<Animator>();
+            //// var animator = sampleFight.GetComponent<Animator>();
             //// var controller = Resources.Load<AnimatorController>("Fights/734/animator_734");
 
             //// AnimatorController.SetAnimatorController(animator, controller);
 
-            var anim = 9;
-            animator.runtimeAnimatorController = Resources.Load<AnimatorController>(
-                string.Format("Fights/{0}/animator_{0}", StringUtils.Digit3(anim))
-            );
+            //// var anim = 9;
+            //// animator.runtimeAnimatorController = Resources.Load<AnimatorController>(
+            ////    string.Format("Fights/{0}/animator_{0}", StringUtils.Digit3(anim))
+            //// );
 
-            animator.SetInteger("actionState", 1);
+            //// animator.SetInteger("actionState", 1);
 
         }
 

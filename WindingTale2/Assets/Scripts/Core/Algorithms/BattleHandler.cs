@@ -16,6 +16,7 @@ namespace WindingTale.Core.Algorithms
     public class BattleHandler
     {
         private static int DEFAULT_DOUBLE_ATTACK_RATE = 5;
+
         private static int DEFAULT_CRITICAL_ATTACK_RATE = 5;
 
         #region Public Methods 
@@ -289,10 +290,19 @@ namespace WindingTale.Core.Algorithms
         private static bool CanFightBack(FDCreature subject, FDCreature target, FDField field)
         {
             // Near
+            if (!subject.Position.IsNextTo(target.Position))
+            {
+                return false;
+            }
 
             // target has weapon and not freezing
+            if (!target.CanAttack())
+            {
+                return false;
+            }
 
-            return false;
+
+            return true;
         }
 
         #endregion
