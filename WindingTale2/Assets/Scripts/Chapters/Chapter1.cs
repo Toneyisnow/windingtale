@@ -41,6 +41,8 @@ namespace WindingTale.Chapters
             FDCreature c2 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 2, 2, FDPosition.At(11, 21));
             FDCreature c3 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 3, 3, FDPosition.At(9, 22));
             FDCreature c4 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 4, 4, FDPosition.At(12, 23));
+            //// FDCreature c6 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 6, 1016, FDPosition.At(12, 23));
+            //// FDCreature c7 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 7, 50103, FDPosition.At(10, 21));
 
             //FDCreature c1 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 1, 1, FDPosition.At(4, 11));
             //FDCreature c2 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 2, 2, FDPosition.At(4, 8));
@@ -92,7 +94,7 @@ namespace WindingTale.Chapters
             gameMain.PushActivity((gameMain) =>
             {
                 // Enemy Group2 appear
-                e5 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 15, 50101, FDPosition.At(4, 2), 101);
+                e5 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 15, 50102, FDPosition.At(4, 2), 101);
                 e6 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 16, 50101, FDPosition.At(3, 2));
                 e7 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 17, 50101, FDPosition.At(2, 3), 101);
                 e8 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 18, 50101, FDPosition.At(2, 3));
@@ -112,7 +114,8 @@ namespace WindingTale.Chapters
 
             // One Enemy move away
             gameMain.PushActivity(
-                    ActivityFactory.CreatureWalkActivity(14, FDMovePath.Create(FDPosition.At(5, 20), FDPosition.At(8, 20), FDPosition.At(8, 24))));
+                ActivityFactory.CreatureWalkActivity(14, FDMovePath.Create(FDPosition.At(5, 20), FDPosition.At(8, 20), FDPosition.At(8, 24)))
+            );
 
             gameMain.PushActivity((gameMain) =>
             {
@@ -130,7 +133,7 @@ namespace WindingTale.Chapters
             // Friends appear
             FDCreature c5 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 5, 5, FDPosition.At(12, 12));
             //// FDCreature c6 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 6, 1016, FDPosition.At(12, 12));
-            FDCreature c6 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 6, 5, FDPosition.At(12, 12));
+            FDCreature c6 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 6, 1016, FDPosition.At(12, 12));
 
             gameMain.PushActivity(new ParallelActivity(
                 new ActivityBase[] {

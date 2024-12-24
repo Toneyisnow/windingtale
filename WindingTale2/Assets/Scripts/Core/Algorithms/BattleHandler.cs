@@ -35,17 +35,19 @@ namespace WindingTale.Core.Algorithms
             DamageResult damage1 = DamageFrom(subject, target, field);
             result.Experience = CalculateDamageExp(subject, target, damage1);
             result.Damages.Add(damage1);
+            int targetLastHp = damage1.HpAfter;
 
             if (target.Hp > 0 && FDRandom.BoolFromRate(DEFAULT_DOUBLE_ATTACK_RATE))
             {
                 DamageResult damage2 = DamageFrom(subject, target, field);
                 result.Experience += CalculateDamageExp(subject, target, damage2);
                 result.Damages.Add(damage2);
+                targetLastHp = damage2.HpAfter;
             }
 
             // Fight back
             bool canFightBack = CanFightBack(subject, target, field);
-            if (canFightBack && target.Hp > 0)
+            if (canFightBack && targetLastHp > 0)
             {
                 DamageResult back1 = DamageFrom(target, subject, field);
                 result.Experience += CalculateDamageExp(target, subject, back1);
@@ -144,6 +146,13 @@ namespace WindingTale.Core.Algorithms
 
         #region Private Methods
 
+        /// <summary>
+        /// Calculate a single damage result
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <param name="target"></param>
+        /// <param name="field"></param>
+        /// <returns></returns>
         private static DamageResult DamageFrom(FDCreature subject, FDCreature target, FDField field)
         {
             bool isHit = FDRandom.BoolFromRate(subject.CalculatedHit - target.CalculatedEv);
@@ -182,7 +191,8 @@ namespace WindingTale.Core.Algorithms
                 }
             }
 
-            DamageResult damage = new DamageResult(target.Hp, target.Hp - reduceHp, isCritical);
+            int hpAfter = Math.Max(target.Hp - reduceHp, 0);
+            DamageResult damage = new DamageResult(target.Hp, hpAfter, isCritical);
             return damage;
         }
 
