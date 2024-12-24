@@ -301,7 +301,6 @@ namespace WindingTale.Core.Algorithms
                 return false;
             }
 
-
             return true;
         }
 

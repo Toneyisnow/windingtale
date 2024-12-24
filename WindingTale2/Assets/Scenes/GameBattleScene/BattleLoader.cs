@@ -22,10 +22,21 @@ namespace WindingTale.Scenes.GameBattleScene
         public GameObject localBody;
         public GameObject foreignBody;
 
+        public GameObject localHpBar;
+        public GameObject localMpBar;
+        public GameObject foreignHpBar;
+        public GameObject foreignMpBar;
+
         private AttackResult attackResult;
 
         private GameObject subjectObject = null;
         private GameObject targetObject = null;
+
+        private GameObject subjectHpBar;
+        private GameObject subjectMpBar;
+        private GameObject targetHpBar;
+        private GameObject targetMpBar;
+
 
         private Animator subjectAnimator = null;
         private Animator targetAnimator = null;
@@ -51,16 +62,28 @@ namespace WindingTale.Scenes.GameBattleScene
             }
 
             CreatureFaction faction = attackResult.Subject.Faction;
-            if (faction == CreatureFaction.Friend || faction == CreatureFaction.Friend)
+            if (faction == CreatureFaction.Friend || faction == CreatureFaction.Npc)
             {
                 subjectObject = localBody;
                 targetObject = foreignBody;
+
+                subjectHpBar = localHpBar;
+                subjectMpBar = localMpBar;
+                targetHpBar = foreignHpBar;
+                targetMpBar = foreignMpBar;
             }
             else
             {   
                 subjectObject = foreignBody;
                 targetObject = localBody;
+
+                subjectHpBar = foreignHpBar;
+                subjectMpBar = foreignMpBar;
+                targetHpBar = localHpBar;
+                targetMpBar = localMpBar;
             }
+
+
 
             var subjectAniId = attackResult.Subject.Definition.AnimationId;
 
@@ -68,10 +91,12 @@ namespace WindingTale.Scenes.GameBattleScene
             subjectAnimator = subjectObject.GetComponent<Animator>();
             subjectAnimator.runtimeAnimatorController = Resources.Load<AnimatorController>(
                 string.Format("Fights/{0}/animator_{0}", StringUtils.Digit3(subjectAniId)));
-            subjectObject.GetComponent<FightBody>().Initialize(subjectAniId, onAnimationFinish);
+            subjectObject.GetComponent<FightBody>().Initialize(subjectAniId, onAnimationHit, onAnimationFinish);
 
-
-
+            // Set the HP and MP
+            var subjectInitialHp = attackResult.BackDamages.Count > 0
+                ? attackResult.BackDamages[0].HpBefore : attackResult.Subject.Hp;
+            updateSubjectHp(subjectInitialHp);
 
             var targetAniId = attackResult.Target.Definition.AnimationId;
 
@@ -79,7 +104,11 @@ namespace WindingTale.Scenes.GameBattleScene
             targetAnimator = targetObject.GetComponent<Animator>();
             targetAnimator.runtimeAnimatorController = Resources.Load<AnimatorController>(
                 string.Format("Fights/{0}/animator_{0}", StringUtils.Digit3(targetAniId)));
-            targetAnimator.GetComponent<FightBody>().Initialize(targetAniId, onAnimationFinish);
+            targetAnimator.GetComponent<FightBody>().Initialize(targetAniId, onAnimationHit, onAnimationFinish);
+
+            var targetInitialHp = attackResult.Damages.Count > 0
+                ? attackResult.Damages[0].HpBefore : attackResult.Target.Hp;
+            updateTargetHp(targetInitialHp);
 
 
             currentAnimationIndex = 0;
@@ -120,10 +149,70 @@ namespace WindingTale.Scenes.GameBattleScene
             
         }
 
+        private void onAnimationHit(int percent)
+        {
+            DamageResult damage;
+            if (currentAnimationIndex < attackResult.Damages.Count)
+            {
+                damage = attackResult.Damages[currentAnimationIndex];
+                var currentHp = damage.HpBefore + (damage.HpAfter - damage.HpBefore) * percent / 100;
+                updateTargetHp(currentHp);
+            }
+            else
+            {
+                int backIndex = currentAnimationIndex - attackResult.Damages.Count;
+                if (backIndex < attackResult.BackDamages.Count)
+                {
+                    damage = attackResult.BackDamages[backIndex];
+                    var currentHp = damage.HpBefore + (damage.HpAfter - damage.HpBefore) * percent / 100;
+                    updateSubjectHp(currentHp);
+                }
+            }
+        }
+
         private void onAnimationFinish()
         {
             currentAnimationIndex++;
             onAnimationStart();
+        }
+
+        private void updateSubjectHp(int current)
+        {
+            var subjectHpScale = getBarScale(current, attackResult.Subject.HpMax);
+            subjectHpBar.transform.localScale = new Vector3(subjectHpScale, 1, 1);
+
+        }
+
+        private void updateTargetHp(int current)
+        {
+            var targetHpScale = getBarScale(current, attackResult.Target.HpMax);
+            Debug.Log("updateTargetHp: " + targetHpScale + ", " + current + ", " + attackResult.Target.HpMax);
+            targetHpBar.transform.localScale = new Vector3(targetHpScale, 1, 1);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="maxValue"></param>
+        /// <returns></returns>
+        private float getBarScale(int value, int maxValue)
+        {
+            if (maxValue == 0)
+            {
+                return 0;
+            }
+
+            if (value > maxValue)
+            {
+                return 1;
+            }
+
+            if (value < 0)
+            {
+                return 0;
+            }
+            return (float)value / maxValue;
         }
 
         // Update is called once per frame

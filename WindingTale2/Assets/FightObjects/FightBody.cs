@@ -15,6 +15,8 @@ namespace WindingTale.FightObjects
         private FightAnimation fightAnimation;
         private List<int> animationHitPoints = null;
         private int animationHitIndex = 0;
+
+        private Action<int> onHit = null;
         private Action onFinish = null;
 
         // Start is called before the first frame update
@@ -29,13 +31,14 @@ namespace WindingTale.FightObjects
 
         }
 
-        public void Initialize(int animationId, Action onFinish)
+        public void Initialize(int animationId, Action<int> onHit, Action onFinish)
         {
             this.animationId = animationId;
             this.fightAnimation = DefinitionStore.Instance.GetFightAnimation(animationId);
             this.animationHitPoints = this.fightAnimation.AttackPercentageByFrame.Values.ToList().FindAll(val => val > 0);
             this.animationHitIndex = 0;
 
+            this.onHit = onHit;
             this.onFinish = onFinish;
         }
 
@@ -53,6 +56,7 @@ namespace WindingTale.FightObjects
 
             Debug.Log("=== onAttackHit === " + hitPoint.ToString());
 
+            this.onHit?.Invoke(hitPoint);
 
         }
 
@@ -63,7 +67,11 @@ namespace WindingTale.FightObjects
         {
             Debug.Log("=== onAttackFinish ===");
             Animator animator = this.GetComponent<Animator>();
-            animator.SetInteger("actionState", 0);
+
+            MonoBehaviourUtils.ExecuteWithDelay(this, 0.1f, () =>
+            {
+                animator.SetInteger("actionState", 0);
+            });
 
             this.onFinish?.Invoke();
         }
