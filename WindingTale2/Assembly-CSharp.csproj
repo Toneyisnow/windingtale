@@ -79,6 +79,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ActivityBase.cs" />
     <Compile Include="Assets\MapObjects\Cursors\MoveIndicator.cs" />
+    <Compile Include="Assets\Scripts\UI\Utils\MonoBehaviourUtils.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ActivityFactory.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\TalkDialog.cs" />
@@ -169,7 +170,6 @@
     <Compile Include="Assets\Scripts\Core\Definitions\StringsDefinition.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
-    <Compile Include="Assets\FightObjects\MonoBehaviourUtils.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter1.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\OccupationDefinition.cs" />

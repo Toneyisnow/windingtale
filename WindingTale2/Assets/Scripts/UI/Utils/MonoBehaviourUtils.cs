@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WindingTale.FightObjects
+namespace WindingTale.UI.Utils
 {
     public class MonoBehaviourUtils : MonoBehaviour
     {

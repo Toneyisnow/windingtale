@@ -6,6 +6,7 @@ using UnityEditor.Animations;
 using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
+using WindingTale.UI.Utils;
 
 namespace WindingTale.FightObjects
 {

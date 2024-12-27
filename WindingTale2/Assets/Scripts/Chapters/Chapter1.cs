@@ -37,12 +37,10 @@ namespace WindingTale.Chapters
         private Action<GameMain> turn1 = (gameMain) =>
         {
             // Friends appear
-            FDCreature c1 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 1, 1, FDPosition.At(8, 20));
+            FDCreature c1 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 1, 8, FDPosition.At(8, 20));
             FDCreature c2 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 2, 2, FDPosition.At(11, 21));
             FDCreature c3 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 3, 3, FDPosition.At(9, 22));
             FDCreature c4 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 4, 4, FDPosition.At(12, 23));
-            //// FDCreature c6 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 6, 1016, FDPosition.At(12, 23));
-            //// FDCreature c7 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 7, 50103, FDPosition.At(10, 21));
 
             //FDCreature c1 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 1, 1, FDPosition.At(4, 11));
             //FDCreature c2 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 2, 2, FDPosition.At(4, 8));
