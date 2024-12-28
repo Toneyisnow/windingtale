@@ -49,6 +49,11 @@ namespace WindingTale.Scenes.GameFieldScene
                 return;
             }
 
+            if (!gameMain.activityQueue.IsIdle)
+            {
+                return;
+            }
+
             FDPosition cursorPos = gameMain.gameMap.GetCursorPosition();
             if (!cursorPos.AreSame(position))
             {

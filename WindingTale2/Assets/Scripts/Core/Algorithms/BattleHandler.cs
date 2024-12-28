@@ -37,7 +37,7 @@ namespace WindingTale.Core.Algorithms
             result.Damages.Add(damage1);
             int targetLastHp = damage1.HpAfter;
 
-            if (target.Hp > 0 && FDRandom.BoolFromRate(DEFAULT_DOUBLE_ATTACK_RATE))
+            if (targetLastHp > 0 && FDRandom.BoolFromRate(DEFAULT_DOUBLE_ATTACK_RATE))
             {
                 DamageResult damage2 = DamageFrom(subject, target, field);
                 result.Experience += CalculateDamageExp(subject, target, damage2);
@@ -53,7 +53,7 @@ namespace WindingTale.Core.Algorithms
                 result.Experience += CalculateDamageExp(target, subject, back1);
                 result.BackDamages.Add(back1);
 
-                if (subject.Hp > 0 && FDRandom.BoolFromRate(DEFAULT_DOUBLE_ATTACK_RATE))
+                if (back1.HpAfter > 0 && FDRandom.BoolFromRate(DEFAULT_DOUBLE_ATTACK_RATE))
                 {
                     DamageResult back2 = DamageFrom(target, subject, field);
                     result.Experience += CalculateDamageExp(target, subject, back2);

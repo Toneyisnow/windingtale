@@ -25,6 +25,12 @@ public class MainCamera : MonoBehaviour
         } else if (Input.GetKeyDown(KeyCode.D))
         {
             transform.position += new Vector3(-1, 0, 0);
+        } else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            transform.position += new Vector3(0, 1, 0);
+        } else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            transform.position += new Vector3(0, -1, 0);
         }
     }
 }

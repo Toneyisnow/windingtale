@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
 using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 
@@ -18,7 +19,7 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         /// <summary>
         /// The raw text to be displayed.
         /// </summary>
-        private string rawText = null;
+        private LocalizedString rawText = null;
 
         /// <summary>
         /// Need to confirm Yes or No
@@ -50,8 +51,8 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         {
             this.creature = creature;
             this.onSelected = onSelected;
-            
-            //// this.rawText = conversation;
+
+            this.rawText = LocalizationManager.GetConversationString(conversation);
 
             this.needConfirm = false;
         }

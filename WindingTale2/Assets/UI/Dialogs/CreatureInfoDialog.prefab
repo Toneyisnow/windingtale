@@ -2154,7 +2154,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No translation found for 'New Entry 5' in CommonStringTable
+  m_text: "\t"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 099c2adc3a6c076409dd7bd61fd0ba33, type: 2}
   m_sharedMaterial: {fileID: -6831262710851198789, guid: 099c2adc3a6c076409dd7bd61fd0ba33, type: 2}

@@ -13,23 +13,24 @@ namespace WindingTale.Core.Common
             get; private set;
         }
 
+        public int ConversationId
+        {
+            get; private set;
+        }
+
         public int SequenceId
         {
             get; private set;
         }
 
-        public int Index
-        {
-            get; private set;
-        }
 
-        public static Conversation Create(int cId, int sId, int index)
+        public static Conversation Create(int cId, int convId, int sId)
         {
             Conversation conversation = new Conversation();
 
             conversation.ChapterId = cId;
+            conversation.ConversationId = convId;
             conversation.SequenceId = sId;
-            conversation.Index = index;
 
             return conversation;
         }
@@ -37,7 +38,7 @@ namespace WindingTale.Core.Common
         public string GetKeyForId()
         {
             string key = string.Format(@"Chapter_{0}-{0}-{1}-{2}-Id",
-                StringUtils.Digit2(this.ChapterId), StringUtils.Digit2(this.SequenceId), StringUtils.Digit3(this.Index));
+                StringUtils.Digit2(this.ChapterId), StringUtils.Digit2(this.ConversationId), StringUtils.Digit3(this.SequenceId));
             return key;
         }
 

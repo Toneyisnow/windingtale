@@ -50,6 +50,18 @@ public class LocalizationManager
         return GetString("CommonStrings", key);
     }
 
+    public static LocalizedString GetConversationString(Conversation conversaction)
+    {
+        string key = string.Format(@"Conversation-{0}-{1}-{2}",
+            StringUtils.Digit2(conversaction.ChapterId),
+            StringUtils.Digit2(conversaction.ConversationId),
+            StringUtils.Digit2(conversaction.SequenceId));
+
+        string tableName = string.Format(@"ChapterStrings-{0}", StringUtils.Digit2(conversaction.ChapterId));
+        return GetString(tableName, key);
+    }
+
+
     private static LocalizedString GetString(string tableName, string entryKey)
     {
         LocalizedString stringReference = new LocalizedString(tableName, entryKey);

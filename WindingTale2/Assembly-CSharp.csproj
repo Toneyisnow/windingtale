@@ -417,6 +417,7 @@
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Magic.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_07_ConversationId.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-08.txt" />
+    <None Include="Assets\Resources\Fonts\README.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_29_Creature.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\Resources\Strings\Occupation.strings.txt" />

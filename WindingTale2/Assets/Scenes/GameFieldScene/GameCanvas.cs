@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Localization;
 using WindingTale.Core.Objects;
 using WindingTale.UI.Dialogs;
 
@@ -48,12 +49,12 @@ namespace WindingTale.Scenes.GameFieldScene
         /// <param name="needConfirm"></param>
         /// <param name="dialogPosition"></param>
         /// <param name="onSelected"></param>
-        public void ShowTalkDialog(int creatureAnimationid, string rawText, bool needConfirm, DialogPosition dialogPosition, Action<int> onSelected)
+        public void ShowTalkDialog(int creatureAnimationid, LocalizedString rawText, bool needConfirm, DialogPosition dialogPosition, Action<int> onSelected)
         {
             dialog = this.transform.Find("TalkDialog").gameObject;
             dialog.SetActive(true);
             TalkDialog sDialog = dialog.GetComponent<TalkDialog>();
-            sDialog.Init(onSelected);
+            sDialog.Init(creatureAnimationid, rawText, onSelected);
         }
 
         public void CloseDialog()
