@@ -2,6 +2,8 @@ Battle music:
 
 Game background music, beating and fighting, Keep original main melody, keep the same beat rating from begin to end, rhythm should be a little slower than original sound. Only beating on grave accent.
 
+Game background music, beating and fighting, Keep original main melody, try different instruments, the melody should be tense and deep, not too light or cheerful.
+
 
 End music:
 
