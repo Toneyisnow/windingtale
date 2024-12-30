@@ -28,6 +28,8 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Reset creature to pre position
             if (creature.PrePosition != null && !creature.PrePosition.AreSame(creature.Position))
             {
+                // Call reset position immediately before next activity
+                creature.ResetPosition();
                 gameMain.PushActivity((gameMain) =>
                 {
                     gameMain.gameMap.ResetCreaturePosition(creature, creature.PrePosition);

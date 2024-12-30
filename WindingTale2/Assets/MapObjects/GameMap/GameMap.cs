@@ -171,8 +171,7 @@ namespace WindingTale.MapObjects.GameMap
 
         public void ResetCreaturePosition(FDCreature creature, FDPosition position)
         {
-            creature.ResetPosition(); 
-            creature.Position = position;
+            //// creature.Position = position;
             Transform creatureIcon = getCreatureObjectById(creature.Id);
             if (creatureIcon != null)
             {

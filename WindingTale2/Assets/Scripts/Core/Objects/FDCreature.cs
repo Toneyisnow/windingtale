@@ -558,9 +558,16 @@ namespace WindingTale.Core.Objects
             return this.Effects.Contains(effect);
         }
 
+        /// <summary>
+        /// During player 's turn, if the player cancelled current move, the creature should be reset to the previous position.
+        /// </summary>
         public void ResetPosition()
         {
-            this.Position = this.PrePosition;
+            if (this.PrePosition != null)
+            {
+                this.Position = this.PrePosition;
+                //// this.PrePosition = null;
+            }
         }
 
         public void ApplyDamage(DamageResult damage)
