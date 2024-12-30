@@ -11,7 +11,11 @@ using WindingTale.Scenes.GameFieldScene;
 
 public class TalkDialog : MonoBehaviour
 {
-    public GameObject messageText;
+    public GameObject messageTextObj;
+
+    private String fullText = "";
+
+    private bool skipToFullText = false;
 
 
     private Action<int> onSelected = null;
@@ -25,21 +29,43 @@ public class TalkDialog : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.anyKey)
+        {
+            skipToFullText = true;
+        }
     }
 
     public void Init(int creatureAnimationId, LocalizedString text, Action<int> onSelected)
     {
         this.onSelected = onSelected;
 
-        //// this.messageText.GetComponent<TextMeshProUGUI>().text = "听说再越过这片海洋就到马拉大陆了，我们先在此休息一会儿，等海水涨潮适合我们上岸的时候船夫就会来接我们。";
+        fullText = text.GetLocalizedString();
+        skipToFullText = false;
 
+        ///this.messageTextObj.GetComponent<LocalizeStringEvent>().StringReference = text;
 
-
-        // LocalizedString contentString = LocalizationManager.GetConversationString(1, 1, 3);
-        this.messageText.GetComponent<LocalizeStringEvent>().StringReference = text;
-
+        StartCoroutine(BuildText());
     }
+
+
+    private IEnumerator BuildText()
+    {
+        for (int i = 0; i < fullText.Length; i++)
+        {
+            if (skipToFullText)
+            {
+                this.messageTextObj.GetComponent<TextMeshProUGUI>().text = fullText;
+                break;
+            }
+            
+            String nowText = fullText.Substring(0, i + 1);
+            this.messageTextObj.GetComponent<TextMeshProUGUI>().text = nowText;
+
+            //Wait a certain amount of time, then continue with the for loop
+            yield return new WaitForSeconds(0.05f);
+        }
+    }
+
 
     public void onConfirm()
     {
