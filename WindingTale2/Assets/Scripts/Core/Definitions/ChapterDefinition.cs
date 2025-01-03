@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using WindingTale.Core.Common;
 using WindingTale.Core.Files;
 
 namespace WindingTale.Core.Definitions
@@ -49,20 +50,39 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
-        public Dictionary<string, int> ConversationIds
+        public Dictionary<string, int> ConversationAnimationIds
         {
             get; private set;
         }
 
         public void ReadConversationIdsFromFile(ResourceDataFile dataFile)
         {
-            this.ConversationIds = new Dictionary<string, int>();
+            this.ConversationAnimationIds = new Dictionary<string, int>();
             string key;
             while ((key = dataFile.ReadString()) != string.Empty)
             {
                 int value = dataFile.ReadInt();
-                this.ConversationIds[key] = value;
+                this.ConversationAnimationIds[key] = value;
             }
+        }
+
+        /// <summary>
+        /// Returns animation Id for the conversation, if return 0 it means the narrator
+        /// </summary>
+        /// <param name="conversation"></param>
+        /// <returns></returns>
+        public int GetConversationAnimationId(Conversation conversation)
+        {
+            string key = string.Format(@"Chapter_{0}-{0}-{1}-{2}-Id",
+                StringUtils.Digit2(this.ChapterId),
+                StringUtils.Digit2(conversation.ConversationId),
+                StringUtils.Digit3(conversation.SequenceId));
+
+            if (this.ConversationAnimationIds.ContainsKey(key))
+            {
+                return this.ConversationAnimationIds[key];
+            }
+            return 0;
         }
 
     }

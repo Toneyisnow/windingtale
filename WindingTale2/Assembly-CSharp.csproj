@@ -413,7 +413,6 @@
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-99.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_12.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-13.txt" />
-    <None Include="Assets\Resources\Audios\suno_prompt.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Magic.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_07_ConversationId.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-08.txt" />

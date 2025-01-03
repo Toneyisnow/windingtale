@@ -5,18 +5,23 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
+using UnityEngine.UI;
+using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.Scenes.GameFieldScene;
 
 public class TalkDialog : MonoBehaviour
 {
+    public GameObject datoObj;
+
     public GameObject messageTextObj;
 
     private String fullText = "";
 
     private bool skipToFullText = false;
 
+    private int creatureAnimationId = 0;
 
     private Action<int> onSelected = null;
 
@@ -37,6 +42,11 @@ public class TalkDialog : MonoBehaviour
 
     public void Init(int creatureAnimationId, LocalizedString text, Action<int> onSelected)
     {
+        this.creatureAnimationId = creatureAnimationId;
+        this.datoObj.GetComponent<Image>().sprite = Resources.Load<Sprite>(
+            string.Format(@"Datos/Dato_{0}", StringUtils.Digit3(creatureAnimationId))
+        );
+
         this.onSelected = onSelected;
 
         fullText = text.GetLocalizedString();

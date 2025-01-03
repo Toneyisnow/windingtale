@@ -78,10 +78,8 @@ namespace WindingTale.Core.Map
             Debug.Log("FDMap loadFromChapter");
             var map = new FDMap();
 
-            DefinitionStore.Instance.LoadChapter(chapterId);
-            ChapterDefinition chapterDefinition = ChapterLoader.LoadChapter(chapterId);
+            ChapterDefinition chapterDefinition = DefinitionStore.Instance.LoadChapter(chapterId);
             map.Field = new FDField(chapterDefinition);
-
             return map;
         }
 

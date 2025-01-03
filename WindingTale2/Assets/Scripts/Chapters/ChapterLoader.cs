@@ -17,19 +17,19 @@ namespace WindingTale.Chapters
         /// <param name="chapterId"></param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        public static ChapterDefinition LoadChapter(int chapterId)
-        {
-            // Load Chapter
-            ChapterDefinition definition = ResourceJsonFile.Load<ChapterDefinition>(string.Format(@"Data/Chapters/Chapter_{0}", StringUtils.Digit2(chapterId)));
-            if (definition == null)
-            {
-                throw new Exception("Cannot find definition for chapter " + chapterId);
-            }
+        //public static ChapterDefinition LoadChapter(int chapterId)
+        //{
+        //    // Load Chapter
+        //    ChapterDefinition definition = ResourceJsonFile.Load<ChapterDefinition>(string.Format(@"Data/Chapters/Chapter_{0}", StringUtils.Digit2(chapterId)));
+        //    if (definition == null)
+        //    {
+        //        throw new Exception("Cannot find definition for chapter " + chapterId);
+        //    }
             
-            definition.ChapterId = chapterId;
+        //    definition.ChapterId = chapterId;
 
-            return definition;
-        }
+        //    return definition;
+        //}
 
         public static List<FDEvent> LoadEvents(GameMain gameMain, int chapterId)
         {
