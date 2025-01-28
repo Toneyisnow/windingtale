@@ -50,19 +50,19 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
-        public Dictionary<string, int> ConversationAnimationIds
+        public Dictionary<string, int> ConversationCreatureIds
         {
             get; private set;
         }
 
         public void ReadConversationIdsFromFile(ResourceDataFile dataFile)
         {
-            this.ConversationAnimationIds = new Dictionary<string, int>();
+            this.ConversationCreatureIds = new Dictionary<string, int>();
             string key;
             while ((key = dataFile.ReadString()) != string.Empty)
             {
                 int value = dataFile.ReadInt();
-                this.ConversationAnimationIds[key] = value;
+                this.ConversationCreatureIds[key] = value;
             }
         }
 
@@ -71,16 +71,16 @@ namespace WindingTale.Core.Definitions
         /// </summary>
         /// <param name="conversation"></param>
         /// <returns></returns>
-        public int GetConversationAnimationId(Conversation conversation)
+        public int GetConversationCreatureId(Conversation conversation)
         {
             string key = string.Format(@"Chapter_{0}-{0}-{1}-{2}-Id",
                 StringUtils.Digit2(this.ChapterId),
                 StringUtils.Digit2(conversation.ConversationId),
                 StringUtils.Digit3(conversation.SequenceId));
 
-            if (this.ConversationAnimationIds.ContainsKey(key))
+            if (this.ConversationCreatureIds.ContainsKey(key))
             {
-                return this.ConversationAnimationIds[key];
+                return this.ConversationCreatureIds[key];
             }
             return 0;
         }

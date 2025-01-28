@@ -70,7 +70,7 @@ namespace WindingTale.Chapters
             for(int index = start; index <= end; index++)
             {
                 Conversation conversation = Conversation.Create(chapterId, sequenceId, index);
-                int creatureId = chapterDefinition.GetConversationAnimationId(conversation);
+                int creatureId = chapterDefinition.GetConversationCreatureId(conversation);
                 FDCreature creature = gameMain.gameMap.Map.GetCreatureById(creatureId);
 
                 gameMain.PushActivity(new TalkActivity(conversation, creature ));

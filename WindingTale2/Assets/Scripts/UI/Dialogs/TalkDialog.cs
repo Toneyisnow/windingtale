@@ -47,6 +47,8 @@ public class TalkDialog : MonoBehaviour
             string.Format(@"Datos/Dato_{0}", StringUtils.Digit3(creatureAnimationId))
         );
 
+        Debug.Log("Talk Dialog Animation Id: " + creatureAnimationId);
+
         this.onSelected = onSelected;
 
         fullText = text.GetLocalizedString();

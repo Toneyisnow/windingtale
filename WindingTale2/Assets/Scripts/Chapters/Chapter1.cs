@@ -106,9 +106,11 @@ namespace WindingTale.Chapters
                     ActivityFactory.CreatureWalkActivity(18, FDMovePath.Create(FDPosition.At(2, 3), FDPosition.At(3, 3))) })
                 );
 
-            // Talking
-            ShowConversations(gameMain, 1, 1, 6, 7);
-
+            gameMain.PushActivity((gameMain) =>
+            {
+                // Talking
+                ShowConversations(gameMain, 1, 1, 6, 7);
+            });
 
             // One Enemy move away
             gameMain.PushActivity(
@@ -120,8 +122,11 @@ namespace WindingTale.Chapters
                 gameMain.gameMap.RemoveCreature(14);
             });
 
-            // Talking
-            ShowConversations(gameMain, 1, 1, 8, 19);
+            gameMain.PushActivity((gameMain) =>
+            {
+                // Talking
+                ShowConversations(gameMain, 1, 1, 8, 19);
+            });
 
         };
 
