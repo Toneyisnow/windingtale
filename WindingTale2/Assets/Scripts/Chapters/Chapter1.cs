@@ -24,7 +24,7 @@ namespace WindingTale.Chapters
             LoadTurnEvent(++eventId, 5, CreatureFaction.Enemy, turn5_Boss);
             LoadTurnEvent(++eventId, 6, CreatureFaction.Npc, turn6_Npc);
 
-            LoadDeadEvent(++eventId, 1, (gameMain) => gameMain.onGameOver());
+            LoadDeadEvent(++eventId, 1, (gameMain) => gameMain.OnGameOver());
             LoadDeadEvent(++eventId, 5, hanuoDead);
             LoadDeadEvent(++eventId, 6, hawateDead);
 

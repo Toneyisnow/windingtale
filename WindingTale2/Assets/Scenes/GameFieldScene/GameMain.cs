@@ -65,11 +65,17 @@ namespace WindingTale.Scenes.GameFieldScene
 
         private int chapterId = 0;
 
-        // Start is called before the first frame update
         void Start()
         {
-            chapterId = 1;
-            onInitialize();
+            int chapterId = GlobalVariables.Get<int>("ChapterId");
+            if (chapterId == 1)
+            {
+                StartNewGame();
+            }
+            else
+            {
+                LoadGame();
+            }
         }
 
         void Update()
@@ -84,38 +90,40 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Game Cycles
 
-        public void startNewGame()
+        public void StartNewGame()
         {
             // Map load from file
+            chapterId = 1;
+            onInitialize();
         }
 
-        public void loadGame()
+        public void LoadGame()
         {
 
         }
 
-        public void continueGame()
+        public void ContinueGame()
         {
 
         }
 
-        public void saveGame()
+        public void SaveGame()
         {
 
         }
 
 
-        public void onQuit()
+        public void OnQuit()
         {
 
         }
 
-        public void onGameOver()
+        public void OnGameOver()
         {
 
         }
 
-        public void onGameWin()
+        public void OnGameWin()
         {
 
         }

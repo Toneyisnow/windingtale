@@ -187,6 +187,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter3.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIEscapeDelegate.cs" />
+    <Compile Include="Assets\Scenes\TitleScene\TitleSceneLoader.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDSpan.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureDying.cs" />

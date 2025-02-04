@@ -13,19 +13,19 @@ namespace WindingTale.Scenes.GameFieldScene
     {
         #region Game Cycles
 
-        void startNewGame();
+        void StartNewGame();
 
-        void loadGame();
+        void LoadGame();
 
-        void continueGame();
+        void ContinueGame();
 
-        void saveGame();
+        void SaveGame();
 
-        void onQuit();
+        void OnQuit();
 
-        void onGameOver();
+        void OnGameOver();
 
-        void onGameWin();
+        void OnGameWin();
 
         #endregion
 
