@@ -123,7 +123,7 @@ namespace WindingTale.MapObjects.GameMap
 
         public void CloseMenu(FDMenu menu)
         {
-            GameObject menuObject = indicatorsLayer.transform.Find("menu").gameObject;
+            GameObject menuObject = indicatorsLayer.transform.Find("menu")?.gameObject;
             if (menuObject != null)
             {
                 Destroy(menuObject.gameObject);

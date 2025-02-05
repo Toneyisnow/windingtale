@@ -26,6 +26,8 @@ namespace WindingTale.UI.Dialogs
     public class CreatureInfoDialog : MonoBehaviour
     {
 
+        public GameObject datoObj;
+
         public GameObject nameLabel;
         public GameObject raceLabel;
         public GameObject occupationLabel;
@@ -89,6 +91,11 @@ namespace WindingTale.UI.Dialogs
 
         public void Init(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected)
         {
+            int animationId = creature.Definition.AnimationId;
+            this.datoObj.GetComponent<Image>().sprite = Resources.Load<Sprite>(
+                string.Format(@"Datos/Dato_{0}", StringUtils.Digit3(animationId))
+            );
+
             this.creature = creature;
             this.infoType = infoType;
             this.onSelected = onSelected;
@@ -124,8 +131,9 @@ namespace WindingTale.UI.Dialogs
                     selectable.SetActive(true);
                     var selectableText = selectable.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
                     selectableText.text = item.Name;
-                    var selectableButton = selectable.GetComponent<Button>();
-                    selectableButton.onClick.AddListener(delegate { 
+                    TaggedButton taggedButton = selectable.AddComponent<TaggedButton>();
+                    taggedButton.Init(itemIndex, (itemIndex) =>
+                    {
                         onSelected(itemIndex);
                         GameMain.getDefault().gameCanvas.CloseDialog();
                     });

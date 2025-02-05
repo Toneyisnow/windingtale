@@ -410,6 +410,11 @@ namespace WindingTale.Core.Objects
 
         public void EquipItemAt(int itemIndex)
         {
+            if (itemIndex < 0 || itemIndex >= this.Items.Count)
+            {
+                return;
+            }
+
             int itemId = this.Items[itemIndex];
             ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
 

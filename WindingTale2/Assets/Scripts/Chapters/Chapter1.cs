@@ -18,7 +18,7 @@ namespace WindingTale.Chapters
         public Chapter1(GameMain gameMain) : base (gameMain, 1)
         {
             int eventId = 0;
-            LoadTurnEvent(++eventId, 1, CreatureFaction.Friend, turn1);
+            LoadTurnEvent(++eventId, 1, CreatureFaction.Friend, turn1_test);
             LoadTurnEvent(++eventId, 3, CreatureFaction.Enemy, turn3);
             LoadTurnEvent(++eventId, 4, CreatureFaction.Enemy, turn4);
             LoadTurnEvent(++eventId, 5, CreatureFaction.Enemy, turn5_Boss);
@@ -33,6 +33,34 @@ namespace WindingTale.Chapters
             LoadTeamEvent(++eventId, CreatureFaction.Enemy, enemyClear);
         }
 
+        private Action<GameMain> turn1_test = (gameMain) =>
+        {
+            // Friends appear
+            FDCreature c1 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 1, 1, FDPosition.At(8, 20));
+            FDCreature c2 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 2, 2, FDPosition.At(11, 21));
+            FDCreature c3 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 3, 3, FDPosition.At(9, 22));
+            FDCreature c4 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 4, 4, FDPosition.At(12, 23));
+
+
+            FDCreature e1 = null;
+            FDCreature e2 = null;
+            FDCreature e3 = null;
+            FDCreature e4 = null;
+            FDCreature e5 = null;
+            FDCreature e6 = null;
+            FDCreature e7 = null;
+            FDCreature e8 = null;
+
+            gameMain.PushActivity((gameMain) =>
+            {
+                // Enemy Group1 appear
+                e1 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 11, 50101, FDPosition.At(2, 22));
+                e2 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 12, 50101, FDPosition.At(3, 22), 101);
+                e3 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 13, 50101, FDPosition.At(4, 23));
+                e4 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 14, 50101, FDPosition.At(5, 23));
+            });
+
+        };
 
         private Action<GameMain> turn1 = (gameMain) =>
         {

@@ -16,6 +16,11 @@ namespace WindingTale.Core.Definitions.Items
             return def;
         }
 
+        public override ItemType GetItemType()
+        {
+            return ItemType.Money;
+        }
+
         public int Amount
         {
             get; set;

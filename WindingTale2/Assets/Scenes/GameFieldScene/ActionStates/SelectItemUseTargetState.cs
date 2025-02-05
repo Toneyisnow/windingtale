@@ -70,7 +70,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Selecte position must be included in the range
             if (!itemRange.Contains(position))
             {
-                return this;
+                return onUserCancelled();
             }
 
             // No creature or not a friend/NPC

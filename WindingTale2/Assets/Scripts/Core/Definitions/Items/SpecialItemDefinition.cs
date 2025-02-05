@@ -19,6 +19,11 @@ namespace WindingTale.Core.Definitions.Items
             return def;
         }
 
+        public override ItemType GetItemType()
+        {
+            return ItemType.Special;
+        }
+
         public override bool IsEquipment()
         {
             return false;

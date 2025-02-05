@@ -44,6 +44,10 @@ namespace WindingTale.Core.Definitions.Items
             
             return def;
         }
+        public override ItemType GetItemType()
+        {
+            return ItemType.Consumable;
+        }
 
         public ItemUseType UseType
         {

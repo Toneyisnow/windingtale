@@ -127,7 +127,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
 
             int itemId = this.Creature.GetItemAt(index);
-            if (itemId < 0)
+            if (itemId <= 0)
             {
                 // Item not found, should not reach here
                 //// stateHandler.HandleClearStates();

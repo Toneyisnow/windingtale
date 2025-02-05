@@ -50,6 +50,11 @@ namespace WindingTale.Core.Definitions.Items
             return def;
         }
 
+        public override ItemType GetItemType()
+        {
+            return ItemType.Attack;
+        }
+
         public ItemCategory Category
         {
             get; private set;

@@ -287,6 +287,10 @@ namespace WindingTale.Scenes.GameFieldScene
         {
             Debug.Log("creatureUseItem!!!");
 
+            int itemId = creature.Items[itemIndex];
+            creature.RemoveItemAt(itemIndex);
+            CreatureFormula.TakeItemEffect(target, itemId);
+
             Creature c = gameMap.GetCreature(creature);
             c.SetActioned(true);
 

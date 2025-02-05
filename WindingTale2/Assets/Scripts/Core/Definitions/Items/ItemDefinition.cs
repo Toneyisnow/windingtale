@@ -47,5 +47,7 @@ namespace WindingTale.Core.Definitions
 
         public abstract bool IsUsable();
 
+        public abstract ItemType GetItemType();
+
     }
 }

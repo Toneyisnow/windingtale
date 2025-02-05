@@ -94,6 +94,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ItemDefinition.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIAggressiveDelegate.cs" />
+    <Compile Include="Assets\Scripts\UI\Common\TaggedButton.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\DefendItemDefinition.cs" />
     <Compile Include="Assets\FightObjects\FightBody.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
