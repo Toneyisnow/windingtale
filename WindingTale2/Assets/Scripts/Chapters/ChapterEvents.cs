@@ -63,7 +63,7 @@ namespace WindingTale.Chapters
         }
 
 
-        public static void ShowConversations(GameMain gameMain, int chapterId, int sequenceId, int start, int end)
+        public static void PushConversationsActivities(GameMain gameMain, int chapterId, int sequenceId, int start, int end)
         {
             ChapterDefinition chapterDefinition = DefinitionStore.Instance.LoadChapter(chapterId);
 

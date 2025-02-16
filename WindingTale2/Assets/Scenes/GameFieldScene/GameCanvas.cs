@@ -41,20 +41,21 @@ namespace WindingTale.Scenes.GameFieldScene
 
         }
 
-        /// <summary>
-        /// Show talk dialog, if creatureAnimationid is zero, then it is a system dialog from narrator
-        /// </summary>
-        /// <param name="creatureAnimationid"></param>
-        /// <param name="rawText"></param>
-        /// <param name="needConfirm"></param>
-        /// <param name="dialogPosition"></param>
-        /// <param name="onSelected"></param>
-        public void ShowTalkDialog(int creatureAnimationid, LocalizedString rawText, bool needConfirm, DialogPosition dialogPosition, Action<int> onSelected)
+
+        public void ShowTalkDialog(int creatureAnimationid, LocalizedString rawText, bool needConfirm, DialogPosition dialogPosition, Action<int> onSelected, int chapterId)
         {
             dialog = this.transform.Find("TalkDialog").gameObject;
             dialog.SetActive(true);
             TalkDialog sDialog = dialog.GetComponent<TalkDialog>();
-            sDialog.Init(creatureAnimationid, rawText, onSelected);
+
+            if (chapterId >= 0)
+            {
+                sDialog.InitConversation(chapterId, creatureAnimationid, rawText, onSelected);
+            }
+            else
+            {
+                sDialog.InitMessage(creatureAnimationid, rawText, onSelected);
+            }
         }
 
         public void CloseDialog()

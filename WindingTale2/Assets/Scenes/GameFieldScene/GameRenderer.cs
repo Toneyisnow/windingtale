@@ -20,7 +20,7 @@ namespace WindingTale.Scenes.GameFieldScene
             {
                 if (instance == null)
                 {
-                    instance = GameObject.Find("GameRoot").GetComponent<GameRenderer>();
+                    instance = FindFirstObjectByType<GameRenderer>(); //// GameObject.Find("GameRoot").GetComponent<GameRenderer>();
                     if (instance == null)
                     {
                         throw new MissingComponentException("Cannot find component GameRenderer");

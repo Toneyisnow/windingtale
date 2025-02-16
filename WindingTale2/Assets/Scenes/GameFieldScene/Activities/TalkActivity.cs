@@ -30,6 +30,7 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
 
         private Nullable<int> selectedResult = null;
 
+        private bool isMessage = false;
 
         /// <summary>
         /// Show the TalkDialog and wait for the user to click close or confirm.
@@ -42,9 +43,10 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             this.creature = creature;
             this.onSelected = onSelected;
 
-            //// this.rawText = message;
-            ///
+            this.rawText = LocalizationManager.GetFDMessageString(message);
             this.needConfirm = message.MessageType == FDMessage.MessageTypes.Confirm;
+
+            this.isMessage = true;
         }
 
         public TalkActivity(Conversation conversation, FDCreature creature = null, Action<int> onSelected = null)
@@ -53,7 +55,6 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             this.onSelected = onSelected;
 
             this.rawText = LocalizationManager.GetConversationString(conversation);
-
             this.needConfirm = false;
         }
 
@@ -67,7 +68,8 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
                 (result) =>
                 {
                     selectedResult = result;
-                });
+                },
+                isMessage ? -1 : gameMain.ChapterId);
 
             this.HasFinished = false;
         }

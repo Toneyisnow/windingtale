@@ -34,17 +34,17 @@ namespace WindingTale.Core.Common
             get; private set;
         }
 
-        public int IntParam3
+        public string StrParam1
         {
             get; private set;
         }
 
-        public override string ToString()
+        public string StrParam2
         {
-            return "";
+            get; private set;
         }
 
-        public static FDMessage Create(MessageTypes type, int key, int iParam1 = 0, int iParam2 = 0, int iParam3 = 0)
+        public static FDMessage Create(MessageTypes type, int key, int iParam1 = 0, int iParam2 = 0, string strParam1 = "", string strParam2 = "")
         {
             FDMessage result = new FDMessage();
 
@@ -52,7 +52,8 @@ namespace WindingTale.Core.Common
             result.Key = key;
             result.IntParam1 = iParam1;
             result.IntParam2 = iParam2;
-            result.IntParam3 = iParam3;
+            result.StrParam1 = strParam1;
+            result.StrParam2 = strParam2;
 
             return result;
         }

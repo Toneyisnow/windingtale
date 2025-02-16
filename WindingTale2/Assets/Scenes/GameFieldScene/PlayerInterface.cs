@@ -19,7 +19,7 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public static PlayerInterface getDefault()
         {
-            PlayerInterface playerInterface = GameObject.Find("GameRoot").GetComponent<PlayerInterface>();
+            PlayerInterface playerInterface = FindFirstObjectByType<PlayerInterface>(); //// GameObject.Find("GameRoot").GetComponent<PlayerInterface>();
             if (playerInterface == null)
             {
                 throw new MissingComponentException("Cannot find component PlayerInterface");

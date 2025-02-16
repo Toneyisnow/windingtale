@@ -18,7 +18,7 @@ namespace WindingTale.Chapters
         public Chapter1(GameMain gameMain) : base (gameMain, 1)
         {
             int eventId = 0;
-            LoadTurnEvent(++eventId, 1, CreatureFaction.Friend, turn1_test);
+            LoadTurnEvent(++eventId, 1, CreatureFaction.Friend, turn1);
             LoadTurnEvent(++eventId, 3, CreatureFaction.Enemy, turn3);
             LoadTurnEvent(++eventId, 4, CreatureFaction.Enemy, turn4);
             LoadTurnEvent(++eventId, 5, CreatureFaction.Enemy, turn5_Boss);
@@ -83,30 +83,20 @@ namespace WindingTale.Chapters
                 ActivityFactory.CreatureWalkActivity(1, FDMovePath.Create(FDPosition.At(8, 20), FDPosition.At(8, 15))),
                 ActivityFactory.CreatureWalkActivity(2, FDMovePath.Create(FDPosition.At(11, 21), FDPosition.At(11, 16))),
                 ActivityFactory.CreatureWalkActivity(3, FDMovePath.Create(FDPosition.At(9, 22), FDPosition.At(9, 17))),
-                //// ActivityFactory.CreatureWalkActivity(3, FDMovePath.Create(FDPosition.At(9, 22), FDPosition.At(9, 8), FDPosition.At(6, 8))),
                 ActivityFactory.CreatureWalkActivity(4, FDMovePath.Create(FDPosition.At(12, 23), FDPosition.At(12, 18)))
                 }
             ));
 
             // Talking
-            ShowConversations(gameMain, 1, 1, 1, 5);
-
-            FDCreature e1 = null;
-            FDCreature e2 = null;
-            FDCreature e3 = null;
-            FDCreature e4 = null;
-            FDCreature e5 = null;
-            FDCreature e6 = null;
-            FDCreature e7 = null;
-            FDCreature e8 = null;
+            PushConversationsActivities(gameMain, 1, 1, 1, 5);
 
             gameMain.PushActivity((gameMain) =>
             {
                 // Enemy Group1 appear
-                e1 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 11, 50101, FDPosition.At(2, 22));
-                e2 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 12, 50101, FDPosition.At(3, 22), 101);
-                e3 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 13, 50101, FDPosition.At(4, 23));
-                e4 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 14, 50101, FDPosition.At(5, 23));
+                AddCreatureToMap(gameMain, CreatureFaction.Enemy, 11, 50101, FDPosition.At(2, 22));
+                AddCreatureToMap(gameMain, CreatureFaction.Enemy, 12, 50101, FDPosition.At(3, 22), 101);
+                AddCreatureToMap(gameMain, CreatureFaction.Enemy, 13, 50101, FDPosition.At(4, 23));
+                AddCreatureToMap(gameMain, CreatureFaction.Enemy, 14, 50101, FDPosition.At(5, 23));
             });
 
             gameMain.PushActivity(new ParallelActivity(
@@ -120,10 +110,10 @@ namespace WindingTale.Chapters
             gameMain.PushActivity((gameMain) =>
             {
                 // Enemy Group2 appear
-                e5 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 15, 50101, FDPosition.At(4, 2), 101);
-                e6 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 16, 50101, FDPosition.At(3, 2));
-                e7 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 17, 50101, FDPosition.At(2, 3), 101);
-                e8 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 18, 50101, FDPosition.At(2, 3));
+                AddCreatureToMap(gameMain, CreatureFaction.Enemy, 15, 50101, FDPosition.At(4, 2), 101);
+                AddCreatureToMap(gameMain, CreatureFaction.Enemy, 16, 50101, FDPosition.At(3, 2));
+                AddCreatureToMap(gameMain, CreatureFaction.Enemy, 17, 50101, FDPosition.At(2, 3), 101);
+                AddCreatureToMap(gameMain, CreatureFaction.Enemy, 18, 50101, FDPosition.At(2, 3));
             });
 
             gameMain.PushActivity(new ParallelActivity(
@@ -137,25 +127,28 @@ namespace WindingTale.Chapters
             gameMain.PushActivity((gameMain) =>
             {
                 // Talking
-                ShowConversations(gameMain, 1, 1, 6, 7);
-            });
+                // Note: Because the enemies are created after the above activity, we need to put the talking activity here
+                PushConversationsActivities(gameMain, 1, 1, 6, 7);
 
-            // One Enemy move away
-            gameMain.PushActivity(
-                ActivityFactory.CreatureWalkActivity(14, FDMovePath.Create(FDPosition.At(5, 20), FDPosition.At(8, 20), FDPosition.At(8, 24)))
-            );
+                // One Enemy move away
+                gameMain.PushActivity(
+                    ActivityFactory.CreatureWalkActivity(14, FDMovePath.Create(FDPosition.At(5, 20), FDPosition.At(8, 20), FDPosition.At(8, 24)))
+                );
 
-            gameMain.PushActivity((gameMain) =>
-            {
-                gameMain.gameMap.RemoveCreature(14);
-            });
+                gameMain.PushActivity((gameMain) =>
+                {
+                    gameMain.gameMap.RemoveCreature(14);
+                });
 
-            gameMain.PushActivity((gameMain) =>
-            {
                 // Talking
-                ShowConversations(gameMain, 1, 1, 8, 19);
-            });
+                PushConversationsActivities(gameMain, 1, 1, 8, 19);
 
+                gameMain.PushActivity((gameMain) =>
+                {
+                    // Play background music
+                    gameMain.PlayBackgroundMusic();
+                });
+            });
         };
 
         private Action<GameMain> turn3 = (gameMain) =>
@@ -172,7 +165,7 @@ namespace WindingTale.Chapters
             ));
 
             // Talking
-            ShowConversations(gameMain, 1, 2, 1, 13);
+            PushConversationsActivities(gameMain, 1, 2, 1, 13);
         };
 
         private Action<GameMain> turn4 = (gameMain) =>
@@ -192,7 +185,7 @@ namespace WindingTale.Chapters
                 }
             ));
 
-            ShowConversations(gameMain, 1, 3, 1, 2);
+            PushConversationsActivities(gameMain, 1, 3, 1, 2);
         };
 
         private Action<GameMain> turn5_Boss = (gameMain) =>
@@ -214,7 +207,7 @@ namespace WindingTale.Chapters
                 }
             ));
 
-            ShowConversations(gameMain, 1, 4, 1, 11);
+            PushConversationsActivities(gameMain, 1, 4, 1, 11);
         };
 
         private Action<GameMain> turn6_Npc = (gameMain) =>
@@ -234,12 +227,12 @@ namespace WindingTale.Chapters
                 }
             ));
 
-            ShowConversations(gameMain, 1, 5, 1, 6);
+            PushConversationsActivities(gameMain, 1, 5, 1, 6);
         };
 
         private Action<GameMain> hanuoDead = (gameMain) =>
         {
-            ShowConversations(gameMain, 1, 91, 1, 4);
+            PushConversationsActivities(gameMain, 1, 91, 1, 4);
         };
 
         private Action<GameMain> hawateDead = (gameMain) =>
@@ -249,12 +242,12 @@ namespace WindingTale.Chapters
 
         private Action<GameMain> showBossDyingMessage = (gameMain) =>
         {
-            ShowConversations(gameMain, 1, 99, 1, 1);
+            PushConversationsActivities(gameMain, 1, 99, 1, 1);
         };
 
         private Action<GameMain> enemyClear = (gameMain) =>
         {
-            ShowConversations(gameMain, 1, 7, 1, 13);
+            PushConversationsActivities(gameMain, 1, 7, 1, 13);
 
             // Adjust friends
 

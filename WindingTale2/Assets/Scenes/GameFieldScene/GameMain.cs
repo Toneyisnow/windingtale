@@ -33,7 +33,7 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public static GameMain getDefault()
         {
-            GameMain game = GameObject.Find("GameRoot").GetComponent<GameMain>();
+            GameMain game = FindFirstObjectByType<GameMain>(); // GameObject.Find("GameRoot").GetComponent<GameMain>();
             if (game == null)
             {
                 throw new MissingComponentException("Cannot find component GameMain");
@@ -59,7 +59,10 @@ namespace WindingTale.Scenes.GameFieldScene
 
         private AIHandler npcAIHandler = null;
 
-
+        public int ChapterId
+        {
+            get { return chapterId; }
+        }
 
         #endregion
 
@@ -128,6 +131,18 @@ namespace WindingTale.Scenes.GameFieldScene
 
         }
 
+        public void PlayBackgroundMusic()
+        {
+            BackgroundMusic musicPlayer = FindFirstObjectByType<BackgroundMusic>();
+            musicPlayer.SetAudioClipName("Audios/Battle_2_HD_Final_V3");
+            musicPlayer.PlayMusic();
+        }
+
+        public void StopBackgroundMusic()
+        {
+
+        }
+
         #endregion
 
         #region Creature Related Operation
@@ -188,10 +203,13 @@ namespace WindingTale.Scenes.GameFieldScene
             {
                 if (result.Experience > 0)
                 {
-                    this.InsertActivity(gameMain =>
-                    {
-                        // Show experience dialog
-                    });
+                    FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 5, result.Experience);
+                    this.InsertActivity(new TalkActivity(message, creature));
+                }
+                if (result.BackExperience > 0)
+                {
+                    FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 5, result.BackExperience);
+                    this.InsertActivity(new TalkActivity(message, target));
                 }
             });
 

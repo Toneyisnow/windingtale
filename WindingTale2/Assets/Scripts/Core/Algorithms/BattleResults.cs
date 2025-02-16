@@ -144,6 +144,9 @@ namespace WindingTale.Core.Algorithms
 
         public List<DamageResult> BackDamages;
 
+        public int BackExperience { get; set; }
+
+
         public AttackResult(FDCreature subject, FDCreature target) : base(subject)
         {
             this.Target = target;

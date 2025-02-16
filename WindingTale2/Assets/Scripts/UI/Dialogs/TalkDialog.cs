@@ -15,6 +15,8 @@ public class TalkDialog : MonoBehaviour
 {
     public GameObject datoObj;
 
+    public GameObject conversationTextObj;
+
     public GameObject messageTextObj;
 
     private String fullText = "";
@@ -24,6 +26,8 @@ public class TalkDialog : MonoBehaviour
     private int creatureAnimationId = 0;
 
     private Action<int> onSelected = null;
+
+    private GameObject activeTextObj = null;
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +44,48 @@ public class TalkDialog : MonoBehaviour
         }
     }
 
-    public void Init(int creatureAnimationId, LocalizedString text, Action<int> onSelected)
+    /// <summary>
+    /// Init a message dialog, using CommonString as text material
+    /// </summary>
+    /// <param name="creatureAnimationId"></param>
+    /// <param name="text"></param>
+    /// <param name="onSelected"></param>
+    public void InitMessage(int creatureAnimationId, LocalizedString text, Action<int> onSelected)
+    {
+        var textMeshComponent = messageTextObj.GetComponent<TextMeshProUGUI>();
+        textMeshComponent.fontMaterial = Resources.Load<Material>(@"Fonts/FontAssets/zh/FZB_Message");
+        textMeshComponent.fontSharedMaterial = Resources.Load<Material>(@"Fonts/FontAssets/zh/FZB_Message");
+        //// textMeshComponent.UpdateFontAsset();
+        textMeshComponent.ForceMeshUpdate();
+
+        activeTextObj = messageTextObj;
+        messageTextObj.SetActive(true);
+        conversationTextObj.SetActive(false);
+
+        Init(creatureAnimationId, text, onSelected);
+    }
+
+    /// <summary>
+    /// Init a conversation dialog, the chapterId is used to load material for the text
+    /// </summary>
+    /// <param name="chapterId"></param>
+    /// <param name="creatureAnimationId"></param>
+    /// <param name="text"></param>
+    /// <param name="onSelected"></param>
+    public void InitConversation(int chapterId, int creatureAnimationId, LocalizedString text, Action<int> onSelected)
+    {
+        var textMeshComponent = conversationTextObj.GetComponent<TextMeshProUGUI>();
+        textMeshComponent.fontMaterial = Resources.Load<Material>(string.Format(@"Fonts/FontAssets/zh/FZB_Chapter-{0}", StringUtils.Digit2(chapterId)));
+        textMeshComponent.UpdateFontAsset();
+
+        activeTextObj = conversationTextObj;
+        conversationTextObj.SetActive(true);
+        messageTextObj.SetActive(false);
+
+        Init(creatureAnimationId, text, onSelected);
+    }
+
+    private void Init(int creatureAnimationId, LocalizedString text, Action<int> onSelected)
     {
         this.creatureAnimationId = creatureAnimationId;
         this.datoObj.GetComponent<Image>().sprite = Resources.Load<Sprite>(
@@ -66,12 +111,12 @@ public class TalkDialog : MonoBehaviour
         {
             if (skipToFullText)
             {
-                this.messageTextObj.GetComponent<TextMeshProUGUI>().text = fullText;
+                activeTextObj.GetComponent<TextMeshProUGUI>().text = fullText;
                 break;
             }
             
             String nowText = fullText.Substring(0, i + 1);
-            this.messageTextObj.GetComponent<TextMeshProUGUI>().text = nowText;
+            activeTextObj.GetComponent<TextMeshProUGUI>().text = nowText;
 
             //Wait a certain amount of time, then continue with the for loop
             yield return new WaitForSeconds(0.05f);

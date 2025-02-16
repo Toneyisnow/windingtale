@@ -50,13 +50,13 @@ namespace WindingTale.Core.Algorithms
             if (canFightBack && targetLastHp > 0)
             {
                 DamageResult back1 = DamageFrom(target, subject, field);
-                result.Experience += CalculateDamageExp(target, subject, back1);
+                result.BackExperience += CalculateDamageExp(target, subject, back1);
                 result.BackDamages.Add(back1);
 
                 if (back1.HpAfter > 0 && FDRandom.BoolFromRate(DEFAULT_DOUBLE_ATTACK_RATE))
                 {
                     DamageResult back2 = DamageFrom(target, subject, field);
-                    result.Experience += CalculateDamageExp(target, subject, back2);
+                    result.BackExperience += CalculateDamageExp(target, subject, back2);
                     result.BackDamages.Add(back2);
                 }
             }
@@ -248,7 +248,8 @@ namespace WindingTale.Core.Algorithms
                 calculatedHp = damage.HpBefore - damage.HpAfter;
             }
 
-            return calculatedHp * target.Level * target.Exp / subject.Level / target.HpMax;
+            float result = calculatedHp * target.Level * target.Exp / (float)subject.Level / (float)target.HpMax;
+            return (int)result;
         }
 
         private static int CalculateRecoverExp(FDCreature subject, FDCreature target, MagicDefinition magic, RecoverResult recoverResult)

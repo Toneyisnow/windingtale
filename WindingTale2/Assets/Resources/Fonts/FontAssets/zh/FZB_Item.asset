@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: FZB_Item Material
-  m_Shader: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 10101, guid: 0000000000000000e000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -98,6 +98,7 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,21 +111,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: FZB_Item
   m_EditorClassIdentifier: 
-  hashCode: -553412492
-  material: {fileID: -381545313617310420}
-  materialHashCode: -1893377708
   m_Version: 1.1.0
-  m_SourceFontFileGUID: 66154a801d431244c879b816c3ebb3a4
-  m_SourceFontFile_EditorRef: {fileID: 0}
-  m_SourceFontFile: {fileID: 0}
-  m_AtlasPopulationMode: 0
   m_FaceInfo:
     m_FaceIndex: 0
     m_FamilyName: FZLanTingHeiS-H-GB
     m_StyleName: Regular
     m_PointSize: 33
     m_Scale: 1
-    m_UnitsPerEM: 0
+    m_UnitsPerEM: 2816
     m_LineHeight: 41.25
     m_AscentLine: 29.519531
     m_CapLine: 26
@@ -140,6 +134,31 @@ MonoBehaviour:
     m_StrikethroughOffset: 7.2
     m_StrikethroughThickness: 1.546875
     m_TabWidth: 9
+  m_Material: {fileID: -381545313617310420}
+  m_SourceFontFileGUID: 66154a801d431244c879b816c3ebb3a4
+  m_CreationSettings:
+    sourceFontFileName: 
+    sourceFontFileGUID: 66154a801d431244c879b816c3ebb3a4
+    faceIndex: 0
+    pointSizeSamplingMode: 0
+    pointSize: 33
+    padding: 1
+    paddingMode: 0
+    packingMode: 0
+    atlasWidth: 512
+    atlasHeight: 512
+    characterSetSelectionMode: 8
+    characterSequence: "\u836F\u8349\r\n\u56DE\u590D\u5242\r\n\u518D\u751F\u836F\r\n\u795E\u5723\u4E4B\u6C34\r\n\u9B54\u6CD5\u6C34\r\n\u6C34\u6676\u7C92\r\n\u795B\u9EBB\u5242\r\n\u89E3\u6BD2\u5242\r\n\u751F\u547D\u4E4B\u5B9E\r\n\u9B54\u529B\u6C34\u6676\r\n\u529B\u91CF\u836F\u6C34\r\n\u8010\u529B\u836F\u6C34\r\n\u98CE\u7CBE\u4E4B\u7FBD\r\n\u901F\u5EA6\u836F\u6C34\r\n\u661F\u4E4B\u773C\r\n\u5149\u4E4B\u773C\r\n\u6697\u4E4B\u773C\r\n\u51B0\u4E4B\u773C\r\n\u706B\u4E4B\u773C\r\n\u4FEE\u7406\u5957\u4EF6\r\n\u77ED\u5251\r\n\u9614\u5251\r\n\u957F\u5251\r\n\u5DE8\u5251\r\n\u9ED1\u6697\u5251\r\n\u6218\u58EB\u5251\r\n\u5DE8\u9B54\u5251\r\n\u65A9\u94C1\u5251\r\n\u6D41\u6C34\u5251\r\n\u5927\u5730\u4E4B\u5251\r\n\u9F99\u795E\u5251\r\n\u5C0F\u5200\r\n\u5315\u9996\r\n\u6DEC\u6BD2\u5200\r\n\u76D7\u8D3C\u5315\u9996\r\n\u6697\u6740\u5200\r\n\u62A4\u624B\u5200\r\n\u5FCD\u8005\u5200\r\n\u5730\u72F1\u5200\r\n\u708E\u9F99\u5200\r\n\u624B\u65A7\r\n\u56DE\u65CB\u65A7\r\n\u6218\u65A7\r\n\u6218\u9524\r\n\u5DE8\u65A7\r\n\u8840\u4E4B\u65A7\r\n\u95EA\u7535\u9524\r\n\u72C2\u66B4\u4E4B\u65A7\r\n\u5149\u4E4B\u65A7\r\n\u529B\u91CF\u4E4B\u65A7\r\n\u5927\u5730\u4E4B\u9524\r\n\u9B54\u795E\u65A7\r\n\u523A\u77DB\r\n\u9A91\u67AA\r\n\u957F\u621F\r\n\u5148\u950B\u77DB\r\n\u65A9\u9A6C\u5200\r\n\u6076\u9B54\u4E4B\u77DB\r\n\u5723\u4E4B\u67AA\r\n\u9EC4\u91D1\u4E4B\u621F\r\n\u9F99\u4E4B\u67AA\r\n\u7834\u9B54\u67AA\r\n\u5DE8\u795E\u621F\r\n\u6218\u795E\u621F\r\n\u77ED\u5F13\r\n\u957F\u5F13\r\n\u9ED1\u6697\u5F13\r\n\u5DE8\u5F13\r\n\u7CBE\u7075\u5F13\r\n\u72D9\u51FB\u5F13\r\n\u5341\u5B57\u5F13\r\n\u6C34\u6676\u5F13\r\n\u5C01\u9B54\u5F13\r\n\u706B\u795E\u5F13\r\n\u98CE\u795E\u5F13\r\n\u957F\u68CD\r\n\u9489\u5934\u9524\r\n\u5DE8\u9524\r\n\u94FE\u67B7\r\n\u9B54\u6CD5\u6756\r\n\u5C01\u5492\u6756\r\n\u529B\u4E4B\u6756\r\n\u4F20\u9001\u6CD5\u6756\r\n\u9ED1\u6697\u6CD5\u6756\r\n\u9F99\u4E4B\u6756\r\n\u5149\u4E4B\u6756\r\n\u94C1\u6307\u5957\r\n\u94C1\u722A\r\n\u7687\u5E1D\u6307\u73AF\r\n\u6BD2\u722A\r\n\u788E\u5CA9\u722A\r\n\u50F5\u5C38\u722A\r\n\u91D1\u521A\u6307\u73AF\r\n\u88C2\u5203\u722A\r\n\u5DE8\u795E\u6307\u73AF\r\n\u6597\u795E\u6307\u73AF\r\n\u9B54\u9F99\u722A\r\n\u5A01\u529B\u624B\u81C2\r\n\u91D1\u521A\u624B\u81C2\r\n\u51B2\u51FB\u624B\u81C2\r\n\u96F7\u795E\u624B\u81C2\r\n\u62F3\u5934\r\n\u6FC0\u6C34\u70AE\r\n\u96F7\u795E\u97AD\r\n\u5149\u675F\u67AA\r\n\u72D9\u51FB\u67AA\r\n\u9B54\u7130\u6CE2\r\n\u5149\u675F\u70AE\r\n\u706B\u708E\r\n\u51B0\u708E\r\n\u9ED1\u6697\u6CE2\r\n\u7A7A\u96F7\u9707\r\n\u5DE8\u5CA9\u624B\u81C2\r\n\u89E6\u624B\r\n\u5149\u675F\u5251\r\n\u5229\u722A\r\n\u708E\u9F99\u5251\r\n\u98CE\u7259\u65A9\r\n\u5E03\u8863\r\n\u76AE\u7532\r\n\u65C5\u884C\u88C5\r\n\u786C\u76AE\u7532\r\n\u591C\u884C\u88C5\r\n\u9B54\u6CD5\u76AE\u7532\r\n\u76D7\u8D3C\u4E4B\u8863\r\n\u7CBE\u7075\u62AB\u98CE\r\n\u5FCD\u8005\u88C5\r\n\u6F5C\u884C\u670D\r\n\u795E\u79D8\u88C5\r\n\u6697\u6740\u670D\r\n\u9ED1\u6697\u4E4B\u8863\r\n\u6076\u9B54\u76AE\u7532\r\n\u96F7\u795E\u670D\r\n\u73AF\u72B6\u7532\r\n\u9501\u5B50\u7532\r\n\u9CDE\u7532\r\n\u8FDE\u73AF\u94A2\u7532\r\n\u5408\u91D1\u9501\u7532\r\n\u9B54\u6CD5\u9CDE\u7532\r\n\u8840\u73AF\u7532\r\n\u91D1\u521A\u9501\u7532\r\n\u9ED1\u6697\u9CDE\u7532\r\n\u529B\u91CF\u9501\u7532\r\n\u6076\u9B54\u9CDE\u7532\r\n\u9F99\u9CDE\u7532\r\n\u94E0\u7532\r\n\u94F6\u94E0\u7532\r\n\u9B54\u6CD5\u94E0\u7532\r\n\u91CD\u94E0\u7532\r\n\u5730\u72F1\u94E0\u7532\r\n\u5723\u94E0\u7532\r\n\u5927\u5730\u94E0\u7532\r\n\u9F99\u795E\u94E0\u7532\r\n\u957F\u888D\r\n\u6CD5\u5E08\u888D\r\n\u50E7\u4FA3\u888D\r\n\u796D\u5E08\u888D\r\n\u5723\u8005\u888D\r\n\u96FE\u4E4B\u888D\r\n\u9ED1\u6697\u4E4B\u888D\r\n\u5730\u4E4B\u888D\r\n\u6C34\u4E4B\u888D\r\n\u5929\u4E4B\u888D\r\n\u6B66\u6597\u88C5\r\n\u6597\u58EB\u670D\r\n\u6B66\u8005\u94E0\u7532\r\n\u5996\u9B54\u6597\u670D\r\n\u6597\u58EB\u62A4\u670D\r\n\u6B66\u795E\u6597\u670D\r\n\u6218\u6597\u88C5\u7532\r\n\u7A81\u51FB\u88C5\u7532\r\n\u7279\u6B8A\u88C5\u7532\r\n\u5927\u5730\u88C5\u7532\r\n\u6B66\u9053\u670D\r\n\u9B54\u5CA9\u94E0\r\n\u786C\u76AE\r\n\u9B54\u795E\u7532\r\n\u5DE8\u5CA9\u94E0\r\n\u91CD\u88C5\u7532\r\n\u9752\u8272\u786C\u76AE\r\n\u5143\u7D20\u62A4\u4F53\r\n\u9F99\u9CDE\r\n\u865A\u65E0\u6218\u7532\r\n\u738B\u888D\r\n\u7EFF\u5B9D\u77F3\r\n\u7EA2\u5B9D\u77F3\r\n\u84DD\u5B9D\u77F3\r\n\u94BB\u77F3\r\n\u9EC4\u91D1\u5FBD\u7AE0\r\n\u5723\u8005\u4E4B\u6212\r\n\u767D\u91D1\u5FBD\u7AE0\r\n\u5FC3\u773C\u4E4B\u4E66\r\n\u98DE\u9F99\u5375\r\n\u9886\u609F\u4E4B\u4E66\r\n\u52C7\u8005\u5FBD\u7AE0\r\n\u7CBE\u7075\u5951\u7EA6\r\n\u63A7\u5236\u4E2D\u67A2\r\n\u5929\u7A7A\u4E4B\u94A5\r\n3000\u5143\r\n5000\u5143\r\n10000\u5143\r\n20000\u5143\r\n30000\u5143\r\n50000\u5143\r\n"
+    referencedFontAssetGUID: f92f4c48dc6b0f84a8a81edcbae99499
+    referencedTextAssetGUID: 80b71ff76658ee74eb919d78e49a5577
+    fontStyle: 0
+    fontStyleModifier: 0
+    renderMode: 4121
+    includeFontFeatures: 0
+  m_SourceFontFile: {fileID: 0}
+  m_SourceFontFilePath: 
+  m_AtlasPopulationMode: 0
+  InternalDynamicOS: 0
   m_GlyphTable:
   - m_Index: 17
     m_Metrics:
@@ -4041,7 +4060,12 @@ MonoBehaviour:
   - {fileID: 3877787489527919360}
   m_AtlasTextureIndex: 0
   m_IsMultiAtlasTexturesEnabled: 0
+  m_GetFontFeatures: 1
   m_ClearDynamicDataOnBuild: 0
+  m_AtlasWidth: 512
+  m_AtlasHeight: 512
+  m_AtlasPadding: 1
+  m_AtlasRenderMode: 4121
   m_UsedGlyphRects:
   - m_X: 0
     m_Y: 0
@@ -5048,57 +5072,14 @@ MonoBehaviour:
     m_Y: 391
     m_Width: 9
     m_Height: 121
-  m_fontInfo:
-    Name: 
-    PointSize: 0
-    Scale: 0
-    CharacterCount: 0
-    LineHeight: 0
-    Baseline: 0
-    Ascender: 0
-    CapHeight: 0
-    Descender: 0
-    CenterLine: 0
-    SuperscriptOffset: 0
-    SubscriptOffset: 0
-    SubSize: 0
-    Underline: 0
-    UnderlineThickness: 0
-    strikethrough: 0
-    strikethroughThickness: 0
-    TabWidth: 0
-    Padding: 0
-    AtlasWidth: 0
-    AtlasHeight: 0
-  atlas: {fileID: 0}
-  m_AtlasWidth: 512
-  m_AtlasHeight: 512
-  m_AtlasPadding: 1
-  m_AtlasRenderMode: 4121
-  m_glyphInfoList: []
-  m_KerningTable:
-    kerningPairs: []
   m_FontFeatureTable:
+    m_MultipleSubstitutionRecords: []
+    m_LigatureSubstitutionRecords: []
     m_GlyphPairAdjustmentRecords: []
-  fallbackFontAssets: []
+    m_MarkToBaseAdjustmentRecords: []
+    m_MarkToMarkAdjustmentRecords: []
+  m_ShouldReimportFontFeatures: 0
   m_FallbackFontAssetTable: []
-  m_CreationSettings:
-    sourceFontFileName: 
-    sourceFontFileGUID: 66154a801d431244c879b816c3ebb3a4
-    pointSizeSamplingMode: 0
-    pointSize: 33
-    padding: 1
-    packingMode: 0
-    atlasWidth: 512
-    atlasHeight: 512
-    characterSetSelectionMode: 8
-    characterSequence: "\u836F\u8349\r\n\u56DE\u590D\u5242\r\n\u518D\u751F\u836F\r\n\u795E\u5723\u4E4B\u6C34\r\n\u9B54\u6CD5\u6C34\r\n\u6C34\u6676\u7C92\r\n\u795B\u9EBB\u5242\r\n\u89E3\u6BD2\u5242\r\n\u751F\u547D\u4E4B\u5B9E\r\n\u9B54\u529B\u6C34\u6676\r\n\u529B\u91CF\u836F\u6C34\r\n\u8010\u529B\u836F\u6C34\r\n\u98CE\u7CBE\u4E4B\u7FBD\r\n\u901F\u5EA6\u836F\u6C34\r\n\u661F\u4E4B\u773C\r\n\u5149\u4E4B\u773C\r\n\u6697\u4E4B\u773C\r\n\u51B0\u4E4B\u773C\r\n\u706B\u4E4B\u773C\r\n\u4FEE\u7406\u5957\u4EF6\r\n\u77ED\u5251\r\n\u9614\u5251\r\n\u957F\u5251\r\n\u5DE8\u5251\r\n\u9ED1\u6697\u5251\r\n\u6218\u58EB\u5251\r\n\u5DE8\u9B54\u5251\r\n\u65A9\u94C1\u5251\r\n\u6D41\u6C34\u5251\r\n\u5927\u5730\u4E4B\u5251\r\n\u9F99\u795E\u5251\r\n\u5C0F\u5200\r\n\u5315\u9996\r\n\u6DEC\u6BD2\u5200\r\n\u76D7\u8D3C\u5315\u9996\r\n\u6697\u6740\u5200\r\n\u62A4\u624B\u5200\r\n\u5FCD\u8005\u5200\r\n\u5730\u72F1\u5200\r\n\u708E\u9F99\u5200\r\n\u624B\u65A7\r\n\u56DE\u65CB\u65A7\r\n\u6218\u65A7\r\n\u6218\u9524\r\n\u5DE8\u65A7\r\n\u8840\u4E4B\u65A7\r\n\u95EA\u7535\u9524\r\n\u72C2\u66B4\u4E4B\u65A7\r\n\u5149\u4E4B\u65A7\r\n\u529B\u91CF\u4E4B\u65A7\r\n\u5927\u5730\u4E4B\u9524\r\n\u9B54\u795E\u65A7\r\n\u523A\u77DB\r\n\u9A91\u67AA\r\n\u957F\u621F\r\n\u5148\u950B\u77DB\r\n\u65A9\u9A6C\u5200\r\n\u6076\u9B54\u4E4B\u77DB\r\n\u5723\u4E4B\u67AA\r\n\u9EC4\u91D1\u4E4B\u621F\r\n\u9F99\u4E4B\u67AA\r\n\u7834\u9B54\u67AA\r\n\u5DE8\u795E\u621F\r\n\u6218\u795E\u621F\r\n\u77ED\u5F13\r\n\u957F\u5F13\r\n\u9ED1\u6697\u5F13\r\n\u5DE8\u5F13\r\n\u7CBE\u7075\u5F13\r\n\u72D9\u51FB\u5F13\r\n\u5341\u5B57\u5F13\r\n\u6C34\u6676\u5F13\r\n\u5C01\u9B54\u5F13\r\n\u706B\u795E\u5F13\r\n\u98CE\u795E\u5F13\r\n\u957F\u68CD\r\n\u9489\u5934\u9524\r\n\u5DE8\u9524\r\n\u94FE\u67B7\r\n\u9B54\u6CD5\u6756\r\n\u5C01\u5492\u6756\r\n\u529B\u4E4B\u6756\r\n\u4F20\u9001\u6CD5\u6756\r\n\u9ED1\u6697\u6CD5\u6756\r\n\u9F99\u4E4B\u6756\r\n\u5149\u4E4B\u6756\r\n\u94C1\u6307\u5957\r\n\u94C1\u722A\r\n\u7687\u5E1D\u6307\u73AF\r\n\u6BD2\u722A\r\n\u788E\u5CA9\u722A\r\n\u50F5\u5C38\u722A\r\n\u91D1\u521A\u6307\u73AF\r\n\u88C2\u5203\u722A\r\n\u5DE8\u795E\u6307\u73AF\r\n\u6597\u795E\u6307\u73AF\r\n\u9B54\u9F99\u722A\r\n\u5A01\u529B\u624B\u81C2\r\n\u91D1\u521A\u624B\u81C2\r\n\u51B2\u51FB\u624B\u81C2\r\n\u96F7\u795E\u624B\u81C2\r\n\u62F3\u5934\r\n\u6FC0\u6C34\u70AE\r\n\u96F7\u795E\u97AD\r\n\u5149\u675F\u67AA\r\n\u72D9\u51FB\u67AA\r\n\u9B54\u7130\u6CE2\r\n\u5149\u675F\u70AE\r\n\u706B\u708E\r\n\u51B0\u708E\r\n\u9ED1\u6697\u6CE2\r\n\u7A7A\u96F7\u9707\r\n\u5DE8\u5CA9\u624B\u81C2\r\n\u89E6\u624B\r\n\u5149\u675F\u5251\r\n\u5229\u722A\r\n\u708E\u9F99\u5251\r\n\u98CE\u7259\u65A9\r\n\u5E03\u8863\r\n\u76AE\u7532\r\n\u65C5\u884C\u88C5\r\n\u786C\u76AE\u7532\r\n\u591C\u884C\u88C5\r\n\u9B54\u6CD5\u76AE\u7532\r\n\u76D7\u8D3C\u4E4B\u8863\r\n\u7CBE\u7075\u62AB\u98CE\r\n\u5FCD\u8005\u88C5\r\n\u6F5C\u884C\u670D\r\n\u795E\u79D8\u88C5\r\n\u6697\u6740\u670D\r\n\u9ED1\u6697\u4E4B\u8863\r\n\u6076\u9B54\u76AE\u7532\r\n\u96F7\u795E\u670D\r\n\u73AF\u72B6\u7532\r\n\u9501\u5B50\u7532\r\n\u9CDE\u7532\r\n\u8FDE\u73AF\u94A2\u7532\r\n\u5408\u91D1\u9501\u7532\r\n\u9B54\u6CD5\u9CDE\u7532\r\n\u8840\u73AF\u7532\r\n\u91D1\u521A\u9501\u7532\r\n\u9ED1\u6697\u9CDE\u7532\r\n\u529B\u91CF\u9501\u7532\r\n\u6076\u9B54\u9CDE\u7532\r\n\u9F99\u9CDE\u7532\r\n\u94E0\u7532\r\n\u94F6\u94E0\u7532\r\n\u9B54\u6CD5\u94E0\u7532\r\n\u91CD\u94E0\u7532\r\n\u5730\u72F1\u94E0\u7532\r\n\u5723\u94E0\u7532\r\n\u5927\u5730\u94E0\u7532\r\n\u9F99\u795E\u94E0\u7532\r\n\u957F\u888D\r\n\u6CD5\u5E08\u888D\r\n\u50E7\u4FA3\u888D\r\n\u796D\u5E08\u888D\r\n\u5723\u8005\u888D\r\n\u96FE\u4E4B\u888D\r\n\u9ED1\u6697\u4E4B\u888D\r\n\u5730\u4E4B\u888D\r\n\u6C34\u4E4B\u888D\r\n\u5929\u4E4B\u888D\r\n\u6B66\u6597\u88C5\r\n\u6597\u58EB\u670D\r\n\u6B66\u8005\u94E0\u7532\r\n\u5996\u9B54\u6597\u670D\r\n\u6597\u58EB\u62A4\u670D\r\n\u6B66\u795E\u6597\u670D\r\n\u6218\u6597\u88C5\u7532\r\n\u7A81\u51FB\u88C5\u7532\r\n\u7279\u6B8A\u88C5\u7532\r\n\u5927\u5730\u88C5\u7532\r\n\u6B66\u9053\u670D\r\n\u9B54\u5CA9\u94E0\r\n\u786C\u76AE\r\n\u9B54\u795E\u7532\r\n\u5DE8\u5CA9\u94E0\r\n\u91CD\u88C5\u7532\r\n\u9752\u8272\u786C\u76AE\r\n\u5143\u7D20\u62A4\u4F53\r\n\u9F99\u9CDE\r\n\u865A\u65E0\u6218\u7532\r\n\u738B\u888D\r\n\u7EFF\u5B9D\u77F3\r\n\u7EA2\u5B9D\u77F3\r\n\u84DD\u5B9D\u77F3\r\n\u94BB\u77F3\r\n\u9EC4\u91D1\u5FBD\u7AE0\r\n\u5723\u8005\u4E4B\u6212\r\n\u767D\u91D1\u5FBD\u7AE0\r\n\u5FC3\u773C\u4E4B\u4E66\r\n\u98DE\u9F99\u5375\r\n\u9886\u609F\u4E4B\u4E66\r\n\u52C7\u8005\u5FBD\u7AE0\r\n\u7CBE\u7075\u5951\u7EA6\r\n\u63A7\u5236\u4E2D\u67A2\r\n\u5929\u7A7A\u4E4B\u94A5\r\n3000\u5143\r\n5000\u5143\r\n10000\u5143\r\n20000\u5143\r\n30000\u5143\r\n50000\u5143\r\n"
-    referencedFontAssetGUID: f92f4c48dc6b0f84a8a81edcbae99499
-    referencedTextAssetGUID: 80b71ff76658ee74eb919d78e49a5577
-    fontStyle: 0
-    fontStyleModifier: 0
-    renderMode: 4121
-    includeFontFeatures: 0
   m_FontWeightTable:
   - regularTypeface: {fileID: 0}
     italicTypeface: {fileID: 0}
@@ -5127,6 +5108,33 @@ MonoBehaviour:
   boldSpacing: 7
   italicStyle: 35
   tabSize: 10
+  m_fontInfo:
+    Name: 
+    PointSize: 0
+    Scale: 0
+    CharacterCount: 0
+    LineHeight: 0
+    Baseline: 0
+    Ascender: 0
+    CapHeight: 0
+    Descender: 0
+    CenterLine: 0
+    SuperscriptOffset: 0
+    SubscriptOffset: 0
+    SubSize: 0
+    Underline: 0
+    UnderlineThickness: 0
+    strikethrough: 0
+    strikethroughThickness: 0
+    TabWidth: 0
+    Padding: 0
+    AtlasWidth: 0
+    AtlasHeight: 0
+  m_glyphInfoList: []
+  m_KerningTable:
+    kerningPairs: []
+  fallbackFontAssets: []
+  atlas: {fileID: 0}
 --- !u!28 &3877787489527919360
 Texture2D:
   m_ObjectHideFlags: 0
@@ -5137,10 +5145,8 @@ Texture2D:
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
   m_IsAlphaChannelOptional: 0
-  serializedVersion: 2
+  serializedVersion: 3
   m_Width: 512
   m_Height: 512
   m_CompleteImageSize: 262144

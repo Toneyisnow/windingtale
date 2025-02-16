@@ -179,6 +179,7 @@
     <Compile Include="Assets\Scripts\Plugins\CreateFightAnimations.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalGuardDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\SpecialItemDefinition.cs" />
+    <Compile Include="Assets\Scenes\TitleScene\TitleButton.cs" />
     <Compile Include="Assets\Scripts\Core\Files\GameMapRecord.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDSpan.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureDying.cs" />
+    <Compile Include="Assets\Scenes\Shared\BackgroundMusic.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\DefinitionStore.cs" />
     <Compile Include="Assets\MapObjects\GameMap\FieldLayer.cs" />
     <Compile Include="Assets\Scripts\Chapters\ChapterEvents.cs" />
@@ -220,6 +222,7 @@
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalAggressiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Files\ResourceDataFile.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\SequencedActivity.cs" />
+    <Compile Include="Assets\Scenes\Shared\SceneTransition.cs" />
     <Compile Include="Assets\MapObjects\Menus\MenuItem.cs" />
     <Compile Include="Assets\Scripts\Core\Common\DirectedPosition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\IGameActions.cs" />
