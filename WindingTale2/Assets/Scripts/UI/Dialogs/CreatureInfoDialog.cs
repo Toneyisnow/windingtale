@@ -6,9 +6,12 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
+using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
+using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
+using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
 
 namespace WindingTale.UI.Dialogs
@@ -37,12 +40,17 @@ namespace WindingTale.UI.Dialogs
         public GameObject mpCurrentLabel;
         public GameObject mpMaxLabel;
 
+        public GameObject hpBar;
+        public GameObject mpBar;
 
         public GameObject levelLabel;
+        public GameObject expLabel;
+        public GameObject mvLabel;
         public GameObject apLabel;
         public GameObject dpLabel;
         public GameObject dxLabel;
-        public GameObject expLabel;
+        public GameObject hitLabel;
+        public GameObject evLabel;
 
         public GameObject itemsContainer;
         public GameObject magicContainer;
@@ -71,7 +79,7 @@ namespace WindingTale.UI.Dialogs
 
 
 
-
+        private GameMain gameMain = null;
 
         private FDCreature creature = null;
         private CreatureInfoType infoType = CreatureInfoType.View;
@@ -86,11 +94,13 @@ namespace WindingTale.UI.Dialogs
         // Update is called once per frame
         void Update()
         {
-
         }
 
-        public void Init(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected)
+        public void Init(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected, GameMain gameMain)
         {
+            this.gameMain = gameMain;
+            FDMap map = gameMain.gameMap.Map;
+
             int animationId = creature.Definition.AnimationId;
             this.datoObj.GetComponent<Image>().sprite = Resources.Load<Sprite>(
                 string.Format(@"Datos/Dato_{0}", StringUtils.Digit3(animationId))
@@ -117,10 +127,31 @@ namespace WindingTale.UI.Dialogs
 
             this.hpCurrentLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.Hp);
             this.hpMaxLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.HpMax);
+            this.hpBar.transform.localScale = new Vector3((float)creature.Hp / creature.HpMax, 1, 1);
+
             this.mpCurrentLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.Mp);
             this.mpMaxLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.MpMax);
+            this.mpBar.transform.localScale = new Vector3(creature.MpMax > 0 ? (float)creature.Mp / creature.MpMax : 0, 1, 1);
 
-            if (infoType != CreatureInfoType.SelectMagic)
+            // Details information
+
+            int creatureAp = CreatureFormula.GetCalculatedAp(creature, map);
+            int creatureDp = CreatureFormula.GetCalculatedDp(creature, map);
+            int creatureDx = CreatureFormula.GetCalculatedDx(creature, map);
+            int creatureHit = CreatureFormula.GetCalculatedHit(creature, map);
+            int creatureEv = CreatureFormula.GetCalculatedEv(creature, map);
+
+            this.levelLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creature.Level);
+            this.expLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.Exp);
+            this.mvLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creature.Mv);
+            this.apLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creatureAp);
+            this.dpLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creatureDp);
+            this.dxLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creatureDx);
+            this.hitLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creatureHit);
+            this.evLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creatureEv);
+
+
+            if (!isMagic)
             {
                 for(int itemIndex = 0; itemIndex < creature.Items.Count; itemIndex ++)
                 {

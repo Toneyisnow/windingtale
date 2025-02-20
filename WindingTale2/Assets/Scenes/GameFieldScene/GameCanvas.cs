@@ -37,7 +37,8 @@ namespace WindingTale.Scenes.GameFieldScene
             dialog.SetActive(true);
             CreatureInfoDialog sDialog = dialog.GetComponent<CreatureInfoDialog>();
 
-            sDialog.Init(creature, infoType, onSelected);
+            GameMain gameMain = GameObject.FindFirstObjectByType<GameMain>();
+            sDialog.Init(creature, infoType, onSelected, gameMain);
 
         }
 

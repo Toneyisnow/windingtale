@@ -205,11 +205,15 @@ namespace WindingTale.Scenes.GameFieldScene
                 {
                     FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 5, result.Experience);
                     this.InsertActivity(new TalkActivity(message, creature));
+
+                    BattleHandler.ApplyExperience(creature, result.Experience);
                 }
                 if (result.BackExperience > 0)
                 {
                     FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 5, result.BackExperience);
                     this.InsertActivity(new TalkActivity(message, target));
+
+                    BattleHandler.ApplyExperience(target, result.BackExperience);
                 }
             });
 

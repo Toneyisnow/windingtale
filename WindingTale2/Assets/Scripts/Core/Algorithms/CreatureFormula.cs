@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
+using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 
 namespace WindingTale.Core.Algorithms
@@ -71,5 +73,113 @@ namespace WindingTale.Core.Algorithms
                 
             }
         }
+
+        /// <summary>
+        /// Get Ap according to the creature's status, and map's block
+        /// </summary>
+        /// <param name="creature"></param>
+        /// <returns></returns>
+        public static int GetCalculatedAp(FDCreature creature, FDMap map)
+        {
+            FDPosition position = creature.Position;
+            ShapeDefinition shape = map.Field.GetShapeAt(position);
+
+            AttackItemDefinition attackItem = creature.GetAttackItem();
+            if (attackItem == null)
+            {
+                return 0;
+            }
+            return creature.Ap + attackItem.Ap;
+        }
+
+
+        /// <summary>
+        /// Get Dp according to the creature's status, and map's block
+        /// </summary>
+        /// <param name="creature"></param>
+        /// <returns></returns>
+        public static int GetCalculatedDp(FDCreature creature, FDMap map)
+        {
+            FDPosition position = creature.Position;
+            ShapeDefinition shape = map.Field.GetShapeAt(position);
+            
+            AttackItemDefinition attackItem = creature.GetAttackItem();
+            DefendItemDefinition defendItem = creature.GetDefendItem();
+
+            int result = creature.Dp + defendItem.Dp;
+            if (attackItem != null)
+            {
+                result += attackItem.Dp;
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// Get Dx according to the creature's status, and map's block
+        /// </summary>
+        /// <param name="creature"></param>
+        /// <returns></returns>
+        public static int GetCalculatedDx(FDCreature creature, FDMap map)
+        {
+            
+            return creature.Dx;
+        }
+
+
+        /// <summary>
+        /// Get Ap according to the creature's status, and map's block
+        /// </summary>
+        /// <param name="creature"></param>
+        /// <returns></returns>
+        public static int GetCalculatedHit(FDCreature creature, FDMap map)
+        {
+            int effectDx = GetCalculatedDx(creature, map);
+
+            AttackItemDefinition item = creature.GetAttackItem();
+            if (item != null)
+            {
+                return item.Hit + effectDx;
+            }
+            return effectDx;
+        }
+
+
+        /// <summary>
+        /// Get Ev according to the creature's status, and map's block
+        /// </summary>
+        /// <param name="creature"></param>
+        /// <returns></returns>
+        public static int GetCalculatedEv(FDCreature creature, FDMap map)
+        {
+            int effectDx = GetCalculatedDx(creature, map);
+
+            DefendItemDefinition defendItem = creature.GetDefendItem();
+            if (defendItem != null)
+            {
+                return effectDx + defendItem.Ev;
+            }
+
+            return effectDx;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="creature"></param>
+        /// <returns></returns>
+        public static LevelUpInfo ComposeLevelUp(FDCreature creature)
+        {
+            LevelUpInfo result = new LevelUpInfo();
+            result.ImprovedAp = 0;
+            result.ImprovedDp = 0;
+            result.ImprovedDx = 0;
+            result.ImprovedHp = 0;
+            result.ImprovedMp = 0;
+
+            return result;
+        }
+
+
     }
 }

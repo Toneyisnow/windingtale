@@ -10,10 +10,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{3D0A49E7-7F1E-04C4-BD41-38AE5808D2DA}</ProjectGuid>
+    <ProjectGuid>{0FBAD68E-76B2-D162-3CF0-3D0DB75BAA9D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>UnityEngine.TestRunner</AssemblyName>
+    <AssemblyName>Unity.RenderPipelines.Universal.Editor</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -23,11 +23,11 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>UNITY_2022_3_24;UNITY_2022_3;UNITY_2022;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;UNITY_2022_1_OR_NEWER;UNITY_2022_2_OR_NEWER;UNITY_2022_3_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_EDITOR_GAME_SERVICES;ENABLE_UNITY_GAME_SERVICES_ANALYTICS_SUPPORT;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_GENERATE_NATIVE_PLUGINS_FOR_ASSEMBLIES_API;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION;ENABLE_NAVIGATION_HEIGHTMESH_RUNTIME_SUPPORT;ENABLE_NAVIGATION_UI_REQUIRES_PACKAGE;PLATFORM_STANDALONE;TEXTCORE_1_0_OR_NEWER;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_NVIDIA;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;PLATFORM_INITIALIZES_MEMORY_MANAGER_EXPLICITLY;ENABLE_MONO;NET_4_6;NET_UNITY_4_8;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;TEXTCORE_FONT_ENGINE_1_5_OR_NEWER;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>UNITY_2022_3_24;UNITY_2022_3;UNITY_2022;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;UNITY_2022_1_OR_NEWER;UNITY_2022_2_OR_NEWER;UNITY_2022_3_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_EDITOR_GAME_SERVICES;ENABLE_UNITY_GAME_SERVICES_ANALYTICS_SUPPORT;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_GENERATE_NATIVE_PLUGINS_FOR_ASSEMBLIES_API;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION;ENABLE_NAVIGATION_HEIGHTMESH_RUNTIME_SUPPORT;ENABLE_NAVIGATION_UI_REQUIRES_PACKAGE;PLATFORM_STANDALONE;TEXTCORE_1_0_OR_NEWER;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_NVIDIA;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;PLATFORM_INITIALIZES_MEMORY_MANAGER_EXPLICITLY;ENABLE_MONO;NET_4_6;NET_UNITY_4_8;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;TEXTCORE_FONT_ENGINE_1_5_OR_NEWER;ENABLE_XR_MODULE;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER;UNITY_EDITOR_ONLY_COMPILATION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169;USG0001</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,7 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169;USG0001</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <NoConfig>true</NoConfig>
@@ -50,7 +50,7 @@
     <UnityProjectGenerator>Package</UnityProjectGenerator>
     <UnityProjectGeneratorVersion>2.0.22</UnityProjectGeneratorVersion>
     <UnityProjectGeneratorStyle>Legacy</UnityProjectGeneratorStyle>
-    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2022.3.24f1</UnityVersion>
   </PropertyGroup>
@@ -60,122 +60,300 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.24f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\UnityTestTimeoutException.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\AssemblyProvider\PlayerTestAssemblyProvider.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\RestoreTestContextAfterDomainReload.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\SynchronousFilter.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\UnhandledLogMessageException.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\UnityWorkItemDataHolder.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\EnumerableSetUpTearDownCommand.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Attributes\UnityPlatformAttribute.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\OuterUnityTestActionCommand.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\RemoteHelpers\RemoteTestData.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\LogScope\LogMatch.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\UnityTestExecutionContext.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Filters\FullNameFilter.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\OrderedTestSuiteModifier.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\Vector3ComparerWithEqualsOperator.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\EnumerableTestMethodCommand.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\TestExtensions.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\BeforeAfterTestCommandBase.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\ITestSuiteModifier.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\UnityWorkItem.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\TestResultExtensions.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\AttributeHelper.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\CompositeWorkItem.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\LogScope\ILogScope.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\PrebuildSceneSetupAttribute.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\RemoteHelpers\IRemoteTestResultDataFactory.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\Vector2EqualityComparer.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\IOuterUnityTestAction.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\LogScope\LogEvent.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\Vector4EqualityComparer.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\ConstraintsExtensions.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\ColorEqualityComparer.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\MonoBehaviourTest\IMonoBehaviourTest.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\PlaymodeTestsController.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\MonoBehaviourTest\MonoBehaviourTest.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\AssemblyProvider\IScriptingRuntimeProxy.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\RemoteHelpers\RemoteTestResultDataFactory.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\Callbacks\PlayerQuitHandler.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\IPostBuildCleanup.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\EnumerableRetryTestCommand.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Attributes\UnityTestAttribute.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\LogScope\LogScope.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\LogAssert.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\Callbacks\TestResultRenderer.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\FloatEqualityComparer.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\RemoteHelpers\RemoteTestResultData.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestMustExpectAllLogsAttribute.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\AssemblyProvider\IAssemblyWrapper.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\BaseDelegator.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\AssemblyInfo.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Filters\CategoryFilterExtended.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\Vector4ComparerWithEqualsOperator.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\ITestRunnerListener.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Filters\AssemblyNameFilter.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\IAsyncTestAssemblyBuilder.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\Callbacks\RemoteTestResultSender.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\ITestRunCallback.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\StacktraceFilter.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\AllocatingGCMemoryConstraint.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\TestCommandBuilder.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\TestRunCallbackAttribute.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\Is.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Attributes\ConditionalIgnoreAttribute.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\AssemblyProvider\IAssemblyLoadProxy.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\TestEnumeratorWrapper.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\QuaternionEqualityComparer.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\PlaymodeWorkItemFactory.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\ImmediateEnumerableCommand.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\AssemblyProvider\AssemblyLoadProxy.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\EnumerableApplyChangesToContextCommand.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Attributes\UnityCombinatorialStrategy.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\IStateSerializer.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\ActionDelegator.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\RemoteHelpers\PlayerConnectionMessageIds.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\AssemblyProvider\AssemblyWrapper.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\RuntimeTestRunnerFilter.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\EnumerableRepeatedTestCommand.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\ConstructDelegator.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\PlaymodeTestsControllerSettings.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\TestPlatform.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\TestActionCommand.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\CoroutineTestWorkItem.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\UnityTestMethodCommand.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\Callbacks\PlayModeRunnerCallback.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\BeforeAfterTestCommandState.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\SetUpTearDownCommand.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\TestRunCallbackListener.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\Callbacks\TestResultRendererCallback.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\IEnumerableTestMethodCommand.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\Messages\IEditModeTestYieldInstruction.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\RemoteHelpers\RemoteTestResultDataWithTestData.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\Vector2ComparerWithEqualsOperator.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Attributes\UnitySetUpAttribute.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\AssemblyProvider\ScriptingRuntimeProxy.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\PostBuildCleanupAttribute.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\CoroutineRunner.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\Utils.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\IPrebuildSceneSetup.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Utils\Vector3EqualityComparer.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\EnumerableTestState.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\InvalidSignatureException.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\DefaultTestWorkItem.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\UnityLogCheckDelegatingCommand.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\UnexpectedLogMessageException.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Attributes\UnityTearDownAttribute.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\Assertions\OutOfOrderExpectedLogMessageException.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\TestRunner\TestListenerWrapper.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\WorkItemFactory.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\UnityTestAssemblyBuilder.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Commands\TestCommandPcHelper.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\UnityTestAssemblyRunner.cs" />
-    <Compile Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Runner\FailCommand.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\GameObjectCreation.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalAdditionalCameraDataEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\Targets\SpriteSubTargetUtility.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\RendererFeatures\DecalRendererFeatureEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditorTool\PathEditorToolExtensions.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetPostProcessors\ModelPostProcessor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\Targets\UniversalSpriteCustomLitSubTarget.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalAdditionalLightDataEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\RendererFeatures\NewRendererFeatureDropdownItem.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\GlobalSettings\UniversalRenderPipelineGlobalSettingsProvider.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\BezierUtility.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\TrackballUIDrawer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AnimationClipUpgrader_Types.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\Shaders\LitShader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\CinemachineUniversalPixelPerfectEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ScriptableRendererDataEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Decal\DecalProjectorEditor.Skin.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\GUIState.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalRenderPipelineMaterialUpgrader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\InitializeConverterContext.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalRenderPipelineAssetEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\ShaderGraphLitGUI.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\Converter\UpgradeURP2DAssetsContainer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\GUIAction.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\Selection\ISelector.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\LiftGammaGainEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\CompositeShadowCaster2DEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineCameraUI.PhysicalCamera.Drawers.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalSpeedTree8MaterialUpgrader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\Converter\URP2DConverterUtility.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineCameraEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\GUISystem.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\VFXURPLitMeshOutput.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\ConverterItemInfo.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\Control.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetPostProcessors\UniversalRenderPipelineGlobalSettingsPostprocessor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\ControlPoint.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineCameraUI.Rendering.Drawers.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\Renderer2DDataEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Decal\DisplacableRectHandles.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\AssetCallbacks\CreateFullscreenShaderGraph.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\ISnapping.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\Selection\RectSelector.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\EditorUtils.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\DefaultControl.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\Converter\ParametricToFreeformLightUpgrader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\PixelPerfectCameraEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditorTool\GenericScriptablePathInspector.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\GlobalSettings\SerializedUniversalRenderPipelineGlobalSettings.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Targets\UniversalTarget.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditorTool\ScriptableData.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\Selection\PointRectSelector.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\ConverterItemDescriptor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\DepthOfFieldEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UpgradeUtility.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\MaterialReferenceBuilder.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalRenderPipelineAsset\UniversalRenderPipelineAssetUI.Skin.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\UniversalStructFields.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Decal\DecalShaderGraphGUI.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\Selection\IndexedSelection.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderBuildPreprocessor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\ShadingModels\SimpleLitGUI.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditorTool\ScriptablePathInspector.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\GlobalSettings\UniversalGlobalSettingsCreator.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\ShadowsMidtonesHighlightsEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Lighting\UniversalRenderPipelineLightUI.Drawers.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalRenderPipelineAsset\UniversalRenderPipelineAssetUI.Drawers.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\Converters\RenderSettingsConverter.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\Shapes\IShape.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Targets\UniversalDecalSubTarget.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\Light2DEditorUtility.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ScriptableRendererFeatureProvider.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\ColorLookupEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineCameraUI.Rendering.Skin.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AnimationClipUpgrader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\Shapes\Spline.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetPostProcessors\MaterialPostprocessor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\SliderAction.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\UniversalFields.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\Selection\ISelection.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\IEditablePath.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\UniversalProperties.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssemblyInfo.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\RenderPipelineConvertersEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\VFXURPLitPlanarPrimitiveOutput.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\Shaders\BakedLitShader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\Selection\ISelectable.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetPostProcessors\PhysicalMaterial3DsMaxPreprocessor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\ChannelMixerEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\LayoutData.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineCameraUI.Output.Drawers.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\ShadingModels\BakedLitGUI.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\Shapes\Polygon.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\EditablePathExtensions.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Targets\UniversalUnlitSubTarget.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Decal\CreateDecalProjector.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\RendererDataPatcher.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\RendererFeatures\ScreenSpaceShadowsEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Decal\ProjectedTransform.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\ParticleGUI.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\AssetCallbacks\CreateLitShaderGraph.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\HoveredControlAction.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\VFXURPBinder.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalRenderPipelineLightEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetPostProcessors\ShaderGraphMaterialsUpdater.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Targets\UniversalSubTarget.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\LightExplorer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalRendererDataEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\Snapping.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\EditablePathUtility.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\DefaultScene\UniversalProjectSettings.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\Shaders\SimpleLitShader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\Shaders\ParticlesUnlitShader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\LightBatchingDebugger\LightBatchingDebugger.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\Converter\BuiltInToURP2DMaterialUpgrader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\Shapes\ShapeExtensions.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Analytics\AssetReimporterAnalytic.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\CommandAction.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\RendererFeatures\FullScreenPassRendererFeatureEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderStripTool.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetVersion.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineCameraUI.Skin.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\PostProcessDataEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetPostProcessors\AutodeskInteractiveMaterialImport.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineCameraUI.PresetInspector.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\View\EditablePathView.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\IGUIState.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\ShadingModels\LitDetailGUI.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Lighting\UniversalRenderPipelineSerializedLight.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\DecalMeshBiasTypeEnum.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\Renderer2DAnalytics.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\RenderStateDataEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalAnalytics.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Lighting\UniversalRenderPipelineLightUI.Skin.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\ConversionIndexers.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetPostProcessors\ThreeDSMaterialDescriptionPostprocessor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\RunItemContext.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\Targets\UniversalSpriteUnlitSubTarget.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\View\IDrawer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetPostProcessors\FBXArnoldSurfaceMaterialDescriptionPreprocessor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ContextualMenuDispatcher.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\UniversalStructs.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\ReadonlyMaterialConverter.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\Shaders\ParticlesLitShader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\AssetCallbacks\CreateUnlitShaderGraph.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineCameraUI.Environment.Drawers.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\IEditablePathController.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\BuiltInToURPConverterContainer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\FreeformPathPresets.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\Light2DEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Decal\DecalProjectorEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\IUndoObject.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditorTool\GenericScriptablePath.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\Selection\SerializableSelection.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineSerializedCamera.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\AnimationClipConverter.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineCameraUI.Environment.Skin.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\RenderPipelineConverter.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\GenericControl.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\RenderPipelineConverterContainer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetPostProcessors\SketchupMaterialDescriptionPostprocessor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Lighting\UniversalRenderPipelineLightUI.PresetInspector.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Targets\UniversalLitSubTarget.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\ShadingModels\LitGUI.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ScriptableRendererFeatureEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\AssetCallbacks\CreateSpriteUnlitShaderGraph.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\GenericDefaultControl.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderScriptableStripper.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\ColorCurvesEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditorTool\ScriptablePath.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\MotionBlurEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\View\CreatePointAction.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\TerrainLitShaderGUI.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\GlobalSettings\UniversalGlobalSettingsEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderUtils.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\VFXURPLitQuadStripOutput.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\Nodes\LightTextureNode.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalRenderPipelineAsset\SerializedUniversalRenderPipelineAsset.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineCameraUI.Output.Skin.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\VFXAbstractParticleURPLitOutput.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\VFXShaderGraphGUI.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\Converters.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditorTool\PathComponentEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\UniversalBlockFields.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Targets\UniversalFullscreenSubTarget.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Decal\CreateDecalShaderGraph.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\TonemappingEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\EditablePathController.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\SortingLayerDropDown.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\Shaders\ParticlesSimpleLitShader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\Renderer2DMenus.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\ShaderGraphUnlitGUI.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Nodes\UniversalSampleBufferNode.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\UniversalMetadata.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UpgradeCommon.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShadowCaster2DShapeTool.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\RendererFeatures\ScreenSpaceAmbientOcclusionEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\MultipleEditablePathController.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\SavedParameter.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\Targets\UniversalSpriteLitSubTarget.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\View\Drawer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\Converter\BuiltInToURP2DConverterContainer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\View\IEditablePathView.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetPostProcessors\FBXMaterialDescriptionPreprocessor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\FilmGrainEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\AssetCallbacks\CreateSpriteLitShaderGraph.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\Shaders\UnlitShader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineCameraUI.Drawers.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditorTool\PathEditorTool.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\EditablePath.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\VFXURPSubOutput.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\BloomEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\ClickAction.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShadowCaster2DEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\BaseShaderGUI.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Deprecated.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\AssetCallbacks\CreateSpriteCustomLitShaderGraph.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\GlobalSettings\UniversalRenderPipelineGlobalSettingsUI.Skin.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\RendererFeatures\RenderObjectsPassFeatureEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\GlobalSettings\UniversalRenderPipelineGlobalSettingsUI.Drawers.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\UnityEngine.TestRunner.asmdef" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\Varyings.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticlePlanarPrimitives\PassForward2D.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticlePoints\PassForward2D.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\converter_widget_item.uxml" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Templates\ShaderPass.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticlePlanarPrimitivesLit\PassSelection.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\converter_widget_main.uss" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\RendererFeatures\NewRendererFeature.cs.txt" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticleMeshesLit\PassSelection.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\VFXLit.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\VFXParticleMeshes.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticleLinesSW\PassForward2D.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\converter_editor.uss" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\ShaderPassDecal.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticleMeshesLit\PassDepth.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\UnlitGBufferPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticleLines\PassForward2D.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticlePlanarPrimitivesLit\PassDepthNormal.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\VFXParticleLinesSW.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\VFXParticleBasicCube.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\DecalMeshBiasTypeEnum.cs.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\LightBatchingDebugger\LayerBatch.uxml" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticleMeshesLit\PassDepthNormal.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\Shaders\ShadowsMidtonesHighlightsCurves.shader" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticleMeshesLit\PassDepthOrMV.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Unity.RenderPipelines.Universal.Editor.asmdef" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticlePlanarPrimitivesLit\PassDepthOrMV.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\PBRGBufferPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\VFXParticleCube.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticleMeshesLit\PassGBuffer.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\VFXLitVaryings.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\UnlitPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\Includes\SpriteUnlitPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\PBRForwardPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticlePlanarPrimitivesLit\PassDepth.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\VFXParticleLitPlanarPrimitive.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\VFXParticlePoints.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticleMeshesLit\Pass.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\Shaders\TrackballEditor.shader" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\converter_editor.uxml" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticleMeshesLit\PassForward.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\converter_widget.uxml" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\VFXParticleDecal.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Decal\DecalPass.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\Includes\SpriteNormalPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\Includes\SpriteForwardPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\ShaderVariablesDecal.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\ShaderPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\ShadowCasterPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\converter_widget_main.uxml" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\LightingMetaPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\VFXParticleLinesHW.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\Includes\SpriteLitPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\PBR2DPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\VFXSGSurfaceData.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticleMeshes\PassForward2D.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\Shaders\CurveBackground.shader" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticleHexahedron\PassForward2D.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\VFXPasses.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\SelectionPickingPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticlePlanarPrimitivesLit\PassShadowCaster.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Templates\SharedCode.template.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\LightBatchingDebugger\LightBatchingDebugger.uss" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\VFXParticleLitMesh.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticleMeshesLit\PassShadowCaster.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\DepthNormalsOnlyPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticlePlanarPrimitivesLit\PassGBuffer.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\ParticlePlanarPrimitivesLit\PassForward.template" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\LightBatchingDebugger\LightBatchingDebugger.uxml" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\Includes\DepthOnlyPass.hlsl" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\converter_widget.uss" />
+    <None Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\VFXGraph\Shaders\Templates\VFXParticlePlanarPrimitive.template" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -280,6 +458,10 @@
     </Reference>
     <Reference Include="UnityEngine.LocalizationModule">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.24f1\Editor\Data\Managed\UnityEngine\UnityEngine.LocalizationModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.NVIDIAModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.24f1\Editor\Data\Managed\UnityEngine\UnityEngine.NVIDIAModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
@@ -516,6 +698,70 @@
     </Reference>
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.24f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CsvHelper">
+      <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\CSVHelper\CsvHelper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="unityplastic">
+      <HintPath>Library\PackageCache\com.unity.collab-proxy@2.3.1\Lib\Editor\PlasticSCM\unityplastic.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Plastic.Antlr3.Runtime">
+      <HintPath>Library\PackageCache\com.unity.collab-proxy@2.3.1\Lib\Editor\PlasticSCM\Unity.Plastic.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Assets\Plugins\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Plastic.Newtonsoft.Json">
+      <HintPath>Library\PackageCache\com.unity.collab-proxy@2.3.1\Lib\Editor\PlasticSCM\Unity.Plastic.Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="log4netPlastic">
+      <HintPath>Library\PackageCache\com.unity.collab-proxy@2.3.1\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.OpenXml4Net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.OOXML.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ExcelLibrary">
+      <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\ExcelLibrary\ExcelLibrary.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.OpenXmlFormats.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.TextureAssets">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.IonicZip">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.YamlDotNet">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="nunit.framework">
@@ -1022,6 +1268,48 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.24f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
       <Private>False</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Unity.RenderPipelines.Universal.Runtime.csproj">
+      <Project>{8954E9F9-DBF4-27D5-C000-F2B135115AEF}</Project>
+      <Name>Unity.RenderPipelines.Universal.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.RenderPipelines.Core.Runtime.csproj">
+      <Project>{38AA6A36-9192-5830-A803-A33681AA00A2}</Project>
+      <Name>Unity.RenderPipelines.Core.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.RenderPipelines.Core.Editor.csproj">
+      <Project>{BFB73A3F-12EA-6C22-7EDA-A15CDF34B5F9}</Project>
+      <Name>Unity.RenderPipelines.Core.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.ShaderGraph.Editor.csproj">
+      <Project>{E0BFB505-D31F-7DEE-0E71-11A5776ED5D3}</Project>
+      <Name>Unity.ShaderGraph.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Burst.Editor.csproj">
+      <Project>{822B389C-DE48-1497-E8E9-47D06FB45C04}</Project>
+      <Name>Unity.Burst.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Mathematics.Editor.csproj">
+      <Project>{CA7162E4-46D3-B9B8-CE04-9FCC2EC348AC}</Project>
+      <Name>Unity.Mathematics.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEditor.UI.csproj">
+      <Project>{311893BA-7F85-54D3-967C-CBEE8F2AEEA4}</Project>
+      <Name>UnityEditor.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEngine.UI.csproj">
+      <Project>{A199B544-6E37-41C0-30D2-A56A4F30CFD6}</Project>
+      <Name>UnityEngine.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEditor.TestRunner.csproj">
+      <Project>{4FD33E25-90C9-606B-CDD0-3A73A2C01BB1}</Project>
+      <Name>UnityEditor.TestRunner</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEngine.TestRunner.csproj">
+      <Project>{3D0A49E7-7F1E-04C4-BD41-38AE5808D2DA}</Project>
+      <Name>UnityEngine.TestRunner</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

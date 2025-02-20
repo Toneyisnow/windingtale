@@ -132,6 +132,8 @@ namespace WindingTale.Core.Algorithms
             return new RecoverResult(RecoverType.Hp, actualAmount);
         }
 
+
+
         public static void ApplyDamage(FDCreature creature, DamageResult damage)
         {
             creature.Hp = damage.HpAfter;
@@ -140,6 +142,30 @@ namespace WindingTale.Core.Algorithms
                 creature.Hp = 0;
             }
         }
+
+        public static LevelUpInfo ApplyExperience(FDCreature creature, int experience)
+        {
+            if (creature.Faction != CreatureFaction.Friend)
+            {
+                // Only friend can gain experience
+                return null;
+            }
+
+            creature.Exp += experience;
+            if (creature.Exp >= 100)
+            {
+                creature.Exp -= 100;
+                return CreatureFormula.ComposeLevelUp(creature);
+            }
+
+            return null;
+        }
+
+        public static void ApplyLevelUp(FDCreature creature, LevelUpInfo levelUpInfo)
+        {
+            creature.Level = creature.Level + 1;
+        }
+
 
         #endregion
 
