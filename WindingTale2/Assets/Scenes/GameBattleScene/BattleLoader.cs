@@ -151,6 +151,10 @@ namespace WindingTale.Scenes.GameBattleScene
 
         private void onAnimationHit(int percent)
         {
+            EnemyHitEffect hitEffect = GameObject.FindFirstObjectByType<EnemyHitEffect>();
+            hitEffect.OnHit(new Vector3(1, 1, 1));
+
+
             DamageResult damage;
             if (currentAnimationIndex < attackResult.Damages.Count)
             {

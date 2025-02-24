@@ -79,6 +79,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ActivityBase.cs" />
     <Compile Include="Assets\MapObjects\Cursors\MoveIndicator.cs" />
+    <Compile Include="Assets\Scenes\GameBattleScene\EnemyHitEffect.cs" />
     <Compile Include="Assets\Scripts\UI\Utils\MonoBehaviourUtils.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ActivityFactory.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Assets\Scripts\AI\Delegates\AITreasureDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Events\TeamEliminatedEvent.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\GameRenderer.cs" />
+    <Compile Include="Assets\MapObjects\Menus\MenuSlidingEffect.cs" />
     <Compile Include="Assets\Scripts\UI\Utils\LocalizationManager.cs" />
     <Compile Include="Assets\Scripts\Core\Events\CreatureDyingEvent.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuState.cs" />
@@ -131,12 +133,12 @@
     <Compile Include="Assets\Scenes\GameBattleScene\BattleLoader.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpMagicDefinition.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
+    <Compile Include="Assets\MapObjects\BlockIndicator\BlockBlinkEffect.cs" />
     <Compile Include="Assets\MapObjects\GameMap\GameMap.cs" />
     <Compile Include="Assets\MapObjects\GameMap\MapCoordinate.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\CreatureInfoDialog.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\TalkActivity.cs" />
-    <Compile Include="Assets\MapObjects\BlockIndicator\BlockIndicator.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActivityQueue.cs" />
     <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\SelectItemExchangeTargetState.cs" />

@@ -46,6 +46,7 @@ public class MainCamera : MonoBehaviour
         }
 
         // 上下运镜
+        /*
         if (Input.GetKey(KeyCode.W)) // || mousePos.y >= Screen.height - edgeScrollThreshold)
         {
             targetVelocity += transform.forward * moveSpeed;
@@ -54,6 +55,18 @@ public class MainCamera : MonoBehaviour
         {
             targetVelocity -= transform.forward * moveSpeed;
         }
+        */
+
+        // 上下运镜（平行于地面）
+        if (Input.GetKey(KeyCode.W))
+        {
+            targetVelocity += new Vector3(transform.forward.x, 0, transform.forward.z) * moveSpeed * (float)1.5;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            targetVelocity -= new Vector3(transform.forward.x, 0, transform.forward.z) * moveSpeed * (float)1.5;
+        }
+
 
         // 平滑运动计算
         velocity = Vector3.Lerp(velocity, targetVelocity, Time.deltaTime * (targetVelocity.magnitude > 0 ? acceleration : deceleration));

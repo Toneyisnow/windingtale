@@ -39,6 +39,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         private ItemDefinition treasureItem = null;
 
+
         public MenuActionState(GameMain gameMain, FDCreature creature, FDPosition targetPos)
             : base(gameMain, targetPos, new ShowMoveRangeState(gameMain, creature))
         {
@@ -46,8 +47,10 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             this.targetPosition = targetPos;
             this.treasure = fdMap.GetTreasureAt(targetPos);
 
+            bool hasMoved = targetPos != null && !targetPos.AreSame(creature.Position);
+
             // Magic
-            this.SetMenu(0, MenuItemId.ActionMagic, IsMenuMagicEnabled(), () =>
+            this.SetMenu(0, MenuItemId.ActionMagic, IsMenuMagicEnabled(hasMoved), () =>
             {
                 gameMain.PushActivity(gameMain =>
                 {
@@ -124,9 +127,9 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             return canAttack && (target != null);
         }
 
-        private bool IsMenuMagicEnabled()
+        private bool IsMenuMagicEnabled(bool hasMoved)
         {
-            return this.creature.CanSpellMagic() && (!this.creature.HasMoved() || this.creature.HasAfterMoveMagic());
+            return this.creature.CanSpellMagic() && (!hasMoved || this.creature.HasAfterMoveMagic());
         }
 
         private bool IsMenuItemEnabled()
@@ -153,13 +156,13 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             {
                 // Enough MP to spell
                 SelecteMagicTargetState magicTargetState = new SelecteMagicTargetState(gameMain, creature, magicDefinition);
-                PlayerInterface.getDefault().onUpdateState(magicTargetState);
-
-                //stateHandler.HandlePushState(magicTargetState);
+                this.playerInterface.onUpdateState(magicTargetState);
             }
             else
             {
                 // Go back to open magic info
+                gameMain.gameCanvas.ShowCreatureDialog(creature, CreatureInfoType.SelectMagic, OnMagicSelected);
+                
                 //ShowCreatureInfoActivity activity = new ShowCreatureInfoActivity(gameMain, creature, CreatureInfoType.SelectMagic, OnMagicSelected);
                 //activityManager.Push(activity);
             }

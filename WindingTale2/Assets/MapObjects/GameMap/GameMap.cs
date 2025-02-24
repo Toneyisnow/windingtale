@@ -126,7 +126,14 @@ namespace WindingTale.MapObjects.GameMap
             GameObject menuObject = indicatorsLayer.transform.Find("menu")?.gameObject;
             if (menuObject != null)
             {
-                Destroy(menuObject.gameObject);
+                // Direct destroy the menu object
+                //// Destroy(menuObject.gameObject);
+
+                // Close with animation
+                Menu menuComponent = menuObject.GetComponent<Menu>();
+                menuComponent.CloseMenu();
+
+                
             }
         }
 
@@ -141,6 +148,8 @@ namespace WindingTale.MapObjects.GameMap
                 GameObject indicator = MonoBehaviour.Instantiate(indicatorPrefab, indicatorsLayer.transform);
                 indicator.name = "move_indicator";
                 indicator.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
+                //// indicator.transform.localScale = new Vector3(0.85f, 0.85f);
+                indicator.AddComponent<BlockBlinkEffect>();
             }
         }
 

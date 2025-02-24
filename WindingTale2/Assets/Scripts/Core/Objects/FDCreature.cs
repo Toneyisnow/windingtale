@@ -533,7 +533,7 @@ namespace WindingTale.Core.Objects
 
         public bool HasMoved()
         {
-            return this.PrePosition != null && this.PrePosition.AreSame(this.Position);
+            return this.PrePosition != null && !this.PrePosition.AreSame(this.Position);
         }
 
         /// <summary>

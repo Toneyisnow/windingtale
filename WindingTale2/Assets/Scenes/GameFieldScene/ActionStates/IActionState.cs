@@ -10,6 +10,8 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
     {
         protected GameMain gameMain;
 
+        protected PlayerInterface playerInterface;
+
         protected FDMap fdMap
         {
             get
@@ -22,6 +24,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         public IActionState(GameMain game)
         {
             this.gameMain = game;
+            this.playerInterface = PlayerInterface.getDefault();
         }
 
         public abstract void onEnter();
