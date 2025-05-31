@@ -109,8 +109,8 @@
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Common\ConstantBuffer.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\XR\XRGraphicsAutomatedTests.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Textures\RTHandles.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Volume\VolumeComponent.EditorOnly.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Debugging\Prefabs\Scripts\DebugUIHandlerField.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Volume\VolumeComponent.EditorOnly.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Inputs\InputRegistering.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Debugging\IVolumeDebugSettings.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Debugging\Prefabs\Scripts\DebugUIHandlerWidget.cs" />
@@ -177,13 +177,13 @@
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Common\RemoveRange.Extensions.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\RenderPipeline\IVolumetricCloud.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Debugging\DebugUI.Panel.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Lighting\ProbeVolume\ProbeReferenceVolumeProfile.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Camera\CameraSwitcher.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Lighting\ProbeVolume\ProbeReferenceVolumeProfile.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Textures\Texture2DAtlasDynamic.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Debugging\DebugFrameTiming.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Utilities\ColorUtils.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Debugging\Prefabs\Scripts\DebugUIHandlerObjectPopupField.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Debugging\Prefabs\Scripts\DebugUIHandlerFoldout.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Debugging\Prefabs\Scripts\DebugUIHandlerObjectPopupField.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Lighting\ProbeVolume\ProbeVolume.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\Debugging\Prefabs\Scripts\DebugUIHandlerMessageBox.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.10\Runtime\XR\XRBuiltinShaderConstants.cs" />
@@ -599,6 +599,10 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.24f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualScripting.YamlDotNet">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NPOI">
       <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.dll</HintPath>
       <Private>False</Private>
@@ -631,12 +635,24 @@
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.3.1\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualScripting.IonicZip">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NPOI.OpenXml4Net">
       <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.OpenXml4Net.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NPOI.OOXML">
       <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.OOXML.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.TextureAssets">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ExcelLibrary">
@@ -645,22 +661,6 @@
     </Reference>
     <Reference Include="NPOI.OpenXmlFormats">
       <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.OpenXmlFormats.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.TextureAssets">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.IonicZip">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.YamlDotNet">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="mscorlib">

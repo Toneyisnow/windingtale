@@ -64,8 +64,8 @@
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalAdditionalCameraDataEditor.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\Targets\SpriteSubTargetUtility.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\RendererFeatures\DecalRendererFeatureEditor.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditorTool\PathEditorToolExtensions.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetPostProcessors\ModelPostProcessor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditorTool\PathEditorToolExtensions.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\Targets\UniversalSpriteCustomLitSubTarget.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalAdditionalLightDataEditor.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\RendererFeatures\NewRendererFeatureDropdownItem.cs" />
@@ -81,9 +81,9 @@
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalRenderPipelineMaterialUpgrader.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\InitializeConverterContext.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\UniversalRenderPipelineAssetEditor.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\ShaderGraphLitGUI.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\Converter\UpgradeURP2DAssetsContainer.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\GUIAction.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGUI\ShaderGraphLitGUI.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\Selection\ISelector.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\LiftGammaGainEditor.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\CompositeShadowCaster2DEditor.cs" />
@@ -96,8 +96,8 @@
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Converter\ConverterItemInfo.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\Control.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\AssetPostProcessors\UniversalRenderPipelineGlobalSettingsPostprocessor.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\ControlPoint.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Camera\UniversalRenderPipelineCameraUI.Rendering.Drawers.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditablePath\ControlPoint.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\Renderer2DDataEditor.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Decal\DisplacableRectHandles.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderGraph\AssetCallbacks\CreateFullscreenShaderGraph.cs" />
@@ -227,8 +227,8 @@
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ScriptableRendererFeatureEditor.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShaderGraph\AssetCallbacks\CreateSpriteUnlitShaderGraph.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\GUIFramework\GenericDefaultControl.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderScriptableStripper.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\ColorCurvesEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\ShaderScriptableStripper.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\EditorTool\ScriptablePath.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\Overrides\MotionBlurEditor.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Editor\2D\ShapeEditor\View\CreatePointAction.cs" />
@@ -700,6 +700,10 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.24f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualScripting.YamlDotNet">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NPOI">
       <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.dll</HintPath>
       <Private>False</Private>
@@ -732,12 +736,24 @@
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.3.1\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualScripting.IonicZip">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NPOI.OpenXml4Net">
       <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.OpenXml4Net.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NPOI.OOXML">
       <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.OOXML.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.TextureAssets">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ExcelLibrary">
@@ -746,22 +762,6 @@
     </Reference>
     <Reference Include="NPOI.OpenXmlFormats">
       <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.OpenXmlFormats.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.TextureAssets">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.IonicZip">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.YamlDotNet">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="nunit.framework">

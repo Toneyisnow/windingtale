@@ -107,3 +107,19 @@ Update Mode: mergeDefaultDependencies
 The following packages were added:
   com.unity.render-pipelines.universal@14.0.10
   com.unity.visualscripting@1.9.2
+
+=== Thu Mar 27 19:35:08 2025
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.shadergraph from version 14.0.9 to 14.0.10
+
+=== Thu Mar 27 19:35:08 2025
+
+Packages were changed.
+Update Mode: mergeDefaultDependencies
+
+The following packages were added:
+  com.unity.shadergraph@14.0.10

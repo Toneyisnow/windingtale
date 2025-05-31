@@ -58,7 +58,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             //ShowRangeActivity activity = new ShowRangeActivity(magicRange.ToList());
             //activityManager.Push(activity);
 
-            // Send move range to UI
+            // Send magic range to UI
             gameMain.PushActivity((gameMain) =>
             {
                 gameMain.gameMap.showActionTargetRange(this.Creature, magicRange);

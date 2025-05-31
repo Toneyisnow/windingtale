@@ -145,10 +145,10 @@ namespace WindingTale.MapObjects.GameMap
             GameObject indicatorPrefab = Resources.Load<GameObject>("Others/Cursors/MoveIndicator");
             foreach (FDPosition position in moveRange.ToList())
             {
-                GameObject indicator = MonoBehaviour.Instantiate(indicatorPrefab, indicatorsLayer.transform);
+                GameObject indicator = Instantiate(indicatorPrefab, indicatorsLayer.transform);
                 indicator.name = "move_indicator";
                 indicator.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
-                //// indicator.transform.localScale = new Vector3(0.85f, 0.85f);
+                indicator.transform.localScale = new Vector3(0.82f, 2f, 0.82f);
                 indicator.AddComponent<BlockBlinkEffect>();
             }
         }
@@ -160,8 +160,9 @@ namespace WindingTale.MapObjects.GameMap
             GameObject indicatorPrefab = Resources.Load<GameObject>("Others/Cursors/MoveIndicator");
             foreach (FDPosition position in targetRange.ToList())
             {
-                GameObject indicator = MonoBehaviour.Instantiate(indicatorPrefab, indicatorsLayer.transform);
+                GameObject indicator = Instantiate(indicatorPrefab, indicatorsLayer.transform);
                 indicator.name = "move_indicator";
+                indicator.transform.localScale = new Vector3(0.82f, 2f, 0.82f);
                 indicator.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
             }
         }

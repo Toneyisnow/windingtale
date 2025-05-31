@@ -28,7 +28,8 @@ namespace WindingTale.Core.Algorithms
 
         public bool Contains(FDPosition position) 
         {
-            return GetPosition(position) != null;
+            DirectedPosition directedPosition = GetPosition(position);
+            return directedPosition != null && !directedPosition.IsSkipped;
         }
 
         public List<FDPosition> ToList()

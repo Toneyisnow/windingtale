@@ -123,14 +123,14 @@
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\ShadowUtils.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Debug\DebugHandler.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Decal\Entities\DecalDrawSystem.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Passes\CapturePass.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Passes\PostProcessPass.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Passes\CapturePass.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Passes\FinalBlitPass.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\UniversalAdditionalCameraData.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\2D\Light2DManager.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Decal\DecalProjector.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Passes\ScriptableRenderPass.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\External\LibTessDotNet\Tess.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Passes\ScriptableRenderPass.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Passes\MotionVectorRenderPass.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Decal\Entities\DecalCreateDrawCallSystem.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Overrides\ShadowsMidtonesHighlights.cs" />
@@ -160,14 +160,14 @@
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\2D\Light2DCullResult.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Tiling\TileRangeExpansionJob.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\TemporalAA.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Data\UniversalRenderPipelineAsset.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\2D\CinemachineUniversalPixelPerfect.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Data\UniversalRenderPipelineAsset.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\XR\XRPassUniversal.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Overrides\PaniniProjection.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Data\PostProcessData.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Debug\DebugDisplaySettingsCommon.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\2D\PixelPerfectCamera.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\ShaderData.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\2D\PixelPerfectCamera.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\2D\PixelPerfectCameraInternal.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\Decal\Entities\DecalUpdateCachedSystem.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.10\Runtime\UniversalRenderPipeline.cs" />
@@ -583,6 +583,10 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.24f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualScripting.YamlDotNet">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NPOI">
       <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.dll</HintPath>
       <Private>False</Private>
@@ -615,12 +619,24 @@
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.3.1\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualScripting.IonicZip">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NPOI.OpenXml4Net">
       <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.OpenXml4Net.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NPOI.OOXML">
       <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.OOXML.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.TextureAssets">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ExcelLibrary">
@@ -629,22 +645,6 @@
     </Reference>
     <Reference Include="NPOI.OpenXmlFormats">
       <HintPath>Assets\SmartLocalization\Scripts\Editor\ThirdParty\NPOI\NPOI.OpenXmlFormats.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.TextureAssets">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.IonicZip">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.YamlDotNet">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.2\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="mscorlib">

@@ -231,15 +231,20 @@ namespace WindingTale.Scenes.GameFieldScene
             Creature c = gameMap.GetCreature(creature);
             MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
 
-            DirectRangeFinder directRangeFinder = new DirectRangeFinder(gameMap.Map.Field, position, magic.EffectRange);
-            FDRange range = directRangeFinder.CalculateRange();
-            List<FDCreature> targetList = gameMap.Map.GetCreaturesInRange(range.ToList(), CreatureFaction.Enemy);
+            DirectRangeFinder directRangeFinder = new DirectRangeFinder(gameMap.Map.Field, position, magic.EffectScope);
+            FDRange magicScope = directRangeFinder.CalculateRange();
+
+            List<FDCreature> targetList = gameMap.Map.GetCreaturesInRange(magicScope.ToList(), CreatureFaction.Enemy);
 
             MagicResult result = BattleHandler.HandleCreatureMagic(creature, targetList, position, magic, gameMap.Map.Field);
             c.SetActioned(true);
 
             // Play attack animation
-
+            if (magic.hasAnimaion())
+            {
+                GlobalVariables.Set("MagicResult", result);
+                SceneManager.LoadScene("GameBattleScene", LoadSceneMode.Additive);
+            }
 
             // Apply the results
             this.PushActivity((gameMain) =>

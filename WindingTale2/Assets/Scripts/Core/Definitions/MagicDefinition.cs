@@ -88,6 +88,10 @@ namespace WindingTale.Core.Definitions
             get; private set;
         }
 
+        public bool hasAnimaion()
+        {
+            return this.MagicId != 0;
+        }
 
 
         public MagicDefinition()

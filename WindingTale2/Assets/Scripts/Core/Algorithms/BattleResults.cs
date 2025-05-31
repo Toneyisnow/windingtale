@@ -20,13 +20,12 @@ namespace WindingTale.Core.Algorithms
 
     public abstract class SoloResult
     {
-
         public SoloResultType ResultType { get; private set; }
+
         public SoloResult(SoloResultType type)
-        { 
+        {
             this.ResultType = type;
         }
-
     }
 
     public class DamageResult : SoloResult
@@ -161,6 +160,9 @@ namespace WindingTale.Core.Algorithms
     /// </summary>
     public class MagicResult : BattleResult
     {
+        /// <summary>
+        /// The targets of magic, with order
+        /// </summary>
         public List<FDCreature> Targets { get; private set; }
 
         /// <summary>
@@ -168,10 +170,13 @@ namespace WindingTale.Core.Algorithms
         /// </summary>
         public Dictionary<int, SoloResult> Results;
 
-        public MagicResult(FDCreature subject, List<FDCreature> targets) : base(subject)
+        public int MpCost { get; private set; }
+
+        public MagicResult(FDCreature subject, List<FDCreature> targets, int mpCost) : base(subject)
         {
             this.Results = new Dictionary<int, SoloResult>();
             this.Targets = targets;
+            this.MpCost = mpCost;
         }
     }
 

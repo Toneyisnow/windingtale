@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
@@ -186,9 +187,11 @@ namespace WindingTale.UI.Dialogs
                     magicObject.SetActive(true);
                     var selectableText = magicObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
                     selectableText.text = magic.Name;
-                    var selectableButton = magicObject.GetComponent<Button>();
-                    selectableButton.onClick.AddListener(delegate {
-                        onSelected(magicIndex);
+
+                    TaggedButton taggedButton = magicObject.AddComponent<TaggedButton>();
+                    taggedButton.Init(magicIndex, (mIndex) =>
+                    {
+                        onSelected(mIndex);
                         GameMain.getDefault().gameCanvas.CloseDialog();
                     });
                 }

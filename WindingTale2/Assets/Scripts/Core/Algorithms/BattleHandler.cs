@@ -78,7 +78,7 @@ namespace WindingTale.Core.Algorithms
             {
                 return null;
             }
-            MagicResult result = new MagicResult(subject, targetList);
+            MagicResult result = new MagicResult(subject, targetList, magic.MpCost);
             if (subject == null || targetList == null || targetList.Count == 0)
             {
                 // From previous steps, there should be at least one target
@@ -238,10 +238,10 @@ namespace WindingTale.Core.Algorithms
                 switch (magic.Type)
                 {
                     case MagicType.Attack:
-                        changedHp = -FDRandom.IntFromSpan(magic.Span) + magic.ApInvolvedRate * subject.CalculatedAp / 100;
+                        changedHp = FDRandom.IntFromSpan(magic.Span) + magic.ApInvolvedRate * subject.CalculatedAp / 100;
                         changedHp = (int)(changedHp * hitRate);
-                        changedHp = Math.Min(0, changedHp);
-                        return new DamageResult(target.Hp, target.Hp + changedHp, false);
+                        changedHp = Math.Max(0, changedHp);
+                        return new DamageResult(target.Hp, target.Hp - changedHp, false);
                     case MagicType.Recover:
                         changedHp = FDRandom.IntFromSpan(magic.Span);
                         changedHp = Math.Max(0, changedHp);

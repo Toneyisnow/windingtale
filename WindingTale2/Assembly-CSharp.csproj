@@ -224,7 +224,9 @@
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalAggressiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Files\ResourceDataFile.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\SequencedActivity.cs" />
+    <Compile Include="Assets\Scenes\GameBattleScene\AttackRunner.cs" />
     <Compile Include="Assets\Scenes\Shared\SceneTransition.cs" />
+    <Compile Include="Assets\Scenes\GameBattleScene\MagicRunner.cs" />
     <Compile Include="Assets\MapObjects\Menus\MenuItem.cs" />
     <Compile Include="Assets\Scripts\Core\Common\DirectedPosition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\IGameActions.cs" />

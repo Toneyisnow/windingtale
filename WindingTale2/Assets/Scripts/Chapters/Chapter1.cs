@@ -58,8 +58,15 @@ namespace WindingTale.Chapters
                 e2 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 12, 50101, FDPosition.At(12, 17), 101);
                 e3 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 13, 50101, FDPosition.At(11, 20));
                 e4 = AddCreatureToMap(gameMain, CreatureFaction.Enemy, 14, 50101, FDPosition.At(15, 20));
+
+                gameMain.PushActivity((gameMain) =>
+                {
+                    // Play background music
+                    gameMain.PlayBackgroundMusic();
+                });
             });
 
+            
         };
 
         private Action<GameMain> turn1 = (gameMain) =>
