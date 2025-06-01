@@ -161,8 +161,13 @@ namespace WindingTale.UI.Dialogs
                     
                     GameObject selectable = getSelectableObject(itemIndex);
                     selectable.SetActive(true);
+                    
                     var selectableText = selectable.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
                     selectableText.text = item.Name;
+
+                    var selectableAttr = selectable.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
+                    selectableAttr.text = item.ToAttributeString();
+
                     TaggedButton taggedButton = selectable.AddComponent<TaggedButton>();
                     taggedButton.Init(itemIndex, (itemIndex) =>
                     {

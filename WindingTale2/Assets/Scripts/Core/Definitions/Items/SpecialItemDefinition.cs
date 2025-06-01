@@ -33,5 +33,10 @@ namespace WindingTale.Core.Definitions.Items
         {
             return false;
         }
+
+        public override string ToAttributeString()
+        {
+            return string.Empty; // Special items do not have attributes to display
+        }
     }
 }

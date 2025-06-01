@@ -109,5 +109,12 @@ namespace WindingTale.Core.Definitions.Items
         {
             return false;
         }
+
+        public override string ToAttributeString()
+        {
+            string str = string.Format("AP+{0}", Ap);
+            
+            return str;
+        }
     }
 }

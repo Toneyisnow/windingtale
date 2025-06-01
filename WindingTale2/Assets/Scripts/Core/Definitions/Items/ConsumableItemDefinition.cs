@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Files;
@@ -72,6 +73,36 @@ namespace WindingTale.Core.Definitions.Items
         public bool IsReusable
         {
             get; private set;
+        }
+
+        public override string ToAttributeString()
+        {
+            string attriType = string.Empty;
+            switch(this.UseType)
+            {
+                case ItemUseType.Hp:
+                    attriType = "HP";
+                    break;
+                case ItemUseType.Mp:
+                    attriType = "MP";
+                    break;
+                case ItemUseType.Ap:
+                    attriType = "AP";
+                    break;
+                case ItemUseType.Dp:
+                    attriType = "DP";
+                    break;
+                case ItemUseType.Mv:
+                    attriType = "MV";
+                    break;
+                case ItemUseType.Dx:
+                    attriType = "DX";
+                    break;
+                default: break;
+            }
+
+            string str = (attriType != string.Empty) ? string.Format("{0}+{1}", attriType, Quantity) : string.Empty;
+            return str;
         }
     }
 }

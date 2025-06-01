@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using WindingTale.Core.Files;
 
@@ -52,6 +53,12 @@ namespace WindingTale.Core.Definitions.Items
         public override bool IsUsable()
         {
             return false;
+        }
+
+        public override string ToAttributeString()
+        {
+            string str = string.Format("DP+{0}", Dp);
+            return str;
         }
     }
 }

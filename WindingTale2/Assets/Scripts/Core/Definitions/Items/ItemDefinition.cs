@@ -49,5 +49,10 @@ namespace WindingTale.Core.Definitions
 
         public abstract ItemType GetItemType();
 
+        /// <summary>
+        /// Show attribute of the item in a string format, such as "AP +5", "DP +10"
+        /// </summary>
+        /// <returns></returns>
+        public abstract string ToAttributeString();
     }
 }
