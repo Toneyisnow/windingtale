@@ -9,6 +9,8 @@ using WindingTale.Core.Common;
 using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.MapObjects.CreatureIcon;
+using WindingTale.UI.Dialogs;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -21,7 +23,13 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             this.SetMenu(0, MenuItemId.RecordSave, fdMap.CanSaveGame(), () =>
             {
                 // 是否保存当前游戏？
-                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 5);
+                gameMain.PushActivity(gameMain =>
+                {
+                    FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 5);
+                    var rawText = LocalizationManager.GetFDMessageString(message);
+                    gameMain.gameCanvas.ShowTalkDialog(0, rawText, true, GameCanvas.DialogPosition.Bottom, OnSaveGameConfirmed);
+                });
+
                 //PromptActivity prompt = new PromptActivity(message, OnSaveGameConfirmed);
                 //activityManager.Push(prompt);
                 return this;
@@ -39,9 +47,13 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             this.SetMenu(2, MenuItemId.RecordLoad, true, () =>
             {
                 // 要读取战况吗？
-                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 4);
-                //PromptActivity prompt = new PromptActivity(message, OnLoadGameConfirmed);
-                //activityManager.Push(prompt);
+                gameMain.PushActivity(gameMain =>
+                {
+                    FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 4);
+                    var rawText = LocalizationManager.GetFDMessageString(message);
+                    gameMain.gameCanvas.ShowTalkDialog(0, rawText, true, GameCanvas.DialogPosition.Bottom, OnContinueGameConfirmed);
+                });
+
                 return this;
             });
 
@@ -55,15 +67,21 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             });
         }
 
-        private void OnLoadGameConfirmed(int index)
+        private void OnContinueGameConfirmed(int index)
         {
             if (index == 1)
             {
-                Debug.Log("Loading Game...");
+                Debug.Log("Loading Continue Game...");
 
                 // Load Game
-                // gameAction.LoadGame();
-                //// stateHandler.HandleClearStates();
+                gameMain.ContinueGame();
+
+                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 33);
+                var rawText = LocalizationManager.GetFDMessageString(message);
+                gameMain.gameCanvas.ShowTalkDialog(0, rawText, true, GameCanvas.DialogPosition.Bottom, (confirm) => { });
+
+                IdleState idleState = new IdleState(gameMain);
+                PlayerInterface.getDefault().onUpdateState(idleState);
             }
         }
 
@@ -74,11 +92,16 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 Debug.Log("Saving Game...");
 
                 // Save Game
-                //// gameMain.SaveMapRecord();
+                gameMain.SaveGame();
+                gameMain.PushActivity(gameMain =>
+                {
+                    FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 9);
+                    var rawText = LocalizationManager.GetFDMessageString(message);
+                    gameMain.gameCanvas.ShowTalkDialog(0, rawText, true, GameCanvas.DialogPosition.Bottom, (confirm) => { });
 
-                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 33);
-                //TalkActivity talk = new TalkActivity(message);
-                //stateHandler.HandleClearStates();
+                    IdleState idleState = new IdleState(gameMain);
+                    PlayerInterface.getDefault().onUpdateState(idleState);
+                });
             }
         }
 

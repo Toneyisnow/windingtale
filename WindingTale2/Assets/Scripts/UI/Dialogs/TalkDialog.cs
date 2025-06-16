@@ -104,7 +104,6 @@ public class TalkDialog : MonoBehaviour
         StartCoroutine(BuildText());
     }
 
-
     private IEnumerator BuildText()
     {
         for (int i = 0; i < fullText.Length; i++)

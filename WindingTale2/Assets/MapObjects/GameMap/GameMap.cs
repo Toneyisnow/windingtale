@@ -68,7 +68,7 @@ namespace WindingTale.MapObjects.GameMap
 
         public void Initialize(int chapterId)
         {
-            this.Map = FDMap.loadFromChapter(chapterId);
+            this.Map = FDMap.LoadFromChapter(chapterId);
 
             FieldLayer fieldComponent = fieldLayer.GetComponent<FieldLayer>();
             fieldComponent.Initialize(this.Map.Field);

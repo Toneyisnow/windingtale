@@ -146,6 +146,7 @@
     <Compile Include="Assets\Scripts\Core\Algorithms\DirectRangeFinder.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIGuardDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Events\CreatureDeadEvent.cs" />
+    <Compile Include="Assets\Scripts\Core\Files\GameRecordManager.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDNpc.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuActionState.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureSynced.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureInput.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\AttackItemDefinition.cs" />
+    <Compile Include="Assets\Scripts\Core\Files\GameMapRecordManager.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureWalk.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
     <Compile Include="Assets\Scripts\Core\Common\Constants.cs" />

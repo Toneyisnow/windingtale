@@ -53,7 +53,9 @@ public class LocalizationManager
 
     public static LocalizedString GetFDMessageString(FDMessage message)
     {
-        string key = string.Format(@"Message-{0}", StringUtils.Digit2(message.Key));
+        string key = string.Format(@"{0}-{1}", 
+            message.MessageType == FDMessage.MessageTypes.Confirm ? "Confirm" : "Message",
+            StringUtils.Digit2(message.Key));
 
         LocalizedString template = GetLocalString("CommonStrings", key);
         var dict = new Dictionary<string, string> { 

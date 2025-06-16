@@ -137,12 +137,12 @@ namespace WindingTale.Core.Objects
 
         public List<int> Items
         {
-            get; private set;
+            get; set;
         }
 
         public List<int> Magics
         {
-            get; private set;
+            get; set;
         }
 
         public HashSet<CreatureEffects> Effects

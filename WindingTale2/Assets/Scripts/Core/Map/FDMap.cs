@@ -7,6 +7,7 @@ using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
+using WindingTale.Core.Events;
 using WindingTale.Core.Objects;
 
 namespace WindingTale.Core.Map
@@ -15,6 +16,8 @@ namespace WindingTale.Core.Map
     {
 
         #region Properties
+
+        public int ChapterId { get; set; }
 
         public int TurnNo { get; set; }
 
@@ -29,6 +32,11 @@ namespace WindingTale.Core.Map
         {
             get; private set;
         }
+
+        public List<FDTreasure> Treasures { get; private set; }
+
+        public List<int> TriggeredEvents { get; private set; }
+
 
 
         public List<FDCreature> Friends
@@ -67,19 +75,37 @@ namespace WindingTale.Core.Map
 
             this.Creatures = new List<FDCreature>();
             this.DeadCreatures = new List<FDCreature>();
+            this.Treasures = new List<FDTreasure>();
+
+            this.TriggeredEvents = new List<int>();
         }
 
         #endregion
 
         #region Public Static Methods
 
-        public static FDMap loadFromChapter(int chapterId)
+        public static FDMap LoadFromChapter(int chapterId)
         {
             Debug.Log("FDMap loadFromChapter");
             var map = new FDMap();
+            map.ChapterId = chapterId;
 
             ChapterDefinition chapterDefinition = DefinitionStore.Instance.LoadChapter(chapterId);
             map.Field = new FDField(chapterDefinition);
+
+            return map;
+        }
+
+        public static FDMap LoadFromMapRecord(int chapterId, List<FDCreature> creatures, List<FDCreature> deadCreatures, List<FDTreasure> treasures, List<int> triggeredEvents, int turnNo = 1)
+        {
+            Debug.Log("FDMap LoadFromMapRecord");
+            var map = LoadFromChapter(chapterId);
+
+            map.TurnNo = turnNo;
+            map.Creatures = creatures ?? new List<FDCreature>();
+            map.DeadCreatures = deadCreatures ?? new List<FDCreature>();
+            map.Treasures = treasures ?? new List<FDTreasure>();
+            map.TriggeredEvents = triggeredEvents ?? new List<int>();
             return map;
         }
 
@@ -106,7 +132,7 @@ namespace WindingTale.Core.Map
 
         public FDTreasure GetTreasureAt(FDPosition position)
         {
-            return null;
+            return Treasures.Find(treasure => treasure.Position.AreSame(position));
         }
 
 

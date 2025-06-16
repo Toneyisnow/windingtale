@@ -43,5 +43,10 @@ namespace WindingTale.Core.Events
             this.IsActive = false;
         }
 
+        public void SetActive(bool isActive)
+        {
+            this.IsActive = isActive;
+        }
+
     }
 }

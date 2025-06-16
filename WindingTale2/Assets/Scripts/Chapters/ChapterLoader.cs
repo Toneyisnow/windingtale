@@ -31,7 +31,7 @@ namespace WindingTale.Chapters
         //    return definition;
         //}
 
-        public static List<FDEvent> LoadEvents(GameMain gameMain, int chapterId)
+        public static List<FDEvent> LoadEvents(GameMain gameMain, int chapterId, List<int> triggeredEvents)
         {
             ChapterEvents chapter = null;
             switch (chapterId)
@@ -51,7 +51,16 @@ namespace WindingTale.Chapters
                 throw new Exception("Cannot find definition for chapter " + chapterId);
             }
 
-            return chapter.AllEvents;
+            var allEvents = chapter.AllEvents;
+            foreach (int eventId in triggeredEvents)
+            {
+                FDEvent ev = allEvents.Find(e => e.EventId == eventId);
+                if (ev != null)
+                {
+                    ev.SetActive(false);
+                }
+            }
+            return allEvents;
         }
         
     }

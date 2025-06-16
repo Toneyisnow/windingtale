@@ -43,7 +43,7 @@ namespace WindingTale.Scenes.GameFieldScene
         }
 
 
-        public void ShowTalkDialog(int creatureAnimationid, LocalizedString rawText, bool needConfirm, DialogPosition dialogPosition, Action<int> onSelected, int chapterId)
+        public void ShowTalkDialog(int creatureAnimationid, LocalizedString rawText, bool needConfirm, DialogPosition dialogPosition, Action<int> onSelected, int chapterId = -1)
         {
             dialog = this.transform.Find("TalkDialog").gameObject;
             dialog.SetActive(true);

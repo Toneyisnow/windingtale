@@ -10,6 +10,7 @@ using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Events;
+using WindingTale.Core.Files;
 using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.CreatureIcon;
@@ -102,17 +103,22 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void LoadGame()
         {
-
+            // 
         }
 
         public void ContinueGame()
         {
+            Debug.Log("Continue Game...");
+
+            GameMapRecordManager manager = new GameMapRecordManager();
+            FDMap map = manager.LoadFromFile("current_game");
 
         }
 
         public void SaveGame()
         {
-
+            GameMapRecordManager manager = new GameMapRecordManager();
+            manager.SaveToFile("current_game", this.gameMap.Map);
         }
 
 
@@ -394,7 +400,8 @@ namespace WindingTale.Scenes.GameFieldScene
         {
 
             gameMap.Initialize(chapterId);
-            List<FDEvent> chapterEvents = ChapterLoader.LoadEvents(this, chapterId);
+            List<FDEvent> chapterEvents = ChapterLoader.LoadEvents(this, chapterId, gameMap.Map.TriggeredEvents);
+
             eventHandler = new EventHandler(chapterEvents, this);
             enemyAIHandler = new AIHandler(this, CreatureFaction.Enemy);
             npcAIHandler = new AIHandler(this, CreatureFaction.Npc);
