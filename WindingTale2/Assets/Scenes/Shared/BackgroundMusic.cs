@@ -9,8 +9,7 @@ public class BackgroundMusic : MonoBehaviour
 
     void Awake()
     {
-        // 确保音乐管理器在场景切换时不会销毁
-        DontDestroyOnLoad(gameObject);
+        
     }
 
     void Start()

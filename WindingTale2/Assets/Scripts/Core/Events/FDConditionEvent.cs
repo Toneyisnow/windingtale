@@ -1,5 +1,6 @@
 using System;
 using WindingTale.Core.Map;
+using WindingTale.Scenes.GameFieldScene;
 
 namespace WindingTale.Core.Events
 {

@@ -26,16 +26,16 @@ namespace WindingTale.Core.Map
         public FDField Field { get; private set; }
 
 
-        public List<FDCreature> Creatures { get; private set; }
+        public List<FDCreature> Creatures { get; set; }
 
         public List<FDCreature> DeadCreatures
         {
-            get; private set;
+            get; set;
         }
 
-        public List<FDTreasure> Treasures { get; private set; }
+        public List<FDTreasure> Treasures { get; set; }
 
-        public List<int> TriggeredEvents { get; private set; }
+        //// public List<int> TriggeredEvents { get; private set; }
 
 
 
@@ -77,7 +77,6 @@ namespace WindingTale.Core.Map
             this.DeadCreatures = new List<FDCreature>();
             this.Treasures = new List<FDTreasure>();
 
-            this.TriggeredEvents = new List<int>();
         }
 
         #endregion
@@ -89,23 +88,12 @@ namespace WindingTale.Core.Map
             Debug.Log("FDMap loadFromChapter");
             var map = new FDMap();
             map.ChapterId = chapterId;
+            map.TurnNo = 0;
+            map.TurnType = CreatureFaction.Enemy;
 
             ChapterDefinition chapterDefinition = DefinitionStore.Instance.LoadChapter(chapterId);
             map.Field = new FDField(chapterDefinition);
 
-            return map;
-        }
-
-        public static FDMap LoadFromMapRecord(int chapterId, List<FDCreature> creatures, List<FDCreature> deadCreatures, List<FDTreasure> treasures, List<int> triggeredEvents, int turnNo = 1)
-        {
-            Debug.Log("FDMap LoadFromMapRecord");
-            var map = LoadFromChapter(chapterId);
-
-            map.TurnNo = turnNo;
-            map.Creatures = creatures ?? new List<FDCreature>();
-            map.DeadCreatures = deadCreatures ?? new List<FDCreature>();
-            map.Treasures = treasures ?? new List<FDTreasure>();
-            map.TriggeredEvents = triggeredEvents ?? new List<int>();
             return map;
         }
 

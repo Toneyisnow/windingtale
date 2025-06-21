@@ -13,9 +13,9 @@ namespace WindingTale.Scenes.GameFieldScene
     {
         #region Game Cycles
 
-        void StartNewGame();
+        // void StartNewGame();
 
-        void LoadGame();
+        // void LoadGame();
 
         void ContinueGame();
 

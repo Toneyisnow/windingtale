@@ -54,7 +54,7 @@ namespace WindingTale.Scenes.GameFieldScene
         }
 
         
-        private EventHandler eventHandler = null;
+        public EventHandler eventHandler = null;
 
         private AIHandler enemyAIHandler = null;
 
@@ -71,15 +71,26 @@ namespace WindingTale.Scenes.GameFieldScene
 
         void Start()
         {
-            int chapterId = GlobalVariables.Get<int>("ChapterId");
-            if (chapterId == 1)
+            // 确保音乐管理器在场景切换时不会销毁
+            DontDestroyOnLoad(gameObject);
+
+            if (GameFiledSceneParams.isContinue)
             {
-                StartNewGame();
+                LoadFromMapRecord();
+                GameFiledSceneParams.isContinue = false;
             }
             else
             {
-                LoadGame();
+                StartChapter(1);
             }
+        }
+
+        private void LoadFromMapRecord()
+        {
+            GameMapRecordManager manager = new GameMapRecordManager();
+            manager.LoadFromFile("current_game", this);
+
+            onKickOff();
         }
 
         void Update()
@@ -94,33 +105,20 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Game Cycles
 
-        public void StartNewGame()
-        {
-            // Map load from file
-            chapterId = 1;
-            onInitialize();
-        }
-
-        public void LoadGame()
-        {
-            // 
-        }
-
         public void ContinueGame()
         {
             Debug.Log("Continue Game...");
+            GameFiledSceneParams.isContinue = true;
 
-            GameMapRecordManager manager = new GameMapRecordManager();
-            FDMap map = manager.LoadFromFile("current_game");
-
+            Destroy(gameObject);
+            SceneManager.LoadScene("GameFieldScene", LoadSceneMode.Single);
         }
 
         public void SaveGame()
         {
             GameMapRecordManager manager = new GameMapRecordManager();
-            manager.SaveToFile("current_game", this.gameMap.Map);
+            manager.SaveToFile("current_game", this);
         }
-
 
         public void OnQuit()
         {
@@ -396,19 +394,21 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Game Loops Functions
 
-        private void onInitialize()
+        private void StartChapter(int chapterId)
         {
-
             gameMap.Initialize(chapterId);
-            List<FDEvent> chapterEvents = ChapterLoader.LoadEvents(this, chapterId, gameMap.Map.TriggeredEvents);
 
+            List<FDEvent> chapterEvents = ChapterLoader.LoadEvents(this, chapterId);
             eventHandler = new EventHandler(chapterEvents, this);
+
+            onKickOff();
+        }
+
+        private void onKickOff()
+        {
             enemyAIHandler = new AIHandler(this, CreatureFaction.Enemy);
             npcAIHandler = new AIHandler(this, CreatureFaction.Npc);
             activityQueue = new ActivityQueue(this);
-
-            this.gameMap.Map.TurnNo = 0;
-            this.gameMap.Map.TurnType = CreatureFaction.Enemy;
 
             onStartNextTurn();
         }

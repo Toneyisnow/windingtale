@@ -197,7 +197,6 @@ namespace WindingTale.MapObjects.GameMap
         /// <param name="pos"></param>
         public void AddCreature(FDCreature creature, FDPosition position)
         {
-
             creature.Position = position;
             this.Map.Creatures.Add(creature);
 
@@ -240,6 +239,11 @@ namespace WindingTale.MapObjects.GameMap
         private void AddCreatureUI(FDCreature creature, FDPosition pos)
         {
             GameObject creatureIcon = Instantiate(creatureIconPrefab);
+
+            if (creature.Id == 11)
+            {
+                Debug.Log("Here");
+            }
 
             creatureIcon.name = string.Format("creature_{0}", StringUtils.Digit3(creature.Id));
             creatureIcon.transform.SetParent(creaturesLayer.transform);

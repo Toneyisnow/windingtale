@@ -40,6 +40,8 @@ namespace WindingTale.Core.Files
     public class CreatureMapRecord
     {
         public int Id;
+        public int DefinitionId;
+
         public CreatureFaction Faction;
         public string Name;
         public int Level;
@@ -51,6 +53,9 @@ namespace WindingTale.Core.Files
         public List<int> ItemIds;
         public List<int> MagicIds;
         public FDPosition Position;
+
+        // Only for AI Creature
+        public AITypes AIType;
     }
 
     public class TreasureMapRecord

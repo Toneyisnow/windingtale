@@ -148,6 +148,7 @@
     <Compile Include="Assets\Scripts\Core\Events\CreatureDeadEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Files\GameRecordManager.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDNpc.cs" />
+    <Compile Include="Assets\Scenes\GameFieldScene\GameFieldSceneParams.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuActionState.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureSynced.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDMessage.cs" />

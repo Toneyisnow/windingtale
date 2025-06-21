@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
+using WindingTale.Scenes.GameFieldScene;
 
 namespace WindingTale.Core.Events
 {
