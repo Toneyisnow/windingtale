@@ -5,16 +5,16 @@ using UnityEngine;
 
 public class MainCamera : MonoBehaviour
 {
-    public float moveSpeed = 10f; // »ù´¡ÒÆ¶¯ËÙ¶È
-    public float acceleration = 5f; // ¼ÓËÙ¶È
-    public float deceleration = 5f; // ¼õËÙ¶È
-    public float minHeight = 8f; // ×îµÍ¸ß¶È£¨Æ½ÐÐÓÚµØÃæ£©
-    public float maxHeight = 48f; // ×î¸ß¸ß¶È£¨45¶È½Ç£©
-    public float rotationAngle = 45f; // ³õÊ¼¸©ÊÓ½Ç¶È
-    public float edgeScrollSpeed = 10f; // ±ßÔµ¹ö¶¯ËÙ¶È
-    public float edgeScrollThreshold = 50f; // ±ßÔµ¹ö¶¯´¥·¢ãÐÖµ
-    public float zoomSpeed = 0.5f; // Ëõ·ÅËÙ¶È
-    public float zoomAcceleration = 1.3f; // Ëõ·Å¼ÓËÙ¶È
+    public float moveSpeed = 20f; // ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½Ù¶ï¿½
+    public float acceleration = 5f; // ï¿½ï¿½ï¿½Ù¶ï¿½
+    public float deceleration = 5f; // ï¿½ï¿½ï¿½Ù¶ï¿½
+    public float minHeight = 8f; // ï¿½ï¿½Í¸ß¶È£ï¿½Æ½ï¿½ï¿½ï¿½Úµï¿½ï¿½æ£©
+    public float maxHeight = 48f; // ï¿½ï¿½ß¸ß¶È£ï¿½45ï¿½È½Ç£ï¿½
+    public float rotationAngle = 45f; // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Ó½Ç¶ï¿½
+    public float edgeScrollSpeed = 10f; // ï¿½ï¿½Ôµï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
+    public float edgeScrollThreshold = 50f; // ï¿½ï¿½Ôµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+    public float zoomSpeed = 0.5f; // ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
+    public float zoomDeceleration = 8f; // ï¿½ï¿½ï¿½Å¼ï¿½ï¿½ï¿½Ù¶È£ï¿½Ô½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½
 
     private Vector3 velocity = Vector3.zero;
     private float zoomVelocity = 0f;
@@ -23,7 +23,7 @@ public class MainCamera : MonoBehaviour
 
     void Start()
     {
-        // ÉèÖÃ³õÊ¼½Ç¶È
+        // ï¿½ï¿½ï¿½Ã³ï¿½Ê¼ï¿½Ç¶ï¿½
         transform.rotation = Quaternion.Euler(rotationAngle, 180, 0);
     }
 
@@ -32,10 +32,10 @@ public class MainCamera : MonoBehaviour
         Vector3 targetVelocity = Vector3.zero;
         float heightFactor = Mathf.InverseLerp(minHeight, maxHeight, transform.position.y);
 
-        // »ñÈ¡Êó±êÎ»ÖÃ
+        // ï¿½ï¿½È¡ï¿½ï¿½ï¿½Î»ï¿½ï¿½
         Vector3 mousePos = Input.mousePosition;
 
-        // ×óÓÒÆ½ÒÆ£¨±£³ÖË®Æ½£©
+        // ï¿½ï¿½ï¿½ï¿½Æ½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½ï¿½Ë®Æ½ï¿½ï¿½
         if (Input.GetKey(KeyCode.A)) // || mousePos.x <= edgeScrollThreshold)
         {
             targetVelocity -= transform.right * moveSpeed;
@@ -45,7 +45,7 @@ public class MainCamera : MonoBehaviour
             targetVelocity += transform.right * moveSpeed;
         }
 
-        // ÉÏÏÂÔË¾µ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ë¾ï¿½
         /*
         if (Input.GetKey(KeyCode.W)) // || mousePos.y >= Screen.height - edgeScrollThreshold)
         {
@@ -57,7 +57,7 @@ public class MainCamera : MonoBehaviour
         }
         */
 
-        // ÉÏÏÂÔË¾µ£¨Æ½ÐÐÓÚµØÃæ£©
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ë¾ï¿½ï¿½ï¿½Æ½ï¿½ï¿½ï¿½Úµï¿½ï¿½æ£©
         if (Input.GetKey(KeyCode.W))
         {
             targetVelocity += new Vector3(transform.forward.x, 0, transform.forward.z) * moveSpeed * (float)1.5;
@@ -68,21 +68,24 @@ public class MainCamera : MonoBehaviour
         }
 
 
-        // Æ½»¬ÔË¶¯¼ÆËã
+        // Æ½ï¿½ï¿½ï¿½Ë¶ï¿½ï¿½ï¿½ï¿½ï¿½
         velocity = Vector3.Lerp(velocity, targetVelocity, Time.deltaTime * (targetVelocity.magnitude > 0 ? acceleration : deceleration));
         transform.position += velocity * Time.deltaTime;
 
-        // ¼ÆËã¾µÍ·Ëõ·Å
+        // ï¿½ï¿½ï¿½ã¾µÍ·ï¿½ï¿½ï¿½ï¿½
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0)
         {
-            zoomVelocity += scroll * zoomSpeed;
+            zoomVelocity = scroll * zoomSpeed;
         }
-        zoomVelocity = Mathf.Lerp(zoomVelocity, 0, Time.deltaTime * zoomAcceleration);
+        else
+        {
+            zoomVelocity = Mathf.Lerp(zoomVelocity, 0, Time.deltaTime * zoomDeceleration);
+        }
         float newHeight = Mathf.Clamp(transform.position.y - zoomVelocity, minHeight, maxHeight);
         transform.position = new Vector3(transform.position.x, newHeight, transform.position.z);
 
-        // ¼ÆËãÐÂ½Ç¶È
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Â½Ç¶ï¿½
         float newAngle = Mathf.Lerp(0, rotationAngle, Mathf.InverseLerp(minHeight, maxHeight, newHeight));
         transform.rotation = Quaternion.Euler(newAngle, transform.rotation.eulerAngles.y, 0);
     }
