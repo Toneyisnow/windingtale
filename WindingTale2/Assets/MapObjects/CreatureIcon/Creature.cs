@@ -19,6 +19,10 @@ namespace WindingTale.MapObjects.CreatureIcon
 
         private FDMovePath path = null;
 
+        private Material[] originalMaterials1 = null;
+        private Material[] originalMaterials2 = null;
+        private Material[] originalMaterials3 = null;
+
         public FDCreature creature
         {
             get; private set;
@@ -47,15 +51,21 @@ namespace WindingTale.MapObjects.CreatureIcon
 
             if (greyout)
             {
+                MeshRenderer r1 = obj1.GetComponent<MeshRenderer>();
+                MeshRenderer r2 = obj2.GetComponent<MeshRenderer>();
+                MeshRenderer r3 = obj3.GetComponent<MeshRenderer>();
+                if (r1 != null) originalMaterials1 = r1.materials;
+                if (r2 != null) originalMaterials2 = r2.materials;
+                if (r3 != null) originalMaterials3 = r3.materials;
                 GameRenderer.Instance.ApplyDefaultGreyMaterial(obj1);
                 GameRenderer.Instance.ApplyDefaultGreyMaterial(obj2);
                 GameRenderer.Instance.ApplyDefaultGreyMaterial(obj3);
             }
             else
             {
-                GameRenderer.Instance.ApplyDefaultMaterial(obj1);
-                GameRenderer.Instance.ApplyDefaultMaterial(obj2);
-                GameRenderer.Instance.ApplyDefaultMaterial(obj3);
+                if (originalMaterials1 != null) obj1.GetComponent<MeshRenderer>().materials = originalMaterials1;
+                if (originalMaterials2 != null) obj2.GetComponent<MeshRenderer>().materials = originalMaterials2;
+                if (originalMaterials3 != null) obj3.GetComponent<MeshRenderer>().materials = originalMaterials3;
             }
         }
 

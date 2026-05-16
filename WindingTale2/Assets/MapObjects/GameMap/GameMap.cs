@@ -32,7 +32,6 @@ namespace WindingTale.MapObjects.GameMap
         public GameObject menuPrefab;
 
 
-        private Material defaultMaterial = null;
 
         private GameObject cursorObject = null;
         private Cursor cursor = null;
@@ -43,8 +42,6 @@ namespace WindingTale.MapObjects.GameMap
 
         void Start()
         {
-            defaultMaterial = Resources.Load<Material>("Materials/material-fd2-palette");
-
             cursorObject = Instantiate(cursorPrefab);
             cursorObject.transform.parent = indicatorsLayer.transform;
             cursorObject.name = "cursor";
@@ -262,10 +259,6 @@ namespace WindingTale.MapObjects.GameMap
             Debug.Log("iconFilePath: " + iconFilePath);
 
             GameObject prefab = Resources.Load<GameObject>(iconFilePath);
-            GameObject d = prefab.transform.Find("default").gameObject;
-            MeshRenderer renderer = d.GetComponent<MeshRenderer>();
-            renderer.materials = new Material[1] { defaultMaterial };
-
             GameObject icon = Instantiate(prefab);
             icon.transform.SetParent(parent);
             icon.transform.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);

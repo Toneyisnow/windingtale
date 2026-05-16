@@ -626,7 +626,326 @@ def byPrompt():
     except KeyboardInterrupt:
         pass
 
+# =========================================================================
+# Single-file export mode (added).
+#
+# Provide one or more full .vox paths on the command line, e.g.:
+#     python vox_to_obj_exporter.py "C:/.../Icon_009_01.vox" [more.vox ...]
+# and for each input the tool writes 3 sibling files in the SAME folder:
+#     <name>.obj  — geometry with mtllib/usemtl referencing <name>.mtl
+#     <name>.mtl  — Wavefront material pointing at the palette PNG
+#     <name>.png  — 256x1 palette texture (one pixel per palette index)
+#
+# Falls back to the original exportAll() / byPrompt() flow when called
+# with no arguments.
+# =========================================================================
+
+def importVoxFull(file):
+    """ Like importVox() but also returns the 256-entry RGBA palette
+        (or None if the .vox has no RGBA chunk).
+    """
+    vox = VoxelStruct()
+    palette = None
+
+    magic = file.read(4)
+    if magic != b'VOX ':
+        raise ValueError('not a VOX file (magic=%r)' % magic)
+    version = int.from_bytes(file.read(4), byteorder='little')
+    if version != 150:
+        raise ValueError('unsupported VOX version: %d' % version)
+
+    main_header = _readChunkHeader(file)
+    if main_header['id'] != b'MAIN':
+        raise ValueError('expected MAIN chunk, got %r' % main_header['id'])
+    file.read(main_header['size'])
+    end_pos = file.tell() + main_header['childrenSize']
+
+    while file.tell() < end_pos:
+        header = _readChunkHeader(file)
+        cid = header['id']
+        size = header['size']
+        body = file.read(size)
+
+        if cid == b'XYZI':
+            n = int.from_bytes(body[:4], 'little')
+            for i in range(n):
+                x = body[4 + i * 4]
+                y = body[5 + i * 4]
+                z = body[6 + i * 4]
+                c = body[7 + i * 4]
+                if c != 0:
+                    vox.setVoxel(Voxel(x, y, z, c))
+        elif cid == b'RGBA':
+            palette = []
+            for i in range(256):
+                r = body[i * 4]
+                g = body[i * 4 + 1]
+                b = body[i * 4 + 2]
+                a = body[i * 4 + 3]
+                palette.append((r, g, b, a))
+
+        # skip any nested children
+        file.read(header['childrenSize'])
+
+    return vox, palette
+
+
+def exportObjToStream(stream, aaQuads, mtl_lib=None, material_name=None,
+                      scale=1.0, center=False, ground=False, y_up=False):
+    """ Same OBJ writer as exportObj(), but optionally emits mtllib / usemtl
+        lines so the geometry references an external material file, and
+        applies a uniform world transform on every vertex.
+
+        scale  : uniform multiplier on all axes. MagicaVoxel's native OBJ
+                 exporter uses 0.1 per voxel, so pass scale=0.1 to match its
+                 size. Default 1.0 = raw voxel coordinates (legacy).
+        center : if True, centers the model's bounding box on the X and Y
+                 axes (the two "horizontal" axes). The vertical axis is
+                 not centered.
+        ground : if True, shifts the model so the lowest vertical voxel
+                 lies at 0 (i.e. the character "stands on the ground plane").
+        y_up   : if True, rotates the model -90° around the X axis so that
+                 the VOX vertical axis (Z) lands on the OBJ Y axis. Use
+                 this for Y-up engines (Unity, Three.js, OBJ's traditional
+                 convention, MagicaVoxel's native OBJ output). The rotation
+                 is applied AFTER centering/grounding, and the 6 axis-
+                 aligned face normals are rotated accordingly.
+
+        Coordinate transform (per vertex):
+              vx = (x - off_x) * scale
+              vy = (y - off_y) * scale
+              vz = (z - off_z) * scale
+              if y_up:  return (vx, vz, -vy)        # rotate -90° around X
+              else  :   return (vx,  vy,   vz)
+    """
+    faces = aaQuads
+    src_normals = list(AAQuad.normals)
+    uvs = set()
+    for f in faces:
+        if f.uv is not None:
+            uvs.add(f.uv)
+    uvs = list(uvs)
+
+    # Compute X / Y / Z offsets in VOX space (before any rotation).
+    off_x = off_y = off_z = 0.0
+    if center or ground:
+        xs, ys, zs = [], [], []
+        for f in faces:
+            for v in f.vertices:
+                xs.append(v[0]); ys.append(v[1]); zs.append(v[2])
+        if xs:
+            if center:
+                off_x = (min(xs) + max(xs)) / 2.0
+                off_y = (min(ys) + max(ys)) / 2.0
+            if ground:
+                off_z = float(min(zs))
+
+    def xform_vert(v):
+        vx = (v[0] - off_x) * scale
+        vy = (v[1] - off_y) * scale
+        vz = (v[2] - off_z) * scale
+        if y_up:
+            # rotate -90° around X: (x, y, z) -> (x, z, -y)
+            return (vx, vz, -vy)
+        return (vx, vy, vz)
+
+    def xform_normal(n):
+        if y_up:
+            return (n[0], n[2], -n[1])
+        return n
+
+    fLines = []
+    vertices = []
+    indexOffset = 0
+    for f in faces:
+        n = 1 + src_normals.index(f.normal) if f.normal is not None else ''
+        uv = 1 + uvs.index(f.uv) if f.uv is not None else ''
+        fLine = ['f']
+        for i, vert in enumerate(f.vertices):
+            v = 1 + indexOffset + f.vertices.index(vert)
+            fLine.append(str(v) + '/' + str(uv) + '/' + str(n))
+        vertices.extend(f.vertices)
+        indexOffset += len(f.vertices)
+        fLines.append(' '.join(fLine) + '\n')
+
+    stream.write('# generated by vox_to_obj_exporter\n')
+    stream.write('# scale=%g center=%s ground=%s y_up=%s\n' %
+                 (scale,
+                  str(bool(center)).lower(),
+                  str(bool(ground)).lower(),
+                  str(bool(y_up)).lower()))
+    stream.write('\n')
+    if mtl_lib:
+        stream.write('mtllib %s\n' % mtl_lib)
+    if material_name:
+        stream.write('usemtl %s\n' % material_name)
+    if mtl_lib or material_name:
+        stream.write('\n')
+
+    if len(src_normals) > 0:
+        stream.write('# normals\n')
+        for n in src_normals:
+            tn = xform_normal(n)
+            stream.write('vn %s %s %s\n' % (_fmt(tn[0]), _fmt(tn[1]), _fmt(tn[2])))
+        stream.write('\n')
+    if len(uvs) > 0:
+        stream.write('# texcoords\n')
+        for i in uvs:
+            stream.write('vt ' + ' '.join(list(map(str, i))) + '\n')
+        stream.write('\n')
+    stream.write('# verts\n')
+    for v in vertices:
+        tv = xform_vert(v)
+        stream.write('v %s %s %s\n' % (_fmt(tv[0]), _fmt(tv[1]), _fmt(tv[2])))
+    stream.write('\n')
+    stream.write('# faces\n')
+    for i in fLines:
+        stream.write(i)
+    stream.write('\n')
+    return len(vertices), len(fLines)
+
+
+def _fmt(x):
+    """Format a float coordinate compactly (drop trailing zeros, keep up to 6 dp)."""
+    s = ('%.6f' % x).rstrip('0').rstrip('.')
+    return s if s else '0'
+
+
+def writeMtl(mtl_path, palette_png_basename, material_name='palette'):
+    """ Write a minimal Wavefront .mtl that maps the diffuse channel to
+        the 256x1 palette PNG produced by writePalettePng().
+    """
+    with open(mtl_path, 'w') as f:
+        f.write('# generated by vox_to_obj_exporter\n')
+        f.write('\n')
+        f.write('newmtl %s\n' % material_name)
+        f.write('illum 1\n')
+        f.write('Ka 0.000 0.000 0.000\n')
+        f.write('Kd 1.000 1.000 1.000\n')
+        f.write('Ks 0.000 0.000 0.000\n')
+        f.write('map_Kd %s\n' % palette_png_basename)
+
+
+def writePalettePng(png_path, palette):
+    """ Write a 256x1 PNG where pixel x=i is palette index i+1's colour
+        (matches MagicaVoxel's exporter convention).
+    """
+    try:
+        from PIL import Image
+    except ImportError:
+        raise SystemExit(
+            'Need Pillow for palette PNG output. Install with: pip install Pillow'
+        )
+    if palette is None:
+        # No RGBA chunk in VOX -> fall back to opaque white so the model
+        # at least renders.
+        palette = [(255, 255, 255, 255)] * 256
+
+    im = Image.new('RGBA', (256, 1))
+    for i in range(256):
+        if i < len(palette):
+            r, g, b, a = palette[i]
+        else:
+            r, g, b, a = 0, 0, 0, 255
+        # opaque always — transparent palette pixels confuse OBJ viewers
+        im.putpixel((i, 0), (r, g, b, 255))
+    im.save(png_path)
+
+
+def exportVoxFile(vox_path, material_name='palette',
+                  scale=0.1, center=True, ground=True, y_up=False):
+    """ Top-level convenience API.
+
+        Given the FULL path to a .vox file, write three sibling files in
+        the same directory:
+            <stem>.obj   (geometry + mtllib reference)
+            <stem>.mtl   (material pointing at <stem>.png)
+            <stem>.png   (256x1 palette texture)
+
+        Defaults match MagicaVoxel's native OBJ export size/centring:
+            scale  = 0.1   (1 voxel -> 0.1 world units)
+            center = True  (model centred on origin in X and Y)
+            ground = True  (lowest vertical voxel sits at Z = 0)
+            y_up   = False (keep VOX's Z-up convention)
+        Pass y_up=True for a Y-up orientation (Unity / Three.js).
+        Pass scale=1.0, center=False, ground=False to get raw voxel coords.
+
+        Returns (obj_path, mtl_path, png_path, n_vertices, n_quads).
+    """
+    import os
+    base, ext = os.path.splitext(vox_path)
+    if ext.lower() != '.vox':
+        raise ValueError('not a .vox file: %s' % vox_path)
+
+    obj_path = base + '.obj'
+    mtl_path = base + '.mtl'
+    png_path = base + '.png'
+    mtl_name = os.path.basename(mtl_path)
+    png_name = os.path.basename(png_path)
+
+    with open(vox_path, 'rb') as f:
+        vox, palette = importVoxFull(f)
+
+    quads = vox.toQuads()
+    with open(obj_path, 'w') as f:
+        n_v, n_q = exportObjToStream(f, quads,
+                                     mtl_lib=mtl_name,
+                                     material_name=material_name,
+                                     scale=scale, center=center,
+                                     ground=ground, y_up=y_up)
+    writeMtl(mtl_path, png_name, material_name)
+    writePalettePng(png_path, palette)
+    return obj_path, mtl_path, png_path, n_v, n_q
+
+
 if __name__ == "__main__":
+    import sys, os
+
+    # Single-file mode: any .vox path on the command line triggers it.
+    # All non-.vox arguments are treated as flags (parsed below).
+    vox_args = [a for a in sys.argv[1:] if a.lower().endswith('.vox')]
+    if vox_args:
+        import argparse
+        parser = argparse.ArgumentParser(
+            prog='vox_to_obj_exporter.py',
+            description=('Convert one or more .vox files into .obj + .mtl + '
+                         '256x1 palette .png, written next to each .vox.'))
+        parser.add_argument('vox', nargs='+',
+            help='full paths to .vox files')
+        parser.add_argument('--scale', type=float, default=0.1, metavar='S',
+            help='world units per voxel (default 0.1, matches MagicaVoxel)')
+        parser.add_argument('--no-center', action='store_true',
+            help='do NOT centre the model on X/Y; keep raw voxel positions')
+        parser.add_argument('--no-ground', action='store_true',
+            help='do NOT shift Z so the bottom voxel sits at Z=0')
+        parser.add_argument('--y-up', action='store_true', dest='y_up',
+            help='rotate the model -90° around X so that VOX Z (up) maps '
+                 'to OBJ Y. Use this for Unity / Three.js / any Y-up engine '
+                 '(matches MagicaVoxel native OBJ output orientation).')
+        args = parser.parse_args()
+
+        center = not args.no_center
+        ground = not args.no_ground
+        print('scale=%g  center=%s  ground=%s  y_up=%s' %
+              (args.scale, str(center).lower(), str(ground).lower(),
+               str(args.y_up).lower()))
+        for vox_path in args.vox:
+            if not os.path.isfile(vox_path):
+                print('not found:', vox_path)
+                continue
+            try:
+                obj, mtl, png, nv, nq = exportVoxFile(
+                    vox_path, scale=args.scale, center=center,
+                    ground=ground, y_up=args.y_up)
+            except ValueError as exc:
+                print('skipped', vox_path, '-', exc)
+                continue
+            print('%s  (%d verts, %d quads)' % (os.path.basename(obj), nv, nq))
+            print('  +', os.path.basename(mtl))
+            print('  +', os.path.basename(png))
+        sys.exit(0)
+
+    # Legacy modes preserved.
     profiling = False
     try:
         import cProfile
