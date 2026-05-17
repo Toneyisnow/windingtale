@@ -81,6 +81,17 @@ FRINGE_HALF_DEPTH = 1.5         # max |dy| at fringe -> 3 voxels deep
 # common case of a stick / bow / staff that got broken into 2-3 fragments.
 BRIDGE_MAX_DIST = 4             # Manhattan distance threshold; 0 disables
 
+# Asymmetric depth compression along the Y axis (vox Y = character's front-back).
+# After all voxels are placed and the front face is locked in, each voxel's Y
+# is scaled around the model's Y midpoint:
+#     y < y_mid   ->  y_mid + (y - y_mid) * DEPTH_COMPRESS_FRONT
+#     y >= y_mid  ->  y_mid + (y - y_mid) * DEPTH_COMPRESS_BACK
+# Voxels that collide on the same destination Y are merged "outer wins": the
+# voxel further from y_mid takes priority, so front and back surface colours
+# survive. Set both to 1.0 to disable.
+DEPTH_COMPRESS_FRONT = 0.5
+DEPTH_COMPRESS_BACK  = 1.0       # 1.0 == do not touch the back half
+
 
 # --------------------------------------------------------------------------- #
 # small helpers                                                               #
@@ -170,6 +181,48 @@ def _connected_components(voxel_set):
                     stack.append(n)
         components.append(comp)
     return components
+
+
+def _compress_depth(voxel_color, front_factor, back_factor):
+    """Squash voxels along Y axis (vox = character's front-back) asymmetrically.
+
+    Steps:
+      1. Find y_mid = midpoint of the model's Y bounding box.
+      2. For every voxel, scale its Y offset from y_mid:
+            front half (y < y_mid):  new_dy = dy * front_factor
+            back  half (y >= y_mid): new_dy = dy * back_factor
+      3. When several source Y's round to the same destination Y, the OUTER
+         voxel wins — process front-half ascending Y and back-half descending
+         Y so the front-most / back-most pixel is placed first, and skip if
+         the destination already has a voxel. This preserves surface colours
+         (front-face PNG override, back-face hood, etc.).
+    """
+    if not voxel_color:
+        return
+    ys = [pos[1] for pos in voxel_color]
+    y_min, y_max = min(ys), max(ys)
+    y_mid = (y_min + y_max) / 2.0
+
+    def remap(y):
+        dy = y - y_mid
+        scaled = dy * (front_factor if dy < 0 else back_factor)
+        return int(round(y_mid + scaled))
+
+    # Outer-first ordering:
+    #   front half (y < y_mid): smallest y first  -> tuple key (0, y)
+    #   back  half (y >= y_mid): largest y first  -> tuple key (1, -y)
+    items = sorted(voxel_color.items(),
+                   key=lambda kv: (0, kv[0][1]) if kv[0][1] < y_mid else (1, -kv[0][1]))
+
+    new_voxel_color = {}
+    for (x, y, z), c in items:
+        ny = remap(y)
+        if 0 <= ny < DIM:
+            pos = (x, ny, z)
+            if pos not in new_voxel_color:
+                new_voxel_color[pos] = c
+    voxel_color.clear()
+    voxel_color.update(new_voxel_color)
 
 
 def _bridge_same_color(voxel_color, max_dist):
@@ -456,6 +509,14 @@ def build_vox(front_path, back_path, side_low_path, side_high_path, out_path):
                 if (x, y, z) in voxel_color:
                     voxel_color[(x, y, z)] = front_color
                     break
+
+    # DEPTH COMPRESSION: squash the model along Y (character's front-back)
+    # asymmetrically — front half loses 50%, back half loses ~33% (defaults).
+    # Done AFTER the front-face override so the now-front-most voxel still
+    # carries its exact PNG colour, and BEFORE bridging so any same-colour
+    # bridges are drawn in the compressed space and stay continuous.
+    if DEPTH_COMPRESS_FRONT < 1.0 or DEPTH_COMPRESS_BACK < 1.0:
+        _compress_depth(voxel_color, DEPTH_COMPRESS_FRONT, DEPTH_COMPRESS_BACK)
 
     # SAME-COLOUR BRIDGE: weapons (sticks, bows, staffs) often end up
     # fragmented into 2-3 clusters because the per-Z ellipse pinches at

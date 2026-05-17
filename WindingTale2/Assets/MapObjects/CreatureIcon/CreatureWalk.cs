@@ -11,7 +11,7 @@ namespace WindingTale.MapObjects.CreatureIcon
 {
     public class CreatureWalk : MonoBehaviour
     {
-        private static float StepLength = 0.06f;
+        private static float StepLength = 0.03f;
 
         private FDMovePath movePath = null;
 
