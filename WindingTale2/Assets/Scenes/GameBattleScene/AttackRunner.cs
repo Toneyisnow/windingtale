@@ -24,6 +24,9 @@ namespace WindingTale.Scenes.GameBattleScene
         private GameObject subjectObject = null;
         private GameObject targetObject = null;
 
+        private GameObject localBody = null;
+        private GameObject foreignBody = null;
+
         private GameObject subjectHpBar;
         private GameObject subjectMpBar;
         private GameObject targetHpBar;
@@ -47,6 +50,20 @@ namespace WindingTale.Scenes.GameBattleScene
         public void Initialize(BattleLoader battleLoader, AttackResult attackResult)
         {
             this.attackResult = attackResult;
+
+            localBody = battleLoader.localBody;
+            foreignBody = battleLoader.foreignBody;
+
+            // Ensure both bodies can receive hit effects.
+            // Copy settings from whichever body already has the component configured in the editor.
+            EnemyHitEffect foreignEffect = foreignBody.GetComponent<EnemyHitEffect>();
+            EnemyHitEffect localEffect   = localBody.GetComponent<EnemyHitEffect>();
+            EnemyHitEffect referenceEffect = foreignEffect != null ? foreignEffect : localEffect;
+
+            if (localEffect == null)
+                CopyHitEffect(localBody.AddComponent<EnemyHitEffect>(), referenceEffect);
+            if (foreignEffect == null)
+                CopyHitEffect(foreignBody.AddComponent<EnemyHitEffect>(), referenceEffect);
 
             CreatureFaction faction = attackResult.Subject.Faction;
             if (faction == CreatureFaction.Friend || faction == CreatureFaction.Npc)
@@ -136,9 +153,20 @@ namespace WindingTale.Scenes.GameBattleScene
 
         private void onAnimationHit(int percent)
         {
-            EnemyHitEffect hitEffect = GameObject.FindFirstObjectByType<EnemyHitEffect>();
-            hitEffect.OnHit(new Vector3(1, 1, 1));
+            // Determine which body is being hit in this animation round
+            GameObject hitObject;
+            if (currentAnimationIndex < attackResult.Damages.Count)
+                hitObject = targetObject;   // subject is attacking, target takes the hit
+            else
+                hitObject = subjectObject;  // counter-attack, subject takes the hit
 
+            // Camera orientation maps world -X to screen-right.
+            // localBody steps back to screen-right (-X world), foreignBody steps back to screen-left (+X world).
+            Vector3 knockbackDir = (hitObject == localBody) ? new Vector3(-1, 0, 0) : new Vector3(1, 0, 0);
+
+            EnemyHitEffect hitEffect = hitObject.GetComponent<EnemyHitEffect>();
+            if (hitEffect != null)
+                hitEffect.OnHit(knockbackDir);
 
             DamageResult damage;
             if (currentAnimationIndex < attackResult.Damages.Count)
@@ -202,6 +230,17 @@ namespace WindingTale.Scenes.GameBattleScene
                 return 0;
             }
             return (float)value / maxValue;
+        }
+
+        private void CopyHitEffect(EnemyHitEffect dst, EnemyHitEffect src)
+        {
+            if (src == null) return;
+            dst.knockbackForce        = src.knockbackForce;
+            dst.knockbackRecoveryTime = src.knockbackRecoveryTime;
+            dst.hitColor              = src.hitColor;
+            dst.flashDuration         = src.flashDuration;
+            dst.screenFlashDuration   = src.screenFlashDuration;
+            dst.hitEffectImage        = src.hitEffectImage;
         }
 
         // Update is called once per frame

@@ -54,18 +54,19 @@ namespace WindingTale.MapObjects.CreatureIcon
                 MeshRenderer r1 = obj1.GetComponent<MeshRenderer>();
                 MeshRenderer r2 = obj2.GetComponent<MeshRenderer>();
                 MeshRenderer r3 = obj3.GetComponent<MeshRenderer>();
-                if (r1 != null) originalMaterials1 = r1.materials;
-                if (r2 != null) originalMaterials2 = r2.materials;
-                if (r3 != null) originalMaterials3 = r3.materials;
+                // Save shared material references before greying out; guard against double-call overwriting originals
+                if (originalMaterials1 == null && r1 != null) originalMaterials1 = r1.sharedMaterials;
+                if (originalMaterials2 == null && r2 != null) originalMaterials2 = r2.sharedMaterials;
+                if (originalMaterials3 == null && r3 != null) originalMaterials3 = r3.sharedMaterials;
                 GameRenderer.Instance.ApplyDefaultGreyMaterial(obj1);
                 GameRenderer.Instance.ApplyDefaultGreyMaterial(obj2);
                 GameRenderer.Instance.ApplyDefaultGreyMaterial(obj3);
             }
             else
             {
-                if (originalMaterials1 != null) obj1.GetComponent<MeshRenderer>().materials = originalMaterials1;
-                if (originalMaterials2 != null) obj2.GetComponent<MeshRenderer>().materials = originalMaterials2;
-                if (originalMaterials3 != null) obj3.GetComponent<MeshRenderer>().materials = originalMaterials3;
+                if (originalMaterials1 != null) { obj1.GetComponent<MeshRenderer>().sharedMaterials = originalMaterials1; originalMaterials1 = null; }
+                if (originalMaterials2 != null) { obj2.GetComponent<MeshRenderer>().sharedMaterials = originalMaterials2; originalMaterials2 = null; }
+                if (originalMaterials3 != null) { obj3.GetComponent<MeshRenderer>().sharedMaterials = originalMaterials3; originalMaterials3 = null; }
             }
         }
 

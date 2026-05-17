@@ -41,14 +41,34 @@ namespace WindingTale.Scenes.GameFieldScene
             renderer.materials = new Material[1] { DefaultMaterial };
         }
 
+        private Shader _greyShader;
+        private Shader GreyShader => _greyShader != null ? _greyShader : (_greyShader = Shader.Find("Custom/GreyoutShader"));
+
         public void ApplyDefaultGreyMaterial(GameObject gameObject)
         {
             MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
-            if (renderer == null)
+            if (renderer == null) return;
+
+            Shader shader = GreyShader;
+            if (shader == null)
             {
-                renderer = gameObject.AddComponent<MeshRenderer>();
+                Debug.LogError("[GameRenderer] Shader 'Custom/GreyoutShader' not found!");
+                return;
             }
-            renderer.materials = new Material[1] { DefaultGreyMaterial };
+
+            Material[] originals = renderer.sharedMaterials;
+            Material[] greyMats = new Material[originals.Length];
+            for (int i = 0; i < originals.Length; i++)
+            {
+                if (originals[i] == null) { greyMats[i] = null; continue; }
+                Material grey = new Material(shader);
+                if (originals[i].HasProperty("_MainTex"))
+                    grey.SetTexture("_MainTex", originals[i].GetTexture("_MainTex"));
+                if (originals[i].HasProperty("_Color"))
+                    grey.SetColor("_Color", originals[i].GetColor("_Color"));
+                greyMats[i] = grey;
+            }
+            renderer.materials = greyMats;
         }
     }
 }
