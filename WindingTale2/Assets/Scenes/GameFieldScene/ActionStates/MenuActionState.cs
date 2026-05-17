@@ -4,14 +4,7 @@ using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
-using UnityEngine;
-using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
-using WindingTale.Core.Objects;
 using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
@@ -84,7 +77,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 }
                 else
                 {
-                    // 发现宝箱，需要打开吗
+                    // Prompt to open the treasure or not
                     FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 2);
                     gameMain.PushActivity(new TalkActivity(message, creature, (result) =>
                     {
@@ -190,14 +183,14 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
                 if (creature.IsItemsFull())
                 {
-                    // 身上的道具满了，需要交换吗
+                    // 锟斤拷锟较的碉拷锟斤拷锟斤拷锟剿ｏ拷锟斤拷要锟斤拷锟斤拷锟斤拷
                     FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 7);
                     //PromptActivity prompt = new PromptActivity(message, OnExchangeTreasureConfirmed, creature);
                     //activityManager.Push(prompt);
                 }
                 else
                 {
-                    // 获得了XXX
+                    // 锟斤拷锟斤拷锟絏XX
                 //    TalkActivity talk = new TalkActivity(FDMessage.Create(FDMessage.MessageTypes.Information, 11), creature);
                 //    activityManager.Push(talk);
 

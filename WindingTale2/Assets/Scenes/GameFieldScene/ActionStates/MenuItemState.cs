@@ -2,9 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene;

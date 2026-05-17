@@ -8,6 +8,7 @@ using WindingTale.Scenes.GameFieldScene.ActionStates;
 using WindingTale.Scenes.GameFieldScene;
 using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.UI.Dialogs;
+using WindingTale.Scenes.GameFieldScene.Activities;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -40,21 +41,22 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Rest All
             this.SetMenu(3, MenuItemId.SystemRestAll, true, () =>
             {
-                // 想要结束本回合吗
                 FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 1);
-                //PromptActivity prompt = new PromptActivity(message, (index) =>
-                //{
-                //    if (index == 1)
-                //    {
-                //        gameMain.EndAllFriendsTurn();
-                //        stateHandler.HandleClearStates();
-                //    }
-                //});
+                TalkActivity talk = new TalkActivity(message, null, (index) =>
+                {
+                   if (index == 1)
+                   {
+                       gameMain.endTurnForAll();
+                       PlayerInterface.getDefault().onUpdateState(new IdleState(gameMain));
+                       return;
+                   }
+                });
 
+                gameMain.PushActivity(talk);
                 return this;
-                //activityManager.Push(prompt);
             });
         }
+
     }
 }
 

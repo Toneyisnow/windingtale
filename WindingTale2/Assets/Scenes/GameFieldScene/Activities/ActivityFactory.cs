@@ -60,7 +60,7 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             Func<GameMain, bool> checkEnd = gameMain =>
             {
                 Creature creatureObj = gameMain.gameMap.GetCreature(creature);
-                return creatureObj.GetComponent<CreatureDying>() == null;
+                return creatureObj == null || creatureObj.GetComponent<CreatureDying>() == null;
             };
             Action<GameMain> endAction = gameMain =>
             {
@@ -87,15 +87,16 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
 
             Func<GameMain, bool> checkEnd = gameMain =>
             {
-                DateTime nowTime = DateTime.Now;
-                if (nowTime > startTime.AddSeconds(2))
-                {
-                    return true;
-                }
-                return false;
+                return DateTime.Now > startTime.AddSeconds(0.3);
             };
 
-            return new DurationActivity(startAction, checkEnd);
+            Action<GameMain> endAction = gameMain =>
+            {
+                Creature creatureObj = gameMain.gameMap.GetCreature(creature);
+                creatureObj?.SetGreyout(true);
+            };
+
+            return new DurationActivity(startAction, checkEnd, endAction);
         }
     }
 

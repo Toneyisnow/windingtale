@@ -71,7 +71,6 @@ namespace WindingTale.Scenes.GameFieldScene
 
         void Start()
         {
-            // 确保音乐管理器在场景切换时不会销毁
             DontDestroyOnLoad(gameObject);
 
             if (GameFiledSceneParams.isContinue)
@@ -333,11 +332,8 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void creatureRest(FDCreature creature)
         {
-            // Check Treasure
-
-            Creature c = gameMap.GetCreature(creature);
-            c.SetActioned(true);
-
+            // Note: Don't check treature here.
+            // Make animation for rest recovery
 
             this.PushActivity((gameMain) =>
             {
@@ -347,7 +343,14 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void endTurnForAll()
         {
-
+            List<FDCreature> friends = gameMap.Map.Friends;
+            foreach (FDCreature creature in friends)
+            {
+                if (!creature.HasActioned)
+                {
+                    onCreatureEndTurn(creature);
+                }
+            }
         }
 
         #endregion
@@ -505,17 +508,25 @@ namespace WindingTale.Scenes.GameFieldScene
 
         private void onCreatureEndTurn(FDCreature creature)
         {
-            // If creature not moved/actioned, recharge, may need activity
-            if ( !creature.HasMoved() && !creature.HasActioned)
+            bool hasRestRecover = !creature.HasMoved() && !creature.HasActioned;
+            if (hasRestRecover)
             {
-                // Show animation for rest recovery
+                // Show animation for rest recovery; greyout happens in the activity's endAction
                 this.InsertActivity(ActivityFactory.CreatureRestRecoverActivity(creature));
             }
 
             Creature c = gameMap.GetCreature(creature);
             if (c != null)
             {
-                c.SetActioned(true);
+                if (hasRestRecover)
+                {
+                    // Mark as actioned in data only; visual greyout is deferred to RestRecover endAction
+                    creature.HasActioned = true;
+                }
+                else
+                {
+                    c.SetActioned(true);
+                }
                 c.creature.PrePosition = null;
             }
 

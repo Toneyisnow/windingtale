@@ -126,6 +126,7 @@
     <Compile Include="Assets\MapObjects\GameMap\MapCoordinate.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\CreatureInfoDialog.cs" />
+    <Compile Include="Assets\Resources\Animations\exploration\ExplosionPlayer.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\TalkActivity.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActivityQueue.cs" />
     <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
@@ -300,6 +301,7 @@
     <None Include="Assets\Resources\Strings\Race.strings.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-06.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-31.txt" />
+    <None Include="Assets\Resources\Animations\exploration\README.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_09_Creature.txt" />
     <None Include="Assets\Resources\Data\Occupation.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-16.txt" />

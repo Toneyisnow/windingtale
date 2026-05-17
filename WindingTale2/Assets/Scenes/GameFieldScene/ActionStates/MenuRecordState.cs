@@ -2,9 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using WindingTale.Core.Common;
 using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
@@ -22,7 +19,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Save Game
             this.SetMenu(0, MenuItemId.RecordSave, fdMap.CanSaveGame(), () =>
             {
-                // ÊÇ·ñ±£´æµ±Ç°ÓÎÏ·£¿
+                // ï¿½Ç·ñ±£´æµ±Ç°ï¿½ï¿½Ï·ï¿½ï¿½
                 gameMain.PushActivity(gameMain =>
                 {
                     FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 5);
@@ -46,7 +43,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Load Game
             this.SetMenu(2, MenuItemId.RecordLoad, true, () =>
             {
-                // Òª¶ÁÈ¡Õ½¿öÂğ£¿
+                // Òªï¿½ï¿½È¡Õ½ï¿½ï¿½ï¿½ï¿½
                 gameMain.PushActivity(gameMain =>
                 {
                     FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 4);

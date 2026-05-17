@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"d:\\\\SourceCode\\\\Git\\\\toneyisnow\\\\windingtale\\\\WindingTale2\\\\Assets\\\\Resources\\\\Animations\" /s /b)"
+    ]
+  }
+}
