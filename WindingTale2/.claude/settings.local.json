@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dir \"d:\\\\SourceCode\\\\Git\\\\toneyisnow\\\\windingtale\\\\WindingTale2\\\\Assets\\\\Resources\\\\Animations\" /s /b)"
+      "Bash(dir \"d:\\\\SourceCode\\\\Git\\\\toneyisnow\\\\windingtale\\\\WindingTale2\\\\Assets\\\\Resources\\\\Animations\" /s /b)",
+      "Bash(Get-ChildItem -Recurse -Path \"d:\\\\SourceCode\\\\Git\\\\toneyisnow\\\\windingtale\\\\WindingTale2\\\\Assets\" -Filter \"*.meta\")",
+      "Bash(Select-String \"e3eb536ab0944ad499f71ff1ae8bb376|be0e0b49dea8d43448566cef3fb1951e\")",
+      "Bash(Select-Object -First 10)"
     ]
   }
 }

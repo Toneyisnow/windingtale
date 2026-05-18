@@ -150,6 +150,19 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Creature Related Operation
 
+        private int GetLocalTaiId(FDCreature creature)
+        {
+            ShapeDefinition shape = gameMap.Map.Field.GetShapeAt(creature.Position);
+            if (shape != null && shape.TaiId > 0)
+                return shape.TaiId;
+
+            ChapterDefinition chapter = DefinitionStore.Instance.LoadChapter(gameMap.Map.ChapterId);
+            if (chapter?.DefaultTaiIds != null && chapter.DefaultTaiIds.Count > 0)
+                return chapter.DefaultTaiIds[UnityEngine.Random.Range(0, chapter.DefaultTaiIds.Count)];
+
+            return 0;
+        }
+
         public void creatureMoveAsync(FDCreature creature, FDMovePath movePath)
         {
             this.PushActivity(ActivityFactory.CreatureWalkActivity(creature.Id, movePath));
@@ -164,6 +177,7 @@ namespace WindingTale.Scenes.GameFieldScene
             AttackResult result = BattleHandler.HandleCreatureAttack(creature, target, gameMap.Map.Field);
             
             // Play attack animation
+            GlobalVariables.Set("LocalTaiId", GetLocalTaiId(creature));
             GlobalVariables.Set("AttackResult", result);
             SceneManager.LoadScene("GameBattleScene", LoadSceneMode.Additive);
 
@@ -245,6 +259,7 @@ namespace WindingTale.Scenes.GameFieldScene
             // Play attack animation
             if (magic.hasAnimaion())
             {
+                GlobalVariables.Set("LocalTaiId", GetLocalTaiId(creature));
                 GlobalVariables.Set("MagicResult", result);
                 SceneManager.LoadScene("GameBattleScene", LoadSceneMode.Additive);
             }

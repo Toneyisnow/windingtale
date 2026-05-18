@@ -2,6 +2,7 @@
   "Index": 1,
   "Width": 27,
   "Height": 21,
+  "DefaultTais": [1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15],
   "ShapeMatrix": [
     [
       81,

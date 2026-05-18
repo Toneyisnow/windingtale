@@ -27,7 +27,13 @@ namespace WindingTale.Core.Definitions
         }
 
         [JsonProperty(PropertyName = "bg")]
-        public int BattleGroundImage
+        public int BackgroundId
+        {
+            get; set;
+        }
+
+        [JsonProperty(PropertyName = "tai")]
+        public int TaiId
         {
             get; set;
         }

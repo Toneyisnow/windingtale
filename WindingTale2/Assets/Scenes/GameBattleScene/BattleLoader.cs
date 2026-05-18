@@ -23,15 +23,29 @@ namespace WindingTale.Scenes.GameBattleScene
         public GameObject localBody;
         public GameObject foreignBody;
 
+        public GameObject localTai;
+
         public GameObject localHpBar;
         public GameObject localMpBar;
         public GameObject foreignHpBar;
         public GameObject foreignMpBar;
 
         
+        private void LoadLocalTai()
+        {
+            int taiId = GlobalVariables.Get<int>("LocalTaiId");
+            if (taiId <= 0 || localTai == null) return;
+
+            string taiPath = string.Format("Tais/{0:D2}/Tai_{0:D2}", taiId);
+            GameObject taiPrefab = Resources.Load<GameObject>(taiPath);
+            if (taiPrefab != null)
+                Instantiate(taiPrefab, localTai.transform);
+        }
+
         // Start is called before the first frame update
         void Start()
         {
+            LoadLocalTai();
 
             // Load Attack Result if it exists
             AttackResult attackResult = GlobalVariables.Get<AttackResult>("AttackResult");

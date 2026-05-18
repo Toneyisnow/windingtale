@@ -40,6 +40,12 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        [JsonProperty(PropertyName = "DefaultTais")]
+        public List<int> DefaultTaiIds
+        {
+            get; set;
+        }
+
         public List<TreasureDefinition> Treasures
         {
             get; set;
