@@ -28,9 +28,13 @@ namespace WindingTale.MapObjects.Blocks
             entry.callback.AddListener((data) => { OnPointerDownDelegate((PointerEventData)data); });
             trigger.triggers.Add(entry);
 
+            // Collider covers one 2-unit tile cell, centred on the shapeObj origin
+            // (= ConvertPosToVec3(pos), the tile centre). The old (24,24,1)/(12,-36,-24)
+            // values were sized for the 0.083 scale; at scale 1.0 they became ~12 tiles
+            // wide and offset, so tile clicks no longer registered.
             BoxCollider boxCollider = this.gameObject.AddComponent<BoxCollider>();
-            boxCollider.size = new Vector3(24, 24, 1);
-            boxCollider.center = new Vector3(12, -36, -24);
+            boxCollider.size = new Vector3(2, 2, 1);
+            boxCollider.center = new Vector3(0, 0, 0);
         }
 
         // Update is called once per frame

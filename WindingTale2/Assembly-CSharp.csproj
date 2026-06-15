@@ -82,6 +82,7 @@
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\SelectItemUseTargetState.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
     <Compile Include="Assets\Scenes\GameBattleScene\FaceCamera.cs" />
+    <Compile Include="Assets\MapObjects\GameMap\ShapesLayer.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ItemDefinition.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIAggressiveDelegate.cs" />
     <Compile Include="Assets\Scripts\UI\Common\TaggedButton.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\SimpleActivity.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureClip.cs" />
     <Compile Include="Assets\Scripts\Core\Common\StringUtils.cs" />
+    <Compile Include="Assets\MapObjects\GameMap\ObstaclesLayer.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuSettingsState.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDRandom.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter2.cs" />
@@ -182,6 +184,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter3.cs" />
+    <Compile Include="Assets\Scripts\Core\Definitions\ObstacleDefinition.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIEscapeDelegate.cs" />
     <Compile Include="Assets\Scenes\TitleScene\TitleSceneLoader.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
@@ -189,7 +192,6 @@
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureDying.cs" />
     <Compile Include="Assets\Scenes\Shared\BackgroundMusic.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\DefinitionStore.cs" />
-    <Compile Include="Assets\MapObjects\GameMap\FieldLayer.cs" />
     <Compile Include="Assets\Scripts\Chapters\ChapterEvents.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\SelectMagicTargetState.cs" />
@@ -232,6 +234,7 @@
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_30_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_04.txt" />
+    <None Include="Assets\Resources\Data\Chapters\ChapterLegacy_01.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_30.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-21.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -438,7 +441,6 @@
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-03.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-28.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
-    <None Include="Assets\Resources\Data\Chapters\Chapter_01.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-02.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_02_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_26_ConversationId.txt" />

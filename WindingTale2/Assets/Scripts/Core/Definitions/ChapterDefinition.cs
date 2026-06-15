@@ -40,6 +40,12 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        [JsonProperty(PropertyName = "Obstacles")]
+        public List<ObstacleDefinition> Obstacles
+        {
+            get; set;
+        }
+
         [JsonProperty(PropertyName = "DefaultTais")]
         public List<int> DefaultTaiIds
         {

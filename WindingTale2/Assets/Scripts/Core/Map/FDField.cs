@@ -14,10 +14,14 @@ namespace WindingTale.Core.Map
 
         private ShapeDefinition[,] shapes = null;
 
+        public List<ObstacleDefinition> Obstacles { get; private set; }
+
         public FDField(ChapterDefinition chapterDefinition)
         {
             Width = chapterDefinition.Width;
             Height = chapterDefinition.Height;
+
+            Obstacles = chapterDefinition.Obstacles ?? new List<ObstacleDefinition>();
 
             shapes = new ShapeDefinition[Width, Height];
             for (int i = 0; i < Width; i++)

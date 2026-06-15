@@ -25,6 +25,8 @@ namespace WindingTale.MapObjects.GameMap
 
         public GameObject creaturesLayer;
 
+        public GameObject obstaclesLayer;
+
         public GameObject indicatorsLayer;
 
         public GameObject cursorPrefab;
@@ -67,9 +69,18 @@ namespace WindingTale.MapObjects.GameMap
         {
             this.Map = FDMap.LoadFromChapter(chapterId);
 
-            FieldLayer fieldComponent = fieldLayer.GetComponent<FieldLayer>();
+            ShapesLayer fieldComponent = fieldLayer.GetComponent<ShapesLayer>();
             fieldComponent.Initialize(this.Map.Field);
 
+            if (obstaclesLayer != null)
+            {
+                ObstaclesLayer obstaclesComponent = obstaclesLayer.GetComponent<ObstaclesLayer>();
+                if (obstaclesComponent == null)
+                {
+                    obstaclesComponent = obstaclesLayer.AddComponent<ObstaclesLayer>();
+                }
+                obstaclesComponent.Initialize(this.Map.Field);
+            }
         }
 
 
