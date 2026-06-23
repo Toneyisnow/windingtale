@@ -163,6 +163,7 @@
     <Compile Include="Assets\MapObjects\GameMap\ObstaclesLayer.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuSettingsState.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDRandom.cs" />
+    <Compile Include="Assets\MapObjects\GameMap\ObstacleAnchor.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter2.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\StringsDefinition.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
@@ -379,6 +380,7 @@
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_13_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_24_Creature.txt" />
+    <None Include="Assets\Resources\Materials\MapClipShader.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_02_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_21.txt" />
     <None Include="Assets\Resources\Data\LevelUpMagic.txt" />

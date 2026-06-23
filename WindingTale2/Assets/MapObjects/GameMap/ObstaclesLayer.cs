@@ -33,6 +33,12 @@ namespace WindingTale.MapObjects.GameMap
                 return;
             }
 
+            // Publish the map rectangle so the clip shader can truncate any obstacle
+            // geometry that overhangs the board edge. Must run before the obstacles
+            // are instantiated below so their first rendered frame already has it.
+            SetMapClipBounds(field);
+            Shader clipShader = Shader.Find("Custom/MapClip");
+
             foreach (ObstacleDefinition obstacle in field.Obstacles)
             {
                 if (obstacle == null || string.IsNullOrEmpty(obstacle.DefinitionKey) || obstacle.Position == null)
@@ -72,6 +78,11 @@ namespace WindingTale.MapObjects.GameMap
                     inner.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.Euler(180, 0, 0));
                 }
 
+                // Swap to the clip shader so parts of this obstacle that stick out past
+                // the map edge are truncated. Keeps each obstacle's own texture/colour
+                // (the clip shader exposes the same _MainTex/_Color as the Standard one).
+                ApplyClipShader(obj, clipShader);
+
                 // The model is exported centre-pivoted, but Position is the
                 // top-left tile of the footprint. Anchor it via its world bounds:
                 //  - horizontally, shift so the top-left corner (max world X, min
@@ -104,6 +115,48 @@ namespace WindingTale.MapObjects.GameMap
 
                     obj.transform.position += new Vector3(horizX, seatY, horizZ) + extra;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Publishes the map's world-space rectangle to the "Custom/MapClip" shader as
+        /// the global "_MapClipMinMaxXZ" (xy = min, zw = max). Tiles are 2-unit cells
+        /// centred at MapCoordinate.ConvertPosToVec3 (-x*2, 0, y*2) for x in [1,Width]
+        /// and y in [1,Height], so the board spans these world bounds (+/-1 = half tile).
+        /// </summary>
+        private static void SetMapClipBounds(FDField field)
+        {
+            float minX = -2f * field.Width - 1f;
+            float maxX = -1f;
+            float minZ = 1f;
+            float maxZ = 2f * field.Height + 1f;
+            Shader.SetGlobalVector("_MapClipMinMaxXZ", new Vector4(minX, minZ, maxX, maxZ));
+        }
+
+        /// <summary>
+        /// Re-points every renderer material on the obstacle at the clip shader, keeping
+        /// the existing _MainTex/_Color (shared property names with the Standard shader).
+        /// Accessing renderer.materials instantiates per-object copies, so this does not
+        /// mutate the shared source material.
+        /// </summary>
+        private static void ApplyClipShader(GameObject obj, Shader clipShader)
+        {
+            if (clipShader == null)
+            {
+                return;
+            }
+
+            foreach (Renderer renderer in obj.GetComponentsInChildren<Renderer>())
+            {
+                Material[] mats = renderer.materials;
+                for (int i = 0; i < mats.Length; i++)
+                {
+                    if (mats[i] != null)
+                    {
+                        mats[i].shader = clipShader;
+                    }
+                }
+                renderer.materials = mats;
             }
         }
 
