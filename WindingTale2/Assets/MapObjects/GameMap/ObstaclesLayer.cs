@@ -40,8 +40,12 @@ namespace WindingTale.MapObjects.GameMap
                     continue;
                 }
 
-                GameObject prefab = Resources.Load<GameObject>(
-                    string.Format("Obstacles/Obstacles_01/{0}", obstacle.DefinitionKey));
+                // Prefer a hand-tuned prefab (which may carry an ObstacleAnchor) and
+                // fall back to the raw imported model. This lets obstacles migrate to
+                // editor-authored prefabs one at a time without changing the pipeline.
+                GameObject prefab =
+                    Resources.Load<GameObject>(string.Format("Obstacles/Obstacles_01_Prefabs/{0}", obstacle.DefinitionKey))
+                    ?? Resources.Load<GameObject>(string.Format("Obstacles/Obstacles_01/{0}", obstacle.DefinitionKey));
                 if (prefab == null)
                 {
                     Debug.LogWarning("Obstacle model not found: Obstacles/Obstacles_01/" + obstacle.DefinitionKey);
@@ -54,7 +58,13 @@ namespace WindingTale.MapObjects.GameMap
                 obj.name = string.Format("obstacle_{0}_{1}", obstacle.Id, obstacle.DefinitionKey);
                 obj.transform.SetParent(this.transform);
                 obj.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(pos), Quaternion.Euler(90, 0, 0));
-                obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+
+                // House/hut buildings are too tall; halve their height. The model is
+                // Z-up in its own local space (the upright rotation comes from the
+                // parent Euler(90)), so the vertical axis is local Z. A Z-only scale
+                // leaves the footprint (and the anchor math below) untouched.
+                float heightScale = GetHeightScale(obstacle.DefinitionKey);
+                obj.transform.localScale = new Vector3(1.0f, 1.0f, heightScale);
 
                 Transform inner = obj.transform.Find("default");
                 if (inner != null)
@@ -63,13 +73,66 @@ namespace WindingTale.MapObjects.GameMap
                 }
 
                 // The model is exported centre-pivoted, but Position is the
-                // top-left tile of the footprint. Shift the model so its top-left
-                // corner (max world X, min world Z = smallest tile X/Y) sits on the
-                // tile, so it extends INTO the map instead of toward the top-left.
+                // top-left tile of the footprint. Anchor it via its world bounds:
+                //  - horizontally, shift so the top-left corner (max world X, min
+                //    world Z = smallest tile X/Y) sits on the tile, so it extends
+                //    INTO the map instead of toward the top-left;
+                //  - vertically, seat the BOTTOM edge (bounds.min.y) on the ground
+                //    plane (y = 0). This puts the effective anchor at the model's
+                //    base, so changing the height scale above grows/shrinks the model
+                //    upward from a fixed base and needs no further adjustment.
+                ObstacleAnchor anchor = obj.GetComponent<ObstacleAnchor>();
+
                 if (TryGetWorldBounds(obj, out Bounds bounds))
                 {
-                    obj.transform.position += new Vector3(-bounds.extents.x, 0f, bounds.extents.z);
+                    // Horizontal anchor (shared by every obstacle): shift so the top-left
+                    // tile corner sits on the tile and the model extends into the map.
+                    float horizX = -bounds.extents.x;
+                    float horizZ = bounds.extents.z;
+
+                    // Vertical seating: prefer the prefab's authored anchor point (drop it
+                    // onto the ground plane y = 0); otherwise drop the bounding-box bottom.
+                    float seatY = (anchor != null && anchor.groundAnchor != null)
+                        ? -anchor.groundAnchor.position.y
+                        : -bounds.min.y;
+
+                    // Per-prefab fine offset. When the prefab has no ObstacleAnchor we fall
+                    // back to the per-key code table so existing models keep their tweaks.
+                    Vector3 extra = (anchor != null)
+                        ? anchor.anchorOffset
+                        : new Vector3(0f, GetGroundYOffset(obstacle.DefinitionKey), 0f);
+
+                    obj.transform.position += new Vector3(horizX, seatY, horizZ) + extra;
                 }
+            }
+        }
+
+        private static float GetHeightScale(string definitionKey)
+        {
+            switch (definitionKey)
+            {
+                case "dwelling_house_1":
+                case "thatched_hut_1":
+                    return 0.5f;
+                default:
+                    return 1.0f;
+            }
+        }
+
+        /// <summary>
+        /// Per-model vertical adjustment (in world units) applied after the common
+        /// base-seating. Negative lowers the model into the ground, positive raises it.
+        /// One tile is 2 world units (see MapCoordinate.ConvertPosToVec3), so e.g.
+        /// -0.5f sinks the model a quarter-tile. Tune the value to taste.
+        /// </summary>
+        private static float GetGroundYOffset(string definitionKey)
+        {
+            switch (definitionKey)
+            {
+                case "barrel_group_1":
+                    return -0.5f;
+                default:
+                    return 0f;
             }
         }
 
