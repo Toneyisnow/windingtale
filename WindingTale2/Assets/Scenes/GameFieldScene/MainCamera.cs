@@ -19,12 +19,25 @@ public class MainCamera : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     private float zoomVelocity = 0f;
 
+    // Right-drag orbit: hold the right mouse button and move left/right to rotate the
+    // whole camera around the world point currently under the cursor.
+    public float rotateSpeed = 4.0f;   // degrees per unit of horizontal mouse movement
+    private bool isRotating = false;
+    private Vector3 rotatePivot = Vector3.zero;
+    private Camera cam;
+
     // private float lowestHeight = 24f;
 
     void Start()
     {
         // ���ó�ʼ�Ƕ�
         transform.rotation = Quaternion.Euler(rotationAngle, 180, 0);
+
+        cam = GetComponent<Camera>();
+        if (cam == null)
+        {
+            cam = Camera.main;
+        }
     }
 
     void Update()
@@ -72,6 +85,29 @@ public class MainCamera : MonoBehaviour
         velocity = Vector3.Lerp(velocity, targetVelocity, Time.deltaTime * (targetVelocity.magnitude > 0 ? acceleration : deceleration));
         transform.position += velocity * Time.deltaTime;
 
+        // Right-drag orbit: pick the pivot under the cursor on press, then rotate the
+        // camera around it (about world up) as the mouse moves left/right.
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (TryGetGroundPoint(Input.mousePosition, out Vector3 pivot))
+            {
+                rotatePivot = pivot;
+                isRotating = true;
+            }
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            isRotating = false;
+        }
+        if (isRotating)
+        {
+            float dx = Input.GetAxis("Mouse X");
+            if (Mathf.Abs(dx) > Mathf.Epsilon)
+            {
+                transform.RotateAround(rotatePivot, Vector3.up, dx * rotateSpeed);
+            }
+        }
+
         // ���㾵ͷ����
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0)
@@ -88,5 +124,25 @@ public class MainCamera : MonoBehaviour
         // �����½Ƕ�
         float newAngle = Mathf.Lerp(0, rotationAngle, Mathf.InverseLerp(minHeight, maxHeight, newHeight));
         transform.rotation = Quaternion.Euler(newAngle, transform.rotation.eulerAngles.y, 0);
+    }
+
+    // Intersects the cursor ray with the ground plane (y = 0) to find the world point
+    // to orbit around. Returns false if the ray doesn't hit the plane (e.g. aimed at
+    // the sky), in which case no rotation pivot is set.
+    private bool TryGetGroundPoint(Vector3 screenPos, out Vector3 point)
+    {
+        if (cam != null)
+        {
+            Ray ray = cam.ScreenPointToRay(screenPos);
+            Plane ground = new Plane(Vector3.up, Vector3.zero);
+            if (ground.Raycast(ray, out float enter))
+            {
+                point = ray.GetPoint(enter);
+                return true;
+            }
+        }
+
+        point = Vector3.zero;
+        return false;
     }
 }

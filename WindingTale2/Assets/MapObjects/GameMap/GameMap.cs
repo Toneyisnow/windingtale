@@ -35,6 +35,16 @@ namespace WindingTale.MapObjects.GameMap
 
 
 
+        // How opaque a tile's grass stays while an indicator/menu covers it (0 = invisible).
+        private const float IndicatorTileAlpha = 0.2f;
+
+        // How opaque a creature stays while a menu item covers its tile.
+        private const float MenuCreatureAlpha = 0.7f;
+
+        // Acted (greyed-out) creatures use a lower alpha; the grey shader washes them
+        // out, so 0.7 barely reads as faded.
+        private const float MenuActionedCreatureAlpha = 0.4f;
+
         private GameObject cursorObject = null;
         private Cursor cursor = null;
 
@@ -127,6 +137,10 @@ namespace WindingTale.MapObjects.GameMap
             menuObject.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(menu.Position), Quaternion.identity);
             Menu menuComponent = menuObject.GetComponent<Menu>();
             menuComponent.Init(menu);
+
+            // Dim the tiles the menu covers, and the creatures standing on them, so the
+            // menu reads clearly (same treatment as the move/target indicators).
+            setMenuTilesFaded(menu, true);
         }
 
         public void CloseMenu(FDMenu menu)
@@ -141,7 +155,67 @@ namespace WindingTale.MapObjects.GameMap
                 Menu menuComponent = menuObject.GetComponent<Menu>();
                 menuComponent.CloseMenu();
 
-                
+
+            }
+
+            // Restore the tiles and creatures dimmed by ShowMenu.
+            setMenuTilesFaded(menu, false);
+        }
+
+        /// <summary>
+        /// Fades (or restores) the grass on the menu's tiles and the creatures standing
+        /// on them. Grass dims on the centre tile plus the four item tiles, but creatures
+        /// are only dimmed on the four item tiles, NOT on the menu's own centre tile.
+        /// </summary>
+        private void setMenuTilesFaded(FDMenu menu, bool faded)
+        {
+            if (menu == null)
+            {
+                return;
+            }
+
+            ShapesLayer shapes = getShapesLayer();
+            FDPosition[] itemTiles = FDMenu.GetItemPositions(menu.Position);
+
+            // Grass: centre tile + the four item tiles.
+            if (shapes != null)
+            {
+                if (faded) shapes.SetTileFaded(menu.Position, IndicatorTileAlpha);
+                else shapes.ResetTileFade(menu.Position);
+
+                foreach (FDPosition tile in itemTiles)
+                {
+                    if (faded) shapes.SetTileFaded(tile, IndicatorTileAlpha);
+                    else shapes.ResetTileFade(tile);
+                }
+            }
+
+            // Creatures: only the four item tiles dim creatures (the menu's own tile,
+            // where the acting creature usually stands, is left at full opacity).
+            if (this.Map != null)
+            {
+                foreach (FDPosition tile in itemTiles)
+                {
+                    foreach (FDCreature c in this.Map.Creatures)
+                    {
+                        if (c.Position != null && c.Position.X == tile.X && c.Position.Y == tile.Y)
+                        {
+                            Creature comp = GetCreature(c);
+                            if (comp != null)
+                            {
+                                if (faded)
+                                {
+                                    float alpha = c.HasActioned ? MenuActionedCreatureAlpha : MenuCreatureAlpha;
+                                    comp.SetTransparency(alpha);
+                                }
+                                else
+                                {
+                                    comp.ResetTransparency();
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -150,6 +224,7 @@ namespace WindingTale.MapObjects.GameMap
         {
             Debug.Log("showMoveRange");
 
+            ShapesLayer shapes = getShapesLayer();
             GameObject indicatorPrefab = Resources.Load<GameObject>("Others/Cursors/MoveIndicator");
             foreach (FDPosition position in moveRange.ToList())
             {
@@ -158,6 +233,9 @@ namespace WindingTale.MapObjects.GameMap
                 indicator.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
                 indicator.transform.localScale = new Vector3(0.82f, 2f, 0.82f);
                 indicator.AddComponent<BlockBlinkEffect>();
+
+                // Dim the tile's grass so it doesn't fight the indicator visually.
+                if (shapes != null) shapes.SetTileFaded(position, IndicatorTileAlpha);
             }
         }
 
@@ -165,6 +243,7 @@ namespace WindingTale.MapObjects.GameMap
         {
             Debug.Log("showAttackRange");
 
+            ShapesLayer shapes = getShapesLayer();
             GameObject indicatorPrefab = Resources.Load<GameObject>("Others/Cursors/MoveIndicator");
             foreach (FDPosition position in targetRange.ToList())
             {
@@ -172,6 +251,8 @@ namespace WindingTale.MapObjects.GameMap
                 indicator.name = "move_indicator";
                 indicator.transform.localScale = new Vector3(0.82f, 2f, 0.82f);
                 indicator.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
+
+                if (shapes != null) shapes.SetTileFaded(position, IndicatorTileAlpha);
             }
         }
 
@@ -184,6 +265,10 @@ namespace WindingTale.MapObjects.GameMap
                     Destroy(child.gameObject);
                 }
             }
+
+            // Un-dim any tiles that were faded for the indicators above.
+            ShapesLayer shapes = getShapesLayer();
+            if (shapes != null) shapes.ResetFadedTiles();
         }
 
 
@@ -243,6 +328,11 @@ namespace WindingTale.MapObjects.GameMap
 
 
         #region Private Methods
+
+        private ShapesLayer getShapesLayer()
+        {
+            return fieldLayer != null ? fieldLayer.GetComponent<ShapesLayer>() : null;
+        }
 
         private void AddCreatureUI(FDCreature creature, FDPosition pos)
         {

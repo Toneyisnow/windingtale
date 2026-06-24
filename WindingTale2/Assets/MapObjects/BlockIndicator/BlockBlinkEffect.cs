@@ -3,8 +3,16 @@ using UnityEngine;
 
 public class BlockBlinkEffect : MonoBehaviour
 {
-    public MeshRenderer cursorRenderer; // 光标的 Mesh Renderer 组件
-    public float blinkSpeed = 2.0f; // 闪烁速度（秒）
+    public MeshRenderer cursorRenderer;
+    public float blinkSpeed = 2.0f;   // seconds for one fade (down or up)
+
+    // The glassy indicator never fully disappears; it shimmers between these.
+    public float minAlpha = 0.15f;
+    public float maxAlpha = 0.6f;
+
+    // Glassy blue-white tint. RGB only; alpha is driven by the blink.
+    public Color tint = new Color(0.6f, 0.85f, 1.0f, 1.0f);
+
     private Material cursorMaterial;
     private bool isBlinking = false;
 
@@ -13,35 +21,29 @@ public class BlockBlinkEffect : MonoBehaviour
         cursorRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
         if (cursorRenderer != null)
         {
+            // .material gives this indicator its own instance, so each block blinks
+            // independently and we never mutate the shared source material.
             cursorMaterial = cursorRenderer.material;
 
-            SetRenderingModeTransparent();
+            ApplyGlassMaterial();
             StartCoroutine(BlinkCursor());
         }
     }
 
-    private void SetRenderingModeFade()
+    private void ApplyGlassMaterial()
     {
-        cursorMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-        cursorMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-        cursorMaterial.SetInt("_ZWrite", 0);
-        cursorMaterial.SetOverrideTag("RenderType", "Transparent");
-        cursorMaterial.EnableKeyword("_ALPHABLEND_ON");
-        cursorMaterial.DisableKeyword("_ALPHATEST_ON");
-        cursorMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        Shader glass = Shader.Find("Custom/MoveIndicatorGlass");
+        if (glass != null)
+        {
+            cursorMaterial.shader = glass;
+        }
 
-    }
+        Color c = tint;
+        c.a = maxAlpha;
+        cursorMaterial.color = c;
 
-    private void SetRenderingModeTransparent()
-    {
-        cursorMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-        cursorMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-        cursorMaterial.SetInt("_ZWrite", 0);
-        cursorMaterial.SetOverrideTag("RenderType", "Transparent");
-        cursorMaterial.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-        cursorMaterial.DisableKeyword("_ALPHABLEND_ON");
-        cursorMaterial.DisableKeyword("_ALPHATEST_ON");
-
+        if (cursorMaterial.HasProperty("_Glossiness")) cursorMaterial.SetFloat("_Glossiness", 0.95f);
+        if (cursorMaterial.HasProperty("_Metallic")) cursorMaterial.SetFloat("_Metallic", 0.4f);
     }
 
     private IEnumerator BlinkCursor()
@@ -49,19 +51,20 @@ public class BlockBlinkEffect : MonoBehaviour
         isBlinking = true;
         while (isBlinking)
         {
-            // 逐渐淡出
-            float alpha = 1f;
-            while (alpha >= 0f)
+            // Fade down to minAlpha.
+            float alpha = maxAlpha;
+            while (alpha > minAlpha)
             {
-                alpha -= Time.deltaTime / blinkSpeed;
+                alpha -= (maxAlpha - minAlpha) * Time.deltaTime / blinkSpeed;
                 SetCursorAlpha(alpha);
                 yield return null;
             }
 
-            alpha = 0f;
-            while (alpha <= 1f)
+            // Fade back up to maxAlpha.
+            alpha = minAlpha;
+            while (alpha < maxAlpha)
             {
-                alpha += Time.deltaTime / blinkSpeed;
+                alpha += (maxAlpha - minAlpha) * Time.deltaTime / blinkSpeed;
                 SetCursorAlpha(alpha);
                 yield return null;
             }
@@ -70,11 +73,10 @@ public class BlockBlinkEffect : MonoBehaviour
 
     private void SetCursorAlpha(float alpha)
     {
-        Debug.LogWarning("SetCursorAlpha: alpha: " + alpha);
         if (cursorMaterial != null)
         {
             Color color = cursorMaterial.color;
-            color.a = alpha;
+            color.a = Mathf.Clamp(alpha, minAlpha, maxAlpha);
             cursorMaterial.color = color;
         }
     }

@@ -6,11 +6,21 @@ Shader "Custom/GreyoutShader"
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
+
+        // Runtime-controlled blend state, so code (Creature.SetTransparency) can switch
+        // a greyed-out creature between opaque (default) and transparent fade. Defaults
+        // are opaque (One / Zero, ZWrite on) so normal greyed creatures look unchanged.
+        [HideInInspector] _SrcBlend ("__src", Float) = 1.0
+        [HideInInspector] _DstBlend ("__dst", Float) = 0.0
+        [HideInInspector] _ZWrite ("__zw", Float) = 1.0
     }
     SubShader
     {
         Tags { "RenderType"="Opaque" }
         LOD 200
+
+        Blend [_SrcBlend] [_DstBlend]
+        ZWrite [_ZWrite]
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types

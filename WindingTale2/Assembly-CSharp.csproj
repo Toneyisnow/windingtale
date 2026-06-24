@@ -249,6 +249,7 @@
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-11.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_25_Creature.txt" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Roboto-Bold - License.txt" />
+    <None Include="Assets\Resources\Materials\MoveIndicatorGlass.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_28_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_01_ConversationId.txt" />
