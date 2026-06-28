@@ -226,6 +226,7 @@
     <Compile Include="Assets\Scenes\GameBattleScene\MagicRunner.cs" />
     <Compile Include="Assets\MapObjects\Menus\MenuItem.cs" />
     <Compile Include="Assets\Scripts\Core\Common\DirectedPosition.cs" />
+    <Compile Include="Assets\Scenes\GameBattleScene\BattleBarInfo.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\IGameActions.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\DurationActivity.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />

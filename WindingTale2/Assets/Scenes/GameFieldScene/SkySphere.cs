@@ -15,7 +15,7 @@ namespace WindingTale.Scenes.GameFieldScene
         public Color horizonColor = new Color(0.95f, 0.80f, 0.60f, 1f);
         public Color bottomColor = new Color(0.30f, 0.34f, 0.30f, 1f);
 
-        [Range(-1f, 1f)] public float horizonHeight = 0.0f;
+        [Range(-1f, 1f)] public float horizonHeight = -0.4f;
         [Range(0.2f, 4f)] public float gradientCurve = 1.0f;
         [Range(2, 32)] public int bands = 8;
         [Range(0f, 1f)] public float ditherStrength = 1f;

@@ -36,6 +36,9 @@ namespace WindingTale.Scenes.GameBattleScene
         private Animator subjectAnimator = null;
         private Animator targetAnimator = null;
 
+        private BattleBarInfo subjectBarInfo = null;
+        private BattleBarInfo targetBarInfo = null;
+
         private int currentAnimationIndex = 0;
 
         private bool animationFinished = false;
@@ -71,6 +74,12 @@ namespace WindingTale.Scenes.GameBattleScene
                 targetHpBar = battleLoader.localHpBar;
                 targetMpBar = battleLoader.localMpBar;
             }
+
+            // Fill in the pre-built name / occupation / HP / MP labels on each bar.
+            subjectBarInfo = subjectHpBar.transform.parent.GetComponent<BattleBarInfo>();
+            targetBarInfo = targetHpBar.transform.parent.GetComponent<BattleBarInfo>();
+            if (subjectBarInfo != null) subjectBarInfo.Bind(magicResult.Subject);
+            if (targetBarInfo != null) targetBarInfo.Bind(magicResult.Targets[0]);
 
             var subjectAniId = magicResult.Subject.Definition.AnimationId;
 
@@ -167,12 +176,16 @@ namespace WindingTale.Scenes.GameBattleScene
         {
             var subjectHpScale = getBarScale(current, magicResult.Subject.HpMax);
             subjectHpBar.transform.localScale = new Vector3(subjectHpScale, 1, 1);
+
+            if (subjectBarInfo != null) subjectBarInfo.SetHp(current);
         }
-        
+
         private void updateSubjectMp(int current)
         {
             var subjectMpScale = getBarScale(current, magicResult.Subject.MpMax);
             subjectMpBar.transform.localScale = new Vector3(subjectMpScale, 1, 1);
+
+            if (subjectBarInfo != null) subjectBarInfo.SetMp(current);
         }
 
         private void updateTargetHp(int resultIndex, int current)
@@ -182,6 +195,8 @@ namespace WindingTale.Scenes.GameBattleScene
             var targetHpScale = getBarScale(current, target.HpMax);
             Debug.Log("updateTargetHp: " + targetHpScale + ", " + current + ", " + target.HpMax);
             targetHpBar.transform.localScale = new Vector3(targetHpScale, 1, 1);
+
+            if (targetBarInfo != null) targetBarInfo.SetHp(current);
         }
 
         private void updateTargetMp(int resultIndex, int current)

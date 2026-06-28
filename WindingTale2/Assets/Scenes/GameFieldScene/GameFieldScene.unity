@@ -1204,7 +1204,7 @@ MonoBehaviour:
   topColor: {r: 0.16, g: 0.3, b: 0.58, a: 1}
   horizonColor: {r: 0.95, g: 0.8, b: 0.6, a: 1}
   bottomColor: {r: 0.3, g: 0.34, b: 0.3, a: 1}
-  horizonHeight: 0
+  horizonHeight: -0.4
   gradientCurve: 1
   bands: 8
   ditherStrength: 1
