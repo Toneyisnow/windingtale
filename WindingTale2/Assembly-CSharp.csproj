@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scenes\GameFieldScene\GameMain.cs" />
     <Compile Include="Assets\Scripts\Chapters\ChapterLoader.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
+    <Compile Include="Assets\Scenes\GameBattleScene\BattleCameraIntro.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuSystemState.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ActivityBase.cs" />
