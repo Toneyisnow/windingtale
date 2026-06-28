@@ -144,7 +144,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 {
                     MonoBehaviourUtils.ExecuteWithDelay(this, ANIMATION_END, () =>
                     {
-                        //// SceneManager.UnloadSceneAsync("GameBattleScene");
+                        SceneManager.UnloadSceneAsync("GameBattleScene");
                     });
                 }
             }

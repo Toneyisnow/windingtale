@@ -56,6 +56,7 @@
     <Compile Include="Assets\Scripts\Core\Events\FDConditionEvent.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Scripts\Core\Common\Conversation.cs" />
+    <Compile Include="Assets\Scenes\GameFieldScene\SkySphere.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\MovePathFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDEnemy.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\DistanceResolver.cs" />
@@ -81,7 +82,6 @@
     <Compile Include="Assets\Scenes\GameFieldScene\PlayerInterface.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\SelectItemUseTargetState.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
-    <Compile Include="Assets\Scenes\GameBattleScene\FaceCamera.cs" />
     <Compile Include="Assets\MapObjects\GameMap\ShapesLayer.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ItemDefinition.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIAggressiveDelegate.cs" />
@@ -271,6 +271,7 @@
     <None Include="Assets\Resources\Data\LeveledCreatureOld.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_99_ConversationId.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-28.txt" />
+    <None Include="Assets\Resources\Materials\SkySphere.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_03_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_30_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_27_ConversationId.txt" />

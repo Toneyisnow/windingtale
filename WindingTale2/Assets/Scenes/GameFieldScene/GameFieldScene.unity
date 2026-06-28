@@ -1067,6 +1067,7 @@ GameObject:
   - component: {fileID: 999788842}
   - component: {fileID: 999788845}
   - component: {fileID: 999788846}
+  - component: {fileID: 999788847}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1186,6 +1187,28 @@ MonoBehaviour:
   edgeScrollThreshold: 50
   zoomSpeed: 0.8
   zoomDeceleration: 8
+  rotateSpeed: 4
+--- !u!114 &999788847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999788841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c0f7e5b9a1d4e2c8f3a6b7c0d1e2f3a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  radius: 400
+  topColor: {r: 0.16, g: 0.3, b: 0.58, a: 1}
+  horizonColor: {r: 0.95, g: 0.8, b: 0.6, a: 1}
+  bottomColor: {r: 0.3, g: 0.34, b: 0.3, a: 1}
+  horizonHeight: 0
+  gradientCurve: 1
+  bands: 8
+  ditherStrength: 1
+  pixelSize: 2
 --- !u!1 &1597457570
 GameObject:
   m_ObjectHideFlags: 0
