@@ -1,6 +1,7 @@
 using System;
 using UnityEngine.Localization;
 using WindingTale.Core.Common;
+using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
 
 namespace WindingTale.Scenes.GameFieldScene.Activities
@@ -61,7 +62,13 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             /// 
 
             int creatureAnimationId = this.creature?.Definition?.AnimationId ?? 0;
-            gameMain.gameCanvas.ShowTalkDialog(creatureAnimationId, this.rawText, needConfirm, GameCanvas.DialogPosition.Bottom, 
+
+            // Friend talks from the Bottom; Enemy / Npc (and the narrator) from the Top.
+            GameCanvas.DialogPosition dialogPosition = this.creature?.Faction == CreatureFaction.Friend
+                ? GameCanvas.DialogPosition.Bottom
+                : GameCanvas.DialogPosition.Top;
+
+            gameMain.gameCanvas.ShowTalkDialog(creatureAnimationId, this.rawText, needConfirm, dialogPosition,
                 (result) =>
                 {
                     selectedResult = result;

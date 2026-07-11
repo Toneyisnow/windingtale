@@ -63,8 +63,8 @@
     <Compile Include="Library\PackageCache\com.unity.localization@d45547f9f157\Editor\UI\SceneControlsWindow.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@d45547f9f157\Editor\Search\StringTableSearchProvider.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@d45547f9f157\Editor\Search\AssetTableSearchProvider.cs" />
-    <Compile Include="Library\PackageCache\com.unity.localization@d45547f9f157\Editor\UI\Localized Reference\LocalizedAssetTablePropertyDrawer.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@d45547f9f157\Editor\UI\Components\LocalizeStringEventEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.localization@d45547f9f157\Editor\UI\Localized Reference\LocalizedAssetTablePropertyDrawer.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@d45547f9f157\Editor\UI\Utility\PathHelper.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@d45547f9f157\Editor\UI\Pseudo\PseudoLocaleEditor.cs" />
     <Compile Include="Library\PackageCache\com.unity.localization@d45547f9f157\Editor\Addressables\StringTableAnalyzeRule.cs" />

@@ -7,13 +7,13 @@ namespace WindingTale.MapObjects.CreatureIcon
 {
     public class CreatureDying : MonoBehaviour
     {
-        private float initialRotateSpeed = 180.0f;
+        private float initialRotateSpeed = 192.0f;
 
         private Vector3 rotationDirection = new Vector3(0, 2, 0);
 
         private DateTime startTime;
 
-        private static float dyingDuration = 2500f;
+        private static float dyingDuration = 1250f;
 
         private bool rotationFinished = false;
 

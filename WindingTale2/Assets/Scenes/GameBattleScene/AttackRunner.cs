@@ -109,6 +109,10 @@ namespace WindingTale.Scenes.GameBattleScene
             if (subjectBarInfo != null) subjectBarInfo.Bind(attackResult.Subject);
             if (targetBarInfo != null) targetBarInfo.Bind(attackResult.Target);
 
+            // Hide the MP bar entirely for creatures with no MP.
+            if (subjectMpBar != null) subjectMpBar.SetActive(attackResult.Subject.MpMax > 0);
+            if (targetMpBar != null) targetMpBar.SetActive(attackResult.Target.MpMax > 0);
+
             var subjectAniId = attackResult.Subject.Definition.AnimationId;
 
             // Load the animation
@@ -202,7 +206,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 {
                     MonoBehaviourUtils.ExecuteWithDelay(this, ANIMATION_END, () =>
                     {
-                        //// SceneManager.UnloadSceneAsync("GameBattleScene");
+                        SceneManager.UnloadSceneAsync("GameBattleScene");
                     });
                 }
             }

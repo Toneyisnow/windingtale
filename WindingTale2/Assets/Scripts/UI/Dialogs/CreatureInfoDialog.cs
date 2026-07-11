@@ -103,8 +103,9 @@ namespace WindingTale.UI.Dialogs
             FDMap map = gameMain.gameMap.Map;
 
             int animationId = creature.Definition.AnimationId;
+            string id = StringUtils.Digit3(animationId);
             this.datoObj.GetComponent<Image>().sprite = Resources.Load<Sprite>(
-                string.Format(@"Datos/Dato_{0}", StringUtils.Digit3(animationId))
+                string.Format(@"Datos/{0}/Dato_{0}_0", id)
             );
 
             this.creature = creature;

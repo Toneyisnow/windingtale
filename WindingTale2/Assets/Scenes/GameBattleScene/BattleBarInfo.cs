@@ -43,7 +43,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 }
 
                 ApplyNameFont(creatureNameLabel);
-                creatureNameLabel.text = creature.Definition.Name + "  " + occupationName;
+                creatureNameLabel.text = creature.Definition.Name; // + "  " + occupationName;
             }
 
             SetHp(creature.Hp);
@@ -86,7 +86,8 @@ namespace WindingTale.Scenes.GameBattleScene
         {
             if (hpLabel != null && creature != null)
             {
-                hpLabel.text = StringUtils.Digit3(current) + " / " + StringUtils.Digit3(creature.HpMax);
+                //// hpLabel.text = StringUtils.Digit3(current) + " / " + StringUtils.Digit3(creature.HpMax);
+                hpLabel.text = StringUtils.Digit3(current);
             }
         }
 
@@ -94,7 +95,8 @@ namespace WindingTale.Scenes.GameBattleScene
         {
             if (mpLabel != null && creature != null)
             {
-                mpLabel.text = StringUtils.Digit3(current) + " / " + StringUtils.Digit3(creature.MpMax);
+                //// mpLabel.text = StringUtils.Digit3(current) + " / " + StringUtils.Digit3(creature.MpMax);
+                mpLabel.text = StringUtils.Digit3(current);
             }
         }
     }

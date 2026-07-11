@@ -51,11 +51,11 @@ namespace WindingTale.Scenes.GameFieldScene
 
             if (chapterId >= 0)
             {
-                sDialog.InitConversation(chapterId, creatureAnimationid, rawText, onSelected);
+                sDialog.InitConversation(chapterId, creatureAnimationid, rawText, needConfirm, dialogPosition, onSelected);
             }
             else
             {
-                sDialog.InitMessage(creatureAnimationid, rawText, onSelected);
+                sDialog.InitMessage(creatureAnimationid, rawText, needConfirm, dialogPosition, onSelected);
             }
         }
 

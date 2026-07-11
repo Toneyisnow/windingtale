@@ -81,6 +81,10 @@ namespace WindingTale.Scenes.GameBattleScene
             if (subjectBarInfo != null) subjectBarInfo.Bind(magicResult.Subject);
             if (targetBarInfo != null) targetBarInfo.Bind(magicResult.Targets[0]);
 
+            // Hide the MP bar entirely for creatures with no MP.
+            if (subjectMpBar != null) subjectMpBar.SetActive(magicResult.Subject.MpMax > 0);
+            if (targetMpBar != null) targetMpBar.SetActive(magicResult.Targets[0].MpMax > 0);
+
             var subjectAniId = magicResult.Subject.Definition.AnimationId;
 
             // Load the animation
