@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using WindingTale.Core.Algorithms;
@@ -117,7 +116,7 @@ namespace WindingTale.Scenes.GameBattleScene
 
             // Load the animation
             subjectAnimator = subjectObject.GetComponent<Animator>();
-            subjectAnimator.runtimeAnimatorController = Resources.Load<AnimatorController>(
+            subjectAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(
                 string.Format("Fights/{0}/animator_{0}", StringUtils.Digit3(subjectAniId)));
             subjectObject.GetComponent<FightBody>().Initialize(subjectAniId, onAnimationHit, onAnimationFinish);
 
@@ -150,7 +149,7 @@ namespace WindingTale.Scenes.GameBattleScene
 
             // Load the animation
             targetAnimator = targetObject.GetComponent<Animator>();
-            targetAnimator.runtimeAnimatorController = Resources.Load<AnimatorController>(
+            targetAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(
                 string.Format("Fights/{0}/animator_{0}", StringUtils.Digit3(targetAniId)));
             targetAnimator.GetComponent<FightBody>().Initialize(targetAniId, onAnimationHit, onAnimationFinish);
 

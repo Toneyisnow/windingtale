@@ -68,6 +68,12 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
                 ? GameCanvas.DialogPosition.Bottom
                 : GameCanvas.DialogPosition.Top;
 
+            // Slide the map cursor to under the speaking creature before it talks.
+            if (this.creature != null && this.creature.Position != null)
+            {
+                gameMain.gameMap.SlideCursorTo(this.creature.Position, dialogPosition);
+            }
+
             gameMain.gameCanvas.ShowTalkDialog(creatureAnimationId, this.rawText, needConfirm, dialogPosition,
                 (result) =>
                 {

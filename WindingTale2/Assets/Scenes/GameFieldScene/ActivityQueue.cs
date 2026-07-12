@@ -66,6 +66,13 @@ namespace WindingTale.Scenes.GameFieldScene
                     {
                         IsIdle = true;
                         /// gameInterface.GetGameHandler().NotifyAI();
+
+                        // Conversation (or any activity batch) finished: hand the camera
+                        // back to gameplay smoothly if it was following the cursor.
+                        if (gameMain != null && gameMain.gameMap != null)
+                        {
+                            gameMain.gameMap.EndCursorCameraFollow();
+                        }
                     }
 
                     return;

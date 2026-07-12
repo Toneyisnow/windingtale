@@ -5,7 +5,6 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
-using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene.ActionStates;
 using WindingTale.Scenes.GameFieldScene;

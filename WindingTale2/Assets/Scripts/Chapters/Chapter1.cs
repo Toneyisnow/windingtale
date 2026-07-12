@@ -18,7 +18,7 @@ namespace WindingTale.Chapters
         public Chapter1(GameMain gameMain) : base (gameMain, 1)
         {
             int eventId = 0;
-            LoadTurnEvent(++eventId, 1, CreatureFaction.Friend, turn1_test);
+            LoadTurnEvent(++eventId, 1, CreatureFaction.Friend, turn1);
             LoadTurnEvent(++eventId, 3, CreatureFaction.Enemy, turn3);
             LoadTurnEvent(++eventId, 4, CreatureFaction.Enemy, turn4);
             LoadTurnEvent(++eventId, 5, CreatureFaction.Enemy, turn5_Boss);
@@ -101,6 +101,9 @@ namespace WindingTale.Chapters
             // Talking
             PushConversationsActivities(gameMain, 1, 1, 1, 5);
 
+            // Focus the cursor on where Enemy Group1 will appear.
+            gameMain.PushActivity(new SlideCursorActivity(4, 22));
+
             gameMain.PushActivity((gameMain) =>
             {
                 // Enemy Group1 appear
@@ -117,6 +120,9 @@ namespace WindingTale.Chapters
                     ActivityFactory.CreatureWalkActivity(13, FDMovePath.Create(FDPosition.At(4, 23), FDPosition.At(6, 23), FDPosition.At(6, 20))),
                     ActivityFactory.CreatureWalkActivity(14, FDMovePath.Create(FDPosition.At(5, 23), FDPosition.At(5, 20))) })
                 );
+
+            // Focus the cursor on where Enemy Group2 will appear.
+            gameMain.PushActivity(new SlideCursorActivity(4, 3));
 
             gameMain.PushActivity((gameMain) =>
             {

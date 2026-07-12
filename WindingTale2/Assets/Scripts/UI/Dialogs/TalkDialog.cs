@@ -100,17 +100,25 @@ public class TalkDialog : MonoBehaviour
     /// <param name="creatureAnimationId"></param>
     /// <param name="text"></param>
     /// <param name="onSelected"></param>
-    public void InitConversation(int chapterId, int creatureAnimationId, LocalizedString text, bool needConfirm, GameCanvas.DialogPosition displayPosition, Action<int> onSelected)
+    public void InitConversation(int chapterId, int creatureAnimationId, LocalizedString text, GameCanvas.DialogPosition displayPosition, Action<int> onSelected)
     {
         var textMeshComponent = conversationTextObj.GetComponent<TextMeshProUGUI>();
-        textMeshComponent.fontMaterial = Resources.Load<Material>(string.Format(@"Fonts/FontAssets/zh/FZB_Chapter-{0}", StringUtils.Digit2(chapterId)));
-        textMeshComponent.UpdateFontAsset();
+        var chapterMaterial = Resources.Load<Material>(string.Format(@"Fonts/FontAssets/zh/FZB_Chapter-{0}", StringUtils.Digit2(chapterId)));
+        if (chapterMaterial != null)
+        {
+            textMeshComponent.fontMaterial = chapterMaterial;
+            textMeshComponent.UpdateFontAsset();
+        }
+        else
+        {
+            Debug.LogWarning(string.Format("TalkDialog: missing chapter font material FZB_Chapter-{0}", StringUtils.Digit2(chapterId)));
+        }
 
         activeTextObj = conversationTextObj;
         conversationTextObj.SetActive(true);
         messageTextObj.SetActive(false);
 
-        Init(creatureAnimationId, text, needConfirm, displayPosition, onSelected);
+        Init(creatureAnimationId, text, false, displayPosition, onSelected);
     }
 
     private void Init(int creatureAnimationId, LocalizedString text, bool needConfirm, GameCanvas.DialogPosition displayPosition, Action<int> onSelected)
@@ -148,7 +156,8 @@ public class TalkDialog : MonoBehaviour
             cancelButtonObj.SetActive(needConfirm);
         }
 
-        fullText = text.GetLocalizedString();
+        // '#' in the source text is a line-break marker: start a new line and drop the '#'.
+        fullText = text.GetLocalizedString().Replace("#", "\n");
         skipToFullText = false;
         textFinished = false;
 

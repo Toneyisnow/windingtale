@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using NUnit.Framework.Internal;
 using System;
 using System.Collections;
@@ -156,3 +157,4 @@ namespace WindingTale.Editor
         }
     }
 }
+#endif

@@ -62,7 +62,9 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public int ChapterId
         {
-            get { return chapterId; }
+            // The real chapter id lives on the loaded map; fall back to the field
+            // before a map is loaded.
+            get { return (gameMap != null && gameMap.Map != null) ? gameMap.Map.ChapterId : chapterId; }
         }
 
         #endregion
@@ -450,6 +452,20 @@ namespace WindingTale.Scenes.GameFieldScene
 
             //// Main entry to notify the turn events
             eventHandler.notifyTurnEvents();
+
+            // After any turn-start conversation, slide the cursor (and camera) to hero
+            // #001. Runs as a duration activity so the turn waits for the slide to land.
+            this.PushActivity(
+                game =>
+                {
+                    var hero = game.gameMap.Map.GetCreatureById(1);
+                    if (hero != null && hero.Position != null)
+                    {
+                        game.gameMap.SlideCursorTo(hero.Position, GameCanvas.DialogPosition.Bottom);
+                    }
+                },
+                game => !game.gameMap.IsSlideBusy
+            );
 
             if (this.gameMap.Map.TurnType == CreatureFaction.Friend)
             {

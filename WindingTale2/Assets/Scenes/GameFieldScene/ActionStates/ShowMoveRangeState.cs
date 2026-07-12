@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;

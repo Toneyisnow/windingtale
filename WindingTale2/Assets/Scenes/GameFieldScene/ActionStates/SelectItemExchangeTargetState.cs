@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using UnityEngine;
-using UnityEngine.TestTools;
 using WindingTale.Core.Common;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
-using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
 

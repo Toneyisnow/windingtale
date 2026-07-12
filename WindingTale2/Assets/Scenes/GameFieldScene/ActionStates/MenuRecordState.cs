@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using WindingTale.Core.Common;
-using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
 using WindingTale.MapObjects.CreatureIcon;

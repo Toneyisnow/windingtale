@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UIElements;
 using WindingTale.Chapters;
@@ -13,7 +11,6 @@ using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.Scenes.GameFieldScene;
-using static UnityEditor.PlayerSettings;
 
 namespace WindingTale.MapObjects.GameMap
 {
@@ -108,13 +105,110 @@ namespace WindingTale.MapObjects.GameMap
 
         }
 
-        /// <summary>
-        /// Make an animation for cursor moving
-        /// </summary>
-        /// <param name="position"></param>
-        public void SlideCursorTo(FDPosition position)
-        {
+        // Cursor slide speed, in map tiles per second.
+        private const float CursorSlideTilesPerSecond = 20f;
 
+        // World units per tile (see MapCoordinate.ConvertPosToVec3, which scales by 2).
+        private const float WorldUnitsPerTile = 2f;
+
+        private Coroutine cursorSlideCoroutine = null;
+
+        private MainCamera mainCamera = null;
+
+        // True while either the cursor or its follow camera is still animating a slide.
+        public bool IsSlideBusy => cursorSlideCoroutine != null
+            || (mainCamera != null && mainCamera.IsFollowSliding);
+
+        /// <summary>
+        /// Slides the cursor to the given tile: first horizontally from (x0, y0) to
+        /// (x, y0), then vertically to (x, y), at a constant tiles-per-second speed.
+        /// </summary>
+        public void SlideCursorTo(FDPosition position, GameCanvas.DialogPosition dialogPosition)
+        {
+            if (cursor == null || cursorObject == null || position == null)
+            {
+                return;
+            }
+
+            if (cursorSlideCoroutine != null)
+            {
+                StopCoroutine(cursorSlideCoroutine);
+            }
+            cursorSlideCoroutine = StartCoroutine(CursorSlideCoroutine(position, dialogPosition));
+        }
+
+        private IEnumerator CursorSlideCoroutine(FDPosition target, GameCanvas.DialogPosition dialogPosition)
+        {
+            FDPosition from = cursor.Position;
+
+            // Update the logical position immediately; only the visual glides.
+            cursor.Position = target;
+
+            // Path in tile space: (x0,y0) -> (x,y0) -> (x,y).
+            Vector3 p0 = MapCoordinate.ConvertPosToVec3(from);
+            Vector3 p1 = MapCoordinate.ConvertPosToVec3(FDPosition.At(target.X, from.Y));
+            Vector3 p2 = MapCoordinate.ConvertPosToVec3(target);
+
+            float worldSpeed = CursorSlideTilesPerSecond * WorldUnitsPerTile;
+
+            // Have the camera follow: it slides straight from p0 to p2 (ease in / out)
+            // over the same duration as the cursor's L-shaped path.
+            int tileDistance = Mathf.Abs(target.X - from.X) + Mathf.Abs(target.Y - from.Y);
+            float slideDuration = tileDistance / CursorSlideTilesPerSecond;
+            EnsureMainCamera();
+            if (mainCamera != null)
+            {
+                // Top dialog covers the top of the screen: keep the cursor lower.
+                bool keepCursorLow = dialogPosition == GameCanvas.DialogPosition.Top;
+                mainCamera.SlideFocusTo(p2, slideDuration, keepCursorLow);
+            }
+
+            yield return MoveCursorAlong(p0, p1, worldSpeed);
+            yield return MoveCursorAlong(p1, p2, worldSpeed);
+
+            cursorObject.transform.localPosition = p2;
+            cursorSlideCoroutine = null;
+        }
+
+        private void EnsureMainCamera()
+        {
+            if (mainCamera == null)
+            {
+                mainCamera = GameObject.FindFirstObjectByType<MainCamera>();
+            }
+        }
+
+        /// <summary>
+        /// Ends the conversation camera follow, smoothly handing control back to
+        /// gameplay. Safe to call any time (no-op if the camera isn't following).
+        /// </summary>
+        public void EndCursorCameraFollow()
+        {
+            EnsureMainCamera();
+            if (mainCamera != null)
+            {
+                mainCamera.ReturnToGameplay();
+            }
+        }
+
+        private IEnumerator MoveCursorAlong(Vector3 a, Vector3 b, float worldSpeed)
+        {
+            float distance = Vector3.Distance(a, b);
+            if (distance < 0.0001f)
+            {
+                cursorObject.transform.localPosition = b;
+                yield break;
+            }
+
+            float traveled = 0f;
+            while (traveled < distance)
+            {
+                traveled += worldSpeed * Time.deltaTime;
+                float t = Mathf.Clamp01(traveled / distance);
+                cursorObject.transform.localPosition = Vector3.Lerp(a, b, t);
+                yield return null;
+            }
+            cursorObject.transform.localPosition = b;
         }
 
         public Creature GetCreature(FDCreature creature)

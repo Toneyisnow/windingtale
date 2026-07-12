@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Files;

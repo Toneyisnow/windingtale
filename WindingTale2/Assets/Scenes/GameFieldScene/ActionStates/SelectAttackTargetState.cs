@@ -10,9 +10,7 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Definitions.Items;
 using WindingTale.Core.Objects;
-using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
-using UnityEngine.TestTools;
 using WindingTale.MapObjects.CreatureIcon;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates

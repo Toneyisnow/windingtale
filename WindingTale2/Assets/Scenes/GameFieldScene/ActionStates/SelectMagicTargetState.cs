@@ -6,11 +6,9 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
-using UnityEditor.SceneManagement;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
 using System;
-using UnityEngine.TestTools;
 using WindingTale.MapObjects.CreatureIcon;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates

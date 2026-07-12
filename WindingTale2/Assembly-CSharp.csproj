@@ -167,6 +167,7 @@
     <Compile Include="Assets\MapObjects\GameMap\ObstacleAnchor.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter2.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\StringsDefinition.cs" />
+    <Compile Include="Assets\Scenes\GameFieldScene\Activities\SlideCursorActivity.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
