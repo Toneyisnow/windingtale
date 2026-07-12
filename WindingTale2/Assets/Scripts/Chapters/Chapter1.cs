@@ -141,30 +141,28 @@ namespace WindingTale.Chapters
                     ActivityFactory.CreatureWalkActivity(18, FDMovePath.Create(FDPosition.At(2, 3), FDPosition.At(3, 3))) })
                 );
 
+            
+            // Talking
+            // Note: Because the enemies are created after the above activity, we need to put the talking activity here
+            PushConversationsActivities(gameMain, 1, 1, 6, 7);
+
+            // One Enemy move away
+            gameMain.PushActivity(
+                ActivityFactory.CreatureWalkActivity(14, FDMovePath.Create(FDPosition.At(5, 20), FDPosition.At(8, 20), FDPosition.At(8, 24)))
+            );
+
             gameMain.PushActivity((gameMain) =>
             {
-                // Talking
-                // Note: Because the enemies are created after the above activity, we need to put the talking activity here
-                PushConversationsActivities(gameMain, 1, 1, 6, 7);
+                gameMain.gameMap.RemoveCreature(14);
+            });
 
-                // One Enemy move away
-                gameMain.PushActivity(
-                    ActivityFactory.CreatureWalkActivity(14, FDMovePath.Create(FDPosition.At(5, 20), FDPosition.At(8, 20), FDPosition.At(8, 24)))
-                );
+            // Talking
+            PushConversationsActivities(gameMain, 1, 1, 8, 19);
 
-                gameMain.PushActivity((gameMain) =>
-                {
-                    gameMain.gameMap.RemoveCreature(14);
-                });
-
-                // Talking
-                PushConversationsActivities(gameMain, 1, 1, 8, 19);
-
-                gameMain.PushActivity((gameMain) =>
-                {
-                    // Play background music
-                    gameMain.PlayBackgroundMusic();
-                });
+            gameMain.PushActivity((gameMain) =>
+            {
+                // Play background music
+                gameMain.PlayBackgroundMusic();
             });
         };
 

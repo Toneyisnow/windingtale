@@ -73,7 +73,7 @@ namespace WindingTale.Chapters
                 int creatureId = chapterDefinition.GetConversationCreatureId(conversation);
                 FDCreature creature = gameMain.gameMap.Map.GetCreatureById(creatureId);
 
-                gameMain.PushActivity(new TalkActivity(conversation, creature ));
+                gameMain.PushActivity(new TalkActivity(conversation, creatureId ));
             }
         }
     }

@@ -453,6 +453,20 @@ namespace WindingTale.Scenes.GameFieldScene
             //// Main entry to notify the turn events
             eventHandler.notifyTurnEvents();
 
+            
+            if (this.gameMap.Map.TurnType == CreatureFaction.Friend)
+            {
+                PushActivity(gameMain => onPlayerTurn());
+            }
+            else if (this.gameMap.Map.TurnType == CreatureFaction.Npc)
+            {
+                PushActivity(gameMain => onNpcTurn());
+            }
+            else if (this.gameMap.Map.TurnType == CreatureFaction.Enemy)
+            {
+                PushActivity(gameMain => onEnemyTurn());
+            }
+
             // After any turn-start conversation, slide the cursor (and camera) to hero
             // #001. Runs as a duration activity so the turn waits for the slide to land.
             this.PushActivity(
@@ -467,18 +481,6 @@ namespace WindingTale.Scenes.GameFieldScene
                 game => !game.gameMap.IsSlideBusy
             );
 
-            if (this.gameMap.Map.TurnType == CreatureFaction.Friend)
-            {
-                PushActivity(gameMain => onPlayerTurn());
-            }
-            else if (this.gameMap.Map.TurnType == CreatureFaction.Npc)
-            {
-                PushActivity(gameMain => onNpcTurn());
-            }
-            else if (this.gameMap.Map.TurnType == CreatureFaction.Enemy)
-            {
-                PushActivity(gameMain => onEnemyTurn());
-            }
         }
 
         private void onPlayerTurn()

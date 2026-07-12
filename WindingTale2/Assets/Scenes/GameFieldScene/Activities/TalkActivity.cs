@@ -10,9 +10,11 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
     {
 
         /// <summary>
-        /// The creature on the map that is talking. If null, it's the narrator.
+        /// The creature on the map that is talking. If null, need to fetch again during Start.
         /// </summary>        
         private FDCreature creature = null;
+
+        private int creatureId = 0;
 
         /// <summary>
         /// The raw text to be displayed.
@@ -47,9 +49,10 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             this.isMessage = true;
         }
 
-        public TalkActivity(Conversation conversation, FDCreature creature = null, Action<int> onSelected = null)
+        public TalkActivity(Conversation conversation, int creatureId = 0, Action<int> onSelected = null)
         {
-            this.creature = creature;
+            this.creatureId = creatureId;
+            
             this.onSelected = onSelected;
 
             this.rawText = LocalizationManager.GetConversationString(conversation);
@@ -58,9 +61,11 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
 
         public override void Start(GameMain gameMain)
         {
-            /// TODO: move camera to the talking creature
-            /// 
-
+            if (this.creature == null && this.creatureId > 0)
+            {
+                this.creature = gameMain.gameMap.Map.GetCreatureById(this.creatureId);
+            }
+            
             int creatureAnimationId = this.creature?.Definition?.AnimationId ?? 0;
 
             // Friend talks from the Bottom; Enemy / Npc (and the narrator) from the Top.
