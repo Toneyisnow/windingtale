@@ -38,7 +38,26 @@ public class MenuState : IActionState
         Debug.Log("MenuState: onEnter");
         gameMain.gameMap.ShowMenu(fdMenu);
 
-        // Set default active
+        // Auto-select the first enabled item, in Left / Up / Right / Bottom order.
+        SelectDefaultItem();
+    }
+
+    /// <summary>
+    /// Selects (and animates) the first enabled item scanning index 0..3
+    /// (Left, Up, Right, Bottom). No-op if the menu has no enabled item.
+    /// </summary>
+    private void SelectDefaultItem()
+    {
+        for (int index = 0; index < 4; index++)
+        {
+            FDMenuItem item = this.fdMenu.Items[index];
+            if (item != null && item.Enabled)
+            {
+                this.fdMenu.SetSelected(index);
+                gameMain.gameMap.SetMenuActiveItem(index);
+                return;
+            }
+        }
     }
 
     public override void onExit()
@@ -64,10 +83,11 @@ public class MenuState : IActionState
                     return this;
                 }
 
-                // if menu item not selected, select it
+                // if menu item not selected, select it (and animate it)
                 if (!item.Selected)
                 {
                     item.Menu.SetSelected(index);
+                    gameMain.gameMap.SetMenuActiveItem(index);
                     return this;
                 }
 
@@ -83,6 +103,92 @@ public class MenuState : IActionState
     {
         return backState;
     }
+
+    // The map cursor is hidden in every menu; the selected item animates instead.
+    public override bool HidesCursor => true;
+
+    #region Keyboard input
+
+    // A held arrow key must not repeatedly re-select the same menu item.
+    public override bool SupportsDirectionRepeat => false;
+
+    /// <summary>
+    /// Arrow keys move the active item to the one in that direction (Left/Top/Right/
+    /// Bottom map to item index 0/1/2/3). Disabled items cannot become active.
+    /// </summary>
+    public override void OnDirectionKey(InputDirection direction)
+    {
+        int index = DirectionToItemIndex(direction);
+        FDMenuItem item = this.fdMenu.Items[index];
+        if (item == null || !item.Enabled)
+        {
+            // Not selectable in that direction: no reaction.
+            return;
+        }
+
+        this.fdMenu.SetSelected(index);
+
+        // The selected item animates as the highlight (the map cursor stays hidden).
+        gameMain.gameMap.SetMenuActiveItem(index);
+    }
+
+    /// <summary>
+    /// Enter / Space activates the currently active item, exactly as clicking it does.
+    /// </summary>
+    public override void OnConfirmKey()
+    {
+        int index = GetSelectedIndex();
+        if (index < 0)
+        {
+            // Nothing active yet.
+            return;
+        }
+
+        FDMenuItem item = this.fdMenu.Items[index];
+        if (item == null || !item.Enabled)
+        {
+            return;
+        }
+
+        IActionState nextState = item.Action();
+        playerInterface.onUpdateState(nextState);
+    }
+
+    /// <summary>
+    /// Backspace / ESC rolls back to the previous state.
+    /// </summary>
+    public override void OnCancelKey()
+    {
+        playerInterface.onUserCancelled();
+    }
+
+    private static int DirectionToItemIndex(InputDirection direction)
+    {
+        switch (direction)
+        {
+            case InputDirection.Left: return 0;
+            case InputDirection.Up: return 1;
+            case InputDirection.Right: return 2;
+            case InputDirection.Down: return 3;
+            default: return 0;
+        }
+    }
+
+    private int GetSelectedIndex()
+    {
+        for (int i = 0; i < this.fdMenu.Items.Length; i++)
+        {
+            FDMenuItem item = this.fdMenu.Items[i];
+            if (item != null && item.Selected)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    #endregion
 
 
     protected void SetMenu(int index, MenuItemId menuItemId, bool enabled, Func<IActionState> action)

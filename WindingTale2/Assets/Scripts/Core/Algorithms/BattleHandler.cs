@@ -241,7 +241,7 @@ namespace WindingTale.Core.Algorithms
                         changedHp = FDRandom.IntFromSpan(magic.Span) + magic.ApInvolvedRate * subject.CalculatedAp / 100;
                         changedHp = (int)(changedHp * hitRate);
                         changedHp = Math.Max(0, changedHp);
-                        return new DamageResult(target.Hp, target.Hp - changedHp, false);
+                        return new DamageResult(target.Hp, Math.Max(target.Hp - changedHp, 0), false);
                     case MagicType.Recover:
                         changedHp = FDRandom.IntFromSpan(magic.Span);
                         changedHp = Math.Max(0, changedHp);

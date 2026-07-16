@@ -61,5 +61,14 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Nothing to do here
             return this;
         }
+
+        /// <summary>
+        /// In the idle state, Backspace / ESC does not cancel; it slides the cursor to
+        /// the next friend (001, 002, ...) wrapping back to the first.
+        /// </summary>
+        public override void OnCancelKey()
+        {
+            playerInterface.CycleCursorToNextFriend();
+        }
     }
 }

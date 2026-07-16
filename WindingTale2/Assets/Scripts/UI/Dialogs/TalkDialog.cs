@@ -37,6 +37,11 @@ public class TalkDialog : MonoBehaviour
 
     private bool needConfirm = false;
 
+    // "Show only" dialogs (no explicit confirm) auto-dismiss after this many seconds
+    // of no user input, counted from the moment the line has finished displaying.
+    private const float AutoCloseSeconds = 5f;
+    private float autoCloseTimer = AutoCloseSeconds;
+
     private int creatureAnimationId = 0;
 
     private Action<int> onSelected = null;
@@ -55,6 +60,18 @@ public class TalkDialog : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Show-only dialogs auto-dismiss after AutoCloseSeconds of no input, once the
+        // line has fully displayed. Confirm dialogs always wait for the player.
+        if (textFinished && !needConfirm)
+        {
+            autoCloseTimer -= Time.deltaTime;
+            if (autoCloseTimer <= 0f)
+            {
+                onConfirm();
+                return;
+            }
+        }
+
         if (!Input.anyKeyDown)
         {
             return;
@@ -143,9 +160,11 @@ public class TalkDialog : MonoBehaviour
 
         // Show only: display the ConfirmArrow and dismiss on any key press.
         // Need confirm: display the ConfirmButton / CancelButton and keep their callbacks.
+        // The ConfirmArrow stays hidden while the line is being typed out; it is
+        // shown (and starts bouncing) only after the text has finished (see AnimateConfirmArrow).
         if (confirmArrowObj != null)
         {
-            confirmArrowObj.SetActive(!needConfirm);
+            confirmArrowObj.SetActive(false);
         }
         if (confirmButtonObj != null)
         {
@@ -160,6 +179,7 @@ public class TalkDialog : MonoBehaviour
         fullText = text.GetLocalizedString().Replace("#", "\n");
         skipToFullText = false;
         textFinished = false;
+        autoCloseTimer = AutoCloseSeconds;
 
         ///this.messageTextObj.GetComponent<LocalizeStringEvent>().StringReference = text;
 
@@ -167,6 +187,7 @@ public class TalkDialog : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(BuildText());
         StartCoroutine(AnimateDato());
+        StartCoroutine(AnimateConfirmArrow());
     }
 
     /// <summary>
@@ -250,6 +271,29 @@ public class TalkDialog : MonoBehaviour
             SetDatoFrame(3);
             yield return new WaitForSeconds(0.3f);
         }
+    }
+
+    /// <summary>
+    /// Keeps the ConfirmArrow hidden while the line is being typed out, then—only for the
+    /// "show only" dialogs (no explicit confirm)—reveals it. The arrow is left at its
+    /// resting position at the bottom of the dialog and is never moved: the previous
+    /// up/down bounce captured its baseline from the live position, so an interrupted
+    /// cycle made it drift upward across reused dialogs.
+    /// </summary>
+    private IEnumerator AnimateConfirmArrow()
+    {
+        if (confirmArrowObj == null || needConfirm)
+        {
+            yield break;
+        }
+
+        // Wait until the typewriter output has finished before showing the arrow.
+        while (!textFinished)
+        {
+            yield return null;
+        }
+
+        confirmArrowObj.SetActive(true);
     }
 
     private void SetDatoFrame(int frame)

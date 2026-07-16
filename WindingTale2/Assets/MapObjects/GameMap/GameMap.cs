@@ -105,6 +105,17 @@ namespace WindingTale.MapObjects.GameMap
 
         }
 
+        /// <summary>
+        /// Shows or hides the map cursor (hidden while a menu is open).
+        /// </summary>
+        public void SetCursorVisible(bool visible)
+        {
+            if (cursorObject != null)
+            {
+                cursorObject.SetActive(visible);
+            }
+        }
+
         // Cursor slide speed, in map tiles per second.
         private const float CursorSlideTilesPerSecond = 20f;
 
@@ -175,6 +186,40 @@ namespace WindingTale.MapObjects.GameMap
             if (mainCamera == null)
             {
                 mainCamera = GameObject.FindFirstObjectByType<MainCamera>();
+            }
+        }
+
+        /// <summary>
+        /// Tells the camera to keep the cursor in view while the player drives it by
+        /// keyboard: the camera pans (accel/decel) whenever the cursor drifts into the
+        /// outer margin of the screen, and holds otherwise. Called on each keyboard
+        /// cursor move.
+        /// </summary>
+        public void BeginCursorEdgeFollow()
+        {
+            EnsureMainCamera();
+            if (mainCamera != null && cursorObject != null)
+            {
+                mainCamera.BeginCursorFollow(cursorObject.transform);
+            }
+        }
+
+        /// <summary>
+        /// Highlights the given menu item as the active one, swapping it to its "active"
+        /// art variant (and restoring the others). No-op if the menu isn't shown.
+        /// </summary>
+        public void SetMenuActiveItem(int itemIndex)
+        {
+            Transform menuTransform = indicatorsLayer.transform.Find("menu");
+            if (menuTransform == null)
+            {
+                return;
+            }
+
+            Menu menuComponent = menuTransform.GetComponent<Menu>();
+            if (menuComponent != null)
+            {
+                menuComponent.SetActiveItem(itemIndex);
             }
         }
 
@@ -345,6 +390,13 @@ namespace WindingTale.MapObjects.GameMap
                 indicator.name = "move_indicator";
                 indicator.transform.localScale = new Vector3(0.82f, 2f, 0.82f);
                 indicator.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
+
+                // Attack/magic range indicators blink slowly and nearly fade out, so
+                // they read differently from the steadier move range (which uses the
+                // BlockBlinkEffect defaults: blinkSpeed 2.0, minAlpha 0.15).
+                BlockBlinkEffect blink = indicator.AddComponent<BlockBlinkEffect>();
+                blink.blinkSpeed = 3.0f; // larger = slower fade than the move indicator (2.0)
+                blink.minAlpha = 0.02f;  // fade almost to invisible
 
                 if (shapes != null) shapes.SetTileFaded(position, IndicatorTileAlpha);
             }

@@ -1178,7 +1178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
-  acceleration: 5
+  acceleration: 12
   deceleration: 5
   minHeight: 5
   maxHeight: 20

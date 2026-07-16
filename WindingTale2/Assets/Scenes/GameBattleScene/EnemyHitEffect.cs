@@ -49,7 +49,7 @@ public class EnemyHitEffect : MonoBehaviour
     /// �ⲿ���õķ������������ܵ�����ʱ���ô˷���
     /// </summary>
     /// <param name="hitDirection">�����ķ������ڻ���Ч����</param>
-    public void OnHit(Vector3 hitDirection)
+    public void OnHit(Vector3 hitDirection, bool applyKnockback = true)
     {
         if (hitParticle != null)
         {
@@ -57,14 +57,19 @@ public class EnemyHitEffect : MonoBehaviour
             hitParticle.Play();
         }
 
-        Vector3 knockbackPosition = transform.position + hitDirection.normalized * knockbackForce;
-        transform.position = knockbackPosition;
-
-        StartCoroutine(MoveBackToOriginalPosition());
-
-        if (!isFlashing)
+        // Skip the knockback (被击退) movement on a miss (hit value 0). The red flash
+        // on the body goes together with the knockback, so it's skipped too.
+        if (applyKnockback)
         {
-            StartCoroutine(FlashEffect());
+            Vector3 knockbackPosition = transform.position + hitDirection.normalized * knockbackForce;
+            transform.position = knockbackPosition;
+
+            StartCoroutine(MoveBackToOriginalPosition());
+
+            if (!isFlashing)
+            {
+                StartCoroutine(FlashEffect());
+            }
         }
 
         if (hitEffectImage != null)

@@ -220,20 +220,33 @@ namespace WindingTale.Scenes.GameBattleScene
                 ShowTarget();
             }
 
-            // Determine which body is being hit in this animation round
+            // Determine which body is being hit in this animation round, and the damage
+            // being applied to it, so a miss (hit value 0) can skip the knockback.
             GameObject hitObject;
+            DamageResult hitDamage;
             if (currentAnimationIndex < attackResult.Damages.Count)
+            {
                 hitObject = targetObject;   // subject is attacking, target takes the hit
+                hitDamage = attackResult.Damages[currentAnimationIndex];
+            }
             else
+            {
                 hitObject = subjectObject;  // counter-attack, subject takes the hit
+                int backHitIndex = currentAnimationIndex - attackResult.Damages.Count;
+                hitDamage = backHitIndex < attackResult.BackDamages.Count
+                    ? attackResult.BackDamages[backHitIndex] : null;
+            }
 
             // Camera orientation maps world -X to screen-right.
             // localBody steps back to screen-right (-X world), foreignBody steps back to screen-left (+X world).
             Vector3 knockbackDir = (hitObject == localBody) ? new Vector3(-1, 0, 0) : new Vector3(1, 0, 0);
 
+            // A miss (no HP change) plays no knockback animation.
+            bool applyKnockback = hitDamage != null && !hitDamage.HasMissed;
+
             EnemyHitEffect hitEffect = hitObject.GetComponent<EnemyHitEffect>();
             if (hitEffect != null)
-                hitEffect.OnHit(knockbackDir);
+                hitEffect.OnHit(knockbackDir, applyKnockback);
 
             DamageResult damage;
             if (currentAnimationIndex < attackResult.Damages.Count)

@@ -95,6 +95,7 @@
     <Compile Include="Assets\Scenes\GameFieldScene\EventHandler.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\BattleResults.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\SelectAttackTargetState.cs" />
+    <Compile Include="Assets\MapObjects\Menus\MenuItemBlink.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureIdleSyned.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\CreatureFormula.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />

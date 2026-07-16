@@ -6,7 +6,7 @@ using UnityEngine;
 public class MainCamera : MonoBehaviour
 {
     public float moveSpeed = 20f; // �����ƶ��ٶ�
-    public float acceleration = 5f; // ���ٶ�
+    public float acceleration = 12f; // ���ٶ� -- higher so the camera catches up with the cursor faster
     public float deceleration = 5f; // ���ٶ�
     public float minHeight = 8f; // ��͸߶ȣ�ƽ���ڵ��棩
     public float maxHeight = 48f; // ��߸߶ȣ�45�Ƚǣ�
@@ -22,6 +22,12 @@ public class MainCamera : MonoBehaviour
     // Right-drag orbit: hold the right mouse button and move left/right to rotate the
     // whole camera around the world point currently under the cursor.
     public float rotateSpeed = 4.0f;   // degrees per unit of horizontal mouse movement
+
+    // Keyboard camera controls: A/D orbit the view left/right (like the right-drag),
+    // W/S zoom in/out (like the mouse wheel). J/I/K/L do the old A/W/S/D panning.
+    public float keyboardRotateSpeed = 60f;   // degrees per second while A/D held
+    public float keyboardZoomSpeed = 0.15f;   // wheel-equivalent zoom per frame while W/S held
+
     private bool isRotating = false;
     private Vector3 rotatePivot = Vector3.zero;
     private Camera cam;
@@ -166,6 +172,70 @@ public class MainCamera : MonoBehaviour
         }
     }
 
+    // ---- Field cursor edge follow (keyboard control) ----
+    // While the player drives the field cursor by keyboard, the camera pans to keep it
+    // on screen: it moves whenever the cursor sits inside the outer margin on any side,
+    // and holds still otherwise. Uses the same accel/decel as manual panning.
+    private const float CursorEdgeMargin = 0.40f;   // outer 40% of the screen on each side
+    private Transform cursorFollowTarget = null;
+    private bool cursorFollowActive = false;
+
+    /// <summary>
+    /// Starts (or refreshes) keyboard cursor follow around the given cursor transform.
+    /// Any active conversation follow is released so gameplay follow can take over.
+    /// </summary>
+    public void BeginCursorFollow(Transform cursor)
+    {
+        cursorFollowTarget = cursor;
+        cursorFollowActive = true;
+
+        followActive = false;
+        isSliding = false;
+        isReturning = false;
+    }
+
+    // Returns the pan velocity that keeps the followed cursor out of the screen margins,
+    // or zero when it is comfortably inside the safe zone.
+    private Vector3 ComputeCursorEdgeVelocity()
+    {
+        Vector3 screen = cam.WorldToScreenPoint(cursorFollowTarget.position);
+        if (screen.z <= 0f)
+        {
+            return Vector3.zero; // cursor is behind the camera
+        }
+
+        float marginX = Screen.width * CursorEdgeMargin;
+        float marginY = Screen.height * CursorEdgeMargin;
+
+        Vector3 direction = Vector3.zero;
+
+        if (screen.x < marginX)
+        {
+            direction -= transform.right;
+        }
+        else if (screen.x > Screen.width - marginX)
+        {
+            direction += transform.right;
+        }
+
+        Vector3 groundForward = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
+        if (screen.y < marginY)
+        {
+            direction -= groundForward;
+        }
+        else if (screen.y > Screen.height - marginY)
+        {
+            direction += groundForward;
+        }
+
+        if (direction.sqrMagnitude < 0.0001f)
+        {
+            return Vector3.zero;
+        }
+
+        return direction.normalized * moveSpeed;
+    }
+
     // private float lowestHeight = 24f;
 
     void Start()
@@ -188,6 +258,8 @@ public class MainCamera : MonoBehaviour
         {
             bool manualInput = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)
                 || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S)
+                || Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.I)
+                || Input.GetKey(KeyCode.K) || Input.GetKey(KeyCode.L)
                 || Input.GetMouseButton(1) || Input.GetAxis("Mouse ScrollWheel") != 0f;
             if (!manualInput)
             {
@@ -213,38 +285,35 @@ public class MainCamera : MonoBehaviour
         // ��ȡ���λ��
         Vector3 mousePos = Input.mousePosition;
 
-        // ����ƽ�ƣ�����ˮƽ��
-        if (Input.GetKey(KeyCode.A)) // || mousePos.x <= edgeScrollThreshold)
+        // Camera panning moved from A/W/S/D to J/I/K/L (same layout: I=forward,
+        // K=back, J=left, L=right). Horizontal strafe on J/L (screen-horizontal).
+        if (Input.GetKey(KeyCode.J))
         {
             targetVelocity -= transform.right * moveSpeed;
         }
-        if (Input.GetKey(KeyCode.D)) // || mousePos.x >= Screen.width - edgeScrollThreshold)
+        if (Input.GetKey(KeyCode.L))
         {
             targetVelocity += transform.right * moveSpeed;
         }
 
-        // �����˾�
-        /*
-        if (Input.GetKey(KeyCode.W)) // || mousePos.y >= Screen.height - edgeScrollThreshold)
-        {
-            targetVelocity += transform.forward * moveSpeed;
-        }
-        if (Input.GetKey(KeyCode.S)) // || mousePos.y <= edgeScrollThreshold)
-        {
-            targetVelocity -= transform.forward * moveSpeed;
-        }
-        */
-
-        // �����˾���ƽ���ڵ��棩
-        if (Input.GetKey(KeyCode.W))
+        // Forward / back on I/K, along the ground plane.
+        if (Input.GetKey(KeyCode.I))
         {
             targetVelocity += new Vector3(transform.forward.x, 0, transform.forward.z) * moveSpeed * (float)1.5;
         }
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.K))
         {
             targetVelocity -= new Vector3(transform.forward.x, 0, transform.forward.z) * moveSpeed * (float)1.5;
         }
 
+
+        // No manual pan this frame: let the field cursor pull the camera along when it
+        // reaches the screen margins (keyboard control).
+        if (targetVelocity.sqrMagnitude < 0.0001f
+            && cursorFollowActive && cursorFollowTarget != null && cam != null)
+        {
+            targetVelocity = ComputeCursorEdgeVelocity();
+        }
 
         // ƽ���˶�����
         velocity = Vector3.Lerp(velocity, targetVelocity, Time.deltaTime * (targetVelocity.magnitude > 0 ? acceleration : deceleration));
@@ -273,11 +342,30 @@ public class MainCamera : MonoBehaviour
             }
         }
 
-        // ���㾵ͷ����
+        // A/D keyboard orbit: rotate the view left/right around the ground point at the
+        // screen centre (same effect as the right-drag, but driven by keys).
+        float keyRotate = 0f;
+        if (Input.GetKey(KeyCode.A)) keyRotate += 1f;
+        if (Input.GetKey(KeyCode.D)) keyRotate -= 1f;
+        if (keyRotate != 0f)
+        {
+            Vector3 orbitPivot = GetKeyboardOrbitPivot();
+            transform.RotateAround(orbitPivot, Vector3.up, keyRotate * keyboardRotateSpeed * Time.deltaTime);
+        }
+
+        // ���㾵ͷ���� -- mouse wheel, plus W/S as an equivalent zoom in / out.
         float scroll = Input.GetAxis("Mouse ScrollWheel");
+        float keyZoom = 0f;
+        if (Input.GetKey(KeyCode.W)) keyZoom += 1f;
+        if (Input.GetKey(KeyCode.S)) keyZoom -= 1f;
+
         if (scroll != 0)
         {
             zoomVelocity = scroll * zoomSpeed;
+        }
+        else if (keyZoom != 0f)
+        {
+            zoomVelocity = keyZoom * keyboardZoomSpeed;
         }
         else
         {
@@ -289,6 +377,39 @@ public class MainCamera : MonoBehaviour
         // �����½Ƕ�
         float newAngle = Mathf.Lerp(0, rotationAngle, Mathf.InverseLerp(minHeight, maxHeight, newHeight));
         transform.rotation = Quaternion.Euler(newAngle, transform.rotation.eulerAngles.y, 0);
+    }
+
+    // Farthest the A/D orbit pivot may sit in front of the camera, in world units.
+    // At the lowest zoom the view is almost horizontal, so the screen-centre ray hits
+    // the ground far away (or not at all); without this cap the pivot races toward
+    // infinity and a single A/D press flings the camera clean off the map.
+    private const float MaxKeyboardOrbitPivotDistance = 24f;
+
+    // Ground point (on y = 0) the A/D orbit rotates around, clamped to a sane distance
+    // in front of the camera. The screen-centre ray runs along the camera's forward, so
+    // its ground hit lies exactly along the flattened forward direction -- meaning this
+    // clamp leaves the zoomed-in behaviour untouched and only reins in the near-horizontal
+    // edge case.
+    private Vector3 GetKeyboardOrbitPivot()
+    {
+        Vector3 groundForward = new Vector3(transform.forward.x, 0f, transform.forward.z);
+        if (groundForward.sqrMagnitude < 1e-4f)
+        {
+            groundForward = Vector3.forward; // camera looking straight down/up: pick any heading
+        }
+        groundForward.Normalize();
+
+        Vector3 flatCamPos = new Vector3(transform.position.x, 0f, transform.position.z);
+
+        float distance = MaxKeyboardOrbitPivotDistance;
+        Vector3 screenCenter = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
+        if (TryGetGroundPoint(screenCenter, out Vector3 groundPoint))
+        {
+            Vector3 flatPivot = new Vector3(groundPoint.x, 0f, groundPoint.z);
+            distance = Mathf.Min(Vector3.Distance(flatCamPos, flatPivot), MaxKeyboardOrbitPivotDistance);
+        }
+
+        return flatCamPos + groundForward * distance;
     }
 
     // Intersects the cursor ray with the ground plane (y = 0) to find the world point

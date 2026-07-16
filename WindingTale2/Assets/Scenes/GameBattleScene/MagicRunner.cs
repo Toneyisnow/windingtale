@@ -156,14 +156,21 @@ namespace WindingTale.Scenes.GameBattleScene
 
         private void onAnimationHit(int percent)
         {
-            EnemyHitEffect hitEffect = GameObject.FindFirstObjectByType<EnemyHitEffect>();
-            hitEffect.OnHit(new Vector3(1, 1, 1));
-
-            DamageResult damage;
+            DamageResult damage = null;
             if (currentAnimationIndex < magicResult.Results.Count)
             {
                 var target = magicResult.Targets[currentAnimationIndex];
                 damage = magicResult.Results[target.Id] as DamageResult;
+            }
+
+            // A miss (no HP change / hit value 0) plays no knockback animation.
+            bool applyKnockback = !(damage != null && damage.HasMissed);
+
+            EnemyHitEffect hitEffect = GameObject.FindFirstObjectByType<EnemyHitEffect>();
+            hitEffect.OnHit(new Vector3(1, 1, 1), applyKnockback);
+
+            if (damage != null)
+            {
                 var currentHp = damage.HpBefore + (damage.HpAfter - damage.HpBefore) * percent / 100;
                 updateTargetHp(0, currentHp);
             }

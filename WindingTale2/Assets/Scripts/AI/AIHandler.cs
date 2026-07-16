@@ -4,6 +4,7 @@ using WindingTale.Core.Definitions;
 using WindingTale.AI.Delegates;
 using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.Scenes.GameFieldScene.Activities;
 using UnityEngine;
 
 namespace WindingTale.AI
@@ -124,6 +125,12 @@ namespace WindingTale.AI
             if (aiDelegate != null)
             {
                 lastOperatedCreatureId = creature.Id;
+
+                // Before the AI operates on this creature, slide the cursor (and the
+                // follow camera) to the tile under the creature, matching the same
+                // framing used during conversations.
+                gameMain.PushActivity(new SlideCursorActivity(creature.Position));
+
                 aiDelegate.TakeAction();
             }
 
