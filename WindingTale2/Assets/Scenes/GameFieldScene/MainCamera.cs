@@ -11,6 +11,12 @@ public class MainCamera : MonoBehaviour
     public float minHeight = 8f; // ��͸߶ȣ�ƽ���ڵ��棩
     public float maxHeight = 48f; // ��߸߶ȣ�45�Ƚǣ�
     public float rotationAngle = 45f; // ��ʼ���ӽǶ�
+
+    // Look-down angle at minHeight (fully zoomed in). Must stay clear of 0: a level camera
+    // is aimed at the horizon, so the ground point it frames sits height / tan(pitch) away
+    // -- which runs off to infinity as the pitch flattens. Zooming in then reads as the
+    // camera retreating from the character instead of closing in on it.
+    public float minRotationAngle = 25f;
     public float edgeScrollSpeed = 10f; // ��Ե�����ٶ�
     public float edgeScrollThreshold = 50f; // ��Ե����������ֵ
     public float zoomSpeed = 0.5f; // �����ٶ�
@@ -175,10 +181,66 @@ public class MainCamera : MonoBehaviour
     // ---- Field cursor edge follow (keyboard control) ----
     // While the player drives the field cursor by keyboard, the camera pans to keep it
     // on screen: it moves whenever the cursor sits inside the outer margin on any side,
-    // and holds still otherwise. Uses the same accel/decel as manual panning.
+    // and holds still otherwise.
     private const float CursorEdgeMargin = 0.40f;   // outer 40% of the screen on each side
+
+    // The cursor outruns a moveSpeed pan: held arrow keys step it one tile every
+    // PlayerInterface.RepeatInterval (2 world units per 0.08s = 25 units/s). The follow
+    // pan therefore runs on its own, faster speed, and ramps up with how deep the cursor
+    // has pushed into the margin so it eases instead of snapping on and off.
+    public float cursorFollowSpeed = 60f;
+    public float cursorFollowAcceleration = 30f;
+
+    // Hard bound: the cursor is never allowed outside this margin. Whatever the pan
+    // fails to keep up with (a slide, a zoom, a low frame) is corrected by translating
+    // the camera the minimum amount that puts the cursor back on the bound.
+    private const float CursorHardMargin = 0.12f;
+
     private Transform cursorFollowTarget = null;
     private bool cursorFollowActive = false;
+
+    // ---- Menu framing ----
+    // A menu covers part of the board, so the camera lifts to its highest, most top-down
+    // framing while one is open. Only the height is driven: the pitch already follows it
+    // (see the zoom section of Update), so maxHeight is by definition the steepest angle.
+    private const float ZoomToTopDuration = 0.5f;
+    private bool zoomToTopActive = false;
+    private float zoomToTopStartHeight = 0f;
+    private float zoomToTopElapsed = 0f;
+
+    /// <summary>
+    /// Eases the camera up to its highest, most top-down framing. Any manual zoom hands
+    /// control straight back to the player.
+    /// </summary>
+    public void ZoomToTop()
+    {
+        zoomToTopStartHeight = transform.position.y;
+        zoomToTopElapsed = 0f;
+        zoomToTopActive = true;
+
+        // The conversation follow drives the transform itself and returns out of Update
+        // before the zoom runs, so it has to let go or the camera would never rise.
+        followActive = false;
+        isSliding = false;
+        isReturning = false;
+    }
+
+    // Height the ease wants this frame, as a delta in the same sense as zoomVelocity
+    // (positive zooms in, i.e. drops the camera).
+    private float ZoomToTopVelocity()
+    {
+        zoomToTopElapsed += Time.deltaTime;
+
+        float t = Mathf.Clamp01(zoomToTopElapsed / ZoomToTopDuration);
+        float target = Mathf.Lerp(zoomToTopStartHeight, maxHeight, Mathf.SmoothStep(0f, 1f, t));
+
+        if (t >= 1f)
+        {
+            zoomToTopActive = false;
+        }
+
+        return transform.position.y - target;
+    }
 
     /// <summary>
     /// Starts (or refreshes) keyboard cursor follow around the given cursor transform.
@@ -195,7 +257,10 @@ public class MainCamera : MonoBehaviour
     }
 
     // Returns the pan velocity that keeps the followed cursor out of the screen margins,
-    // or zero when it is comfortably inside the safe zone.
+    // or zero when it is comfortably inside the safe zone. The speed scales with how far
+    // into the margin the cursor sits: a gentle drift as it enters, full cursorFollowSpeed
+    // once it reaches the screen edge -- which is faster than the cursor itself moves, so
+    // the camera closes the gap instead of trailing further behind every step.
     private Vector3 ComputeCursorEdgeVelocity()
     {
         Vector3 screen = cam.WorldToScreenPoint(cursorFollowTarget.position);
@@ -204,36 +269,78 @@ public class MainCamera : MonoBehaviour
             return Vector3.zero; // cursor is behind the camera
         }
 
-        float marginX = Screen.width * CursorEdgeMargin;
-        float marginY = Screen.height * CursorEdgeMargin;
-
-        Vector3 direction = Vector3.zero;
-
-        if (screen.x < marginX)
-        {
-            direction -= transform.right;
-        }
-        else if (screen.x > Screen.width - marginX)
-        {
-            direction += transform.right;
-        }
+        float pushX = MarginPush(screen.x, Screen.width);
+        float pushY = MarginPush(screen.y, Screen.height);
 
         Vector3 groundForward = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
-        if (screen.y < marginY)
-        {
-            direction -= groundForward;
-        }
-        else if (screen.y > Screen.height - marginY)
-        {
-            direction += groundForward;
-        }
+        Vector3 direction = transform.right * pushX + groundForward * pushY;
 
         if (direction.sqrMagnitude < 0.0001f)
         {
             return Vector3.zero;
         }
 
-        return direction.normalized * moveSpeed;
+        // Diagonals must not pan faster than a straight edge.
+        if (direction.sqrMagnitude > 1f)
+        {
+            direction.Normalize();
+        }
+
+        return direction * cursorFollowSpeed;
+    }
+
+    // How far the cursor has pushed into the margin on one screen axis: 0 inside the safe
+    // zone, -1 / +1 at the low / high screen edge.
+    private static float MarginPush(float screenPos, float screenSize)
+    {
+        float margin = screenSize * CursorEdgeMargin;
+
+        if (screenPos < margin)
+        {
+            return -Mathf.Clamp01((margin - screenPos) / margin);
+        }
+        if (screenPos > screenSize - margin)
+        {
+            return Mathf.Clamp01((screenPos - (screenSize - margin)) / margin);
+        }
+
+        return 0f;
+    }
+
+    /// <summary>
+    /// Translates the camera along the ground so the followed cursor stays inside the
+    /// hard margin on every side. The pan alone can fall behind (the cursor steps a whole
+    /// tile at a time and the camera accelerates into it), so this is the guarantee that
+    /// it never leaves the screen -- most visibly on the left/right edges, where a held
+    /// arrow key walks the cursor across the map faster than the camera builds up speed.
+    /// </summary>
+    private void ClampCursorOnScreen()
+    {
+        Vector3 cursorPosition = cursorFollowTarget.position;
+        Vector3 screen = cam.WorldToScreenPoint(cursorPosition);
+        if (screen.z <= 0f)
+        {
+            return; // cursor is behind the camera: nothing sensible to clamp against
+        }
+
+        float clampedX = Mathf.Clamp(screen.x, Screen.width * CursorHardMargin, Screen.width * (1f - CursorHardMargin));
+        float clampedY = Mathf.Clamp(screen.y, Screen.height * CursorHardMargin, Screen.height * (1f - CursorHardMargin));
+        if (Mathf.Approximately(clampedX, screen.x) && Mathf.Approximately(clampedY, screen.y))
+        {
+            return; // already in bounds
+        }
+
+        // Translating the camera by d shifts every world point's projection by d, so
+        // landing the cursor on the clamped screen point means moving by the offset
+        // between the cursor and whatever sits on that point now (taken at the cursor's
+        // own height, so the offset stays on the ground plane).
+        if (!TryGetPointAtHeight(new Vector3(clampedX, clampedY, 0f), cursorPosition.y, out Vector3 pointAtBound))
+        {
+            return;
+        }
+
+        Vector3 delta = cursorPosition - pointAtBound;
+        transform.position += new Vector3(delta.x, 0f, delta.z);
     }
 
     // private float lowestHeight = 24f;
@@ -309,15 +416,22 @@ public class MainCamera : MonoBehaviour
 
         // No manual pan this frame: let the field cursor pull the camera along when it
         // reaches the screen margins (keyboard control).
-        if (targetVelocity.sqrMagnitude < 0.0001f
-            && cursorFollowActive && cursorFollowTarget != null && cam != null)
+        bool followingCursor = targetVelocity.sqrMagnitude < 0.0001f
+            && cursorFollowActive && cursorFollowTarget != null && cam != null;
+        if (followingCursor)
         {
             targetVelocity = ComputeCursorEdgeVelocity();
         }
 
         // ƽ���˶�����
-        velocity = Vector3.Lerp(velocity, targetVelocity, Time.deltaTime * (targetVelocity.magnitude > 0 ? acceleration : deceleration));
+        float accel = followingCursor ? cursorFollowAcceleration : acceleration;
+        velocity = Vector3.Lerp(velocity, targetVelocity, Time.deltaTime * (targetVelocity.magnitude > 0 ? accel : deceleration));
         transform.position += velocity * Time.deltaTime;
+
+        if (followingCursor)
+        {
+            ClampCursorOnScreen();
+        }
 
         // Right-drag orbit: pick the pivot under the cursor on press, then rotate the
         // camera around it (about world up) as the mouse moves left/right.
@@ -362,21 +476,71 @@ public class MainCamera : MonoBehaviour
         if (scroll != 0)
         {
             zoomVelocity = scroll * zoomSpeed;
+            zoomToTopActive = false; // player is zooming: abandon the menu framing
         }
         else if (keyZoom != 0f)
         {
             zoomVelocity = keyZoom * keyboardZoomSpeed;
+            zoomToTopActive = false;
+        }
+        else if (zoomToTopActive)
+        {
+            zoomVelocity = ZoomToTopVelocity();
         }
         else
         {
             zoomVelocity = Mathf.Lerp(zoomVelocity, 0, Time.deltaTime * zoomDeceleration);
         }
-        float newHeight = Mathf.Clamp(transform.position.y - zoomVelocity, minHeight, maxHeight);
+        float oldHeight = transform.position.y;
+        float newHeight = Mathf.Clamp(oldHeight - zoomVelocity, minHeight, maxHeight);
+
+        // Zooming drops the camera and flattens its pitch, which on its own would drag the
+        // framed ground point away from under the camera. Pin it instead: capture whatever
+        // the camera is aimed at now, and put it back on the screen centre once the new
+        // framing is applied. The camera then dollies straight in toward that point --
+        // closer with every step, and standing still once the height clamps at minHeight.
+        Vector3 zoomAnchor = Vector3.zero;
+        bool hasZoomAnchor = false;
+        if (Mathf.Abs(newHeight - oldHeight) > 0.0001f)
+        {
+            Vector3 screenCenter = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
+            hasZoomAnchor = TryGetGroundPoint(screenCenter, out zoomAnchor);
+        }
+
         transform.position = new Vector3(transform.position.x, newHeight, transform.position.z);
 
         // �����½Ƕ�
-        float newAngle = Mathf.Lerp(0, rotationAngle, Mathf.InverseLerp(minHeight, maxHeight, newHeight));
+        float newAngle = Mathf.Lerp(minRotationAngle, rotationAngle, Mathf.InverseLerp(minHeight, maxHeight, newHeight));
         transform.rotation = Quaternion.Euler(newAngle, transform.rotation.eulerAngles.y, 0);
+
+        if (hasZoomAnchor)
+        {
+            PinGroundPointToScreenCenter(zoomAnchor);
+        }
+    }
+
+    /// <summary>
+    /// Slides the camera along the ground so the given ground point sits back under the
+    /// screen centre at the current height and pitch. The centre ray runs along the camera
+    /// forward, so its ground hit lies exactly height / tan(pitch) ahead on the flattened
+    /// forward -- no raycast needed to place it.
+    /// </summary>
+    private void PinGroundPointToScreenCenter(Vector3 groundAnchor)
+    {
+        Vector3 forward = transform.forward;
+        Vector3 groundForward = new Vector3(forward.x, 0f, forward.z);
+
+        float horizontal = groundForward.magnitude;
+        float down = -forward.y;
+        if (horizontal < 1e-4f || down < 0.01f)
+        {
+            return; // looking straight down, or level / upward: no usable centre ground hit
+        }
+        groundForward /= horizontal;
+
+        float distance = transform.position.y * horizontal / down; // height / tan(pitch)
+        Vector3 position = groundAnchor - groundForward * distance;
+        transform.position = new Vector3(position.x, transform.position.y, position.z);
     }
 
     // Farthest the A/D orbit pivot may sit in front of the camera, in world units.
@@ -417,11 +581,17 @@ public class MainCamera : MonoBehaviour
     // the sky), in which case no rotation pivot is set.
     private bool TryGetGroundPoint(Vector3 screenPos, out Vector3 point)
     {
+        return TryGetPointAtHeight(screenPos, 0f, out point);
+    }
+
+    // Same, against a horizontal plane at an arbitrary height rather than the ground.
+    private bool TryGetPointAtHeight(Vector3 screenPos, float planeHeight, out Vector3 point)
+    {
         if (cam != null)
         {
             Ray ray = cam.ScreenPointToRay(screenPos);
-            Plane ground = new Plane(Vector3.up, Vector3.zero);
-            if (ground.Raycast(ray, out float enter))
+            Plane plane = new Plane(Vector3.up, new Vector3(0f, planeHeight, 0f));
+            if (plane.Raycast(ray, out float enter))
             {
                 point = ray.GetPoint(enter);
                 return true;

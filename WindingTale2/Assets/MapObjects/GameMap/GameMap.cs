@@ -224,6 +224,19 @@ namespace WindingTale.MapObjects.GameMap
         }
 
         /// <summary>
+        /// Lifts the camera to its highest, most top-down framing, so the board still reads
+        /// while a menu covers part of it. The player's next zoom takes control back.
+        /// </summary>
+        public void ZoomCameraToTop()
+        {
+            EnsureMainCamera();
+            if (mainCamera != null)
+            {
+                mainCamera.ZoomToTop();
+            }
+        }
+
+        /// <summary>
         /// Ends the conversation camera follow, smoothly handing control back to
         /// gameplay. Safe to call any time (no-op if the camera isn't following).
         /// </summary>

@@ -124,6 +124,27 @@ namespace WindingTale.Core.Map
         }
 
 
+        /// <summary>
+        /// The enemy to recommend as the default target inside the given indicator range:
+        /// of the enemies standing in it, the one farthest from the acting creature. Ties
+        /// break on the lower creature id so the pick stays stable (the range is a set, so
+        /// its own order means nothing). Null when the range holds no enemy.
+        /// </summary>
+        public FDCreature GetPreferredAttackTargetInRange(FDCreature creature, FDRange range)
+        {
+            if (creature == null)
+            {
+                return null;
+            }
+
+            return FindFarthestEnemyInRange(range, creature.Position);
+        }
+
+        /// <summary>
+        /// Same, over the creature's own attack range -- the range its attack indicator
+        /// shows. Pass targetPosition to range it from a tile the creature has yet to move
+        /// to, rather than where it currently stands.
+        /// </summary>
         public FDCreature GetPreferredAttackTargetInRange(FDCreature creature, FDPosition targetPosition = null)
         {
             AttackItemDefinition attackItem = creature.GetAttackItem();
@@ -133,31 +154,90 @@ namespace WindingTale.Core.Map
             }
 
             FDSpan span = attackItem.AttackScope;
-            Debug.Log("AttackScope: " + span.ToString());
+            FDPosition attackFrom = targetPosition ?? creature.Position;
 
-            DirectRangeFinder finder = new DirectRangeFinder(this.Field, targetPosition ?? creature.Position, span.Max, span.Min);
-            FDRange range = finder.CalculateRange();
-            foreach (FDPosition pos in range.ToList())
+            DirectRangeFinder finder = new DirectRangeFinder(this.Field, attackFrom, span.Max, span.Min);
+            return FindFarthestEnemyInRange(finder.CalculateRange(), attackFrom);
+        }
+
+        /// <summary>
+        /// The friend or NPC to recommend as the default target inside the given indicator
+        /// range: of those standing in it, the one with the lowest creature id. Set
+        /// includeSelf to false to skip the acting creature itself (an item exchange needs
+        /// a second party). Null when the range holds neither friend nor NPC.
+        /// </summary>
+        public FDCreature GetPreferredFriendOrNpcTargetInRange(FDCreature creature, FDRange range, bool includeSelf)
+        {
+            if (range == null)
             {
-                Debug.Log("AttackScope range: " + pos.ToString());
+                return null;
             }
 
-            foreach (FDCreature c in this.Enemies)
-            {
-                Debug.Log("Enemy: " + c.Position.ToString());
-            }
+            HashSet<FDPosition> positions = new HashSet<FDPosition>(range.ToList());
 
-            // Get a preferred target in range
-            foreach (FDPosition pos in range.ToList())
+            FDCreature first = null;
+
+            foreach (FDCreature candidate in this.Creatures)
             {
-                FDCreature target = this.GetCreatureAt(pos);
-                if (target != null && target.Faction == CreatureFaction.Enemy)
+                if (candidate.Faction == CreatureFaction.Enemy || !IsInPositions(candidate, positions))
                 {
-                    return target;
+                    continue;
+                }
+
+                if (!includeSelf && creature != null && candidate.Id == creature.Id)
+                {
+                    continue;
+                }
+
+                if (first == null || candidate.Id < first.Id)
+                {
+                    first = candidate;
                 }
             }
 
-            return null;
+            return first;
+        }
+
+        private FDCreature FindFarthestEnemyInRange(FDRange range, FDPosition from)
+        {
+            if (range == null || from == null)
+            {
+                return null;
+            }
+
+            HashSet<FDPosition> positions = new HashSet<FDPosition>(range.ToList());
+
+            FDCreature farthest = null;
+            int farthestDistance = -1;
+
+            foreach (FDCreature candidate in this.Creatures)
+            {
+                if (candidate.Faction != CreatureFaction.Enemy || !IsInPositions(candidate, positions))
+                {
+                    continue;
+                }
+
+                int distance = GetDirectDistance(from, candidate.Position);
+                if (distance > farthestDistance || (distance == farthestDistance && candidate.Id < farthest.Id))
+                {
+                    farthestDistance = distance;
+                    farthest = candidate;
+                }
+            }
+
+            return farthest;
+        }
+
+        private static bool IsInPositions(FDCreature creature, HashSet<FDPosition> positions)
+        {
+            return creature.Position != null && positions.Contains(creature.Position);
+        }
+
+        // Manhattan distance -- the metric the direct ranges are themselves built on,
+        // see DirectRangeFinder.
+        private static int GetDirectDistance(FDPosition from, FDPosition to)
+        {
+            return Mathf.Abs(from.X - to.X) + Mathf.Abs(from.Y - to.Y);
         }
 
         public List<FDCreature> GetCreaturesInRange(List<FDPosition> range, CreatureFaction faction)

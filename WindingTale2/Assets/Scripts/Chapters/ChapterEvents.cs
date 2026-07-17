@@ -71,8 +71,7 @@ namespace WindingTale.Chapters
             {
                 Conversation conversation = Conversation.Create(chapterId, sequenceId, index);
                 int creatureId = chapterDefinition.GetConversationCreatureId(conversation);
-                FDCreature creature = gameMain.gameMap.Map.GetCreatureById(creatureId);
-
+                
                 gameMain.PushActivity(new TalkActivity(conversation, creatureId ));
             }
         }

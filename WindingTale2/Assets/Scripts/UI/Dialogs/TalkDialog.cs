@@ -42,6 +42,18 @@ public class TalkDialog : MonoBehaviour
     private const float AutoCloseSeconds = 5f;
     private float autoCloseTimer = AutoCloseSeconds;
 
+    // ConfirmArrow bounce, once the line has finished typing: the arrow dips below its
+    // resting line and comes back, over and over, to invite the next key press.
+    private const float ConfirmArrowBounceDepth = 8f;   // how far it dips, in pixels
+    private const float ConfirmArrowBounceSpeed = 4f;   // radians per second
+
+    // The arrow's resting Y, captured once from the prefab. Every bounce offset is measured
+    // from this rather than from the arrow's live position: Init stops the bounce coroutine
+    // mid-cycle, so the live Y is wherever the dip happened to be interrupted. Reading that
+    // back as the next baseline is what used to walk the arrow up the dialog.
+    private float confirmArrowBaseY = 0f;
+    private bool confirmArrowBaseCaptured = false;
+
     private int creatureAnimationId = 0;
 
     private Action<int> onSelected = null;
@@ -50,6 +62,21 @@ public class TalkDialog : MonoBehaviour
 
     // Dato portrait frames: [0] neutral/mouth-closed, [1][2] speaking, [3] eyes-closed (blink).
     private Sprite[] datoFrames = new Sprite[4];
+
+    // Runs on the dialog's first activation, before any Init: the one moment the arrow is
+    // guaranteed to still be sitting where the prefab put it.
+    void Awake()
+    {
+        if (confirmArrowObj != null)
+        {
+            RectTransform rt = confirmArrowObj.GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                confirmArrowBaseY = rt.anchoredPosition.y;
+                confirmArrowBaseCaptured = true;
+            }
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -165,6 +192,7 @@ public class TalkDialog : MonoBehaviour
         if (confirmArrowObj != null)
         {
             confirmArrowObj.SetActive(false);
+            ResetConfirmArrowPosition();
         }
         if (confirmButtonObj != null)
         {
@@ -275,10 +303,9 @@ public class TalkDialog : MonoBehaviour
 
     /// <summary>
     /// Keeps the ConfirmArrow hidden while the line is being typed out, then—only for the
-    /// "show only" dialogs (no explicit confirm)—reveals it. The arrow is left at its
-    /// resting position at the bottom of the dialog and is never moved: the previous
-    /// up/down bounce captured its baseline from the live position, so an interrupted
-    /// cycle made it drift upward across reused dialogs.
+    /// "show only" dialogs (no explicit confirm)—reveals it and bounces it until the player
+    /// moves on. Runs off confirmArrowBaseY, so an interrupted cycle leaves no trace on the
+    /// next line's bounce.
     /// </summary>
     private IEnumerator AnimateConfirmArrow()
     {
@@ -294,6 +321,49 @@ public class TalkDialog : MonoBehaviour
         }
 
         confirmArrowObj.SetActive(true);
+
+        RectTransform rt = confirmArrowObj.GetComponent<RectTransform>();
+        if (rt == null || !confirmArrowBaseCaptured)
+        {
+            yield break; // no rect to move, or no trustworthy baseline: leave it resting
+        }
+
+        // Abs(Sin) dips and returns rather than crossing the baseline, so the arrow's
+        // resting line stays its upper limit and it cannot ride up into the text above.
+        float elapsed = 0f;
+        while (true)
+        {
+            elapsed += Time.deltaTime;
+
+            Vector2 pos = rt.anchoredPosition;
+            pos.y = confirmArrowBaseY
+                - Mathf.Abs(Mathf.Sin(elapsed * ConfirmArrowBounceSpeed)) * ConfirmArrowBounceDepth;
+            rt.anchoredPosition = pos;
+
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// Puts the ConfirmArrow back on its resting line. Init stops the bounce wherever it
+    /// happened to be, so the arrow is squared up before the next line reuses the dialog.
+    /// </summary>
+    private void ResetConfirmArrowPosition()
+    {
+        if (!confirmArrowBaseCaptured || confirmArrowObj == null)
+        {
+            return;
+        }
+
+        RectTransform rt = confirmArrowObj.GetComponent<RectTransform>();
+        if (rt == null)
+        {
+            return;
+        }
+
+        Vector2 pos = rt.anchoredPosition;
+        pos.y = confirmArrowBaseY;
+        rt.anchoredPosition = pos;
     }
 
     private void SetDatoFrame(int frame)

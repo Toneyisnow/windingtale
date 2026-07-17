@@ -217,8 +217,8 @@ namespace WindingTale.Chapters
                     ActivityFactory.CreatureWalkActivity(29, FDMovePath.Create(FDPosition.At(4, 23), FDPosition.At(4, 22))),
                     ActivityFactory.CreatureWalkActivity(25, FDMovePath.Create(FDPosition.At(1, 22), FDPosition.At(1, 21))),
                     ActivityFactory.CreatureWalkActivity(26, FDMovePath.Create(FDPosition.At(2, 22), FDPosition.At(2, 21))),
-                    ActivityFactory.CreatureWalkActivity(27, FDMovePath.Create(FDPosition.At(5, 24), FDPosition.At(5, 23))),
-                    ActivityFactory.CreatureWalkActivity(28, FDMovePath.Create(FDPosition.At(5, 24), FDPosition.At(6, 24))),
+                    ActivityFactory.CreatureWalkActivity(27, FDMovePath.Create(FDPosition.At(5, 24), FDPosition.At(5, 22))),
+                    ActivityFactory.CreatureWalkActivity(28, FDMovePath.Create(FDPosition.At(5, 24), FDPosition.At(6, 23))),
                 }
             ));
 

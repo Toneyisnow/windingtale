@@ -56,11 +56,31 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             //ShowRangeActivity activity = new ShowRangeActivity(magicRange.ToList());
             //activityManager.Push(activity);
 
-            // Send magic range to UI
+            // Send magic range to UI, then park the cursor on the creature this magic is
+            // most likely meant for (own tile when the range holds nobody suitable).
             gameMain.PushActivity((gameMain) =>
             {
                 gameMain.gameMap.showActionTargetRange(this.Creature, magicRange);
+
+                FDCreature target = IsTargetingEnemy
+                    ? fdMap.GetPreferredAttackTargetInRange(this.Creature, magicRange)
+                    : fdMap.GetPreferredFriendOrNpcTargetInRange(this.Creature, magicRange, true);
+                SlideCursorToTarget(this.Creature, target);
             });
+        }
+
+        /// <summary>
+        /// Whether this magic is cast at the enemy. Attack magic damages them, and Offensive
+        /// magic lands its debuffs (forbidden / poison / freezing) on them as well. The rest
+        /// -- Recover, the Defensive buffs, and Transmit -- are cast on one's own side, self
+        /// included.
+        /// </summary>
+        private bool IsTargetingEnemy
+        {
+            get
+            {
+                return this.Magic.Type == MagicType.Attack || this.Magic.Type == MagicType.Offensive;
+            }
         }
 
         public override void onExit()
@@ -96,16 +116,21 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
             else
             {
-                // Cancel the magic
-                //// stateHandler.HandlePopState();
-                return new MenuActionState(gameMain, this.Creature, position);
+                // Outside the magic range -- roll back to the action menu, keyed off the
+                // creature's own tile. Handing it the clicked tile instead would have the
+                // menu offer whatever treasure happened to lie there.
+                return onUserCancelled();
             }
 
         }
 
         public override IActionState onUserCancelled()
         {
-            throw new NotImplementedException();
+            // Roll back to the action menu the magic was picked from, the same way the
+            // attack target state does. The menu is keyed off where the creature actually
+            // stands: it looks up the treasure underfoot and decides whether the creature
+            // has already moved from that position.
+            return new MenuActionState(gameMain, this.Creature, this.Creature.Position);
         }
     }
 }

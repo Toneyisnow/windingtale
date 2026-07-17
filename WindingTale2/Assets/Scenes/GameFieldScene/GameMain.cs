@@ -271,6 +271,11 @@ namespace WindingTale.Scenes.GameFieldScene
             {
                 c.SetActioned(true);
 
+                // Pay the MP for the spell. The battle scene draws its MP drain from
+                // MagicResult.MpBefore, so it does not matter whether this lands before or
+                // after the animation gets there.
+                creature.UpdateMp(-result.MpCost);
+
                 foreach (var resultPair in result.Results)
                 {
                     int targetCreatureId = resultPair.Key;
@@ -316,10 +321,10 @@ namespace WindingTale.Scenes.GameFieldScene
             {
                 if (result.Experience > 0)
                 {
-                    this.InsertActivity(gameMain =>
-                    {
-                        // Show experience dialog
-                    });
+                    FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 5, result.Experience);
+                    this.InsertActivity(new TalkActivity(message, creature));
+
+                    BattleHandler.ApplyExperience(creature, result.Experience);
                 }
             });
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Map;
+using WindingTale.Core.Objects;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
 {
@@ -56,6 +57,24 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         /// hide it (the selected menu item is the highlight instead).
         /// </summary>
         public virtual bool HidesCursor => false;
+
+        /// <summary>
+        /// Parks the cursor on the target this state recommends, as its indicator range
+        /// appears: it slides to that creature, or falls back to the acting creature's own
+        /// tile when the range holds nobody worth targeting. Each select-target state finds
+        /// its own recommendation (see FDMap.GetPreferredAttackTargetInRange /
+        /// GetPreferredFriendOrNpcTargetInRange); this only moves the cursor there.
+        /// </summary>
+        protected void SlideCursorToTarget(FDCreature actionCreature, FDCreature target)
+        {
+            FDPosition position = (target != null) ? target.Position : actionCreature?.Position;
+            if (position == null)
+            {
+                return;
+            }
+
+            gameMain.gameMap.SlideCursorTo(position, GameCanvas.DialogPosition.Bottom);
+        }
 
         #region Keyboard input
 

@@ -61,6 +61,39 @@ namespace WindingTale.UI.Utils
             }
         }
 
+        /// <summary>
+        /// Gets a variable and removes it in one step, for values that are a one-shot
+        /// handoff to a scene: whoever reads it consumes it, so it can never be picked up
+        /// again by a later scene load.
+        /// </summary>
+        /// <typeparam name="T">The type of the variable</typeparam>
+        /// <param name="key">The variable key</param>
+        /// <returns>The casted variable value, or the type default when absent</returns>
+        public static T Take<T>(string key)
+        {
+            lock (lockObject)
+            {
+                T value = Get<T>(key);
+                Remove(key);
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Removes a variable. Does nothing when the key is not present.
+        /// </summary>
+        /// <param name="key">The variable key</param>
+        public static void Remove(string key)
+        {
+            lock (lockObject)
+            {
+                if (variablesDictionary != null)
+                {
+                    variablesDictionary.Remove(key);
+                }
+            }
+        }
+
 
 
 

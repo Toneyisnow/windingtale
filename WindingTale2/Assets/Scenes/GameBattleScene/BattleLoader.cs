@@ -46,14 +46,17 @@ namespace WindingTale.Scenes.GameBattleScene
         {
             LoadLocalTai();
 
-            // Load Attack Result if it exists
-            AttackResult attackResult = GlobalVariables.Get<AttackResult>("AttackResult");
+            // Each result is consumed as it is read, so this battle runs the one result it
+            // was loaded for and nothing else. Leaving them set made every later battle
+            // re-run the previous magic on top of itself -- the stale MagicRunner won the
+            // animators, so every fight kept showing the creature that last cast a spell.
+            AttackResult attackResult = GlobalVariables.Take<AttackResult>("AttackResult");
             if (attackResult != null )
             {
                 this.AddComponent<AttackRunner>().Initialize(this, attackResult);
             }
             // Load the Magic Result if it exists
-            MagicResult magicResult = GlobalVariables.Get<MagicResult>("MagicResult");
+            MagicResult magicResult = GlobalVariables.Take<MagicResult>("MagicResult");
             if (magicResult != null )
             {
                 this.AddComponent<MagicRunner>().Initialize(this, magicResult);

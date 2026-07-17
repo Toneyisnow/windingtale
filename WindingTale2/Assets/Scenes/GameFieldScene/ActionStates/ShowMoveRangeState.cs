@@ -83,8 +83,10 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         public override IActionState onUserCancelled()
         {
-            // Nothing to do here
-            return this;
+            // Roll back to the idle cursor, the same way clicking outside the move range
+            // does. The creature has not moved yet at this point, so there is nothing to
+            // undo beyond dropping the range indicator (see onExit).
+            return new IdleState(gameMain);
         }
     }
 }

@@ -38,6 +38,10 @@ public class MenuState : IActionState
         Debug.Log("MenuState: onEnter");
         gameMain.gameMap.ShowMenu(fdMenu);
 
+        // Lift the camera to look straight down while the menu is up, so the board around
+        // it stays readable. Applies to every menu -- they all route through this state.
+        gameMain.gameMap.ZoomCameraToTop();
+
         // Auto-select the first enabled item, in Left / Up / Right / Bottom order.
         SelectDefaultItem();
     }

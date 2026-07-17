@@ -51,10 +51,14 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 this.AttackRange = finder.CalculateRange();
             }
 
-            // Display the attack range on the UI.
+            // Display the attack range on the UI, then park the cursor on the enemy
+            // standing farthest away inside it (own tile when there is no enemy).
             gameMain.PushActivity((gameMain) =>
             {
                 gameMain.gameMap.showActionTargetRange(this.Creature, AttackRange);
+
+                FDCreature target = fdMap.GetPreferredAttackTargetInRange(this.Creature, AttackRange);
+                SlideCursorToTarget(this.Creature, target);
             });
         }
 
@@ -83,8 +87,11 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
             else
             {
-                // Cancel
-                return new IdleState(gameMain);
+                // Outside the attack range -- which includes the creature's own tile, where
+                // the cursor starts when no enemy is in reach. The creature has already
+                // moved and still owes an action, so roll back to its action menu the same
+                // way cancelling does; dropping to idle here would strand it mid-action.
+                return onUserCancelled();
             }
 
         }

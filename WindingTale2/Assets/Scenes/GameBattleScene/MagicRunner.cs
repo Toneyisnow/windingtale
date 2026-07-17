@@ -92,9 +92,9 @@ namespace WindingTale.Scenes.GameBattleScene
                 string.Format("Fights/{0}/animator_{0}", StringUtils.Digit3(subjectAniId)));
             subjectObject.GetComponent<FightBody>().Initialize(subjectAniId, onSpellingMagic, onAnimationFinish);
 
-            // Set the HP and MP
-            var subjectInitialMp = magicResult.Subject.Mp;
-            updateSubjectMp(subjectInitialMp);
+            // Set the HP and MP. MP comes from the result's snapshot, not the live creature:
+            // the field applies the cost on its own schedule while this scene animates.
+            updateSubjectMp(magicResult.MpBefore);
             updateSubjectHp(magicResult.Subject.Hp);
 
             // TODO: it seems only damage magic has Battle Scene, so only take care of DamageResult here
@@ -146,7 +146,7 @@ namespace WindingTale.Scenes.GameBattleScene
         /// <param name="percent"></param>
         private void onSpellingMagic(int percent)
         {
-            var mpCurrent = magicResult.Subject.Mp - magicResult.MpCost;
+            var mpCurrent = magicResult.MpBefore - magicResult.MpCost;
 
             updateSubjectMp(mpCurrent);
 
@@ -213,7 +213,9 @@ namespace WindingTale.Scenes.GameBattleScene
         {
             var target = magicResult.Targets[resultIndex];
             var targetMpScale = getBarScale(current, target.MpMax);
-            subjectMpBar.transform.localScale = new Vector3(targetMpScale, 1, 1);
+            targetMpBar.transform.localScale = new Vector3(targetMpScale, 1, 1);
+
+            if (targetBarInfo != null) targetBarInfo.SetMp(current);
         }
 
         /// <summary>

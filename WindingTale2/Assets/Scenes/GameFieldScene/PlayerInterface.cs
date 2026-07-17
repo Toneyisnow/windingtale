@@ -179,7 +179,11 @@ namespace WindingTale.Scenes.GameFieldScene
 
         /// <summary>
         /// Slides the cursor to the next friend by ascending id (001, 002, ...),
-        /// skipping ids that no longer exist and wrapping back to the first.
+        /// skipping ids that no longer exist and wrapping back to the first. Only friends
+        /// who have yet to act are offered -- the cycle exists to reach the ones still
+        /// waiting for orders, and those are exactly the ones a click can open a move range
+        /// on (see IdleState.onSelectedPosition). The cursor holds still once every friend
+        /// has acted.
         /// </summary>
         public void CycleCursorToNextFriend()
         {
@@ -190,7 +194,7 @@ namespace WindingTale.Scenes.GameFieldScene
             }
 
             List<FDCreature> friends = map.Friends
-                .Where(f => f.Position != null)
+                .Where(f => f.Position != null && !f.HasActioned)
                 .OrderBy(f => f.Id)
                 .ToList();
             if (friends.Count == 0)

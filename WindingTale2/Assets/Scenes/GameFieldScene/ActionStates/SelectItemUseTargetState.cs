@@ -51,10 +51,14 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
 
 
-            // Display the usage range on the UI.
+            // Display the usage range on the UI, then park the cursor on the lowest-id
+            // friend / NPC in it, self included (own tile when the range holds none).
             gameMain.PushActivity((gameMain) =>
             {
                 gameMain.gameMap.showActionTargetRange(this.Creature, itemRange);
+
+                FDCreature target = fdMap.GetPreferredFriendOrNpcTargetInRange(this.Creature, itemRange, true);
+                SlideCursorToTarget(this.Creature, target);
             });
         }
 

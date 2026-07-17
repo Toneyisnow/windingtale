@@ -59,6 +59,15 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
             //ShowRangeActivity showRange = new ShowRangeActivity(range.ToList());
             //activityManager.Push(showRange);
+
+            // Park the cursor on the lowest-id friend / NPC to hand the item to. An exchange
+            // needs a second party, so the holder is not a candidate; with nobody in range
+            // the cursor falls back to their own tile.
+            gameMain.PushActivity((gameMain) =>
+            {
+                FDCreature target = fdMap.GetPreferredFriendOrNpcTargetInRange(this.Creature, range, false);
+                SlideCursorToTarget(this.Creature, target);
+            });
         }
 
         public override void onExit()

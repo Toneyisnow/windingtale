@@ -172,11 +172,20 @@ namespace WindingTale.Core.Algorithms
 
         public int MpCost { get; private set; }
 
+        /// <summary>
+        /// The subject's MP before the spell is paid for, snapshotted here the same way a
+        /// DamageResult snapshots HpBefore. The battle scene animates the drain from this
+        /// value, so it stays correct no matter when the cost is actually applied to the
+        /// creature.
+        /// </summary>
+        public int MpBefore { get; private set; }
+
         public MagicResult(FDCreature subject, List<FDCreature> targets, int mpCost) : base(subject)
         {
             this.Results = new Dictionary<int, SoloResult>();
             this.Targets = targets;
             this.MpCost = mpCost;
+            this.MpBefore = (subject != null) ? subject.Mp : 0;
         }
     }
 
