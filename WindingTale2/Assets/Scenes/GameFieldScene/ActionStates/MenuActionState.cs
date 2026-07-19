@@ -89,16 +89,80 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 else
                 {
                     // Standing on an unopened chest: prompt to open the treasure or not
+                    ItemDefinition treasureItem = DefinitionStore.Instance.GetItemDefinition(treasure.ItemId);
+
                     FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 2);
                     gameMain.PushActivity(new TalkActivity(message, creature, (result) =>
                     {
                         if (result == 1)
                         {
-                            // Open
-                            // TODO: Open the treasure
+                            // TODO: Open the treasure, note: need to check whether item is full, if full, need to prompt for exchange
+                            if (!creature.IsItemsFull())
+                            {
+                                creature.AddItem(treasure.ItemId);
+                                treasure.Open();
 
-                            FDMessage yes = FDMessage.Create(FDMessage.MessageTypes.Information, 3);
-                            gameMain.InsertActivity(new TalkActivity(yes, creature));
+                                FDMessage yes = FDMessage.Create(FDMessage.MessageTypes.Information, 3, strParam1: treasureItem.Name);
+                                gameMain.InsertActivity(new TalkActivity(yes, creature));
+                            }
+                            else
+                            {
+                                // Item bag is full, need to prompt for exchange
+                                FDMessage exchangeMessage = FDMessage.Create(FDMessage.MessageTypes.Confirm, 7);
+                                gameMain.InsertActivity(new TalkActivity(exchangeMessage, creature, (confirmExchange) =>
+                                {
+                                    if (confirmExchange == 1)
+                                    {
+                                        gameMain.InsertActivity(gameMain =>
+                                        {
+                                            gameMain.gameCanvas.ShowCreatureDialog(creature, CreatureInfoType.SelectAllItem, (selectedIndex) =>
+                                            {
+                                                if (selectedIndex < 0 || selectedIndex >= creature.Items.Count)
+                                                {
+                                                    // Cancelled, no exchange
+                                                    FDMessage noExchange = FDMessage.Create(FDMessage.MessageTypes.Information, 2);
+                                                    gameMain.InsertActivity(new TalkActivity(noExchange, creature));
+
+                                                    // No exchange, just rest
+                                                    gameMain.creatureRest(creature);
+                                                    this.playerInterface.onUpdateState(new IdleState(gameMain));
+                                                }
+                                                else
+                                                {
+                                                    // Exchange the selected item with the treasure item
+                                                    int exchangeItemId = creature.Items[selectedIndex];
+                                                    ItemDefinition exchangeItemDef = DefinitionStore.Instance.GetItemDefinition(exchangeItemId);
+                                                    if (exchangeItemDef == null)
+                                                    {
+                                                        Debug.LogError("Exchange item definition not found for item ID: " + exchangeItemId);
+                                                        return;
+                                                    }
+                                                    creature.RemoveItemAt(selectedIndex);
+                                                    creature.AddItem(treasure.ItemId);
+                                                    treasure.UpdateItem(exchangeItemId);
+
+                                                    FDMessage yesExchange = FDMessage.Create(FDMessage.MessageTypes.Information, 6, strParam1: treasureItem.Name, strParam2: exchangeItemDef.Name);
+                                                    gameMain.InsertActivity(new TalkActivity(yesExchange, creature));
+
+                                                    // After exchange, just rest
+                                                    gameMain.creatureRest(creature);
+                                                    this.playerInterface.onUpdateState(new IdleState(gameMain));
+                                                }
+                                            });
+                                        });
+                                    }
+                                    else
+                                    {
+                                        // No
+                                        FDMessage no = FDMessage.Create(FDMessage.MessageTypes.Information, 2);
+                                        gameMain.InsertActivity(new TalkActivity(no, creature));
+
+                                        // No exchange, just rest
+                                        gameMain.creatureRest(creature);
+                                        this.playerInterface.onUpdateState(new IdleState(gameMain));
+                                    }
+                                }));
+                            };
                         }
                         else
                         {
@@ -106,6 +170,10 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                             FDMessage no = FDMessage.Create(FDMessage.MessageTypes.Information, 2);
                             gameMain.InsertActivity(new TalkActivity(no, creature));
                         }
+
+                        // Regardless of the choice, return to the idle state after the dialog
+                        gameMain.creatureRest(creature);
+                        this.playerInterface.onUpdateState(new IdleState(gameMain));
 
                     }));
                     nextState = this;

@@ -365,7 +365,11 @@ namespace WindingTale.Core.Objects
         }
 
         /// <summary>
-        /// Note: need to update attack/defense item index after this call
+        /// Removes an item and keeps the equipped-item indices pointing at the same
+        /// items: the removed slot unequips, and anything after it shifts down by one.
+        /// Without this the indices silently address the wrong slot after a removal --
+        /// GetAttackItem / GetDefendItem then return an unrelated item, or null when the
+        /// item at the stale index is of the other kind.
         /// </summary>
         /// <param name="itemIndex"></param>
         public void RemoveItemAt(int itemIndex)
@@ -376,6 +380,20 @@ namespace WindingTale.Core.Objects
             }
 
             this.Items.RemoveAt(itemIndex);
+
+            this.AttackItemIndex = AdjustEquipIndexAfterRemoval(this.AttackItemIndex, itemIndex);
+            this.DefendItemIndex = AdjustEquipIndexAfterRemoval(this.DefendItemIndex, itemIndex);
+        }
+
+        private static int AdjustEquipIndexAfterRemoval(int equipIndex, int removedIndex)
+        {
+            if (equipIndex == removedIndex)
+            {
+                // The equipped item itself was removed: nothing is equipped now.
+                return -1;
+            }
+
+            return equipIndex > removedIndex ? equipIndex - 1 : equipIndex;
         }
 
         public int GetItemAt(int itemIndex)
@@ -418,7 +436,7 @@ namespace WindingTale.Core.Objects
             int itemId = this.Items[itemIndex];
             ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
 
-            if (!item.IsEquipment())
+            if (item == null || !item.IsEquipment())
             {
                 return;
             }

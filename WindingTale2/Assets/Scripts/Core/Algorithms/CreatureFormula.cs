@@ -107,7 +107,11 @@ namespace WindingTale.Core.Algorithms
             AttackItemDefinition attackItem = creature.GetAttackItem();
             DefendItemDefinition defendItem = creature.GetDefendItem();
 
-            int result = creature.Dp + defendItem.Dp;
+            int result = creature.Dp;
+            if (defendItem != null)
+            {
+                result += defendItem.Dp;
+            }
             if (attackItem != null)
             {
                 result += attackItem.Dp;
