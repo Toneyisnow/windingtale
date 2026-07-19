@@ -52,6 +52,7 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        [JsonProperty(PropertyName = "Treasures")]
         public List<TreasureDefinition> Treasures
         {
             get; set;

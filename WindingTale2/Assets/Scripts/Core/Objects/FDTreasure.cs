@@ -8,10 +8,14 @@ namespace WindingTale.Core.Objects
 
         public bool HasOpened { get; private set; }
 
-        public FDTreasure(int id, int itemId) : base(id, ObjectType.Treature)
+        public FDTreasure(int id, int itemId) : this(id, itemId, 0)
+        {
+        }
+
+        public FDTreasure(int id, int itemId, int money) : base(id, ObjectType.Treature)
         {
             this.ItemId = itemId;
-            this.Money = 0;
+            this.Money = money;
             this.HasOpened = false;
         }
 

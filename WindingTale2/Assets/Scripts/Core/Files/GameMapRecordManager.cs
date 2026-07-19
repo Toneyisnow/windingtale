@@ -131,16 +131,28 @@ namespace WindingTale.Core.Files
         private TreasureMapRecord ConvertTreasureToRecord(FDTreasure treasure)
         {
             TreasureMapRecord record = new TreasureMapRecord();
+            record.Id = treasure.Id;
             record.ItemId = treasure.ItemId;
             record.Money = treasure.Money;
+            record.HasOpened = treasure.HasOpened;
             record.Position = treasure.Position;
             return record;
         }
 
         private FDTreasure ConvertRecordToTreasure(TreasureMapRecord record)
         {
-            FDTreasure treasure = new FDTreasure(record.ItemId, record.Money);
+            // The constructor is (id, itemId, money) -- passing (ItemId, Money) here used
+            // to store the item id as the object id and the money as the item id.
+            FDTreasure treasure = new FDTreasure(record.Id, record.ItemId, record.Money);
             treasure.Position = record.Position;
+
+            // HasOpened is write-once through Open(); an emptied chest must stay emptied
+            // across a save/load or its contents could be collected twice.
+            if (record.HasOpened)
+            {
+                treasure.Open();
+            }
+
             return treasure;
         }
 

@@ -222,17 +222,11 @@ namespace WindingTale.Scenes.GameFieldScene
             {
                 if (result.Experience > 0)
                 {
-                    FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 5, result.Experience);
-                    this.InsertActivity(new TalkActivity(message, creature));
-
-                    BattleHandler.ApplyExperience(creature, result.Experience);
+                    applyExperienceAndLevelUp(creature, result.Experience);
                 }
                 if (result.BackExperience > 0)
                 {
-                    FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 5, result.BackExperience);
-                    this.InsertActivity(new TalkActivity(message, target));
-
-                    BattleHandler.ApplyExperience(target, result.BackExperience);
+                    applyExperienceAndLevelUp(target, result.BackExperience);
                 }
             });
 
@@ -321,10 +315,7 @@ namespace WindingTale.Scenes.GameFieldScene
             {
                 if (result.Experience > 0)
                 {
-                    FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 5, result.Experience);
-                    this.InsertActivity(new TalkActivity(message, creature));
-
-                    BattleHandler.ApplyExperience(creature, result.Experience);
+                    applyExperienceAndLevelUp(creature, result.Experience);
                 }
             });
 
@@ -544,27 +535,105 @@ namespace WindingTale.Scenes.GameFieldScene
             }
         }
 
-        private void onCreatureEndTurn(FDCreature creature)
+        /// <summary>
+        /// Grants experience and, when it takes the creature over the threshold, applies
+        /// the level up and queues the level-up dialog right behind the experience one.
+        /// A single gain never exceeds 100 exp, so this can raise at most one level.
+        /// </summary>
+        private void applyExperienceAndLevelUp(FDCreature creature, int experience)
         {
-            bool hasRestRecover = !creature.HasMoved() && !creature.HasActioned;
-            if (hasRestRecover)
+            LevelUpInfo levelUp = BattleHandler.ApplyExperience(creature, experience);
+            if (levelUp != null)
             {
-                // Show animation for rest recovery; greyout happens in the activity's endAction
-                this.InsertActivity(ActivityFactory.CreatureRestRecoverActivity(creature));
+                BattleHandler.ApplyLevelUp(creature, levelUp);
             }
 
+            // InsertActivity puts an activity at the FRONT of the queue, so these go in
+            // back to front: the level-up line first, then the experience line on top of
+            // it. The player then sees "+N exp" followed by the level-up summary.
+            if (levelUp != null)
+            {
+                this.InsertActivity(new TalkActivity(buildLevelUpMessages(creature, levelUp), creature));
+            }
+
+            FDMessage expMessage = FDMessage.Create(FDMessage.MessageTypes.Information, 5, experience);
+            this.InsertActivity(new TalkActivity(expMessage, creature));
+        }
+
+        /// <summary>
+        /// The level-up dialog: "等级上升了！" followed by one line per stat that actually
+        /// improved, and the newly learnt magic if there is one. Messages 12-17 all start
+        /// with '#', so they read as separate lines of the same dialog.
+        /// </summary>
+        private static List<FDMessage> buildLevelUpMessages(FDCreature creature, LevelUpInfo levelUp)
+        {
+            List<FDMessage> messages = new List<FDMessage>
+            {
+                FDMessage.Create(FDMessage.MessageTypes.Information, 11)
+            };
+
+            if (levelUp.ImprovedHp > 0)
+            {
+                messages.Add(FDMessage.Create(FDMessage.MessageTypes.Information, 12, levelUp.ImprovedHp));
+            }
+            if (levelUp.ImprovedMp > 0)
+            {
+                messages.Add(FDMessage.Create(FDMessage.MessageTypes.Information, 13, levelUp.ImprovedMp));
+            }
+            if (levelUp.ImprovedAp > 0)
+            {
+                messages.Add(FDMessage.Create(FDMessage.MessageTypes.Information, 14, levelUp.ImprovedAp));
+            }
+            if (levelUp.ImprovedDp > 0)
+            {
+                messages.Add(FDMessage.Create(FDMessage.MessageTypes.Information, 15, levelUp.ImprovedDp));
+            }
+            if (levelUp.ImprovedDx > 0)
+            {
+                messages.Add(FDMessage.Create(FDMessage.MessageTypes.Information, 16, levelUp.ImprovedDx));
+            }
+
+            if (levelUp.LearntMagicId > 0)
+            {
+                MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(levelUp.LearntMagicId);
+                if (magic != null)
+                {
+                    messages.Add(FDMessage.Create(FDMessage.MessageTypes.Information, 17, 0, 0, magic.Name));
+                }
+            }
+
+            return messages;
+        }
+
+        private void onCreatureEndTurn(FDCreature creature)
+        {
+            // Resting in place (neither moved nor acted this turn) recovers HP.
+            bool hasRestRecover = !creature.HasMoved() && !creature.HasActioned;
+            int recoveredHp = hasRestRecover
+                ? CreatureFormula.GetRestRecoveredHp(creature.Hp, creature.HpMax) - creature.Hp
+                : 0;
+
+            // Always settled in data, even when the creature has no icon to grey out --
+            // the turn cannot end while anyone is still flagged as not having acted.
+            creature.HasActioned = true;
+
             Creature c = gameMap.GetCreature(creature);
+            if (recoveredHp > 0)
+            {
+                // The HP gain, the flash and the visual greyout all happen inside the
+                // activity. Queued rather than inserted so a whole batch of resting
+                // creatures (endTurnForAll) flashes in order, one after another.
+                this.PushActivity(ActivityFactory.CreatureRecoverActivity(creature, recoveredHp));
+            }
+            else if (c != null)
+            {
+                // Nothing to recover (already at full HP, or the creature moved/acted):
+                // no animation, grey out right away.
+                c.SetActioned(true);
+            }
+
             if (c != null)
             {
-                if (hasRestRecover)
-                {
-                    // Mark as actioned in data only; visual greyout is deferred to RestRecover endAction
-                    creature.HasActioned = true;
-                }
-                else
-                {
-                    c.SetActioned(true);
-                }
                 c.creature.PrePosition = null;
             }
 

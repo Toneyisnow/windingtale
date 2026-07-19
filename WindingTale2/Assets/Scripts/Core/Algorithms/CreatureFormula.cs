@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Common;
@@ -164,18 +165,39 @@ namespace WindingTale.Core.Algorithms
         }
 
         /// <summary>
-        /// 
+        /// Rolls what a creature gains from its next level: each stat from the span in
+        /// its LevelUpDefinition, plus the magic (if any) its LevelUpMagicDefinition
+        /// grants at the level it is about to reach. Nothing is written to the creature
+        /// here -- see BattleHandler.ApplyLevelUp for that.
         /// </summary>
-        /// <param name="creature"></param>
-        /// <returns></returns>
         public static LevelUpInfo ComposeLevelUp(FDCreature creature)
         {
             LevelUpInfo result = new LevelUpInfo();
-            result.ImprovedAp = 0;
-            result.ImprovedDp = 0;
-            result.ImprovedDx = 0;
-            result.ImprovedHp = 0;
-            result.ImprovedMp = 0;
+
+            if (creature == null || creature.Definition == null)
+            {
+                return result;
+            }
+
+            int definitionId = creature.Definition.DefinitionId;
+
+            LevelUpDefinition levelUp = DefinitionStore.Instance.GetLevelUpDefinition(definitionId);
+            if (levelUp != null)
+            {
+                result.ImprovedHp = Math.Max(0, FDRandom.IntFromSpan(levelUp.HpRange));
+                result.ImprovedMp = Math.Max(0, FDRandom.IntFromSpan(levelUp.MpRange));
+                result.ImprovedAp = Math.Max(0, FDRandom.IntFromSpan(levelUp.ApRange));
+                result.ImprovedDp = Math.Max(0, FDRandom.IntFromSpan(levelUp.DpRange));
+                result.ImprovedDx = Math.Max(0, FDRandom.IntFromSpan(levelUp.DxRange));
+            }
+
+            // The magic table is keyed by the level being reached, not the current one.
+            LevelUpMagicDefinition levelUpMagic =
+                DefinitionStore.Instance.GetLevelUpMagicDefinition(definitionId, creature.Level + 1);
+            if (levelUpMagic != null)
+            {
+                result.LearntMagicId = levelUpMagic.MagicId;
+            }
 
             return result;
         }

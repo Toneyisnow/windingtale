@@ -94,6 +94,11 @@ namespace WindingTale.UI.Dialogs
         // Update is called once per frame
         void Update()
         {
+            // ESC / Backspace closes the dialog, exactly as the Cancel button does.
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace))
+            {
+                onCancel();
+            }
         }
 
         public void Init(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected, GameMain gameMain)
@@ -214,9 +219,19 @@ namespace WindingTale.UI.Dialogs
         }
 
 
+        /// <summary>
+        /// Cancelled: report index -1 (every caller reads a negative index as "cancelled")
+        /// and close. Wired to the Cancel button and to ESC / Backspace.
+        /// </summary>
         public void onCancel()
         {
-            this.onSelected(-1);
+            // The callback is cleared first: closing deactivates the GameObject, but a
+            // second onCancel in the same frame (button click plus key press) would
+            // otherwise report the cancellation twice.
+            Action<int> callback = this.onSelected;
+            this.onSelected = null;
+
+            callback?.Invoke(-1);
             GameMain.getDefault().gameCanvas.CloseDialog();
         }
 

@@ -70,5 +70,35 @@ namespace WindingTale.Scenes.GameFieldScene
             }
             renderer.materials = greyMats;
         }
+
+        private Shader _whiteFlashShader;
+        private Shader WhiteFlashShader => _whiteFlashShader != null
+            ? _whiteFlashShader
+            : (_whiteFlashShader = Shader.Find("Custom/WhiteFlash"));
+
+        /// <summary>
+        /// Paints every submesh flat white. Used for the short "recovering" flash; the
+        /// caller is responsible for restoring the saved materials afterwards.
+        /// </summary>
+        public void ApplyWhiteFlashMaterial(GameObject gameObject)
+        {
+            MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
+            if (renderer == null) return;
+
+            Shader shader = WhiteFlashShader;
+            if (shader == null)
+            {
+                Debug.LogError("[GameRenderer] Shader 'Custom/WhiteFlash' not found!");
+                return;
+            }
+
+            Material[] originals = renderer.sharedMaterials;
+            Material[] whiteMats = new Material[originals.Length];
+            for (int i = 0; i < originals.Length; i++)
+            {
+                whiteMats[i] = originals[i] == null ? null : new Material(shader);
+            }
+            renderer.materials = whiteMats;
+        }
     }
 }

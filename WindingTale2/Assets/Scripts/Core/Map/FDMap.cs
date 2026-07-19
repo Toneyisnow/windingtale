@@ -93,8 +93,37 @@ namespace WindingTale.Core.Map
 
             ChapterDefinition chapterDefinition = DefinitionStore.Instance.LoadChapter(chapterId);
             map.Field = new FDField(chapterDefinition);
+            map.Treasures = LoadTreasures(chapterDefinition);
 
             return map;
+        }
+
+        /// <summary>
+        /// Builds the map's treasures from the chapter's "Treasures" array. Chapters with
+        /// no treasures (or an older chapter file without the array) simply get none.
+        /// </summary>
+        private static List<FDTreasure> LoadTreasures(ChapterDefinition chapterDefinition)
+        {
+            List<FDTreasure> treasures = new List<FDTreasure>();
+
+            if (chapterDefinition == null || chapterDefinition.Treasures == null)
+            {
+                return treasures;
+            }
+
+            foreach (TreasureDefinition definition in chapterDefinition.Treasures)
+            {
+                if (definition == null || definition.Position == null)
+                {
+                    continue;
+                }
+
+                FDTreasure treasure = new FDTreasure(definition.TreasureId, definition.ItemId);
+                treasure.Position = FDPosition.At(definition.Position.X, definition.Position.Y);
+                treasures.Add(treasure);
+            }
+
+            return treasures;
         }
 
         public static FDMap loadFromRecord()

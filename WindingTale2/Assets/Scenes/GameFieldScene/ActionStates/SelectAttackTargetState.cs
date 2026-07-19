@@ -87,11 +87,9 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
             else
             {
-                // Outside the attack range -- which includes the creature's own tile, where
-                // the cursor starts when no enemy is in reach. The creature has already
-                // moved and still owes an action, so roll back to its action menu the same
-                // way cancelling does; dropping to idle here would strand it mid-action.
-                return onUserCancelled();
+                // Outside the attack range: ignored. Leaving the state is the cancel key's
+                // job, so a stray click on the map has no effect at all.
+                return this;
             }
 
         }

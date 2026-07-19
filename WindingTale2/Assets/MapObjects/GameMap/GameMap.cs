@@ -42,8 +42,20 @@ namespace WindingTale.MapObjects.GameMap
         // out, so 0.7 barely reads as faded.
         private const float MenuActionedCreatureAlpha = 0.4f;
 
+        // How opaque an obstacle stays while the cursor or a menu item covers one of
+        // its tiles. Same treatment as a creature standing under a menu item.
+        private const float ObstacleAlpha = 0.7f;
+
         private GameObject cursorObject = null;
         private Cursor cursor = null;
+
+        // The menu currently on screen, if any. Kept so the obstacle fade can be
+        // recomputed from both the cursor and the menu tiles at once.
+        private FDMenu currentMenu = null;
+
+        // The live menu's component. Held directly rather than looked up by name: a
+        // closing menu lingers in the hierarchy while the next one is already open.
+        private Menu currentMenuComponent = null;
 
         
 
@@ -103,6 +115,7 @@ namespace WindingTale.MapObjects.GameMap
             cursor.Position = position;
             cursorObject.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
 
+            refreshObstacleFade();
         }
 
         /// <summary>
@@ -113,6 +126,38 @@ namespace WindingTale.MapObjects.GameMap
             if (cursorObject != null)
             {
                 cursorObject.SetActive(visible);
+                refreshObstacleFade();
+            }
+        }
+
+        /// <summary>
+        /// Fades every obstacle whose footprint is currently under the cursor or under
+        /// one of the open menu's item tiles, and restores all the others. Recomputed
+        /// from scratch on each cursor move / menu change, so no state can leak.
+        /// </summary>
+        private void refreshObstacleFade()
+        {
+            ObstaclesLayer obstacles = obstaclesLayer != null ? obstaclesLayer.GetComponent<ObstaclesLayer>() : null;
+            if (obstacles == null)
+            {
+                return;
+            }
+
+            obstacles.ResetAllTransparency();
+
+            // The cursor only counts while it is actually on screen (it is hidden
+            // while a menu is open).
+            if (cursor != null && cursorObject != null && cursorObject.activeSelf)
+            {
+                obstacles.GetObstacleAt(cursor.Position)?.SetTransparency(ObstacleAlpha);
+            }
+
+            if (currentMenu != null)
+            {
+                foreach (FDPosition tile in FDMenu.GetItemPositions(currentMenu.Position))
+                {
+                    obstacles.GetObstacleAt(tile)?.SetTransparency(ObstacleAlpha);
+                }
             }
         }
 
@@ -154,6 +199,7 @@ namespace WindingTale.MapObjects.GameMap
 
             // Update the logical position immediately; only the visual glides.
             cursor.Position = target;
+            refreshObstacleFade();
 
             // Path in tile space: (x0,y0) -> (x,y0) -> (x,y).
             Vector3 p0 = MapCoordinate.ConvertPosToVec3(from);
@@ -210,16 +256,12 @@ namespace WindingTale.MapObjects.GameMap
         /// </summary>
         public void SetMenuActiveItem(int itemIndex)
         {
-            Transform menuTransform = indicatorsLayer.transform.Find("menu");
-            if (menuTransform == null)
+            // Must be the menu ShowMenu just created, not a by-name lookup: while a menu
+            // opens another one, the previous menu's GameObject is still in the hierarchy
+            // playing its close animation, and a name lookup would find that one instead.
+            if (currentMenuComponent != null)
             {
-                return;
-            }
-
-            Menu menuComponent = menuTransform.GetComponent<Menu>();
-            if (menuComponent != null)
-            {
-                menuComponent.SetActiveItem(itemIndex);
+                currentMenuComponent.SetActiveItem(itemIndex);
             }
         }
 
@@ -290,6 +332,8 @@ namespace WindingTale.MapObjects.GameMap
             Menu menuComponent = menuObject.GetComponent<Menu>();
             menuComponent.Init(menu);
 
+            currentMenuComponent = menuComponent;
+
             // Dim the tiles the menu covers, and the creatures standing on them, so the
             // menu reads clearly (same treatment as the move/target indicators).
             setMenuTilesFaded(menu, true);
@@ -297,17 +341,17 @@ namespace WindingTale.MapObjects.GameMap
 
         public void CloseMenu(FDMenu menu)
         {
-            GameObject menuObject = indicatorsLayer.transform.Find("menu")?.gameObject;
-            if (menuObject != null)
+            if (currentMenuComponent != null)
             {
                 // Direct destroy the menu object
                 //// Destroy(menuObject.gameObject);
 
-                // Close with animation
-                Menu menuComponent = menuObject.GetComponent<Menu>();
-                menuComponent.CloseMenu();
-
-
+                // Close with animation. The GameObject outlives this call by the length
+                // of the slide-out, and a nested menu's ShowMenu runs in between, so
+                // rename it: nothing may find the dying menu under the live menu's name.
+                currentMenuComponent.gameObject.name = "menu_closing";
+                currentMenuComponent.CloseMenu();
+                currentMenuComponent = null;
             }
 
             // Restore the tiles and creatures dimmed by ShowMenu.
@@ -325,6 +369,11 @@ namespace WindingTale.MapObjects.GameMap
             {
                 return;
             }
+
+            // Obstacles under the menu items fade too; recomputed centrally so the
+            // cursor and the menu can't clobber each other's fades.
+            currentMenu = faded ? menu : null;
+            refreshObstacleFade();
 
             ShapesLayer shapes = getShapesLayer();
             FDPosition[] itemTiles = FDMenu.GetItemPositions(menu.Position);

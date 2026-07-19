@@ -71,8 +71,11 @@ namespace WindingTale.Scenes.GameFieldScene
 
         private bool CanAcceptKeyboardInput()
         {
-            if (gameMain.gameCanvas != null && gameMain.gameCanvas.IsDialogOpened())
+            if (gameMain.gameCanvas != null
+                && (gameMain.gameCanvas.IsDialogOpened() || gameMain.gameCanvas.WasDialogClosedThisFrame()))
             {
+                // Also ignore the frame the dialog closed on: the key press that
+                // dismissed it must not fall through to the field as a second input.
                 return false;
             }
 

@@ -70,10 +70,11 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         public override IActionState onSelectedPosition(FDPosition position)
         {
-            // Selecte position must be included in the range
+            // Selecte position must be included in the range. Outside it: ignored.
+            // Leaving the state is the cancel key's job, so a stray click does nothing.
             if (!itemRange.Contains(position))
             {
-                return onUserCancelled();
+                return this;
             }
 
             // No creature or not a friend/NPC

@@ -1,4 +1,13 @@
 {
+  "Treasures": [
+    { "Id": 1, "Type": 1, "Position": { "X": 4, "Y": 7 }, "ItemId": 903 },
+    { "Id": 2, "Type": 2, "Position": { "X": 20, "Y": 19 }, "ItemId": 904 },
+    { "Id": 3, "Type": 1, "Position": { "X": 30, "Y": 20 }, "ItemId": 114 },
+    { "Id": 4, "Type": 2, "Position": { "X": 12, "Y": 27 }, "ItemId": 803 },
+    { "Id": 5, "Type": 1, "Position": { "X": 31, "Y": 29 }, "ItemId": 810 },
+    { "Id": 6, "Type": 3, "Position": { "X": 28, "Y": 34 }, "ItemId": 113 },
+    { "Id": 7, "Type": 2, "Position": { "X": 18, "Y": 37 }, "ItemId": 312 }
+  ],
   "Index": 15,
   "Width": 40,
   "Height": 40,

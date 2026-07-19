@@ -168,6 +168,9 @@ namespace WindingTale.Chapters
 
         private Action<GameMain> turn3 = (gameMain) =>
         {
+            // Focus the cursor
+            gameMain.PushActivity(new SlideCursorActivity(12, 13));
+
             // Friends appear
             FDCreature c5 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 5, 5, FDPosition.At(12, 12));
             FDCreature c6 = AddCreatureToMap(gameMain, CreatureFaction.Friend, 6, 1016, FDPosition.At(12, 12));
@@ -185,7 +188,10 @@ namespace WindingTale.Chapters
 
         private Action<GameMain> turn4 = (gameMain) =>
         {
-            // Enemy Group1 appear
+            // Focus the cursor
+            gameMain.PushActivity(new SlideCursorActivity(20, 20));
+
+            // Enemy Group3 appear
             AddCreatureToMap(gameMain, CreatureFaction.Enemy, 21, 50101, FDPosition.At(19, 23));
             AddCreatureToMap(gameMain, CreatureFaction.Enemy, 22, 50101, FDPosition.At(20, 22), 101);
             AddCreatureToMap(gameMain, CreatureFaction.Enemy, 23, 50101, FDPosition.At(21, 21));
@@ -205,7 +211,10 @@ namespace WindingTale.Chapters
 
         private Action<GameMain> turn5_Boss = (gameMain) =>
         {
-            // Enemy Group1 appear
+            // Focus the cursor
+            gameMain.PushActivity(new SlideCursorActivity(5, 22));
+
+            // Enemy Group4 appear
             AddCreatureToMap(gameMain, CreatureFaction.Enemy, 25, 50101, FDPosition.At(1, 22));
             AddCreatureToMap(gameMain, CreatureFaction.Enemy, 26, 50101, FDPosition.At(2, 22));
             AddCreatureToMap(gameMain, CreatureFaction.Enemy, 27, 50101, FDPosition.At(5, 24));
@@ -227,6 +236,9 @@ namespace WindingTale.Chapters
 
         private Action<GameMain> turn6_Npc = (gameMain) =>
         {
+            // Focus the cursor
+            gameMain.PushActivity(new SlideCursorActivity(19, 16));
+
             // Enemy Group1 appear
             AddCreatureToMap(gameMain, CreatureFaction.Npc, 31, 50103, FDPosition.At(24, 15));
             AddCreatureToMap(gameMain, CreatureFaction.Npc, 32, 50103, FDPosition.At(24, 15));

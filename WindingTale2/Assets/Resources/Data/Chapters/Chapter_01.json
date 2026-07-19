@@ -1,4 +1,9 @@
 {
+  "Treasures": [
+    { "Id": 1, "Type": 1, "Position": { "X": 8, "Y": 14 }, "ItemId": 101 },
+    { "Id": 2, "Type": 2, "Position": { "X": 4, "Y": 13 }, "ItemId": 901 },
+    { "Id": 3, "Type": 3, "Position": { "X": 1, "Y": 11 }, "ItemId": 902 }
+  ],
   "Index": 0,
   "Width": 24,
   "Height": 24,
@@ -23,7 +28,7 @@
       "DefinitionKey": "dwelling_house_1",
       "Position": {
         "X": 10,
-        "Y": 10
+        "Y": 9
       }
     },
     {
@@ -31,7 +36,7 @@
       "DefinitionKey": "thatched_hut_1",
       "Position": {
         "X": 11,
-        "Y": 5
+        "Y": 4
       }
     },
     {
@@ -39,7 +44,7 @@
       "DefinitionKey": "thatched_hut_1",
       "Position": {
         "X": 16,
-        "Y": 8
+        "Y": 7
       }
     },
     {

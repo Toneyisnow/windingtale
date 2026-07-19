@@ -115,6 +115,57 @@ namespace WindingTale.MapObjects.GameMap
 
                     obj.transform.position += new Vector3(horizX, seatY, horizZ) + extra;
                 }
+
+                // Record which tiles this obstacle covers so the cursor/menu can fade
+                // it. The footprint is derived from the model's own world bounds: one
+                // tile is 2 world units (MapCoordinate.ConvertPosToVec3), map X runs
+                // along world -X and map Y along world +Z, so the tile extents are just
+                // the bounding-box size over the tile size.
+                ObstacleInstance instance = obj.GetComponent<ObstacleInstance>() ?? obj.AddComponent<ObstacleInstance>();
+                int tileWidth = 1;
+                int tileHeight = 1;
+                if (TryGetWorldBounds(obj, out Bounds footprint))
+                {
+                    tileWidth = Mathf.Max(1, Mathf.RoundToInt(footprint.size.x / WorldUnitsPerTile));
+                    tileHeight = Mathf.Max(1, Mathf.RoundToInt(footprint.size.z / WorldUnitsPerTile));
+                }
+                instance.SetFootprint(pos.X, pos.Y, tileWidth, tileHeight);
+            }
+        }
+
+        // One map tile spans 2 world units; see MapCoordinate.ConvertPosToVec3.
+        private const float WorldUnitsPerTile = 2f;
+
+        /// <summary>
+        /// Returns the obstacle whose footprint covers the given tile, or null when the
+        /// tile is clear. Obstacle footprints do not overlap, so the first hit wins.
+        /// </summary>
+        public ObstacleInstance GetObstacleAt(FDPosition position)
+        {
+            if (position == null)
+            {
+                return null;
+            }
+
+            foreach (ObstacleInstance instance in GetComponentsInChildren<ObstacleInstance>())
+            {
+                if (instance.Covers(position))
+                {
+                    return instance;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Restores every obstacle faded by GetObstacleAt(...).SetTransparency().
+        /// </summary>
+        public void ResetAllTransparency()
+        {
+            foreach (ObstacleInstance instance in GetComponentsInChildren<ObstacleInstance>())
+            {
+                instance.ResetTransparency();
             }
         }
 

@@ -73,6 +73,57 @@ namespace WindingTale.MapObjects.CreatureIcon
 
         private static readonly string[] ClipNames = { "Clip_01", "Clip_02", "Clip_03" };
 
+        // Materials saved while the white recovering flash is up. Kept separate from the
+        // greyout originals: a creature flashes first and is greyed out afterwards, and
+        // the two must not overwrite each other's saved state.
+        private Material[][] preFlashMaterials = null;
+
+        /// <summary>
+        /// Paints the creature flat white (the "recovering" flash), or restores the
+        /// materials it had before. See CreatureRecovering for the timing.
+        /// </summary>
+        public void SetWhiteFlash(bool flashing)
+        {
+            if (flashing)
+            {
+                if (preFlashMaterials != null)
+                {
+                    // Already flashing: don't overwrite the saved materials with white ones.
+                    return;
+                }
+
+                preFlashMaterials = new Material[ClipNames.Length][];
+                for (int i = 0; i < ClipNames.Length; i++)
+                {
+                    MeshRenderer renderer = GetClipRenderer(ClipNames[i]);
+                    if (renderer == null)
+                    {
+                        continue;
+                    }
+
+                    preFlashMaterials[i] = renderer.sharedMaterials;
+                    GameRenderer.Instance.ApplyWhiteFlashMaterial(renderer.gameObject);
+                }
+            }
+            else
+            {
+                if (preFlashMaterials == null)
+                {
+                    return;
+                }
+
+                for (int i = 0; i < ClipNames.Length; i++)
+                {
+                    MeshRenderer renderer = GetClipRenderer(ClipNames[i]);
+                    if (renderer != null && preFlashMaterials[i] != null)
+                    {
+                        renderer.sharedMaterials = preFlashMaterials[i];
+                    }
+                }
+                preFlashMaterials = null;
+            }
+        }
+
         /// <summary>
         /// Fades the whole creature to the given alpha (e.g. while a menu covers its
         /// tile, so the menu reads clearly). Call ResetTransparency() to restore.

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
 using UnityEngine.Localization;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
@@ -20,6 +22,11 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         /// The raw text to be displayed.
         /// </summary>
         private LocalizedString rawText = null;
+
+        /// <summary>
+        /// Pre-assembled text, used instead of rawText when set (multi-message lines).
+        /// </summary>
+        private string resolvedText = null;
 
         /// <summary>
         /// Need to confirm Yes or No
@@ -45,6 +52,31 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
 
             this.rawText = LocalizationManager.GetFDMessageString(message);
             this.needConfirm = message.MessageType == FDMessage.MessageTypes.Confirm;
+
+            this.isMessage = true;
+        }
+
+        /// <summary>
+        /// Show several message lines as ONE dialog. The lines are resolved and joined
+        /// here because no single LocalizedString can span table entries; each entry
+        /// keeps its own '#' line-break markers, which TalkDialog turns into newlines.
+        /// Used for the level-up summary (header + one line per improved stat).
+        /// </summary>
+        public TalkActivity(List<FDMessage> messages, FDCreature creature = null, Action<int> onSelected = null)
+        {
+            this.creature = creature;
+            this.onSelected = onSelected;
+
+            StringBuilder builder = new StringBuilder();
+            foreach (FDMessage message in messages)
+            {
+                builder.Append(LocalizationManager.GetFDMessageString(message).GetLocalizedString());
+            }
+            this.resolvedText = builder.ToString();
+
+            // Still needed as the fallback text source; the resolved string wins.
+            this.rawText = LocalizationManager.GetFDMessageString(messages[0]);
+            this.needConfirm = false;
 
             this.isMessage = true;
         }
@@ -84,7 +116,8 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
                 {
                     selectedResult = result;
                 },
-                isMessage ? -1 : gameMain.ChapterId);
+                isMessage ? -1 : gameMain.ChapterId,
+                this.resolvedText);
 
             this.HasFinished = false;
         }

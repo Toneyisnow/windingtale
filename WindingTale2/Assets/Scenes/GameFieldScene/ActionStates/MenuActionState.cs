@@ -39,7 +39,15 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             this.targetPosition = targetPos;
             this.treasure = fdMap.GetTreasureAt(targetPos);
 
-            bool hasMoved = targetPos != null && !targetPos.AreSame(creature.Position);
+            // "Has moved" must not be inferred from targetPos vs the creature's current
+            // position alone: that only holds while the walk activity is still queued
+            // (i.e. when ShowMoveRangeState builds this state). Once the walk has run,
+            // Position == targetPos and the comparison silently reports "not moved" --
+            // which is what happens when this state is rebuilt on the way back from the
+            // item menu or a cancelled target selection. creature.HasMoved() is the
+            // authoritative check afterwards (it compares PrePosition to Position).
+            bool hasMoved = (targetPos != null && !targetPos.AreSame(creature.Position))
+                || creature.HasMoved();
 
             // Magic
             this.SetMenu(0, MenuItemId.ActionMagic, IsMenuMagicEnabled(hasMoved), () =>
@@ -61,7 +69,10 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Item
             this.SetMenu(2, MenuItemId.ActionItems, IsMenuItemEnabled(), () =>
             {
-                return new MenuItemState(gameMain, creature);
+                // Hand ourselves over as the back state so cancelling out of the item
+                // menu returns to THIS menu, keeping targetPosition and the enabled
+                // flags that were computed for the post-move situation.
+                return new MenuItemState(gameMain, creature, this);
             });
 
             // Rest
@@ -69,14 +80,15 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             {
                 Debug.Log("Rest action.");
                 IActionState nextState;
-                if (treasure == null || !treasure.HasOpened)
+                if (treasure == null || treasure.HasOpened)
                 {
+                    // No chest underfoot, or one that has already been emptied: plain rest.
                     gameMain.creatureRest(creature);
                     nextState = new IdleState(gameMain);
                 }
                 else
                 {
-                    // Prompt to open the treasure or not
+                    // Standing on an unopened chest: prompt to open the treasure or not
                     FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 2);
                     gameMain.PushActivity(new TalkActivity(message, creature, (result) =>
                     {

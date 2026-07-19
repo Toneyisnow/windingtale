@@ -79,9 +79,11 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         public override IActionState onSelectedPosition(FDPosition position)
         {
+            // Outside the range: ignored. Leaving the state is the cancel key's job, so a
+            // stray click on the map has no effect at all.
             if (range == null || !range.Contains(position))
             {
-                //// stateHandler.HandlePopState();
+                return this;
             }
 
             // No creature or not a friend/NPC

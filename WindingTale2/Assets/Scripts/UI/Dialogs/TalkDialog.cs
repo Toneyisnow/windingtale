@@ -122,7 +122,7 @@ public class TalkDialog : MonoBehaviour
     /// <param name="creatureAnimationId"></param>
     /// <param name="text"></param>
     /// <param name="onSelected"></param>
-    public void InitMessage(int creatureAnimationId, LocalizedString text, bool needConfirm, GameCanvas.DialogPosition displayPosition, Action<int> onSelected)
+    public void InitMessage(int creatureAnimationId, LocalizedString text, bool needConfirm, GameCanvas.DialogPosition displayPosition, Action<int> onSelected, string resolvedText = null)
     {
         var textMeshComponent = messageTextObj.GetComponent<TextMeshProUGUI>();
         textMeshComponent.fontMaterial = Resources.Load<Material>(@"Fonts/FontAssets/zh/FZB_Message");
@@ -134,7 +134,7 @@ public class TalkDialog : MonoBehaviour
         messageTextObj.SetActive(true);
         conversationTextObj.SetActive(false);
 
-        Init(creatureAnimationId, text, needConfirm, displayPosition, onSelected);
+        Init(creatureAnimationId, text, needConfirm, displayPosition, onSelected, resolvedText);
     }
 
     /// <summary>
@@ -165,7 +165,12 @@ public class TalkDialog : MonoBehaviour
         Init(creatureAnimationId, text, false, displayPosition, onSelected);
     }
 
-    private void Init(int creatureAnimationId, LocalizedString text, bool needConfirm, GameCanvas.DialogPosition displayPosition, Action<int> onSelected)
+    /// <summary>
+    /// resolvedText, when supplied, is displayed instead of resolving `text` through the
+    /// localization table. Used for lines assembled from several table entries (the
+    /// level-up summary, for example), which no single LocalizedString can express.
+    /// </summary>
+    private void Init(int creatureAnimationId, LocalizedString text, bool needConfirm, GameCanvas.DialogPosition displayPosition, Action<int> onSelected, string resolvedText = null)
     {
         this.creatureAnimationId = creatureAnimationId;
 
@@ -204,7 +209,7 @@ public class TalkDialog : MonoBehaviour
         }
 
         // '#' in the source text is a line-break marker: start a new line and drop the '#'.
-        fullText = text.GetLocalizedString().Replace("#", "\n");
+        fullText = (resolvedText ?? text.GetLocalizedString()).Replace("#", "\n");
         skipToFullText = false;
         textFinished = false;
         autoCloseTimer = AutoCloseSeconds;

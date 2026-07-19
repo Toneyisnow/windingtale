@@ -1,4 +1,7 @@
 {
+  "Treasures": [
+    { "Id": 1, "Type": 3, "Position": { "X": 17, "Y": 16 }, "ItemId": 260 }
+  ],
   "Index": 11,
   "Width": 28,
   "Height": 50,

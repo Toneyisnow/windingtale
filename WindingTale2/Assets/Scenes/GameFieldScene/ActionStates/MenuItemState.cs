@@ -28,8 +28,14 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         }
 
 
-        public MenuItemState(GameMain gameMain, FDCreature creature) 
-            : base(gameMain, creature.Position, new MenuActionState(gameMain, creature, creature.Position))
+        /// <summary>
+        /// backState is the action menu this item menu was opened from. Pass it whenever
+        /// it exists: rebuilding a MenuActionState here would lose the position the
+        /// creature moved FROM, and the rebuilt menu would treat the creature as if it
+        /// had never moved. Only fall back to a fresh one when there is no caller state.
+        /// </summary>
+        public MenuItemState(GameMain gameMain, FDCreature creature, IActionState backState = null)
+            : base(gameMain, creature.Position, backState ?? new MenuActionState(gameMain, creature, creature.Position))
         {
             this.Creature = creature;
 

@@ -60,8 +60,10 @@ namespace WindingTale.Core.Files
 
     public class TreasureMapRecord
     {
+        public int Id;
         public int ItemId;
         public int Money;
+        public bool HasOpened;
         public FDPosition Position;
     }
 }

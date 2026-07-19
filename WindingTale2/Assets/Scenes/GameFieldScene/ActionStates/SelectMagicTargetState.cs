@@ -116,10 +116,9 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
             else
             {
-                // Outside the magic range -- roll back to the action menu, keyed off the
-                // creature's own tile. Handing it the clicked tile instead would have the
-                // menu offer whatever treasure happened to lie there.
-                return onUserCancelled();
+                // Outside the magic range: ignored. Leaving the state is the cancel key's
+                // job, so a stray click on the map has no effect at all.
+                return this;
             }
 
         }

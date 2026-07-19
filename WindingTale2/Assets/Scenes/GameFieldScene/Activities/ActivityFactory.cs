@@ -72,26 +72,37 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         }
 
         /// <summary>
-        /// Show the animation of a creature resting and recovering
+        /// A creature resting in place recovers HP: the HP is applied up front and the
+        /// creature flashes white for the length of the flash, after which it greys out
+        /// as an actioned creature. Only ever queued when recoveredHp > 0 -- a creature
+        /// already at full HP rests without any animation.
+        ///
+        /// The activity finishes when CreatureRecovering removes itself, so a batch of
+        /// resting creatures (endTurnForAll) flashes strictly one at a time.
         /// </summary>
-        /// <param name="creature"></param>
-        /// <param name="movePath"></param>
-        /// <returns></returns>
-        public static DurationActivity CreatureRestRecoverActivity(FDCreature creature)
+        public static DurationActivity CreatureRecoverActivity(FDCreature creature, int recoveredHp)
         {
-            DateTime startTime = DateTime.Now;
             Action<GameMain> startAction = gameMain =>
             {
-                startTime = DateTime.Now;
+                creature.Hp = Math.Min(creature.Hp + recoveredHp, creature.HpMax);
+
+                Creature creatureObj = gameMain.gameMap.GetCreature(creature);
+                if (creatureObj != null && creatureObj.GetComponent<CreatureRecovering>() == null)
+                {
+                    creatureObj.gameObject.AddComponent<CreatureRecovering>();
+                }
             };
 
             Func<GameMain, bool> checkEnd = gameMain =>
             {
-                return DateTime.Now > startTime.AddSeconds(0.3);
+                Creature creatureObj = gameMain.gameMap.GetCreature(creature);
+                return creatureObj == null || creatureObj.GetComponent<CreatureRecovering>() == null;
             };
 
             Action<GameMain> endAction = gameMain =>
             {
+                // Greying out is deferred to here so the flash reads against the
+                // creature's normal colours, not against the grey "already acted" look.
                 Creature creatureObj = gameMain.gameMap.GetCreature(creature);
                 creatureObj?.SetGreyout(true);
             };

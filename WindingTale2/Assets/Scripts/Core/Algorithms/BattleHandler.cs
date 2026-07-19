@@ -89,6 +89,11 @@ namespace WindingTale.Core.Algorithms
             foreach (FDCreature target in targetList)
             {
                 SoloResult soloResult = MagicFrom(magic, subject, target, field);
+                if (soloResult == null)
+                {
+                    continue;
+                }
+
                 result.Results[target.Id] = soloResult;
 
                 if (soloResult.ResultType == SoloResultType.Damage)
@@ -143,9 +148,15 @@ namespace WindingTale.Core.Algorithms
             }
         }
 
+        /// <summary>
+        /// Adds experience and, when it crosses 100, rolls the level-up. A single gain
+        /// never exceeds 100 exp, so at most one level is reached at a time. Returns the
+        /// composed LevelUpInfo when a level was reached (the caller is expected to pass
+        /// it to ApplyLevelUp and announce it), or null otherwise.
+        /// </summary>
         public static LevelUpInfo ApplyExperience(FDCreature creature, int experience)
         {
-            if (creature.Faction != CreatureFaction.Friend)
+            if (creature == null || creature.Faction != CreatureFaction.Friend)
             {
                 // Only friend can gain experience
                 return null;
@@ -161,9 +172,33 @@ namespace WindingTale.Core.Algorithms
             return null;
         }
 
+        /// <summary>
+        /// Writes a composed level-up onto the creature: one level, the rolled stat
+        /// gains, and the magic learnt at the new level. HP/MP gains raise both the
+        /// maximum and the current value, so levelling up also heals by that much.
+        /// </summary>
         public static void ApplyLevelUp(FDCreature creature, LevelUpInfo levelUpInfo)
         {
+            if (creature == null || levelUpInfo == null)
+            {
+                return;
+            }
+
             creature.Level = creature.Level + 1;
+
+            creature.HpMax += levelUpInfo.ImprovedHp;
+            creature.Hp += levelUpInfo.ImprovedHp;
+            creature.MpMax += levelUpInfo.ImprovedMp;
+            creature.Mp += levelUpInfo.ImprovedMp;
+
+            creature.Ap += levelUpInfo.ImprovedAp;
+            creature.Dp += levelUpInfo.ImprovedDp;
+            creature.Dx += levelUpInfo.ImprovedDx;
+
+            if (levelUpInfo.LearntMagicId > 0)
+            {
+                creature.AddMagic(levelUpInfo.LearntMagicId);
+            }
         }
 
 
@@ -222,39 +257,63 @@ namespace WindingTale.Core.Algorithms
             return damage;
         }
 
+        /// <summary>
+        /// Result of one spell against one target. Never returns null: a miss is a real
+        /// outcome and gets a zero-valued result of the magic's own kind (a missed attack
+        /// is a DamageResult with HasMissed set, the same shape a missed physical attack
+        /// produces). Callers index Results by target id for every target, so leaving a
+        /// target without a result would break them.
+        /// </summary>
         private static SoloResult MagicFrom(MagicDefinition magic, FDCreature subject, FDCreature target, FDField field)
         {
             bool isHit = FDRandom.BoolFromRate(magic.HittingRate);
             int changedHp = 0;
-            if (isHit)
+
+            switch (magic.Type)
             {
-                OccupationDefinition occupation = DefinitionStore.Instance.GetOccupationDefinition(target.Definition.Occupation);
-                double hitRate = 1.0f;
-                if (occupation != null)
-                {
-                    hitRate = (100 - occupation.MagicDefendRate) / 100.0f;
-                }
+                case MagicType.Attack:
+                    if (!isHit)
+                    {
+                        return new DamageResult(target.Hp, target.Hp, false);
+                    }
 
-                switch (magic.Type)
-                {
-                    case MagicType.Attack:
-                        changedHp = FDRandom.IntFromSpan(magic.Span) + magic.ApInvolvedRate * subject.CalculatedAp / 100;
-                        changedHp = (int)(changedHp * hitRate);
-                        changedHp = Math.Max(0, changedHp);
-                        return new DamageResult(target.Hp, Math.Max(target.Hp - changedHp, 0), false);
-                    case MagicType.Recover:
-                        changedHp = FDRandom.IntFromSpan(magic.Span);
-                        changedHp = Math.Max(0, changedHp);
-                        return new RecoverResult(RecoverType.Hp, changedHp);
-                    case MagicType.Offensive:
-                    case MagicType.Defensive:
-                        return magic.GenerateEffect();
-                    default:
-                        break;
-                }
+                    double hitRate = 1.0f;
+                    OccupationDefinition occupation = (target.Definition != null)
+                        ? DefinitionStore.Instance.GetOccupationDefinition(target.Definition.Occupation)
+                        : null;
+                    if (occupation != null)
+                    {
+                        hitRate = (100 - occupation.MagicDefendRate) / 100.0f;
+                    }
+
+                    changedHp = FDRandom.IntFromSpan(magic.Span) + magic.ApInvolvedRate * subject.CalculatedAp / 100;
+                    changedHp = (int)(changedHp * hitRate);
+                    changedHp = Math.Max(0, changedHp);
+                    return new DamageResult(target.Hp, Math.Max(target.Hp - changedHp, 0), false);
+
+                case MagicType.Recover:
+                    changedHp = isHit ? Math.Max(0, FDRandom.IntFromSpan(magic.Span)) : 0;
+                    return new RecoverResult(RecoverType.Hp, changedHp);
+
+                case MagicType.Offensive:
+                case MagicType.Defensive:
+                    // GenerateEffect only covers the magic ids it knows; an unknown id
+                    // falls through to "no effect" rather than to a null result.
+                    EffectResult effect = isHit ? magic.GenerateEffect() : null;
+                    return effect ?? NoEffect();
+
+                default:
+                    return NoEffect();
             }
+        }
 
-            return null;
+        /// <summary>
+        /// "Nothing happened" for effect magic: an empty MultiEffectResult. Applying it
+        /// is a no-op and it earns no experience (see CalculateMagicEffectExp).
+        /// </summary>
+        private static EffectResult NoEffect()
+        {
+            return new MultiEffectResult(new List<EffectResult>());
         }
 
         private static int CalculateDamageExp(FDCreature subject, FDCreature target, DamageResult damage)
@@ -309,6 +368,12 @@ namespace WindingTale.Core.Algorithms
         private static int CalculateMagicEffectExp(FDCreature subject, FDCreature target, MagicDefinition magic, EffectResult effectResult)
         {
             if (subject == null || target == null || magic == null || effectResult == null || subject.Faction != CreatureFaction.Friend)
+            {
+                return 0;
+            }
+
+            // An empty MultiEffectResult means the spell missed / did nothing: no exp.
+            if (effectResult is MultiEffectResult multi && (multi.Effects == null || multi.Effects.Count == 0))
             {
                 return 0;
             }

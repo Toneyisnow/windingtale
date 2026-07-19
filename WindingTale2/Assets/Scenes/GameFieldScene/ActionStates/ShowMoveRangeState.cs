@@ -76,8 +76,9 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
             else
             {
-                // Cancel
-                return new IdleState(gameMain);
+                // Outside the move range: ignored. Leaving the state is the cancel key's
+                // job, so a stray click on the map has no effect at all.
+                return this;
             }
         }
 
