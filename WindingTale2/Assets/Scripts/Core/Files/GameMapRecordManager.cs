@@ -22,6 +22,14 @@ namespace WindingTale.Core.Files
     public class GameMapRecordManager
     {
 
+        /// <summary>
+        /// Whether a save exists to continue from -- checked before the Title scene offers it.
+        /// </summary>
+        public static bool HasSavedGame(string recordName)
+        {
+            return File.Exists(GetSaveFilePath(recordName));
+        }
+
         public void LoadFromFile(string recordName, GameMain gameMain)
         {
             string fullFilePth = GetSaveFilePath(recordName);
@@ -49,7 +57,13 @@ namespace WindingTale.Core.Files
             }
 
             FDMap map = gameMain.gameMap.Map;
-            map.TurnNo = record.TurnNo;
+
+            // A load resumes at the start of the saved player turn: Initialize left TurnType
+            // at Enemy, so the onKickOff that follows advances it to Friend and increments
+            // TurnNo on the way. Rewinding one turn here makes that landing spot the turn
+            // that was actually saved, instead of the one after it.
+            map.TurnNo = record.TurnNo - 1;
+            map.TotalMoney = record.TotalMoney;
 
             foreach(CreatureMapRecord creatureRecord in record.Creatures)
             {
@@ -71,6 +85,7 @@ namespace WindingTale.Core.Files
 
             gameMapRecord.ChapterId = map.ChapterId;
             gameMapRecord.TurnNo = map.TurnNo;
+            gameMapRecord.TotalMoney = map.TotalMoney;
             gameMapRecord.Creatures = map.Creatures.Select(creature => ConvertCreatureToRecord(creature) ).ToList();
             gameMapRecord.DeadCreatures = map.DeadCreatures.Select(creature => ConvertCreatureToRecord(creature)).ToList();
             gameMapRecord.Treasures = map.Treasures.Select(treasure => ConvertTreasureToRecord(treasure)).ToList();
@@ -94,11 +109,18 @@ namespace WindingTale.Core.Files
             record.Level = creature.Level;
             record.Hp = creature.Hp;
             record.Mp = creature.Mp;
+            record.HpMax = creature.HpMax;
+            record.MpMax = creature.MpMax;
             record.Ap = creature.Ap;
             record.Dp = creature.Dp;
             record.Dx = creature.Dx;
+            record.Mv = creature.Mv;
+            record.Exp = creature.Exp;
             record.ItemIds = creature.Items;
             record.MagicIds = creature.Magics;
+            record.AttackItemIndex = creature.AttackItemIndex;
+            record.DefendItemIndex = creature.DefendItemIndex;
+            record.Effects = creature.Effects.ToList();
             record.Position = creature.Position;
 
             if (creature is FDAICreature aiCreature)
@@ -119,12 +141,31 @@ namespace WindingTale.Core.Files
             creature.Level = record.Level;
             creature.Hp = record.Hp;
             creature.Mp = record.Mp;
+            creature.HpMax = record.HpMax;
+            creature.MpMax = record.MpMax;
             creature.Ap = record.Ap;
             creature.Dp = record.Dp;
             creature.Dx = record.Dx;
+            creature.Mv = record.Mv;
+            creature.Exp = record.Exp;
             creature.Items = record.ItemIds;
             creature.Magics = record.MagicIds;
             creature.Position = record.Position;
+
+            // The constructor equipped whatever the *definition* listed; the saved indices
+            // point into the saved item list, which exchanges may have reordered. Re-equip
+            // from the record so the creature keeps the weapon it actually had.
+            creature.EquipItemAt(record.AttackItemIndex);
+            creature.EquipItemAt(record.DefendItemIndex);
+
+            if (record.Effects != null)
+            {
+                foreach (CreatureEffects effect in record.Effects)
+                {
+                    creature.Effects.Add(effect);
+                }
+            }
+
             return creature;
         }
 
@@ -133,7 +174,6 @@ namespace WindingTale.Core.Files
             TreasureMapRecord record = new TreasureMapRecord();
             record.Id = treasure.Id;
             record.ItemId = treasure.ItemId;
-            record.Money = treasure.Money;
             record.HasOpened = treasure.HasOpened;
             record.Position = treasure.Position;
             return record;
@@ -141,9 +181,7 @@ namespace WindingTale.Core.Files
 
         private FDTreasure ConvertRecordToTreasure(TreasureMapRecord record)
         {
-            // The constructor is (id, itemId, money) -- passing (ItemId, Money) here used
-            // to store the item id as the object id and the money as the item id.
-            FDTreasure treasure = new FDTreasure(record.Id, record.ItemId, record.Money);
+            FDTreasure treasure = new FDTreasure(record.Id, record.ItemId);
             treasure.Position = record.Position;
 
             // HasOpened is write-once through Open(); an emptied chest must stay emptied

@@ -561,6 +561,7 @@ namespace WindingTale.MapObjects.GameMap
 
             Creature comp = creatureIcon.GetComponent<Creature>();
             comp.SetCreature(creature);
+            comp.InitializeClipVisibility();
         }
 
         private void AttachIcon(string iconFilePath, Transform parent)

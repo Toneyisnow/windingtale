@@ -85,6 +85,36 @@ namespace WindingTale.UI.Dialogs
         private CreatureInfoType infoType = CreatureInfoType.View;
         private Action<int> onSelected = null;
 
+        // Slide in / out animation: Dato enters from the left, Details from the right and
+        // Container from the bottom; closing plays the exact reverse.
+        private const float AnimationDuration = 0.15f;
+
+        private RectTransform datoRect = null;
+        private RectTransform detailsRect = null;
+        private RectTransform containerRect = null;
+
+        // Resting (authored) positions, captured once so a dialog that is reopened while a
+        // previous animation left the children off-centre still lands in the right place.
+        private Vector2 datoHome = Vector2.zero;
+        private Vector2 detailsHome = Vector2.zero;
+        private Vector2 containerHome = Vector2.zero;
+        private bool layoutCaptured = false;
+
+        // Dato idle blink, the same idiom the TalkDialog portrait uses: frame 0 is the
+        // open-eyed portrait, frame 3 the closed-eyed one. Characters without a frame 3
+        // simply hold frame 0.
+        private const float DatoOpenSeconds = 2.5f;
+        private const float DatoBlinkSeconds = 0.5f;
+
+        private Sprite datoOpenSprite = null;
+        private Sprite datoBlinkSprite = null;
+        private Coroutine blinkCoroutine = null;
+
+        // True from the moment the closing animation starts until the dialog is hidden.
+        // Input and further selections are ignored while it runs.
+        private bool isClosing = false;
+        private Coroutine slideCoroutine = null;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -95,7 +125,7 @@ namespace WindingTale.UI.Dialogs
         void Update()
         {
             // ESC / Backspace closes the dialog, exactly as the Cancel button does.
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace))
+            if (!isClosing && (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace)))
             {
                 onCancel();
             }
@@ -108,9 +138,9 @@ namespace WindingTale.UI.Dialogs
 
             int animationId = creature.Definition.AnimationId;
             string id = StringUtils.Digit3(animationId);
-            this.datoObj.GetComponent<Image>().sprite = Resources.Load<Sprite>(
-                string.Format(@"Datos/{0}/Dato_{0}_0", id)
-            );
+            datoOpenSprite = Resources.Load<Sprite>(string.Format(@"Datos/{0}/Dato_{0}_0", id));
+            datoBlinkSprite = Resources.Load<Sprite>(string.Format(@"Datos/{0}/Dato_{0}_3", id));
+            startBlink();
 
             this.creature = creature;
             this.infoType = infoType;
@@ -176,8 +206,12 @@ namespace WindingTale.UI.Dialogs
                     TaggedButton taggedButton = selectable.AddComponent<TaggedButton>();
                     taggedButton.Init(itemIndex, (itemIndex) =>
                     {
-                        onSelected(itemIndex);
-                        GameMain.getDefault().gameCanvas.CloseDialog();
+                        if (isClosing)
+                        {
+                            return;
+                        }
+
+                        closeWithAnimation(() => onSelected(itemIndex));
                     });
                 }
                 for (int itemIndex = creature.Items.Count; itemIndex < 8; itemIndex++)
@@ -201,8 +235,12 @@ namespace WindingTale.UI.Dialogs
                     TaggedButton taggedButton = magicObject.AddComponent<TaggedButton>();
                     taggedButton.Init(magicIndex, (mIndex) =>
                     {
-                        onSelected(mIndex);
-                        GameMain.getDefault().gameCanvas.CloseDialog();
+                        if (isClosing)
+                        {
+                            return;
+                        }
+
+                        closeWithAnimation(() => onSelected(mIndex));
                     });
                 }
                 for (int magicIndex = creature.Magics.Count; magicIndex < 12; magicIndex++)
@@ -212,10 +250,7 @@ namespace WindingTale.UI.Dialogs
                 }
             }
 
-
-
-
-
+            playEnterAnimation();
         }
 
 
@@ -225,14 +260,199 @@ namespace WindingTale.UI.Dialogs
         /// </summary>
         public void onCancel()
         {
+            // A cancel that arrives while the closing animation is already running (button
+            // click plus key press) is ignored.
+            if (isClosing)
+            {
+                return;
+            }
+
             // The callback is cleared first: closing deactivates the GameObject, but a
             // second onCancel in the same frame (button click plus key press) would
             // otherwise report the cancellation twice.
             Action<int> callback = this.onSelected;
             this.onSelected = null;
 
-            callback?.Invoke(-1);
-            GameMain.getDefault().gameCanvas.CloseDialog();
+            closeWithAnimation(() => callback?.Invoke(-1));
+        }
+
+
+        /// <summary>
+        /// Slides the three panels back out, then reports the result and hides the dialog.
+        /// The callback runs after the animation so the dialog is still on screen while it
+        /// leaves, and the caller's follow-up (which may open another dialog) only happens
+        /// once this one is done.
+        /// </summary>
+        private void closeWithAnimation(Action onClosed)
+        {
+            isClosing = true;
+
+            startSlide(false, () =>
+            {
+                onClosed?.Invoke();
+                GameMain.getDefault().gameCanvas.CloseDialog();
+            });
+        }
+
+        /// <summary>
+        /// (Re)starts the portrait's blink loop. The dialog is reused across creatures, so a
+        /// blink left running for the previous one has to be stopped before the next starts,
+        /// or the two would fight over the Image.
+        /// </summary>
+        private void startBlink()
+        {
+            if (blinkCoroutine != null)
+            {
+                StopCoroutine(blinkCoroutine);
+                blinkCoroutine = null;
+            }
+
+            setDatoSprite(datoOpenSprite);
+
+            // Nothing to alternate with: leave the portrait open-eyed.
+            if (datoBlinkSprite == null)
+            {
+                return;
+            }
+
+            blinkCoroutine = StartCoroutine(blinkRoutine());
+        }
+
+        private IEnumerator blinkRoutine()
+        {
+            while (true)
+            {
+                setDatoSprite(datoOpenSprite);
+                yield return new WaitForSeconds(DatoOpenSeconds);
+
+                setDatoSprite(datoBlinkSprite);
+                yield return new WaitForSeconds(DatoBlinkSeconds);
+            }
+        }
+
+        private void setDatoSprite(Sprite sprite)
+        {
+            if (sprite == null || datoObj == null)
+            {
+                return;
+            }
+
+            datoObj.GetComponent<Image>().sprite = sprite;
+        }
+
+        private void playEnterAnimation()
+        {
+            isClosing = false;
+            startSlide(true, null);
+        }
+
+        private void startSlide(bool isEntering, Action onComplete)
+        {
+            captureLayout();
+
+            if (slideCoroutine != null)
+            {
+                StopCoroutine(slideCoroutine);
+            }
+
+            slideCoroutine = StartCoroutine(slideRoutine(isEntering, onComplete));
+        }
+
+        /// <summary>
+        /// Caches the three animated children and their authored positions. Done once: the
+        /// positions must come from a state where nothing has been offset yet.
+        /// </summary>
+        private void captureLayout()
+        {
+            if (layoutCaptured)
+            {
+                return;
+            }
+
+            datoRect = this.transform.Find("Dato") as RectTransform;
+            detailsRect = this.transform.Find("Details") as RectTransform;
+            containerRect = this.transform.Find("Container") as RectTransform;
+
+            if (datoRect != null)
+            {
+                datoHome = datoRect.anchoredPosition;
+            }
+            if (detailsRect != null)
+            {
+                detailsHome = detailsRect.anchoredPosition;
+            }
+            if (containerRect != null)
+            {
+                containerHome = containerRect.anchoredPosition;
+            }
+
+            layoutCaptured = true;
+        }
+
+        private IEnumerator slideRoutine(bool isEntering, Action onComplete)
+        {
+            Vector2 datoOffset = getOffscreenOffset(datoRect, Vector2.left);
+            Vector2 detailsOffset = getOffscreenOffset(detailsRect, Vector2.right);
+            Vector2 containerOffset = getOffscreenOffset(containerRect, Vector2.down);
+
+            float elapsed = 0f;
+            while (elapsed < AnimationDuration)
+            {
+                // Unscaled: the dialog must animate even when the field is paused.
+                elapsed += Time.unscaledDeltaTime;
+
+                float eased = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / AnimationDuration));
+
+                // Fraction of the off-screen offset still applied: entering counts it down
+                // to zero, leaving counts it back up, which makes the two exact mirrors.
+                applyOffset(isEntering ? 1f - eased : eased, datoOffset, detailsOffset, containerOffset);
+
+                yield return null;
+            }
+
+            applyOffset(isEntering ? 0f : 1f, datoOffset, detailsOffset, containerOffset);
+
+            slideCoroutine = null;
+            onComplete?.Invoke();
+        }
+
+        private void applyOffset(float amount, Vector2 datoOffset, Vector2 detailsOffset, Vector2 containerOffset)
+        {
+            if (datoRect != null)
+            {
+                datoRect.anchoredPosition = datoHome + datoOffset * amount;
+            }
+            if (detailsRect != null)
+            {
+                detailsRect.anchoredPosition = detailsHome + detailsOffset * amount;
+            }
+            if (containerRect != null)
+            {
+                containerRect.anchoredPosition = containerHome + containerOffset * amount;
+            }
+        }
+
+        /// <summary>
+        /// Distance along <paramref name="direction"/> that puts the panel fully outside the
+        /// canvas, so it is never visible at the far end of the slide.
+        /// </summary>
+        private Vector2 getOffscreenOffset(RectTransform rect, Vector2 direction)
+        {
+            if (rect == null)
+            {
+                return Vector2.zero;
+            }
+
+            Canvas canvas = GetComponentInParent<Canvas>();
+            RectTransform canvasRect = canvas != null ? canvas.transform as RectTransform : null;
+
+            float canvasWidth = canvasRect != null ? canvasRect.rect.width : Screen.width;
+            float canvasHeight = canvasRect != null ? canvasRect.rect.height : Screen.height;
+
+            return new Vector2(
+                direction.x * (canvasWidth / 2f + rect.rect.width),
+                direction.y * (canvasHeight / 2f + rect.rect.height)
+            );
         }
 
 

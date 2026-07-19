@@ -30,6 +30,8 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public GameObject canvasObject;
 
+        public GameObject turnInfoPrefab;
+
         public ActivityQueue activityQueue = null;
 
         public static GameMain getDefault()
@@ -70,6 +72,8 @@ namespace WindingTale.Scenes.GameFieldScene
         #endregion
 
         private int chapterId = 0;
+
+        private TurnInfo turnInfo = null;
 
         void Start()
         {
@@ -449,7 +453,18 @@ namespace WindingTale.Scenes.GameFieldScene
             //// Main entry to notify the turn events
             eventHandler.notifyTurnEvents();
 
-            
+            //// Turn-start banner. Only the player turn opens a new turn number, so that
+            //// is the only one worth announcing. Runs as a duration activity so the turn
+            //// waits for the animation to play out.
+            if (this.gameMap.Map.TurnType == CreatureFaction.Friend)
+            {
+                int turnNo = this.gameMap.Map.TurnNo;
+                this.PushActivity(
+                    game => game.ShowTurnInfo(turnNo),
+                    game => game.turnInfo == null || !game.turnInfo.IsPlaying
+                );
+            }
+
             if (this.gameMap.Map.TurnType == CreatureFaction.Friend)
             {
                 PushActivity(gameMain => onPlayerTurn());
@@ -477,6 +492,29 @@ namespace WindingTale.Scenes.GameFieldScene
                 game => !game.gameMap.IsSlideBusy
             );
 
+        }
+
+        /// <summary>
+        /// Spawns the turn banner and starts its animation. It destroys itself when done.
+        /// </summary>
+        private void ShowTurnInfo(int turnNo)
+        {
+            turnInfo = null;
+
+            if (turnInfoPrefab == null)
+            {
+                return;
+            }
+
+            GameObject turnInfoObject = Instantiate(turnInfoPrefab);
+            turnInfo = turnInfoObject.GetComponent<TurnInfo>();
+            if (turnInfo == null)
+            {
+                Destroy(turnInfoObject);
+                return;
+            }
+
+            turnInfo.Play(turnNo);
         }
 
         private void onPlayerTurn()

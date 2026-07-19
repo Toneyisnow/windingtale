@@ -125,6 +125,7 @@
     <Compile Include="Assets\Scripts\Core\Game\GameHandler.cs" />
     <Compile Include="Assets\Scenes\GameBattleScene\BattleLoader.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpMagicDefinition.cs" />
+    <Compile Include="Assets\MapObjects\Others\TurnInfo.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\MapObjects\BlockIndicator\BlockBlinkEffect.cs" />
     <Compile Include="Assets\MapObjects\GameMap\GameMap.cs" />

@@ -1183,11 +1183,16 @@ MonoBehaviour:
   minHeight: 5
   maxHeight: 20
   rotationAngle: 60
+  minRotationAngle: 25
   edgeScrollSpeed: 10
   edgeScrollThreshold: 50
   zoomSpeed: 0.8
   zoomDeceleration: 8
   rotateSpeed: 4
+  keyboardRotateSpeed: 60
+  keyboardZoomSpeed: 0.15
+  cursorFollowSpeed: 60
+  cursorFollowAcceleration: 30
 --- !u!114 &999788847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1604,6 +1609,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapObject: {fileID: 1721112120}
   canvasObject: {fileID: 2080578391}
+  turnInfoPrefab: {fileID: 183228075905872044, guid: dada2febb9f80c848aa2e085f876aad3, type: 3}
 --- !u!114 &2057688231
 MonoBehaviour:
   m_ObjectHideFlags: 0

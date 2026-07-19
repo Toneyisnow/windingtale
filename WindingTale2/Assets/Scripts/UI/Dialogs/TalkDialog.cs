@@ -54,6 +54,16 @@ public class TalkDialog : MonoBehaviour
     private float confirmArrowBaseY = 0f;
     private bool confirmArrowBaseCaptured = false;
 
+    // Confirm / Cancel buttons bounce the same way the ConfirmArrow does, but only the
+    // one currently selected. Their resting Y is captured in Awake for the same reason.
+    private float confirmButtonBaseY = 0f;
+    private float cancelButtonBaseY = 0f;
+    private bool confirmButtonsBaseCaptured = false;
+
+    // Which button a keyboard confirm would trigger. Yes is selected when a dialog opens;
+    // Right moves to No, Left comes back. Meaningless while needConfirm is false.
+    private bool confirmSelected = true;
+
     private int creatureAnimationId = 0;
 
     private Action<int> onSelected = null;
@@ -75,6 +85,15 @@ public class TalkDialog : MonoBehaviour
                 confirmArrowBaseY = rt.anchoredPosition.y;
                 confirmArrowBaseCaptured = true;
             }
+        }
+
+        RectTransform confirmRt = confirmButtonObj != null ? confirmButtonObj.GetComponent<RectTransform>() : null;
+        RectTransform cancelRt = cancelButtonObj != null ? cancelButtonObj.GetComponent<RectTransform>() : null;
+        if (confirmRt != null && cancelRt != null)
+        {
+            confirmButtonBaseY = confirmRt.anchoredPosition.y;
+            cancelButtonBaseY = cancelRt.anchoredPosition.y;
+            confirmButtonsBaseCaptured = true;
         }
     }
 
@@ -113,6 +132,32 @@ public class TalkDialog : MonoBehaviour
         {
             // Show only: pressing any keyboard or mouse button dismisses the dialog.
             onConfirm();
+        }
+        else
+        {
+            // Need confirm: Left / Right move the selection between Yes and No,
+            // Space / Enter triggers whichever is selected.
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                confirmSelected = false;
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                confirmSelected = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.Space)
+                || Input.GetKeyDown(KeyCode.Return)
+                || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                if (confirmSelected)
+                {
+                    onConfirm();
+                }
+                else
+                {
+                    onCancel();
+                }
+            }
         }
     }
 
@@ -208,6 +253,10 @@ public class TalkDialog : MonoBehaviour
             cancelButtonObj.SetActive(needConfirm);
         }
 
+        // Every confirm dialog opens with Yes selected.
+        confirmSelected = true;
+        ResetConfirmButtonPositions();
+
         // '#' in the source text is a line-break marker: start a new line and drop the '#'.
         fullText = (resolvedText ?? text.GetLocalizedString()).Replace("#", "\n");
         skipToFullText = false;
@@ -221,6 +270,7 @@ public class TalkDialog : MonoBehaviour
         StartCoroutine(BuildText());
         StartCoroutine(AnimateDato());
         StartCoroutine(AnimateConfirmArrow());
+        StartCoroutine(AnimateConfirmButtons());
     }
 
     /// <summary>
@@ -347,6 +397,67 @@ public class TalkDialog : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// Bounces whichever of the Yes / No buttons is currently selected, using the same dip
+    /// as the ConfirmArrow so the two read as one idiom. The unselected button is held on
+    /// its resting line, so the selection is visible the instant Left / Right is pressed.
+    /// </summary>
+    private IEnumerator AnimateConfirmButtons()
+    {
+        if (!needConfirm || !confirmButtonsBaseCaptured)
+        {
+            yield break;
+        }
+
+        // Wait until the typewriter output has finished, matching the arrow's timing.
+        while (!textFinished)
+        {
+            yield return null;
+        }
+
+        RectTransform confirmRt = confirmButtonObj.GetComponent<RectTransform>();
+        RectTransform cancelRt = cancelButtonObj.GetComponent<RectTransform>();
+
+        float elapsed = 0f;
+        while (true)
+        {
+            elapsed += Time.deltaTime;
+            float dip = Mathf.Abs(Mathf.Sin(elapsed * ConfirmArrowBounceSpeed)) * ConfirmArrowBounceDepth;
+
+            SetAnchoredY(confirmRt, confirmButtonBaseY - (confirmSelected ? dip : 0f));
+            SetAnchoredY(cancelRt, cancelButtonBaseY - (confirmSelected ? 0f : dip));
+
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// Squares both buttons back up on their resting line, for the same reason the arrow
+    /// is reset: Init stops the bounce wherever the dip happened to be.
+    /// </summary>
+    private void ResetConfirmButtonPositions()
+    {
+        if (!confirmButtonsBaseCaptured)
+        {
+            return;
+        }
+
+        SetAnchoredY(confirmButtonObj.GetComponent<RectTransform>(), confirmButtonBaseY);
+        SetAnchoredY(cancelButtonObj.GetComponent<RectTransform>(), cancelButtonBaseY);
+    }
+
+    private static void SetAnchoredY(RectTransform rt, float y)
+    {
+        if (rt == null)
+        {
+            return;
+        }
+
+        Vector2 pos = rt.anchoredPosition;
+        pos.y = y;
+        rt.anchoredPosition = pos;
     }
 
     /// <summary>

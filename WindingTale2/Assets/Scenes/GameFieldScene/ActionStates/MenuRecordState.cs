@@ -18,7 +18,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Save Game
             this.SetMenu(0, MenuItemId.RecordSave, fdMap.CanSaveGame(), () =>
             {
-                // �Ƿ񱣴浱ǰ��Ϸ��
                 gameMain.PushActivity(gameMain =>
                 {
                     FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 5);
@@ -74,7 +73,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
                 FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 33);
                 var rawText = LocalizationManager.GetFDMessageString(message);
-                gameMain.gameCanvas.ShowTalkDialog(0, rawText, true, GameCanvas.DialogPosition.Bottom, (confirm) => { });
+                gameMain.gameCanvas.ShowTalkDialog(0, rawText, false, GameCanvas.DialogPosition.Bottom, (confirm) => { });
 
                 IdleState idleState = new IdleState(gameMain);
                 PlayerInterface.getDefault().onUpdateState(idleState);
@@ -93,7 +92,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 {
                     FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 9);
                     var rawText = LocalizationManager.GetFDMessageString(message);
-                    gameMain.gameCanvas.ShowTalkDialog(0, rawText, true, GameCanvas.DialogPosition.Bottom, (confirm) => { });
+                    gameMain.gameCanvas.ShowTalkDialog(0, rawText, false, GameCanvas.DialogPosition.Bottom, (confirm) => { });
 
                     IdleState idleState = new IdleState(gameMain);
                     PlayerInterface.getDefault().onUpdateState(idleState);

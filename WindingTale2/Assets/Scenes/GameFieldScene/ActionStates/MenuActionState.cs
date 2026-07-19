@@ -5,6 +5,7 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 
 using WindingTale.Core.Definitions;
+using WindingTale.Core.Definitions.Items;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
 using WindingTale.UI.Dialogs;
@@ -96,8 +97,20 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                     {
                         if (result == 1)
                         {
+                            // Money goes straight into the purse rather than the creature's
+                            // bag, so a full bag is no obstacle and there is nothing to exchange.
+                            if (treasureItem is MoneyItemDefinition moneyItem)
+                            {
+                                fdMap.TotalMoney += moneyItem.Amount;
+                                treasure.Open();
+
+                                // Money items carry their own display name ("3000元") from
+                                // Items.strings, so the ordinary "found X" line reads correctly.
+                                FDMessage gotMoney = FDMessage.Create(FDMessage.MessageTypes.Information, 3, strParam1: treasureItem.Name);
+                                gameMain.InsertActivity(new TalkActivity(gotMoney, creature));
+                            }
                             // TODO: Open the treasure, note: need to check whether item is full, if full, need to prompt for exchange
-                            if (!creature.IsItemsFull())
+                            else if (!creature.IsItemsFull())
                             {
                                 creature.AddItem(treasure.ItemId);
                                 treasure.Open();

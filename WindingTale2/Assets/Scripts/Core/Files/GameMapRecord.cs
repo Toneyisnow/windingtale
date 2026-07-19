@@ -16,6 +16,11 @@ namespace WindingTale.Core.Files
 
         public int TurnNo;
 
+        /// <summary>
+        /// The player's purse at the moment of the save.
+        /// </summary>
+        public int TotalMoney;
+
         public List<CreatureMapRecord> Creatures;
 
         public List<CreatureMapRecord> DeadCreatures;
@@ -43,15 +48,31 @@ namespace WindingTale.Core.Files
         public int DefinitionId;
 
         public CreatureFaction Faction;
-        public string Name;
         public int Level;
         public int Hp;
         public int Mp;
+
+        // Maxima and Mv/Exp grow with level-ups, so they cannot be recovered from the
+        // creature definition the way the initial values can -- they must be recorded.
+        public int HpMax;
+        public int MpMax;
         public int Ap;
         public int Dp;
         public int Dx;
+        public int Mv;
+        public int Exp;
+
         public List<int> ItemIds;
         public List<int> MagicIds;
+
+        // Equipment is an index into ItemIds, and item exchange reorders that list, so the
+        // definition's own equip order is not a valid substitute after the battle starts.
+        public int AttackItemIndex;
+        public int DefendItemIndex;
+
+        // Poisoned / frozen / stat buffs currently on the creature.
+        public List<CreatureEffects> Effects;
+
         public FDPosition Position;
 
         // Only for AI Creature
@@ -62,7 +83,6 @@ namespace WindingTale.Core.Files
     {
         public int Id;
         public int ItemId;
-        public int Money;
         public bool HasOpened;
         public FDPosition Position;
     }

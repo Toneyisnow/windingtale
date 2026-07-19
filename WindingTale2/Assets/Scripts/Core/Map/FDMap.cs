@@ -21,6 +21,11 @@ namespace WindingTale.Core.Map
 
         public int TurnNo { get; set; }
 
+        /// <summary>
+        /// The player's purse, carried across the battle and into the save.
+        /// </summary>
+        public int TotalMoney { get; set; }
+
         public CreatureFaction TurnType { get; set; }
 
         public FDField Field { get; private set; }
@@ -72,6 +77,7 @@ namespace WindingTale.Core.Map
 
             this.TurnNo = 1;
             this.TurnType = CreatureFaction.Friend;
+            this.TotalMoney = 0;
 
             this.Creatures = new List<FDCreature>();
             this.DeadCreatures = new List<FDCreature>();

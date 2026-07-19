@@ -175,6 +175,39 @@ namespace WindingTale.MapObjects.CreatureIcon
             }
         }
 
+        /// <summary>
+        /// Picks the first idle frame immediately, before any Update runs.
+        /// Without this the prefab spawns with all three clips enabled and the
+        /// creature renders as all three animation frames stacked on top of each
+        /// other for a frame or two - the visible "flash" on appearance.
+        /// CreatureClip only propagates enabled to its children in its own Update,
+        /// so the children are set here directly rather than relying on it.
+        /// </summary>
+        public void InitializeClipVisibility()
+        {
+            for (int i = 0; i < ClipNames.Length; i++)
+            {
+                Transform clip = transform.Find(ClipNames[i]);
+                if (clip == null)
+                {
+                    continue;
+                }
+
+                bool visible = (i == 0);
+
+                MeshRenderer clipRenderer = clip.GetComponent<MeshRenderer>();
+                if (clipRenderer != null)
+                {
+                    clipRenderer.enabled = visible;
+                }
+
+                foreach (MeshRenderer child in clip.GetComponentsInChildren<MeshRenderer>(true))
+                {
+                    child.enabled = visible;
+                }
+            }
+        }
+
         private MeshRenderer GetClipRenderer(string clipName)
         {
             Transform clip = transform.Find(clipName);
