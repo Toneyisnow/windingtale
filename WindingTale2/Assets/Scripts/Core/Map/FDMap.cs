@@ -28,6 +28,13 @@ namespace WindingTale.Core.Map
 
         public CreatureFaction TurnType { get; set; }
 
+        /// <summary>
+        /// The turn a load restored this battle into, or 0 for one that was started fresh.
+        /// Runtime only -- it describes where this session came from, not the battle, so it
+        /// is not part of the record. Read by CanSaveGame; see there for what it is for.
+        /// </summary>
+        public int RestoredTurnNo { get; set; }
+
         public FDField Field { get; private set; }
 
 
@@ -124,7 +131,7 @@ namespace WindingTale.Core.Map
                     continue;
                 }
 
-                FDTreasure treasure = new FDTreasure(definition.TreasureId, definition.ItemId);
+                FDTreasure treasure = new FDTreasure(definition.TreasureId, definition.ItemId, definition.Type);
                 treasure.Position = FDPosition.At(definition.Position.X, definition.Position.Y);
                 treasures.Add(treasure);
             }
@@ -132,11 +139,9 @@ namespace WindingTale.Core.Map
             return treasures;
         }
 
-        public static FDMap loadFromRecord()
-        {
-            return new FDMap();
-        }
-
+        // Note: there is no loadFromRecord counterpart here. A save holds only the
+        // battle's dynamic state, so it is laid over a map that LoadFromChapter has
+        // already built -- see GameMapRecordManager.ApplyRecord.
 
         #endregion
 
@@ -311,10 +316,40 @@ namespace WindingTale.Core.Map
         }
 
 
+        /// <summary>
+        /// Whether the record menu may offer "save" right now: only at the start of the
+        /// player's turn, before any friend has moved or acted.
+        ///
+        /// This is the rule that lets the record leave per-creature turn state out (see
+        /// CreatureMapRecord). A load resumes at the *start* of the saved turn and resets
+        /// the board, so a save taken part-way through one would hand back every move
+        /// already spent in it. Enforcing it here rather than trusting the player is what
+        /// makes the omission safe -- MenuRecordState greys the Save item out on false.
+        /// </summary>
         public bool CanSaveGame()
         {
-            // If none of friends have moved
-            return true;
+            // The record menu is only reachable during the player's phase anyway; checking
+            // it keeps the rule true rather than merely unobserved.
+            if (this.TurnType != CreatureFaction.Friend)
+            {
+                return false;
+            }
+
+            // A battle that was just restored is still exactly what the record already
+            // holds -- a load lands at the start of the saved turn, which is also the only
+            // moment saving is allowed, so without this the player could save straight back
+            // over the same state. The block lifts of its own accord once the battle has
+            // moved on to a later turn; TurnNo only ever counts up.
+            if (this.RestoredTurnNo == this.TurnNo)
+            {
+                return false;
+            }
+
+            // A friend counts as untouched while it has neither acted (which includes
+            // resting in place -- onCreatureEndTurn flags that too) nor stepped off the
+            // tile the turn found it on. Both are cleared for everyone by onPlayerTurn,
+            // so at the top of the turn this holds for the whole team.
+            return !this.Friends.Any(creature => creature.HasActioned || creature.HasMoved());
         }
 
         #endregion

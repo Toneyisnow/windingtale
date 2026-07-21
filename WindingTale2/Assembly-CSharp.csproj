@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Core\Events\ReachPositionEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TransferDefinition.cs" />
+    <Compile Include="Assets\MapObjects\GameMap\TreasureInstance.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\IActionState.cs" />
     <Compile Include="Assets\Scripts\Core\Events\FDConditionEvent.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\ShowMoveRangeState.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\DirectRangeFinder.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIGuardDelegate.cs" />
+    <Compile Include="Assets\MapObjects\GameMap\ObjectsLayer.cs" />
     <Compile Include="Assets\Scripts\Core\Events\CreatureDeadEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Files\GameRecordManager.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDNpc.cs" />
@@ -147,6 +149,7 @@
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuActionState.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureSynced.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDMessage.cs" />
+    <Compile Include="Assets\MapObjects\GameMap\MapObjectFade.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDefensiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\FDMovePath.cs" />
     <Compile Include="Assets\Scripts\UI\Utils\GlobalVariables.cs" />

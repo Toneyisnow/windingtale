@@ -17,6 +17,13 @@ namespace WindingTale.Core.Files
         public int TurnNo;
 
         /// <summary>
+        /// Which side's phase the save was taken in. Saves written before this field
+        /// existed decode it as 0 (Friend), which is what they all were: the record menu
+        /// is only reachable during the player's phase.
+        /// </summary>
+        public CreatureFaction TurnType;
+
+        /// <summary>
         /// The player's purse at the moment of the save.
         /// </summary>
         public int TotalMoney;
@@ -73,6 +80,12 @@ namespace WindingTale.Core.Files
         // Poisoned / frozen / stat buffs currently on the creature.
         public List<CreatureEffects> Effects;
 
+        // Note: HasActioned is deliberately NOT recorded. The game only lets a battle be
+        // saved at the start of a turn, before anyone has moved, so every creature in a
+        // record is by construction still to act -- and a load lands at the start of that
+        // same turn, where onPlayerTurn resets the whole board anyway. Recording it would
+        // be storing a value that can only ever be false and is overwritten on the way in.
+
         public FDPosition Position;
 
         // Only for AI Creature
@@ -84,6 +97,14 @@ namespace WindingTale.Core.Files
         public int Id;
         public int ItemId;
         public bool HasOpened;
+
+        /// <summary>
+        /// Which chest model to draw. Saves written before this field existed
+        /// deserialize it as 0, which is not a valid TreasureType; see
+        /// GameMapRecordManager.ConvertRecordToTreasure for the fallback.
+        /// </summary>
+        public TreasureType Type;
+
         public FDPosition Position;
     }
 }

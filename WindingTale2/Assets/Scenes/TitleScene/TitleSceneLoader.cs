@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using WindingTale.Core.Files;
+using WindingTale.Scenes.GameFieldScene;
 using WindingTale.UI.Utils;
 
 namespace WindingTale.Scenes.TitleScene
@@ -54,15 +55,20 @@ namespace WindingTale.Scenes.TitleScene
         }
 
 
+        /// <summary>
+        /// 读取战场战况: resumes the saved battle. Identical to the in-battle record menu's
+        /// Load -- both end up in GameMain.ContinueFromRecord, which loads the saved
+        /// chapter's static data and then lays the saved battle state over it.
+        /// </summary>
         public void OnContinueGame()
         {
-            if (!GameMapRecordManager.HasSavedGame("current_game"))
+            if (!GameMapRecordManager.HasSavedGame(GameMain.SaveRecordName))
             {
                 Debug.LogWarning("No saved game to continue.");
                 return;
             }
 
-            // GameMain reads this on Start to load the .sav instead of beginning chapter 1.
+            // GameMain reads this on Start to load the .sav instead of beginning a chapter.
             GameFiledSceneParams.isContinue = true;
 
             FindFirstObjectByType<SceneTransition>().LoadScene("GameFieldScene");

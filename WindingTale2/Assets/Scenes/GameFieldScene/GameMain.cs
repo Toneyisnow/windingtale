@@ -75,14 +75,17 @@ namespace WindingTale.Scenes.GameFieldScene
 
         private TurnInfo turnInfo = null;
 
+        /// <summary>The single save slot the Continue button reads and writes.</summary>
+        public const string SaveRecordName = "current_game";
+
         void Start()
         {
             DontDestroyOnLoad(gameObject);
 
             if (GameFiledSceneParams.isContinue)
             {
-                LoadFromMapRecord();
                 GameFiledSceneParams.isContinue = false;
+                ContinueFromRecord();
             }
             else
             {
@@ -90,10 +93,42 @@ namespace WindingTale.Scenes.GameFieldScene
             }
         }
 
-        private void LoadFromMapRecord()
+        /// <summary>
+        /// The "读取战场战况" path, shared by the Title scene's Continue button and the
+        /// in-battle record menu. Two steps, in this order and with no overlap:
+        ///
+        ///   1. LoadChapter  -- everything the chapter defines and a battle never changes:
+        ///                      the field shapes, the obstacles, where the chests sit, and
+        ///                      the chapter's event scripts (which is where the creature
+        ///                      spawns, the conversations and the win/lose conditions live).
+        ///   2. ApplyRecord  -- everything the battle did change: the turn counter, the
+        ///                      purse, every creature's position and state, the dead, the
+        ///                      emptied chests, and which events have already fired.
+        ///
+        /// The chapter's own creature spawns are inside its turn events, so step 2's
+        /// "already fired" flags are what stop them replaying on top of the saved
+        /// creatures -- that is the one seam between the two steps.
+        /// </summary>
+        private void ContinueFromRecord()
         {
+            GameMapRecord record = GameMapRecordManager.ReadRecord(SaveRecordName);
+            if (record == null)
+            {
+                // Nothing to continue from. Both entry points check for a record before
+                // sending us here, so this means the file went missing in between. Fall
+                // back to a fresh chapter 1.
+                Debug.LogWarning("No save file to continue from; starting chapter 1 instead.");
+                StartChapter(1);
+                return;
+            }
+
+            LoadChapter(record.ChapterId);
+
             GameMapRecordManager manager = new GameMapRecordManager();
-            manager.LoadFromFile("current_game", this);
+            manager.ApplyRecord(record, this);
+
+            // Chapter turn scripts are skipped when continuing, so start the music here
+            PlayBackgroundMusic();
 
             onKickOff();
         }
@@ -122,7 +157,7 @@ namespace WindingTale.Scenes.GameFieldScene
         public void SaveGame()
         {
             GameMapRecordManager manager = new GameMapRecordManager();
-            manager.SaveToFile("current_game", this);
+            manager.SaveToFile(SaveRecordName, this);
         }
 
         public void OnQuit()
@@ -414,12 +449,29 @@ namespace WindingTale.Scenes.GameFieldScene
 
         #region Game Loops Functions
 
-        private void StartChapter(int chapterId)
+        /// <summary>
+        /// Step one of loading a battle: builds the chapter's static half and nothing
+        /// else. That is the field (shapes and obstacles), the chest placements, and the
+        /// chapter's event scripts -- all of it read from the chapter definition, none of
+        /// it dependent on how far a battle has got.
+        ///
+        /// It deliberately leaves the map empty of creatures: a chapter's creatures
+        /// appear through its turn events, so a new game gets them when turn 1 fires and
+        /// a continued game gets them from the record instead (see ContinueFromRecord).
+        /// </summary>
+        private void LoadChapter(int chapterId)
         {
+            this.chapterId = chapterId;
+
             gameMap.Initialize(chapterId);
 
             List<FDEvent> chapterEvents = ChapterLoader.LoadEvents(this, chapterId);
             eventHandler = new EventHandler(chapterEvents, this);
+        }
+
+        private void StartChapter(int chapterId)
+        {
+            LoadChapter(chapterId);
 
             onKickOff();
         }

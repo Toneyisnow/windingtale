@@ -24,6 +24,9 @@ namespace WindingTale.MapObjects.GameMap
 
         public GameObject obstaclesLayer;
 
+        // Holds the map's treasure chests (see ObjectsLayer).
+        public GameObject objectsLayer;
+
         public GameObject indicatorsLayer;
 
         public GameObject cursorPrefab;
@@ -52,6 +55,11 @@ namespace WindingTale.MapObjects.GameMap
         // The menu currently on screen, if any. Kept so the obstacle fade can be
         // recomputed from both the cursor and the menu tiles at once.
         private FDMenu currentMenu = null;
+
+        // Tiles currently covered by a move/target range indicator. Tracked here rather
+        // than read back off the spawned "move_indicator" objects, so a prop can tell
+        // whether to fade without walking the indicator layer every frame.
+        private readonly List<FDPosition> indicatorTiles = new List<FDPosition>();
 
         // The live menu's component. Held directly rather than looked up by name: a
         // closing menu lingers in the hierarchy while the next one is already open.
@@ -100,6 +108,55 @@ namespace WindingTale.MapObjects.GameMap
                 }
                 obstaclesComponent.Initialize(this.Map.Field);
             }
+
+            // Fall back to the child by name when the Inspector reference is unset, so
+            // the chests still appear in a scene that was serialized before the
+            // objectsLayer field existed.
+            GameObject objects = objectsLayer;
+            if (objects == null)
+            {
+                Transform found = this.transform.Find("ObjectsLayer");
+                objects = found != null ? found.gameObject : null;
+            }
+
+            if (objects != null)
+            {
+                ObjectsLayer objectsComponent = objects.GetComponent<ObjectsLayer>();
+                if (objectsComponent == null)
+                {
+                    objectsComponent = objects.AddComponent<ObjectsLayer>();
+                }
+                objectsComponent.Initialize(this.Map, this);
+            }
+            else
+            {
+                Debug.LogWarning("GameMap: no ObjectsLayer found; treasures will not be drawn.");
+            }
+        }
+
+        /// <summary>
+        /// The tiles where a UI element currently sits on top of the board: the cursor
+        /// (only while it is on screen -- it hides behind an open menu), the open menu's
+        /// four item tiles, and any move/target range indicators. Props standing on
+        /// these tiles fade so the UI reads through them.
+        /// </summary>
+        public FDPosition[] GetFadeTiles()
+        {
+            List<FDPosition> tiles = new List<FDPosition>();
+
+            if (cursor != null && cursorObject != null && cursorObject.activeSelf)
+            {
+                tiles.Add(cursor.Position);
+            }
+
+            if (currentMenu != null)
+            {
+                tiles.AddRange(FDMenu.GetItemPositions(currentMenu.Position));
+            }
+
+            tiles.AddRange(indicatorTiles);
+
+            return tiles.ToArray();
         }
 
 
@@ -434,6 +491,7 @@ namespace WindingTale.MapObjects.GameMap
                 indicator.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
                 indicator.transform.localScale = new Vector3(0.82f, 2f, 0.82f);
                 indicator.AddComponent<BlockBlinkEffect>();
+                indicatorTiles.Add(position);
 
                 // Dim the tile's grass so it doesn't fight the indicator visually.
                 if (shapes != null) shapes.SetTileFaded(position, IndicatorTileAlpha);
@@ -459,6 +517,7 @@ namespace WindingTale.MapObjects.GameMap
                 BlockBlinkEffect blink = indicator.AddComponent<BlockBlinkEffect>();
                 blink.blinkSpeed = 3.0f; // larger = slower fade than the move indicator (2.0)
                 blink.minAlpha = 0.02f;  // fade almost to invisible
+                indicatorTiles.Add(position);
 
                 if (shapes != null) shapes.SetTileFaded(position, IndicatorTileAlpha);
             }
@@ -473,6 +532,8 @@ namespace WindingTale.MapObjects.GameMap
                     Destroy(child.gameObject);
                 }
             }
+
+            indicatorTiles.Clear();
 
             // Un-dim any tiles that were faded for the indicators above.
             ShapesLayer shapes = getShapesLayer();

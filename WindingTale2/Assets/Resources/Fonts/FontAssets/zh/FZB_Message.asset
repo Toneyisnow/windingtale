@@ -3900,6 +3900,9 @@ MonoBehaviour:
   m_ShouldReimportFontFeatures: 0
   m_FallbackFontAssetTable:
   - {fileID: 11400000, guid: 099c2adc3a6c076409dd7bd61fd0ba33, type: 2}
+  - {fileID: 11400000, guid: 8d51b875630ea2b4eafcb8fc2d7f64df, type: 2}
+  - {fileID: 11400000, guid: 7187d706433c2344cb78dbb2180b1be7, type: 2}
+  - {fileID: 11400000, guid: 50a7a7da9251c1b4faec51857e507d4c, type: 2}
   m_FontWeightTable:
   - regularTypeface: {fileID: 0}
     italicTypeface: {fileID: 0}
@@ -3963,7 +3966,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: FZB_Message Material
-  m_Shader: {fileID: 10101, guid: 0000000000000000e000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 128e987d567d4e2c824d754223b3f3b0, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []

@@ -14,7 +14,7 @@ namespace WindingTale.MapObjects.CreatureIcon
     /// </summary>
     public class CreatureRecovering : MonoBehaviour
     {
-        public const float FlashDuration = 0.2f;
+        public const float FlashDuration = 0.1f;
 
         private float elapsed = 0f;
         private Creature creature = null;

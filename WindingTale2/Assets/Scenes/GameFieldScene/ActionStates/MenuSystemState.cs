@@ -42,17 +42,30 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             this.SetMenu(3, MenuItemId.SystemRestAll, true, () =>
             {
                 FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 1);
-                TalkActivity talk = new TalkActivity(message, null, (index) =>
+                var rawText = LocalizationManager.GetFDMessageString(message);
+                        
+                gameMain.gameCanvas.ShowTalkDialog(0, rawText, true, GameCanvas.DialogPosition.Top, (index) =>
                 {
-                   if (index == 1)
-                   {
-                       gameMain.endTurnForAll();
-                       PlayerInterface.getDefault().onUpdateState(new IdleState(gameMain));
-                       return;
-                   }
+                    // The reply message cannot be shown from here. There is only one
+                    // TalkDialog object, and TalkDialog.onConfirm/onCancel close it
+                    // immediately *after* this callback returns -- anything opened inline
+                    // is torn down in the same call stack, before it renders a frame.
+                    // Queue it instead, so it opens once the confirm dialog is gone.
+                    FDMessage reply = FDMessage.Create(FDMessage.MessageTypes.Information, index == 1 ? 1 : 2);
+                    gameMain.PushActivity(new TalkActivity(reply));
+
+                    if (index == 1)
+                    {
+                        // Everything endTurnForAll queues (the rest-recovery flashes, then
+                        // the turn rollover) lands behind the reply, and TalkActivity holds
+                        // the queue until the player dismisses it -- so the message is read
+                        // first. The greyout it applies outside the queue is immediate.
+                        gameMain.endTurnForAll();
+                    }
+
+                    PlayerInterface.getDefault().onUpdateState(new IdleState(gameMain));
                 });
 
-                gameMain.PushActivity(talk);
                 return this;
             });
         }

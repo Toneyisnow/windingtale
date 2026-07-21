@@ -17,65 +17,211 @@ using WindingTale.Scenes.GameFieldScene;
 namespace WindingTale.Core.Files
 {
     /// <summary>
-    /// Saved in the Battle Field so that could load from Continue button
+    /// Saved in the Battle Field so that could load from Continue button.
+    ///
+    /// This class owns only the *dynamic* half of a battle: where everyone stands, what
+    /// state they are in, who has died, which chests are emptied, which events have
+    /// already fired. The *static* half -- the field shapes, the obstacles, the chest
+    /// placements, the chapter's event scripts -- is not in the save at all; it is
+    /// rebuilt from the chapter definition by GameMain.LoadChapter, which must run
+    /// first. See GameMain.ContinueFromRecord for the two steps in order.
     /// </summary>
     public class GameMapRecordManager
     {
 
         /// <summary>
-        /// Whether a save exists to continue from -- checked before the Title scene offers it.
+        /// Whether any save exists to continue from -- what the Title scene checks, since
+        /// it has no battle of its own and will follow the record into whichever chapter
+        /// the record names.
         /// </summary>
         public static bool HasSavedGame(string recordName)
         {
             return File.Exists(GetSaveFilePath(recordName));
         }
 
-        public void LoadFromFile(string recordName, GameMain gameMain)
+        /// <summary>
+        /// Whether a save exists *for this chapter* -- what the in-battle Load checks. That
+        /// menu item means "restart this battle from my save", so a record belonging to
+        /// another chapter is no more use to it than no record at all: taking it would drop
+        /// the player onto a different map altogether. Only the Title scene's Continue is
+        /// allowed to cross chapters.
+        /// </summary>
+        public static bool HasSavedGame(string recordName, int chapterId)
         {
-            string fullFilePth = GetSaveFilePath(recordName);
+            GameMapRecord record = ReadRecord(recordName);
+            return record != null && record.ChapterId == chapterId;
+        }
 
-            if (!File.Exists(fullFilePth))
+        /// <summary>
+        /// Reads and deserializes the save, or null when there is none. Pure file work: it
+        /// touches no game state, so the caller can read the ChapterId out of it and load
+        /// that chapter before applying the rest.
+        ///
+        /// Stays quiet about a missing file -- it is also called to probe whether a save is
+        /// there at all (see the overload above), where absence is an ordinary answer, not
+        /// a fault. Callers that were promised a record warn for themselves.
+        /// </summary>
+        public static GameMapRecord ReadRecord(string recordName)
+        {
+            string fullFilePath = GetSaveFilePath(recordName);
+
+            if (!File.Exists(fullFilePath))
             {
-                Debug.LogWarning("No save file found.");
+                return null;
+            }
+
+            string json = File.ReadAllText(fullFilePath);
+            GameMapRecord record = JsonConvert.DeserializeObject<GameMapRecord>(json);
+
+            if (record != null)
+            {
+                Debug.Log(string.Format(
+                    "Game record read: chapter {0}, turn {1}.", record.ChapterId, record.TurnNo));
+            }
+
+            return record;
+        }
+
+        /// <summary>
+        /// Lays the saved battle state over an already-loaded chapter. Everything the
+        /// chapter definition provides is left exactly as LoadChapter built it -- this
+        /// only writes back what the players changed during the battle.
+        ///
+        /// Precondition: gameMain.LoadChapter(record.ChapterId) has run, so the map,
+        /// the field and the chapter's event list all exist.
+        /// </summary>
+        public void ApplyRecord(GameMapRecord record, GameMain gameMain)
+        {
+            if (record == null)
+            {
                 return;
             }
 
-            string json = File.ReadAllText(fullFilePth);
-            GameMapRecord record = JsonConvert.DeserializeObject<GameMapRecord>(json);
-            Debug.Log("Game Loaded: " + json);
+            FDMap map = gameMain.gameMap.Map;
 
-            gameMain.gameMap.Initialize(record.ChapterId);
-            List<FDEvent> chapterEvents = ChapterLoader.LoadEvents(gameMain, record.ChapterId);
-            gameMain.eventHandler = new EventHandler(chapterEvents, gameMain);
-            foreach (int eventId in record.TriggeredEvents)
+            // Events already fired during the saved battle must not fire a second time.
+            // The list itself came from the chapter, so only the active flags are ours.
+            ApplyTriggeredEvents(gameMain.eventHandler, record.TriggeredEvents);
+
+            ApplyTurn(map, record);
+            map.TotalMoney = record.TotalMoney;
+
+            // Remember which turn this battle was restored into, so the record menu can
+            // refuse to save it straight back onto the same state. See FDMap.CanSaveGame.
+            map.RestoredTurnNo = record.TurnNo;
+
+            // The chapter's own creature spawns live inside its turn events, all of
+            // which are now marked as fired, so the map starts empty and every creature
+            // on it comes from the record.
+            if (record.Creatures != null)
             {
-                FDEvent evt = chapterEvents.Find(e => e.EventId == eventId);
+                foreach (CreatureMapRecord creatureRecord in record.Creatures)
+                {
+                    FDCreature creature = ConvertRecordToCreature(creatureRecord);
+                    gameMain.gameMap.AddCreature(creature, creature.Position);
+                }
+            }
+
+            // Dead creatures are data only -- no icon is drawn for them -- but they are
+            // still needed for the portraits their death conversations use.
+            map.DeadCreatures = record.DeadCreatures == null
+                ? new List<FDCreature>()
+                : record.DeadCreatures.Select(creature => ConvertRecordToCreature(creature)).ToList();
+
+            ApplyTreasures(map, record.Treasures);
+        }
+
+        private static void ApplyTriggeredEvents(EventHandler eventHandler, List<int> triggeredEvents)
+        {
+            if (eventHandler == null || triggeredEvents == null)
+            {
+                return;
+            }
+
+            foreach (int eventId in triggeredEvents)
+            {
+                FDEvent evt = eventHandler.events.Find(e => e.EventId == eventId);
                 if (evt != null)
                 {
                     evt.SetActive(false); // Mark the event as inactive
                 }
             }
-
-            FDMap map = gameMain.gameMap.Map;
-
-            // A load resumes at the start of the saved player turn: Initialize left TurnType
-            // at Enemy, so the onKickOff that follows advances it to Friend and increments
-            // TurnNo on the way. Rewinding one turn here makes that landing spot the turn
-            // that was actually saved, instead of the one after it.
-            map.TurnNo = record.TurnNo - 1;
-            map.TotalMoney = record.TotalMoney;
-
-            foreach(CreatureMapRecord creatureRecord in record.Creatures)
-            {
-                FDCreature creature = ConvertRecordToCreature(creatureRecord);
-                gameMain.gameMap.AddCreature(creature, creature.Position);
-            }
-            map.DeadCreatures = record.DeadCreatures.Select(creature => ConvertRecordToCreature(creature)).ToList();
-            map.Treasures = record.Treasures.Select(treasure => ConvertRecordToTreasure(treasure)).ToList();
-
-            
         }
 
+        /// <summary>
+        /// Rewinds the turn counter by exactly one phase, because the onKickOff that
+        /// follows a load runs onStartNextTurn, which advances the phase (and rolls the
+        /// turn number over on Enemy -> Friend). Landing one phase early makes that
+        /// advance arrive at the phase the save was actually taken in.
+        ///
+        /// This is why a battle may only be saved at the start of a turn: the load resumes
+        /// at a phase boundary, so it replays the saved phase from its beginning. Saving
+        /// part-way through one would silently rewind whatever had already happened in it.
+        /// </summary>
+        private static void ApplyTurn(FDMap map, GameMapRecord record)
+        {
+            switch (record.TurnType)
+            {
+                case CreatureFaction.Npc:
+                    map.TurnNo = record.TurnNo;
+                    map.TurnType = CreatureFaction.Friend;
+                    break;
+                case CreatureFaction.Enemy:
+                    map.TurnNo = record.TurnNo;
+                    map.TurnType = CreatureFaction.Npc;
+                    break;
+                default:
+                    // Friend: the previous phase is the Enemy phase of the turn before.
+                    map.TurnNo = record.TurnNo - 1;
+                    map.TurnType = CreatureFaction.Enemy;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Restores what a battle can change about a chest -- whether it has been emptied,
+        /// and which item it holds after an exchange. The chests themselves came from the
+        /// chapter (LoadChapter placed them and ObjectsLayer has already drawn them), so
+        /// they are updated in place rather than swapped for a fresh list: replacing the
+        /// list would leave the drawn chests keyed to objects nothing writes to any more.
+        /// </summary>
+        private void ApplyTreasures(FDMap map, List<TreasureMapRecord> treasureRecords)
+        {
+            if (treasureRecords == null)
+            {
+                return;
+            }
+
+            foreach (TreasureMapRecord treasureRecord in treasureRecords)
+            {
+                FDTreasure treasure = map.Treasures.Find(t => t.Id == treasureRecord.Id);
+                if (treasure == null)
+                {
+                    // A chest the chapter no longer declares (an edited chapter file, or a
+                    // chest that only ever existed in the save). Keep it: dropping it would
+                    // lose an item the player can still collect.
+                    treasure = ConvertRecordToTreasure(treasureRecord);
+                    map.Treasures.Add(treasure);
+                    continue;
+                }
+
+                treasure.UpdateItem(treasureRecord.ItemId);
+
+                // HasOpened is write-once through Open(); an emptied chest must stay emptied
+                // across a save/load or its contents could be collected twice.
+                if (treasureRecord.HasOpened)
+                {
+                    treasure.Open();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Writes the battle's dynamic state to the save slot. Only ever called at the
+        /// start of a turn, before anyone has moved (the record menu gates on
+        /// FDMap.CanSaveGame), which is what lets the record leave per-creature turn
+        /// state out entirely -- see CreatureMapRecord and ApplyTurn.
+        /// </summary>
         public void SaveToFile(string recordName, GameMain gameMain)
         {
             GameMapRecord gameMapRecord = new GameMapRecord();
@@ -85,6 +231,7 @@ namespace WindingTale.Core.Files
 
             gameMapRecord.ChapterId = map.ChapterId;
             gameMapRecord.TurnNo = map.TurnNo;
+            gameMapRecord.TurnType = map.TurnType;
             gameMapRecord.TotalMoney = map.TotalMoney;
             gameMapRecord.Creatures = map.Creatures.Select(creature => ConvertCreatureToRecord(creature) ).ToList();
             gameMapRecord.DeadCreatures = map.DeadCreatures.Select(creature => ConvertCreatureToRecord(creature)).ToList();
@@ -175,13 +322,21 @@ namespace WindingTale.Core.Files
             record.Id = treasure.Id;
             record.ItemId = treasure.ItemId;
             record.HasOpened = treasure.HasOpened;
+            record.Type = treasure.Type;
             record.Position = treasure.Position;
             return record;
         }
 
         private FDTreasure ConvertRecordToTreasure(TreasureMapRecord record)
         {
-            FDTreasure treasure = new FDTreasure(record.Id, record.ItemId);
+            // Saves written before TreasureMapRecord.Type existed decode it as 0, which
+            // is not a TreasureType. Fall back to RedBox rather than 0: an unrecognised
+            // type would draw no chest at all, silently losing a still-unopened one.
+            TreasureType type = System.Enum.IsDefined(typeof(TreasureType), record.Type)
+                ? record.Type
+                : TreasureType.RedBox;
+
+            FDTreasure treasure = new FDTreasure(record.Id, record.ItemId, type);
             treasure.Position = record.Position;
 
             // HasOpened is write-once through Open(); an emptied chest must stay emptied

@@ -5,14 +5,9 @@ public class BackgroundMusic : MonoBehaviour
 {
     public AudioClip backgroundMusic;
     private AudioSource audioSource;
-    public float fadeDuration = 1.5f; // ÒôÀÖµ­Èë/µ­³öÊ±¼ä
+    public float fadeDuration = 1.5f; // ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 
     void Awake()
-    {
-        
-    }
-
-    void Start()
     {
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -23,7 +18,7 @@ public class BackgroundMusic : MonoBehaviour
         audioSource.clip = backgroundMusic;
         audioSource.loop = true;
         audioSource.playOnAwake = true;
-        audioSource.volume = 0f; // ³õÊ¼ÒôÁ¿ÉèÎª 0
+        audioSource.volume = 0f; // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª 0
 
         //// PlayMusic(true);
     }
@@ -45,7 +40,7 @@ public class BackgroundMusic : MonoBehaviour
             }
             else
             {
-                audioSource.volume = 0.5f; // Ö±½ÓÉèÎªÄ¬ÈÏÒôÁ¿
+                audioSource.volume = 0.5f; // Ö±ï¿½ï¿½ï¿½ï¿½ÎªÄ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             }
         }
     }
@@ -79,6 +74,6 @@ public class BackgroundMusic : MonoBehaviour
         }
 
         audioSource.Stop();
-        audioSource.volume = startVolume; // ¸´Î»ÒôÁ¿ÒÔ±ãÏÂ´Î²¥·Å
+        audioSource.volume = startVolume; // ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½Â´Î²ï¿½ï¿½ï¿½
     }
 }

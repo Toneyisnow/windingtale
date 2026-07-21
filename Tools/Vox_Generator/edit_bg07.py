@@ -23,6 +23,8 @@ PALETTE_OVERRIDES = {
     10: (74, 122, 52),   # was yellow-green -> deep green
     4:  (66, 110, 48),   # flat ground tan -> deep green
     3:  (96, 140, 66),   # bright terrain tan -> green
+    5:  (51, 51, 153),   # water surface: pale cyan -> map-tile deep sea blue
+    6:  (51, 51, 153),   # deep water -> same map-tile deep sea blue
 }
 
 def read_main_children(data):

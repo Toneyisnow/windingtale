@@ -115,6 +115,43 @@ namespace WindingTale.UI.Dialogs
         private bool isClosing = false;
         private Coroutine slideCoroutine = null;
 
+        // Selection grid. Both pages behave the same way - every present entry can be
+        // highlighted, but only a "selectable" one (one that makes sense for this dialog's
+        // infoType) can actually be confirmed - but they are indexed differently.
+        //
+        // Items run row-major, two per row:      Magics run column-major, 3 x 4:
+        //     0 1                                    0 4  8
+        //     2 3                                    1 5  9
+        //     4 5                                    2 6 10
+        //     6 7                                    3 7 11
+        private const int ItemColumns = 2;
+        private const int MagicColumns = 3;
+        private const int MagicRows = 4;
+
+        private const int MaxItemCount = 8;
+        private const int MaxMagicCount = MagicColumns * MagicRows;
+
+        private static readonly Color SelectableTextColor = Color.white;
+
+        // Softened rather than pure red: pure red on the dark panel is hard to read at the
+        // small size the attribute line is rendered at.
+        private static readonly Color UnselectableTextColor = new Color(1f, 0.35f, 0.35f);
+
+        private static readonly Color HighlightColor = new Color(1f, 1f, 1f, 0.3f);
+        private static readonly Color TransparentColor = new Color(1f, 1f, 1f, 0f);
+
+        // Which page the grid currently describes, so the index <-> (column, row) mapping
+        // and the slot lookup both know which layout they are walking.
+        private bool isMagicPage = false;
+
+        private int slotCount = 0;
+        private int selectedSlotIndex = -1;
+        private readonly bool[] slotSelectable = new bool[MaxMagicCount];
+
+        // Frame the dialog was opened on. Keys are ignored on it, so the Enter that picked
+        // the menu entry which opened this dialog does not also confirm the first entry.
+        private int openedFrame = -1;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -124,10 +161,265 @@ namespace WindingTale.UI.Dialogs
         // Update is called once per frame
         void Update()
         {
+            if (isClosing)
+            {
+                return;
+            }
+
             // ESC / Backspace closes the dialog, exactly as the Cancel button does.
-            if (!isClosing && (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace)))
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace))
             {
                 onCancel();
+                return;
+            }
+
+            handleSelectionKeys();
+        }
+
+        /// <summary>
+        /// Arrow keys walk the grid, Enter / Space confirms. Only meaningful while something
+        /// is highlighted, which a view-only dialog never is.
+        /// </summary>
+        private void handleSelectionKeys()
+        {
+            if (slotCount <= 0 || selectedSlotIndex < 0 || Time.frameCount == openedFrame)
+            {
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                moveSelection(0, -1);
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                moveSelection(0, 1);
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                moveSelection(-1, 0);
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                moveSelection(1, 0);
+            }
+            else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
+            {
+                onSlotActivated(selectedSlotIndex, false);
+            }
+        }
+
+        /// <summary>
+        /// Moves the highlight by one grid step. A step that would leave the grid, or land on
+        /// a slot with nothing in it, is ignored - the highlight simply stays where it is.
+        /// </summary>
+        private void moveSelection(int deltaColumn, int deltaRow)
+        {
+            int columns = isMagicPage ? MagicColumns : ItemColumns;
+            int column = getSlotColumn(selectedSlotIndex) + deltaColumn;
+            int row = getSlotRow(selectedSlotIndex) + deltaRow;
+
+            // The item grid grows downwards with the item count, so only its columns are
+            // bounded here; the magic grid is a fixed 3 x 4.
+            if (column < 0 || column >= columns || row < 0)
+            {
+                return;
+            }
+            if (isMagicPage && row >= MagicRows)
+            {
+                return;
+            }
+
+            int target = isMagicPage ? column * MagicRows + row : row * ItemColumns + column;
+            if (target >= slotCount)
+            {
+                return;
+            }
+
+            selectedSlotIndex = target;
+            refreshHighlight();
+        }
+
+        private int getSlotColumn(int index)
+        {
+            return isMagicPage ? index / MagicRows : index % ItemColumns;
+        }
+
+        private int getSlotRow(int index)
+        {
+            return isMagicPage ? index % MagicRows : index / ItemColumns;
+        }
+
+        /// <summary>
+        /// Confirms the entry at <paramref name="index"/>. A click also moves the highlight
+        /// there first, so clicking an unselectable entry leaves it highlighted but does
+        /// nothing else - the same outcome as walking onto it with the arrow keys.
+        /// </summary>
+        private void onSlotActivated(int index, bool moveHighlight)
+        {
+            if (isClosing || isViewOnly() || index < 0 || index >= slotCount)
+            {
+                return;
+            }
+
+            if (moveHighlight)
+            {
+                selectedSlotIndex = index;
+                refreshHighlight();
+            }
+
+            if (!slotSelectable[index])
+            {
+                return;
+            }
+
+            Action<int> callback = this.onSelected;
+            this.onSelected = null;
+
+            closeWithAnimation(() => callback?.Invoke(index));
+        }
+
+        /// <summary>
+        /// A pure inspection dialog: the list is shown, but nothing is highlighted and
+        /// neither the keyboard nor a click can pick anything out of it.
+        /// </summary>
+        private bool isViewOnly()
+        {
+            return infoType == CreatureInfoType.View || infoType == CreatureInfoType.ViewMagic;
+        }
+
+        /// <summary>
+        /// Whether the item at <paramref name="itemIndex"/> can be confirmed in this dialog:
+        /// a use dialog only accepts usable items, an equip dialog only accepts equipment
+        /// that is not already worn.
+        /// </summary>
+        private bool isItemSelectable(int itemIndex, ItemDefinition item)
+        {
+            if (item == null)
+            {
+                return false;
+            }
+
+            switch (infoType)
+            {
+                case CreatureInfoType.SelectUseItem:
+                    return item.IsUsable();
+
+                case CreatureInfoType.SelectEquipItem:
+                    return item.IsEquipment()
+                        && itemIndex != creature.AttackItemIndex
+                        && itemIndex != creature.DefendItemIndex;
+
+                default:
+                    return true;
+            }
+        }
+
+        /// <summary>
+        /// Whether <paramref name="magic"/> can be confirmed: the creature has to be able to
+        /// pay for it.
+        /// </summary>
+        private bool isMagicSelectable(MagicDefinition magic)
+        {
+            if (magic == null)
+            {
+                return false;
+            }
+
+            if (infoType == CreatureInfoType.SelectMagic)
+            {
+                return creature.Mp >= magic.MpCost;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// The entry to open on: the first one that can actually be picked, falling back to
+        /// the first entry so something is always highlighted. View-only dialogs pass -1 to
+        /// leave the grid unhighlighted instead of calling this.
+        /// </summary>
+        private int getFirstSelectableIndex()
+        {
+            if (slotCount <= 0)
+            {
+                return -1;
+            }
+
+            for (int index = 0; index < slotCount; index++)
+            {
+                if (slotSelectable[index])
+                {
+                    return index;
+                }
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Repaints the slot backgrounds so exactly the highlighted one is lit.
+        /// </summary>
+        private void refreshHighlight()
+        {
+            int maxIndex = isMagicPage ? MaxMagicCount : MaxItemCount;
+
+            for (int index = 0; index < maxIndex; index++)
+            {
+                GameObject slot = getSlotObject(index);
+                if (slot == null)
+                {
+                    continue;
+                }
+
+                Image background = slot.GetComponent<Image>();
+                if (background == null)
+                {
+                    continue;
+                }
+
+                background.color = index == selectedSlotIndex ? HighlightColor : TransparentColor;
+            }
+        }
+
+        private GameObject getSlotObject(int index)
+        {
+            return isMagicPage ? getMagicObject(index) : getSelectableObject(index);
+        }
+
+        /// <summary>
+        /// Wires one grid slot: colours its labels by selectability and points its button at
+        /// this open's callback. The dialog is a scene object that is reused rather than
+        /// re-instantiated, so the button is only added once and re-pointed on each open;
+        /// adding a second TaggedButton would fire onSelected twice.
+        /// </summary>
+        private void setupSlot(GameObject slot, int index, bool selectable, params TextMeshProUGUI[] labels)
+        {
+            slotSelectable[index] = selectable;
+
+            Color textColor = selectable ? SelectableTextColor : UnselectableTextColor;
+            foreach (TextMeshProUGUI label in labels)
+            {
+                if (label != null)
+                {
+                    label.color = textColor;
+                }
+            }
+
+            TaggedButton taggedButton = slot.GetComponent<TaggedButton>();
+            if (taggedButton == null)
+            {
+                taggedButton = slot.AddComponent<TaggedButton>();
+            }
+
+            taggedButton.Init(index, clickedIndex => onSlotActivated(clickedIndex, true));
+
+            // Unity's own colour tint would repaint the background on hover / click and
+            // fight the highlight this dialog draws itself.
+            Button button = slot.GetComponent<Button>();
+            if (button != null)
+            {
+                button.transition = Selectable.Transition.None;
             }
         }
 
@@ -145,6 +437,7 @@ namespace WindingTale.UI.Dialogs
             this.creature = creature;
             this.infoType = infoType;
             this.onSelected = onSelected;
+            this.openedFrame = Time.frameCount;
 
             bool isMagic = infoType == CreatureInfoType.SelectMagic || infoType == CreatureInfoType.ViewMagic;
             itemsContainer.SetActive(!isMagic);
@@ -187,68 +480,68 @@ namespace WindingTale.UI.Dialogs
             this.evLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creatureEv);
 
 
+            isMagicPage = isMagic;
+
             if (!isMagic)
             {
-                for(int itemIndex = 0; itemIndex < creature.Items.Count; itemIndex ++)
+                slotCount = Math.Min(creature.Items.Count, MaxItemCount);
+
+                for(int itemIndex = 0; itemIndex < slotCount; itemIndex ++)
                 {
                     int itemId = creature.Items[itemIndex];
                     ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(itemId);
-                    
+
                     GameObject selectable = getSelectableObject(itemIndex);
                     selectable.SetActive(true);
-                    
+
                     var selectableText = selectable.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
                     selectableText.text = item.Name;
 
                     var selectableAttr = selectable.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
                     selectableAttr.text = item.ToAttributeString();
 
-                    TaggedButton taggedButton = selectable.AddComponent<TaggedButton>();
-                    taggedButton.Init(itemIndex, (itemIndex) =>
-                    {
-                        if (isClosing)
-                        {
-                            return;
-                        }
-
-                        closeWithAnimation(() => onSelected(itemIndex));
-                    });
+                    setupSlot(selectable, itemIndex, isItemSelectable(itemIndex, item), selectableText, selectableAttr);
                 }
-                for (int itemIndex = creature.Items.Count; itemIndex < 8; itemIndex++)
+                for (int itemIndex = slotCount; itemIndex < MaxItemCount; itemIndex++)
                 {
                     GameObject selectable = getSelectableObject(itemIndex);
                     selectable.SetActive(false);
+                    slotSelectable[itemIndex] = false;
                 }
 
             } else
             {
-                for (int magicIndex = 0; magicIndex < creature.Magics.Count; magicIndex++)
+                slotCount = Math.Min(creature.Magics.Count, MaxMagicCount);
+
+                for (int magicIndex = 0; magicIndex < slotCount; magicIndex++)
                 {
                     int magicId = creature.Magics[magicIndex];
                     MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
 
                     GameObject magicObject = getMagicObject(magicIndex);
                     magicObject.SetActive(true);
+
                     var selectableText = magicObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
                     selectableText.text = magic.Name;
 
-                    TaggedButton taggedButton = magicObject.AddComponent<TaggedButton>();
-                    taggedButton.Init(magicIndex, (mIndex) =>
-                    {
-                        if (isClosing)
-                        {
-                            return;
-                        }
+                    var selectableAttr = magicObject.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
+                    selectableAttr.text = string.Format("MP-{0}", magic.MpCost);
 
-                        closeWithAnimation(() => onSelected(mIndex));
-                    });
+                    setupSlot(magicObject, magicIndex, isMagicSelectable(magic), selectableText, selectableAttr);
                 }
-                for (int magicIndex = creature.Magics.Count; magicIndex < 12; magicIndex++)
+                for (int magicIndex = slotCount; magicIndex < MaxMagicCount; magicIndex++)
                 {
-                    GameObject selectable = getMagicObject(magicIndex);
-                    selectable.SetActive(false);
+                    GameObject magicObject = getMagicObject(magicIndex);
+                    magicObject.SetActive(false);
+                    slotSelectable[magicIndex] = false;
                 }
             }
+
+            // Open on the first entry that can actually be picked, falling back to the first
+            // entry so something is always highlighted. A view-only dialog shows no highlight
+            // at all: -1 also disables the keyboard and click paths.
+            selectedSlotIndex = isViewOnly() ? -1 : getFirstSelectableIndex();
+            refreshHighlight();
 
             playEnterAnimation();
         }

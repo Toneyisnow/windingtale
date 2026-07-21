@@ -93,11 +93,20 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
 
         public override void Start(GameMain gameMain)
         {
+            // A creature can be scripted to talk after it has died (a dying line, or a
+            // conversation that plays out over the death). It is gone from the live list
+            // by then, so fall back to DeadCreatures for its portrait and faction.
+            bool isDead = false;
             if (this.creature == null && this.creatureId > 0)
             {
                 this.creature = gameMain.gameMap.Map.GetCreatureById(this.creatureId);
+                if (this.creature == null)
+                {
+                    this.creature = gameMain.gameMap.Map.DeadCreatures.Find(c => c.Id == this.creatureId);
+                    isDead = this.creature != null;
+                }
             }
-            
+
             int creatureAnimationId = this.creature?.Definition?.AnimationId ?? 0;
 
             // Friend talks from the Bottom; Enemy / Npc (and the narrator) from the Top.
@@ -105,8 +114,10 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
                 ? GameCanvas.DialogPosition.Bottom
                 : GameCanvas.DialogPosition.Top;
 
-            // Slide the map cursor to under the speaking creature before it talks.
-            if (this.creature != null && this.creature.Position != null)
+            // Slide the map cursor to under the speaking creature before it talks. A dead
+            // creature's Position is stale — it is no longer on the map — so leave the
+            // cursor where it is in that case.
+            if (this.creature != null && this.creature.Position != null && !isDead)
             {
                 gameMain.gameMap.SlideCursorTo(this.creature.Position, dialogPosition);
             }

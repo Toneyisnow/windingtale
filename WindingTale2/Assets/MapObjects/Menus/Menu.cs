@@ -34,10 +34,27 @@ public class Menu : MonoBehaviour
     public void LoadMenuItem(int itemIndex)
     {
         FDMenuItem item = FDMenu.Items[itemIndex];
-        int animIndex = item.Enabled ? 1 : 3;
 
-        GameObject menuItemPrefab = Resources.Load<GameObject>(string.Format("Menus/Menu_{0}_{1}", item.Id.GetHashCode(), animIndex));
-        
+        GameObject menuItemPrefab = LoadItemPrefab(item, item.Enabled ? 1 : 3);
+
+        // Not every item has a disabled (3) variant drawn -- only the ones that were ever
+        // expected to grey out. Fall back to the normal art rather than instantiating null:
+        // the item is still unselectable and unclickable (MenuState gates on Enabled), it
+        // just doesn't read as disabled until the _3 art is authored.
+        if (menuItemPrefab == null)
+        {
+            Debug.LogWarning(string.Format(
+                "Menu: no disabled art for item {0} (Menus/Menu_{1}_3); drawing it enabled.",
+                item.Id, item.Id.GetHashCode()));
+            menuItemPrefab = LoadItemPrefab(item, 1);
+        }
+
+        if (menuItemPrefab == null)
+        {
+            Debug.LogError(string.Format("Menu: no art at all for item {0}.", item.Id));
+            return;
+        }
+
         GameObject menuItemObj = Instantiate(menuItemPrefab, centerObject.transform);
         menuItemObjs[itemIndex] = menuItemObj;
 
@@ -117,10 +134,15 @@ public class Menu : MonoBehaviour
         return inner != null ? inner.GetComponent<MeshFilter>() : null;
     }
 
+    private static GameObject LoadItemPrefab(FDMenuItem item, int animIndex)
+    {
+        return Resources.Load<GameObject>(
+            string.Format("Menus/Menu_{0}_{1}", item.Id.GetHashCode(), animIndex));
+    }
+
     private static Mesh LoadItemMesh(FDMenuItem item, int animIndex)
     {
-        GameObject prefab = Resources.Load<GameObject>(
-            string.Format("Menus/Menu_{0}_{1}", item.Id.GetHashCode(), animIndex));
+        GameObject prefab = LoadItemPrefab(item, animIndex);
         return prefab != null ? FindDefaultMesh(prefab.transform) : null;
     }
 
@@ -155,9 +177,15 @@ public class Menu : MonoBehaviour
 
     public void CloseMenuItem(int itemIndex)
     {
+        // An item whose art failed to load has no object to slide back out.
+        if (menuItemObjs[itemIndex] == null)
+        {
+            return;
+        }
+
         var centerPos = FDPosition.At(0, 0);
         var itemPos = getItemPosition(itemIndex);
-        
+
         MenuSlidingEffect slidingEffect = menuItemObjs[itemIndex].AddComponent<MenuSlidingEffect>();
         slidingEffect.Init(itemPos, centerPos, true);
     }

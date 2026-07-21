@@ -400,9 +400,11 @@ public class TalkDialog : MonoBehaviour
     }
 
     /// <summary>
-    /// Bounces whichever of the Yes / No buttons is currently selected, using the same dip
-    /// as the ConfirmArrow so the two read as one idiom. The unselected button is held on
-    /// its resting line, so the selection is visible the instant Left / Right is pressed.
+    /// Bounces whichever of the Yes / No buttons is currently selected, using the same curve
+    /// as the ConfirmArrow so the two read as one idiom — but lifting rather than dipping:
+    /// the buttons sit low enough in the dialog that a downward bounce read as too far down.
+    /// The unselected button is held on its resting line, so the selection is visible the
+    /// instant Left / Right is pressed.
     /// </summary>
     private IEnumerator AnimateConfirmButtons()
     {
@@ -426,8 +428,8 @@ public class TalkDialog : MonoBehaviour
             elapsed += Time.deltaTime;
             float dip = Mathf.Abs(Mathf.Sin(elapsed * ConfirmArrowBounceSpeed)) * ConfirmArrowBounceDepth;
 
-            SetAnchoredY(confirmRt, confirmButtonBaseY - (confirmSelected ? dip : 0f));
-            SetAnchoredY(cancelRt, cancelButtonBaseY - (confirmSelected ? 0f : dip));
+            SetAnchoredY(confirmRt, confirmButtonBaseY + (confirmSelected ? dip : 0f));
+            SetAnchoredY(cancelRt, cancelButtonBaseY + (confirmSelected ? 0f : dip));
 
             yield return null;
         }
