@@ -78,6 +78,16 @@ namespace WindingTale.Scenes.GameFieldScene
         /// <summary>The single save slot the Continue button reads and writes.</summary>
         public const string SaveRecordName = "current_game";
 
+        /// <summary>Time the whole screen takes to fade to black when leaving the battle, in seconds.</summary>
+        public const float QuitFadeDuration = 3.0f;
+
+        /// <summary>
+        /// Set the moment the battle is being left, whether lost or given up. It freezes
+        /// the activity queue so nothing keeps playing on behind the fade, and it makes
+        /// the second call to QuitToScene a no-op.
+        /// </summary>
+        private bool isQuitting = false;
+
         void Start()
         {
             DontDestroyOnLoad(gameObject);
@@ -135,6 +145,12 @@ namespace WindingTale.Scenes.GameFieldScene
 
         void Update()
         {
+            //// The game is on its way out: let the fade play over a still battlefield.
+            if (isQuitting)
+            {
+                return;
+            }
+
             if (SceneManager.loadedSceneCount > 1)
             {
                 return;
@@ -160,19 +176,84 @@ namespace WindingTale.Scenes.GameFieldScene
             manager.SaveToFile(SaveRecordName, this);
         }
 
+        /// <summary>
+        /// 退出战场: the player gave up the battle from the record menu. Same quitting
+        /// animation as a loss, but it hands straight back to the title screen -- there
+        /// is no game-over screen to show for a battle nobody lost.
+        /// </summary>
         public void OnQuit()
         {
-
+            QuitToScene("TitleScene");
         }
 
+        /// <summary>
+        /// The battle is lost. Plays the quitting animation over the frozen field, then
+        /// puts the game-over screen up in the field's place.
+        /// </summary>
         public void OnGameOver()
         {
-
+            QuitToScene("GameOverScene");
         }
 
+        /// <summary>
+        /// The quitting animation: fades the whole screen to black over
+        /// QuitFadeDuration seconds, then tears the field scene down and loads
+        /// <paramref name="sceneName"/> in its place.
+        ///
+        /// Everything freezes the moment it starts, and a second call is ignored --
+        /// which covers both a second hero dying in the same round and an impatient
+        /// second confirm on the quit menu.
+        ///
+        /// GameMain survives scene loads (DontDestroyOnLoad in Start), so like
+        /// ContinueGame it has to take itself down before loading anything else --
+        /// otherwise a second GameMain would come up with the next battle.
+        /// </summary>
+        private void QuitToScene(string sceneName)
+        {
+            if (isQuitting)
+            {
+                return;
+            }
+            isQuitting = true;
+
+            StopBackgroundMusic();
+
+            ScreenFader fader = ScreenFader.Create(0.0f);
+            fader.FadeTo(1.0f, QuitFadeDuration, () =>
+            {
+                Destroy(gameObject);
+                SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+            });
+        }
+
+        /// <summary>
+        /// The battle is won. The chapter's closing conversation is still sitting in the
+        /// activity queue when the win fires, so the handover is queued behind it rather
+        /// than run here: the player reads the last line, and only then does the field
+        /// fade out into the village.
+        /// </summary>
         public void OnGameWin()
         {
+            this.PushActivity(game => game.EnterVillage());
+        }
 
+        /// <summary>
+        /// Leaves the won battlefield for the village. What survives the battle is the
+        /// party -- everyone healed up, the fallen back on their feet at 0 HP -- and the
+        /// purse; GameRecordManager.CreateFromMapRecord is where that is decided. The
+        /// village picks the record up out of GlobalVariables on the way in.
+        ///
+        /// Same quitting animation as a loss: the field freezes and fades to black, and
+        /// the village fades up out of that same black.
+        /// </summary>
+        private void EnterVillage()
+        {
+            GameMapRecord mapRecord = new GameMapRecordManager().BuildRecord(this);
+            GameRecord record = GameRecordManager.CreateFromMapRecord(mapRecord);
+
+            GlobalVariables.Set(VillageScene.RecordVariableName, record);
+
+            QuitToScene("VillageScene");
         }
 
         public void PlayBackgroundMusic()
@@ -184,7 +265,11 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void StopBackgroundMusic()
         {
-
+            BackgroundMusic musicPlayer = FindFirstObjectByType<BackgroundMusic>();
+            if (musicPlayer != null)
+            {
+                musicPlayer.StopMusic();
+            }
         }
 
         #endregion

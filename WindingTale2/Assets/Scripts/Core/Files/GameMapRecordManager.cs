@@ -217,12 +217,12 @@ namespace WindingTale.Core.Files
         }
 
         /// <summary>
-        /// Writes the battle's dynamic state to the save slot. Only ever called at the
-        /// start of a turn, before anyone has moved (the record menu gates on
-        /// FDMap.CanSaveGame), which is what lets the record leave per-creature turn
-        /// state out entirely -- see CreatureMapRecord and ApplyTurn.
+        /// Takes the snapshot, without deciding what becomes of it. SaveToFile writes it
+        /// to the save slot; winning a chapter instead boils it down to the party that
+        /// walks on to the village (see GameRecordManager.CreateFromMapRecord), and never
+        /// touches the save file at all.
         /// </summary>
-        public void SaveToFile(string recordName, GameMain gameMain)
+        public GameMapRecord BuildRecord(GameMain gameMain)
         {
             GameMapRecord gameMapRecord = new GameMapRecord();
 
@@ -237,6 +237,19 @@ namespace WindingTale.Core.Files
             gameMapRecord.DeadCreatures = map.DeadCreatures.Select(creature => ConvertCreatureToRecord(creature)).ToList();
             gameMapRecord.Treasures = map.Treasures.Select(treasure => ConvertTreasureToRecord(treasure)).ToList();
             gameMapRecord.TriggeredEvents = triggeredEvents;
+
+            return gameMapRecord;
+        }
+
+        /// <summary>
+        /// Writes the battle's dynamic state to the save slot. Only ever called at the
+        /// start of a turn, before anyone has moved (the record menu gates on
+        /// FDMap.CanSaveGame), which is what lets the record leave per-creature turn
+        /// state out entirely -- see CreatureMapRecord and ApplyTurn.
+        /// </summary>
+        public void SaveToFile(string recordName, GameMain gameMain)
+        {
+            GameMapRecord gameMapRecord = BuildRecord(gameMain);
 
             string json = JsonConvert.SerializeObject(gameMapRecord);
 

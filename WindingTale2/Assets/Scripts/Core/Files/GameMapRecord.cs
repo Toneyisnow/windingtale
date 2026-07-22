@@ -90,6 +90,24 @@ namespace WindingTale.Core.Files
 
         // Only for AI Creature
         public AITypes AIType;
+
+        /// <summary>
+        /// A copy that shares nothing mutable with this one. The lists a record is built
+        /// from are the live creature's own (see GameMapRecordManager.ConvertCreatureToRecord),
+        /// so anything that edits a record -- the healing in
+        /// GameRecordManager.CreateFromMapRecord above all -- has to work on a copy or it
+        /// would reach back into the creature it was taken from.
+        /// </summary>
+        public CreatureMapRecord Clone()
+        {
+            CreatureMapRecord copy = (CreatureMapRecord)this.MemberwiseClone();
+
+            copy.ItemIds = this.ItemIds == null ? null : new List<int>(this.ItemIds);
+            copy.MagicIds = this.MagicIds == null ? null : new List<int>(this.MagicIds);
+            copy.Effects = this.Effects == null ? null : new List<CreatureEffects>(this.Effects);
+
+            return copy;
+        }
     }
 
     public class TreasureMapRecord

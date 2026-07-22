@@ -25,6 +25,8 @@ namespace WindingTale.Chapters
             LoadTurnEvent(++eventId, 6, CreatureFaction.Npc, turn6_Npc);
 
             LoadDeadEvent(++eventId, 1, (gameMain) => gameMain.OnGameOver());
+            LoadDeadEvent(++eventId, 2, (gameMain) => gameMain.OnGameOver());
+            
             LoadDeadEvent(++eventId, 5, hanuoDead);
             LoadDeadEvent(++eventId, 6, hawateDead);
 
@@ -276,8 +278,9 @@ namespace WindingTale.Chapters
         {
             PushConversationsActivities(gameMain, 1, 7, 1, 13);
 
-            // Adjust friends
-
+            // The chapter is over once the last enemy falls. OnGameWin queues itself
+            // behind the conversation above, so the closing lines play out first.
+            gameMain.OnGameWin();
         };
     }
 }

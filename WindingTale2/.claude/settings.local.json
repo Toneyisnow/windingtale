@@ -23,7 +23,8 @@
       "Bash(command -v uuidgen)",
       "Bash(uuidgen)",
       "Bash(command -v python)",
-      "PowerShell($root='D:\\\\SourceCode\\\\Git\\\\toneyisnow\\\\windingtale\\\\WindingTale2'; Get-Content \"$root\\\\ProjectSettings\\\\ProjectVersion.txt\"; Get-ChildItem 'C:\\\\Program Files\\\\Unity\\\\Hub\\\\Editor' -Directory | Select-Object -ExpandProperty Name)"
+      "PowerShell($root='D:\\\\SourceCode\\\\Git\\\\toneyisnow\\\\windingtale\\\\WindingTale2'; Get-Content \"$root\\\\ProjectSettings\\\\ProjectVersion.txt\"; Get-ChildItem 'C:\\\\Program Files\\\\Unity\\\\Hub\\\\Editor' -Directory | Select-Object -ExpandProperty Name)",
+      "Bash(powershell -NoProfile -Command \"1..2 | ForEach-Object { [guid]::NewGuid\\(\\).ToString\\('N'\\) }\")"
     ]
   }
 }

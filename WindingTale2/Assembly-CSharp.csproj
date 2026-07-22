@@ -93,6 +93,7 @@
     <Compile Include="Assets\FightObjects\FightBody.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
+    <Compile Include="Assets\Scenes\VillageScene\VillageScene.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ShapeDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\EventHandler.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\BattleResults.cs" />
@@ -220,6 +221,7 @@
     <Compile Include="Assets\Scripts\Core\Common\Constants.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIDefensiveDelegate.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ParallelActivity.cs" />
+    <Compile Include="Assets\Scenes\GameOverScene\GameOverSceneLoader.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\FightAnimation.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ConsumableItemDefinition.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\SampleDialog.cs" />
@@ -236,6 +238,7 @@
     <Compile Include="Assets\Scripts\Core\Common\DirectedPosition.cs" />
     <Compile Include="Assets\Scenes\GameBattleScene\BattleBarInfo.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\IGameActions.cs" />
+    <Compile Include="Assets\Scenes\Shared\ScreenFader.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\DurationActivity.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
     <Compile Include="Assets\MapObjects\Menus\Menu.cs" />
