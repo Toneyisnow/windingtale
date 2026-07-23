@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using WindingTale.Core.Files;
 using WindingTale.UI.Utils;
@@ -23,8 +25,47 @@ public class VillageScene : MonoBehaviour
     /// </summary>
     public const string RecordVariableName = "GameRecord";
 
+    /// <summary>
+    /// The GlobalVariables key the shop is entered on: the index of the spot the cursor
+    /// stood on, which the shop turns into which picture to show.
+    /// </summary>
+    public const string ShopIndexVariableName = "ShopIndex";
+
+    /// <summary>
+    /// The GlobalVariables key the shop hands the village back on. Present only on a
+    /// return from a shop, it carries the round the cursor was walking and the spot it
+    /// went in on, so the village can rebuild that round and play the zoom in reverse.
+    /// A normal entry from a battle never has it, so it fades in the ordinary way.
+    /// </summary>
+    public const string ShopReturnVariableName = "VillageShopReturn";
+
+    /// <summary>
+    /// What the shop hands the village back on ShopReturnVariableName. The spot list is
+    /// world positions worked out against the resting camera, which is the same every
+    /// load, so restoring them lands the cursor exactly where it left.
+    /// </summary>
+    public class ShopReturnInfo
+    {
+        public List<Vector3> Spots;
+        public int SpotIndex;
+        public Vector3 Spot;
+    }
+
     /// <summary>Time the village takes to come up out of black, in seconds.</summary>
     public float fadeInDuration = 2.0f;
+
+    /// <summary>
+    /// Time the camera takes to pull into a shop, and to pull back out of one on the way
+    /// home. The shop's own fade is quicker, so the black the camera lands on has fully
+    /// arrived before the shop starts showing through it.
+    /// </summary>
+    public float shopTransitionDuration = 1.0f;
+
+    /// <summary>
+    /// How far the camera pulls in when entering a shop: 3 means the spot ends up three
+    /// times its resting size, filling the middle of the screen.
+    /// </summary>
+    public float shopZoomFactor = 3.0f;
 
     /// <summary>
     /// How far in front of the camera the cursor stands. The background canvas is put
@@ -54,10 +95,14 @@ public class VillageScene : MonoBehaviour
     private static readonly string[] ClipNames = { "icon01", "icon02", "icon03" };
 
     /// <summary>
-    /// How much further out than the cursor the background sits. Only has to be enough
-    /// to keep the picture behind the cursor; the canvas fills the view either way.
+    /// How much further out than the cursor the background sits. The canvas fills the
+    /// view whatever this is, so it does not change the resting picture -- but it does
+    /// set how hard the background zooms when the enter-shop camera pulls in: the closer
+    /// it is to the cursor plane, the more of the cursor's own zoom it shares, so keep it
+    /// small to make the picture pull in nearly as much as the cursor. Only floor is
+    /// leaving enough gap that the cursor stays clear in front of the picture.
     /// </summary>
-    private const float BackgroundDistanceBehindCursor = 20.0f;
+    public float backgroundDistanceBehindCursor = 2.0f;
 
     /// <summary>
     /// Where a scattered spot may land, in viewport coordinates. Kept off all four
@@ -70,6 +115,8 @@ public class VillageScene : MonoBehaviour
     /// <summary>The party that walked into the village, as the won battle left them.</summary>
     public GameRecord Record { get; private set; }
 
+    private int villageId = 0;
+
     private Transform cursor = null;
 
     private readonly GameObject[] clips = new GameObject[ClipNames.Length];
@@ -81,9 +128,13 @@ public class VillageScene : MonoBehaviour
 
     private ScreenFader fader = null;
 
+    /// <summary>True while the camera is pulling into a shop; input is shut off until the scene changes.</summary>
+    private bool transitioning = false;
+
     void Start()
     {
-        Init(GlobalVariables.Take<GameRecord>(RecordVariableName));
+        ShopReturnInfo returnInfo = GlobalVariables.Take<ShopReturnInfo>(ShopReturnVariableName);
+        Init(GlobalVariables.Take<GameRecord>(RecordVariableName), returnInfo);
     }
 
     /// <summary>
@@ -91,7 +142,7 @@ public class VillageScene : MonoBehaviour
     /// record-driven so the scene can be tested on its own: opened straight from the
     /// editor there is no record, and it falls back to the first village.
     /// </summary>
-    public void Init(GameRecord record)
+    public void Init(GameRecord record, ShopReturnInfo returnInfo = null)
     {
         if (record == null)
         {
@@ -102,13 +153,27 @@ public class VillageScene : MonoBehaviour
         }
 
         this.Record = record;
+        this.villageId = GetVillageId(record.ChapterId);
 
-        ShowBackground(GetVillageId(record.ChapterId));
+        ShowBackground(this.villageId);
         SetupCursor();
-        PlaceSpots();
 
-        fader = ScreenFader.Create(1.0f);
-        fader.FadeTo(0.0f, fadeInDuration);
+        if (returnInfo != null && returnInfo.Spots != null && returnInfo.Spots.Count > 0)
+        {
+            // Come back out of a shop: put the cursor back on the round it left and pull
+            // the camera back out of the shop, the entering zoom run backwards.
+            spots = returnInfo.Spots;
+            spotIndex = Mathf.Clamp(returnInfo.SpotIndex, 0, spots.Count - 1);
+            cursor.position = spots[spotIndex];
+            StartCoroutine(ExitShopRoutine(returnInfo.Spot));
+        }
+        else
+        {
+            PlaceSpots();
+
+            fader = ScreenFader.Create(1.0f);
+            fader.FadeTo(0.0f, fadeInDuration);
+        }
     }
 
     void Update()
@@ -138,10 +203,13 @@ public class VillageScene : MonoBehaviour
     }
 
     /// <summary>
-    /// Puts the village picture up on the scene's background canvas, and moves that
-    /// canvas out of screen-space overlay: an overlay canvas draws over everything in
-    /// the scene, the cursor included, so the picture has to be rendered through the
-    /// camera to end up behind it.
+    /// Puts the village picture up on the scene's background canvas as a flat panel
+    /// standing out in the world in front of the camera. A screen-space canvas would
+    /// ride along with the camera and so never appear to move, but the enter-shop zoom
+    /// pulls the camera into the picture, so the picture has to stand still in the world
+    /// for the camera to close on it. The panel is sized and placed to fill the resting
+    /// view exactly, so with the camera at rest it looks like an ordinary backdrop, and
+    /// it sits further out than the cursor so the cursor stays in front of it.
     /// </summary>
     private void ShowBackground(int villageId)
     {
@@ -162,19 +230,29 @@ public class VillageScene : MonoBehaviour
 
         image.sprite = sprite;
 
-        //// Fill the screen whatever the resolution turns out to be.
+        //// Fill the panel whatever the resolution turns out to be.
         RectTransform rect = image.rectTransform;
         rect.anchorMin = Vector2.zero;
         rect.anchorMax = Vector2.one;
         rect.offsetMin = Vector2.zero;
         rect.offsetMax = Vector2.zero;
 
+        Camera camera = Camera.main;
         Canvas canvas = image.canvas;
-        if (canvas != null && Camera.main != null)
+        if (canvas != null && camera != null)
         {
-            canvas.renderMode = RenderMode.ScreenSpaceCamera;
-            canvas.worldCamera = Camera.main;
-            canvas.planeDistance = cursorDistance + BackgroundDistanceBehindCursor;
+            float planeDistance = cursorDistance + backgroundDistanceBehindCursor;
+            float height = 2.0f * planeDistance * Mathf.Tan(camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+            float width = height * camera.aspect;
+
+            canvas.renderMode = RenderMode.WorldSpace;
+            canvas.worldCamera = camera;
+
+            RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+            canvasRect.sizeDelta = new Vector2(width, height);
+            canvasRect.localScale = Vector3.one;
+            canvasRect.position = camera.transform.position + camera.transform.forward * planeDistance;
+            canvasRect.rotation = camera.transform.rotation;
         }
     }
 
@@ -325,7 +403,7 @@ public class VillageScene : MonoBehaviour
     /// </summary>
     private void HandleInput()
     {
-        if (spots == null || spots.Count == 0 || fader == null || fader.IsFading)
+        if (spots == null || spots.Count == 0 || transitioning || fader == null || fader.IsFading)
         {
             return;
         }
@@ -338,11 +416,92 @@ public class VillageScene : MonoBehaviour
         {
             MoveToSpot(spotIndex - 1);
         }
+        else if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            StartCoroutine(EnterShopRoutine());
+        }
     }
 
     private void MoveToSpot(int index)
     {
         spotIndex = (index + spots.Count) % spots.Count;
         cursor.position = spots[spotIndex];
+    }
+
+    /// <summary>
+    /// Enters the shop the cursor is standing on: the whole picture goes to black over
+    /// shopTransitionDuration while the camera pulls in to face the spot, and once it
+    /// lands the shop is loaded on that black, entered on the spot's index.
+    /// </summary>
+    private IEnumerator EnterShopRoutine()
+    {
+        transitioning = true;
+
+        Camera camera = Camera.main;
+        Vector3 spot = spots[spotIndex];
+        Vector3 from = camera.transform.position;
+        Vector3 to = ZoomedCameraPosition(camera, spot);
+
+        fader.FadeTo(1.0f, shopTransitionDuration);
+        yield return LerpCameraPosition(camera, from, to, shopTransitionDuration);
+
+        GlobalVariables.Set(RecordVariableName, Record);
+        GlobalVariables.Set(ShopIndexVariableName, spotIndex);
+        GlobalVariables.Set(ShopReturnVariableName, new ShopReturnInfo
+        {
+            Spots = spots,
+            SpotIndex = spotIndex,
+            Spot = spot,
+        });
+
+        SceneManager.LoadScene("ShoppingScene", LoadSceneMode.Single);
+    }
+
+    /// <summary>
+    /// The entering zoom run backwards, for a return from a shop: the camera starts
+    /// pulled in on the spot with the screen black, then backs out to its resting place
+    /// as the black clears, leaving the whole village showing again.
+    /// </summary>
+    private IEnumerator ExitShopRoutine(Vector3 spot)
+    {
+        transitioning = true;
+
+        Camera camera = Camera.main;
+        Vector3 to = camera.transform.position;
+        Vector3 from = ZoomedCameraPosition(camera, spot);
+        camera.transform.position = from;
+
+        fader = ScreenFader.Create(1.0f);
+        fader.FadeTo(0.0f, shopTransitionDuration);
+        yield return LerpCameraPosition(camera, from, to, shopTransitionDuration);
+
+        transitioning = false;
+    }
+
+    /// <summary>
+    /// Where the camera stands to face <paramref name="spot"/> head on, pulled in by
+    /// shopZoomFactor. Facing it is a straight sideways slide to sit over it -- the
+    /// camera never turns -- and pulling in closes the resting gap to the cursor plane
+    /// down to a fraction of its length. Must be read with the camera at rest.
+    /// </summary>
+    private Vector3 ZoomedCameraPosition(Camera camera, Vector3 spot)
+    {
+        float restingZ = camera.transform.position.z;
+        float zoomedZ = restingZ + cursorDistance * (1.0f - 1.0f / shopZoomFactor);
+        return new Vector3(spot.x, spot.y, zoomedZ);
+    }
+
+    private IEnumerator LerpCameraPosition(Camera camera, Vector3 from, Vector3 to, float duration)
+    {
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0.0f, 1.0f, Mathf.Clamp01(elapsed / duration));
+            camera.transform.position = Vector3.Lerp(from, to, t);
+            yield return null;
+        }
+
+        camera.transform.position = to;
     }
 }

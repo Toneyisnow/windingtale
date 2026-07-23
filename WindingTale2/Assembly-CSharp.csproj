@@ -131,6 +131,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\MapObjects\BlockIndicator\BlockBlinkEffect.cs" />
     <Compile Include="Assets\MapObjects\GameMap\GameMap.cs" />
+    <Compile Include="Assets\Scenes\ShoppingScene\ShoppingScene.cs" />
     <Compile Include="Assets\MapObjects\GameMap\MapCoordinate.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\CreatureInfoDialog.cs" />
