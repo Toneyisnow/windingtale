@@ -34,6 +34,12 @@ namespace WindingTale.MapObjects.GameMap
         // at y = 1.6 in the scene -- seating a chest at 0 buries it under the board.
         private const float GroundY = 1.6f;
 
+        // The visible board surface stands a couple of voxels above GroundY, so
+        // seating a chest exactly on GroundY sinks its bottom ~2 voxels into the
+        // board and hides the chest floor. Lift every chest by that much so its
+        // base rests on the visible surface. 0.2 = 2 voxels at the 0.1 export scale.
+        private const float TreasureLift = 0.2f;
+
         private const string TreasureModelRoot = "Others/Treasures/";
 
         // Name given to the child holding the actual chest mesh, so the model can be
@@ -139,7 +145,7 @@ namespace WindingTale.MapObjects.GameMap
             // but both have their base at bounds.min.y, so both land on the ground.
             if (TryGetWorldBounds(model, out Bounds bounds))
             {
-                model.transform.position += new Vector3(0f, GroundY - bounds.min.y, 0f);
+                model.transform.position += new Vector3(0f, GroundY - bounds.min.y + TreasureLift, 0f);
             }
 
             instance.SetShowingOpened(opened);

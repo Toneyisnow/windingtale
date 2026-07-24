@@ -119,9 +119,11 @@
     <Compile Include="Assets\Scripts\Core\Definitions\MagicDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TreasureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Map\FDMap.cs" />
+    <Compile Include="Assets\Scenes\ShoppingScene\ShoppingHomeDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
     <Compile Include="Assets\MapObjects\Cursors\Cursor.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\GameCanvas.cs" />
+    <Compile Include="Assets\Scripts\Core\Files\UserSettings.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\CreatureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Game\GameHandler.cs" />
@@ -202,6 +204,7 @@
     <Compile Include="Assets\Scripts\Core\Common\FDSpan.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureDying.cs" />
     <Compile Include="Assets\Scenes\Shared\BackgroundMusic.cs" />
+    <Compile Include="Assets\Scripts\Core\Files\UserSettingsManager.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\DefinitionStore.cs" />
     <Compile Include="Assets\Scripts\Chapters\ChapterEvents.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />

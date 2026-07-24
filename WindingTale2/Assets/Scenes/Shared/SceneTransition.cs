@@ -5,12 +5,26 @@ using System.Collections;
 
 public class SceneTransition : MonoBehaviour
 {
-    public Image fadeImage; // UI Image ÓÃÓÚ¹ý¶ÉÐ§¹û
-    public float fadeDuration = 0.8f; // ½¥±ä³ÖÐøÊ±¼ä
+    public Image fadeImage; // UI Image ï¿½ï¿½ï¿½Ú¹ï¿½ï¿½ï¿½Ð§ï¿½ï¿½
+    public float fadeDuration = 0.8f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+
+    private void Awake()
+    {
+        // The fade overlay lives on its own Canvas. Force that Canvas to render above every
+        // other Canvas in the scene, otherwise a same-sorting-order Canvas (e.g. the title UI)
+        // draws on top and the black fade only darkens the area behind it -- leaving the title
+        // image and buttons fully bright. Rendering on top makes the whole scene fade out.
+        if (fadeImage != null && fadeImage.canvas != null)
+        {
+            Canvas fadeCanvas = fadeImage.canvas;
+            fadeCanvas.overrideSorting = true;
+            fadeCanvas.sortingOrder = short.MaxValue;
+        }
+    }
 
     private void Start()
     {
-        StartCoroutine(FadeIn()); // ³¡¾°¿ªÊ¼Ê±µ­Èë
+        StartCoroutine(FadeIn()); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼Ê±ï¿½ï¿½ï¿½ï¿½
     }
 
     public void LoadScene(string sceneName)

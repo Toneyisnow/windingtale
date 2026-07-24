@@ -296,8 +296,8 @@ public class TalkDialog : MonoBehaviour
         SetAnchoredX(conversationTextObj, up ? 0f   : 210f);
         SetAnchoredX(messageTextObj,      up ? 0f   : 210f);
         SetAnchoredX(confirmArrowObj,     up ? -100f : 100f);
-        SetAnchoredX(confirmButtonObj,    up ? -64f  : 156f);
-        SetAnchoredX(cancelButtonObj,     up ? 80f   : 300f);
+        SetAnchoredX(confirmButtonObj,    up ? 30f  : 250f);
+        SetAnchoredX(cancelButtonObj,     up ? 115f   : 335f);
 
         // In the Bottom position, flip the Dato portrait horizontally.
         if (datoObj != null)

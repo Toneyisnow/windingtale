@@ -29,7 +29,16 @@ public class ShoppingScene : MonoBehaviour
     /// <summary>Time the shop takes to fade its picture up, and back down on the way out.</summary>
     public float fadeDuration = 0.3f;
 
+    /// <summary>
+    /// The home dialog prefab (greeting + four action buttons). Assigned in the inspector;
+    /// instantiated once on entry and handed the shop kind so it picks its own greeting and
+    /// buttons. See ShoppingHomeDialog.
+    /// </summary>
+    public GameObject shoppingHomeDialogPrefab = null;
+
     private GameRecord record = null;
+
+    private ShoppingHomeDialog homeDialog = null;
 
     private int shopIndex = 0;
 
@@ -44,9 +53,38 @@ public class ShoppingScene : MonoBehaviour
         record = GlobalVariables.Get<GameRecord>(RecordVariableName);
 
         ShowBackground(shopIndex);
+        ShowHomeDialog(shopIndex);
 
         fader = ScreenFader.Create(1.0f);
         fader.FadeTo(0.0f, fadeDuration);
+    }
+
+    /// <summary>
+    /// Puts up the home dialog for this shop. The village hands the entered spot over
+    /// zero-based; the dialog's shop kinds are numbered from one (1=ItemShop .. 5=SecretShop),
+    /// so spot+1 is the shop kind -- the same +1 ShowBackground uses to reach VillageShop-01-1
+    /// from the middle spot, keeping the greeting and the picture on the same shop. The
+    /// chapter comes off the party record so the deeper dialogs have it. Rendered over the
+    /// shop picture and, like it, under the fader's black curtain.
+    /// </summary>
+    private void ShowHomeDialog(int shopIndex)
+    {
+        if (shoppingHomeDialogPrefab == null)
+        {
+            Debug.LogWarning("Shopping scene has no home dialog prefab to show.");
+            return;
+        }
+
+        GameObject dialogObject = Instantiate(shoppingHomeDialogPrefab);
+        homeDialog = dialogObject.GetComponent<ShoppingHomeDialog>();
+        if (homeDialog == null)
+        {
+            Debug.LogWarning("Shopping home dialog prefab has no ShoppingHomeDialog component.");
+            return;
+        }
+
+        int chapterId = record != null ? record.ChapterId : 0;
+        homeDialog.Init(chapterId, shopIndex + 1, record);
     }
 
     void Update()

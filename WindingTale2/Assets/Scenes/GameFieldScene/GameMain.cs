@@ -600,6 +600,23 @@ namespace WindingTale.Scenes.GameFieldScene
                     game => game.ShowTurnInfo(turnNo),
                     game => game.turnInfo == null || !game.turnInfo.IsPlaying
                 );
+
+                // Once the turn banner has finished, slide the cursor (and camera) to
+                // hero #001. Only the player turn does this, right after the banner --
+                // the AI sub-turns must not yank the cursor back to 001 while
+                // conversations and enemy moves are playing out. Runs as a duration
+                // activity so the turn waits for the slide to land.
+                this.PushActivity(
+                    game =>
+                    {
+                        var hero = game.gameMap.Map.GetCreatureById(1);
+                        if (hero != null && hero.Position != null)
+                        {
+                            game.gameMap.SlideCursorTo(hero.Position, GameCanvas.DialogPosition.Bottom);
+                        }
+                    },
+                    game => !game.gameMap.IsSlideBusy
+                );
             }
 
             if (this.gameMap.Map.TurnType == CreatureFaction.Friend)
@@ -614,21 +631,6 @@ namespace WindingTale.Scenes.GameFieldScene
             {
                 PushActivity(gameMain => onEnemyTurn());
             }
-
-            // After any turn-start conversation, slide the cursor (and camera) to hero
-            // #001. Runs as a duration activity so the turn waits for the slide to land.
-            this.PushActivity(
-                game =>
-                {
-                    var hero = game.gameMap.Map.GetCreatureById(1);
-                    if (hero != null && hero.Position != null)
-                    {
-                        game.gameMap.SlideCursorTo(hero.Position, GameCanvas.DialogPosition.Bottom);
-                    }
-                },
-                game => !game.gameMap.IsSlideBusy
-            );
-
         }
 
         /// <summary>
