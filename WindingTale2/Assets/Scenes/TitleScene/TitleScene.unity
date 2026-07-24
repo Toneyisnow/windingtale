@@ -680,6 +680,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9b60f11d7a889241959d7b217f20e72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  recordDialogPrefab: {fileID: 2694091083722347790, guid: bf08802685ebf9d4d9672010cd4156e8, type: 3}
 --- !u!4 &579719896
 Transform:
   m_ObjectHideFlags: 0

@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scenes\GameBattleScene\EnemyHitEffect.cs" />
     <Compile Include="Assets\Scripts\UI\Utils\MonoBehaviourUtils.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
+    <Compile Include="Assets\Scenes\ShoppingScene\ShoppingMessageDialog.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ActivityFactory.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\TalkDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\MoveRangeFinder.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Assets\Scenes\VillageScene\VillageScene.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ShapeDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\EventHandler.cs" />
+    <Compile Include="Assets\Scenes\ShoppingScene\ShoppingRecordDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\BattleResults.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\SelectAttackTargetState.cs" />
     <Compile Include="Assets\MapObjects\Menus\MenuItemBlink.cs" />
@@ -231,6 +233,7 @@
     <Compile Include="Assets\Scripts\UI\Dialogs\SampleDialog.cs" />
     <Compile Include="Assets\MapObjects\Blocks\MapBlock.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDTreasure.cs" />
+    <Compile Include="Assets\Scenes\ShoppingScene\ShoppingConfirmDialog.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalAggressiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Files\ResourceDataFile.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\SequencedActivity.cs" />
