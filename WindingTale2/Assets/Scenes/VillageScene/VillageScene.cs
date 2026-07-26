@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using WindingTale.Core.Definitions;
 using WindingTale.Core.Files;
 using WindingTale.UI.Utils;
 
 /// <summary>
 /// The village between two chapters. It is handed over on black by the field scene's
 /// quitting animation (GameMain.EnterVillage), so it opens by fading the village art up
-/// out of that black, with the party's cursor standing in the middle of it.
+/// out of that black, with the party's cursor resting on pos 1.
 ///
-/// The cursor walks a fixed round of spots on the picture: the middle one it starts on,
-/// plus a handful scattered over the rest of the screen, which left and right cycle
-/// through. Where those spots eventually lead -- the shop, the inn, the next chapter --
-/// is not wired up yet.
+/// The cursor walks a fixed round of spots read from a per-village map, six by position
+/// index: pos 0 is the way on to the next chapter; pos 1-5 are the shops, each matched to
+/// the shop of the same index, and the cursor rests on pos 1 to begin with. Left and
+/// right cycle pos 0 through pos 4; pos 5 waits on a special route not yet wired up.
+/// Entering pos 0 (the next battlefield) is also still a placeholder -- see OnProceed.
 /// </summary>
 public class VillageScene : MonoBehaviour
 {
@@ -79,9 +81,6 @@ public class VillageScene : MonoBehaviour
     /// </summary>
     public float cursorScale = 0.72f;
 
-    /// <summary>How many spots to scatter, on top of the middle one the cursor starts on.</summary>
-    public int randomSpotCount = 4;
-
     /// <summary>Creature 001's icon is what the cursor wears -- the hero, leading the party in.</summary>
     private const int CursorAnimationId = 1;
 
@@ -95,6 +94,62 @@ public class VillageScene : MonoBehaviour
     private static readonly string[] ClipNames = { "icon01", "icon02", "icon03" };
 
     /// <summary>
+    /// How many spots the left/right keys walk: pos 0 through pos 4. The last spot (pos 5)
+    /// is left out of the round -- it is reached only by the secret sequence.
+    /// </summary>
+    private const int CyclableSpotCount = 5;
+
+    /// <summary>The secret spot, pos 5, the left/right walk never lands on.</summary>
+    private const int SecretSpotIndex = 5;
+
+    /// <summary>
+    /// Where the cursor may stand in each village, in world coordinates on the cursor
+    /// plane. One entry per village (1-3), each holding six spots by position index: index
+    /// 0 is the way on to the next chapter (see OnProceed), indices 1-5 are the shops,
+    /// each matched to the shop of the same index. Index 5 is only reachable by a special
+    /// route, not the left/right walk. Replaces the spots that used to be scattered at
+    /// random.
+    /// </summary>
+    private static readonly Dictionary<int, Vector2[]> VillageSpotMaps = new Dictionary<int, Vector2[]>
+    {
+        {
+            1, new[]
+            {
+                new Vector2(-6.4f, -5.2f), // pos 0 -- proceed to next chapter
+                new Vector2(-8.2f, -1.8f), // pos 1 -- shop 1
+                new Vector2(-8.9f, 3.3f),  // pos 2 -- shop 2
+                new Vector2(3.2f, 1.8f),   // pos 3 -- shop 3
+                new Vector2(1.2f, -3.6f),  // pos 4 -- shop 4
+                new Vector2(-1.8f, 5.7f),  // pos 5 -- shop 5, special route
+            }
+        },
+        // Villages 2 and 3 reuse village 1's layout as a placeholder; retune once their
+        // own pictures are drawn.
+        {
+            2, new[]
+            {
+                new Vector2(-6.4f, -5.2f),
+                new Vector2(-8.2f, -1.8f),
+                new Vector2(-8.9f, 3.3f),
+                new Vector2(3.2f, 1.8f),
+                new Vector2(1.2f, -3.6f),
+                new Vector2(-1.8f, 5.7f),
+            }
+        },
+        {
+            3, new[]
+            {
+                new Vector2(-6.4f, -5.2f),
+                new Vector2(-8.2f, -1.8f),
+                new Vector2(-8.9f, 3.3f),
+                new Vector2(3.2f, 1.8f),
+                new Vector2(1.2f, -3.6f),
+                new Vector2(-1.8f, 5.7f),
+            }
+        },
+    };
+
+    /// <summary>
     /// How much further out than the cursor the background sits. The canvas fills the
     /// view whatever this is, so it does not change the resting picture -- but it does
     /// set how hard the background zooms when the enter-shop camera pulls in: the closer
@@ -103,14 +158,6 @@ public class VillageScene : MonoBehaviour
     /// leaving enough gap that the cursor stays clear in front of the picture.
     /// </summary>
     public float backgroundDistanceBehindCursor = 2.0f;
-
-    /// <summary>
-    /// Where a scattered spot may land, in viewport coordinates. Kept off all four
-    /// edges so the figure standing on it is not half off the screen.
-    /// </summary>
-    private const float SpotMarginX = 0.15f;
-    private const float SpotMarginBottom = 0.15f;
-    private const float SpotMarginTop = 0.65f;
 
     /// <summary>The party that walked into the village, as the won battle left them.</summary>
     public GameRecord Record { get; private set; }
@@ -125,6 +172,28 @@ public class VillageScene : MonoBehaviour
     private List<Vector3> spots = null;
 
     private int spotIndex = 0;
+
+    /// <summary>
+    /// This chapter's hidden route to pos 5, or null if the chapter has none. The cursor
+    /// must be on its start spot and the left/right presses entered in order to walk it.
+    /// </summary>
+    private SecretSequenceDefinition secretSequence = null;
+
+    /// <summary>How many of the secret sequence's presses have been entered correctly so far.</summary>
+    private int secretProgress = 0;
+
+    /// <summary>The panel the village picture is drawn on, kept so the picture can be swapped.</summary>
+    private Image backgroundImage = null;
+
+    /// <summary>The ordinary village picture, shown when no secret is under way.</summary>
+    private Sprite normalBackgroundSprite = null;
+
+    /// <summary>
+    /// The alternate picture shown while the secret sequence is being entered (and while the
+    /// cursor rests on the secret spot). One per chapter by chapterId % 4, or null if this
+    /// village has no secret art -- in which case the ordinary picture stays up.
+    /// </summary>
+    private Sprite secretBackgroundSprite = null;
 
     private ScreenFader fader = null;
 
@@ -154,6 +223,7 @@ public class VillageScene : MonoBehaviour
 
         this.Record = record;
         this.villageId = GetVillageId(record.ChapterId);
+        this.secretSequence = DefinitionStore.Instance.GetSecretSequenceDefinition(record.ChapterId);
 
         ShowBackground(this.villageId);
         SetupCursor();
@@ -174,6 +244,10 @@ public class VillageScene : MonoBehaviour
             fader = ScreenFader.Create(1.0f);
             fader.FadeTo(0.0f, fadeInDuration);
         }
+
+        // Coming back onto the secret spot should already show the secret picture rather
+        // than flip to it a frame later.
+        RefreshBackground();
     }
 
     void Update()
@@ -228,6 +302,12 @@ public class VillageScene : MonoBehaviour
             return;
         }
 
+        // Keep the panel and both pictures so the secret sequence can swap the picture out
+        // and back without touching the rest of the layout.
+        this.backgroundImage = image;
+        this.normalBackgroundSprite = sprite;
+        this.secretBackgroundSprite = LoadSecretBackground(villageId, this.Record.ChapterId);
+
         image.sprite = sprite;
 
         //// Fill the panel whatever the resolution turns out to be.
@@ -253,6 +333,50 @@ public class VillageScene : MonoBehaviour
             canvasRect.localScale = Vector3.one;
             canvasRect.position = camera.transform.position + camera.transform.forward * planeDistance;
             canvasRect.rotation = camera.transform.rotation;
+        }
+    }
+
+    /// <summary>
+    /// Loads the secret picture for this chapter: Village-NN-secret-1 through -4, chosen by
+    /// chapterId % 4 (with 0 wrapping to 4, so chapter 4 takes -4 not a missing -0). Returns
+    /// null if the village has no secret art, which just leaves the ordinary picture up.
+    /// </summary>
+    private static Sprite LoadSecretBackground(int villageId, int chapterId)
+    {
+        int secretNo = chapterId % 4;
+        if (secretNo == 0)
+        {
+            secretNo = 4;
+        }
+
+        string spritePath = string.Format("Village/Village-{0:D2}-secret-{1}", villageId, secretNo);
+        Sprite sprite = Resources.Load<Sprite>(spritePath);
+        if (sprite == null)
+        {
+            Debug.LogWarning("Cannot load village secret background: " + spritePath);
+        }
+
+        return sprite;
+    }
+
+    /// <summary>
+    /// Shows the secret picture while the secret sequence is being entered (and while the
+    /// cursor rests on the secret spot), the ordinary one otherwise. A village with no
+    /// secret art keeps its ordinary picture throughout.
+    /// </summary>
+    private void RefreshBackground()
+    {
+        if (backgroundImage == null)
+        {
+            return;
+        }
+
+        bool showSecret = (secretProgress > 0 || spotIndex == SecretSpotIndex) && secretBackgroundSprite != null;
+        Sprite wanted = showSecret ? secretBackgroundSprite : normalBackgroundSprite;
+
+        if (wanted != null && backgroundImage.sprite != wanted)
+        {
+            backgroundImage.sprite = wanted;
         }
     }
 
@@ -337,11 +461,13 @@ public class VillageScene : MonoBehaviour
         icon.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
     }
 
+    /// <summary>The spot the cursor rests on when the village is first entered: pos 1.</summary>
+    private const int StartSpotIndex = 1;
+
     /// <summary>
-    /// Lays out the round the cursor walks: the middle of the screen, where it starts,
-    /// and randomSpotCount more scattered over the picture. Each is a screen position
-    /// turned into a world position at the cursor's distance from the camera, so the
-    /// round comes out the same shape whatever the resolution.
+    /// Lays out the round the cursor walks from this village's spot map: six fixed spots
+    /// by position index, each a world point on the cursor plane. The cursor rests on
+    /// pos 1 to begin with, one step in from pos 0 (the way on to the next chapter).
     /// </summary>
     private void PlaceSpots()
     {
@@ -351,24 +477,24 @@ public class VillageScene : MonoBehaviour
             return;
         }
 
-        spots = new List<Vector3>();
-        spots.Add(ViewportToCursorPoint(camera, 0.5f, 0.5f));
-
-        for (int i = 0; i < randomSpotCount; i++)
+        if (!VillageSpotMaps.TryGetValue(villageId, out Vector2[] map))
         {
-            spots.Add(ViewportToCursorPoint(
-                camera,
-                Random.Range(SpotMarginX, 1.0f - SpotMarginX),
-                Random.Range(SpotMarginBottom, SpotMarginTop)));
+            Debug.LogWarning("No spot map for village " + villageId + "; using village 1's.");
+            map = VillageSpotMaps[1];
         }
 
-        spotIndex = 0;
-        cursor.position = spots[spotIndex];
-    }
+        //// The map is world x/y on the cursor plane; take that plane's depth from the
+        //// camera so every spot sits the same distance out, whatever the resolution.
+        float planeZ = camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, cursorDistance)).z;
 
-    private Vector3 ViewportToCursorPoint(Camera camera, float viewportX, float viewportY)
-    {
-        return camera.ViewportToWorldPoint(new Vector3(viewportX, viewportY, cursorDistance));
+        spots = new List<Vector3>(map.Length);
+        foreach (Vector2 point in map)
+        {
+            spots.Add(new Vector3(point.x, point.y, planeZ));
+        }
+
+        spotIndex = StartSpotIndex;
+        cursor.position = spots[spotIndex];
     }
 
     /// <summary>
@@ -410,22 +536,114 @@ public class VillageScene : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            MoveToSpot(spotIndex + 1);
+            // The jump to pos 5 takes the whole press; otherwise it is an ordinary step.
+            if (!AdvanceSecretSequence(SecretOperation.Right))
+            {
+                MoveToSpot(spotIndex + 1);
+            }
+
+            // A press may have started, advanced, broken or finished the sequence; put the
+            // right picture up for wherever that left things.
+            RefreshBackground();
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            MoveToSpot(spotIndex - 1);
+            if (!AdvanceSecretSequence(SecretOperation.Left))
+            {
+                MoveToSpot(spotIndex - 1);
+            }
+
+            RefreshBackground();
         }
         else if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            StartCoroutine(EnterShopRoutine());
+            if (spotIndex == 0)
+            {
+                //// Pos 0 is the way on to the next chapter, not a shop.
+                OnProceed();
+            }
+            else
+            {
+                StartCoroutine(EnterShopRoutine());
+            }
         }
     }
 
+    /// <summary>
+    /// Left and right walk pos 0 through pos 4, wrapping at both ends. Pos 5 is left out
+    /// of the round -- it is reached by a special route, not the walk.
+    /// </summary>
     private void MoveToSpot(int index)
     {
-        spotIndex = (index + spots.Count) % spots.Count;
+        spotIndex = (index + CyclableSpotCount) % CyclableSpotCount;
         cursor.position = spots[spotIndex];
+    }
+
+    /// <summary>
+    /// Feeds one left/right press into this chapter's secret sequence, the hidden route to
+    /// pos 5. The sequence has to begin on its own start spot and be entered in order; a
+    /// wrong key breaks the attempt, and getting the whole thing right lands the cursor on
+    /// pos 5. Returns true only on that landing, so the caller skips the ordinary cursor
+    /// step for the press -- while the sequence is still building, the cursor walks as
+    /// usual, so the input looks like plain navigation until it pays off.
+    /// </summary>
+    private bool AdvanceSecretSequence(SecretOperation op)
+    {
+        if (secretSequence == null || secretSequence.Operations.Count == 0)
+        {
+            return false;
+        }
+
+        // Nothing entered yet and standing somewhere other than the start spot: this press
+        // is just navigation, not the opening of the sequence.
+        if (secretProgress == 0 && spotIndex != secretSequence.StartPosIndex)
+        {
+            return false;
+        }
+
+        if (op == secretSequence.Operations[secretProgress])
+        {
+            secretProgress++;
+            if (secretProgress >= secretSequence.Operations.Count)
+            {
+                secretProgress = 0;
+                ReachSecretSpot();
+                return true;
+            }
+
+            return false;
+        }
+
+        // Wrong key: the attempt is off. Starting over means walking back to the start spot
+        // and entering it again from the first press.
+        secretProgress = 0;
+        return false;
+    }
+
+    /// <summary>
+    /// The secret sequence has been entered in full: drop the cursor on pos 5, the spot the
+    /// left/right walk never lands on.
+    /// </summary>
+    private void ReachSecretSpot()
+    {
+        if (spots == null || spots.Count <= SecretSpotIndex)
+        {
+            return;
+        }
+
+        spotIndex = SecretSpotIndex;
+        cursor.position = spots[spotIndex];
+        Debug.Log("Village secret sequence entered; cursor moved to pos 5.");
+    }
+
+    /// <summary>
+    /// Pos 0 is not a shop but the way on to the next chapter's battle. Loading that field
+    /// scene is left for later; for now this only notes it was reached, so the spot is
+    /// walkable and selectable while the route behind it is built out.
+    /// </summary>
+    private void OnProceed()
+    {
+        Debug.Log("Village proceed (pos 0) selected; the next battlefield is not wired up yet.");
     }
 
     /// <summary>

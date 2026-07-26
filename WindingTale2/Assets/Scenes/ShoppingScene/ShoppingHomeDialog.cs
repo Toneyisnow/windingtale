@@ -211,7 +211,7 @@ public class ShoppingHomeDialog : MonoBehaviour
                 break;
 
             case ShopType.ChurchShop:
-                initMessageId = 54;
+                initMessageId = 55;
                 updateMessageId = 56;
                 actions = new[] { ShopAction.ShowInfo, ShopAction.Revive, ShopAction.Transfer, ShopAction.Give };
                 break;

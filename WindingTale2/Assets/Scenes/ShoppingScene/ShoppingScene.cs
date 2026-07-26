@@ -104,11 +104,11 @@ public class ShoppingScene : MonoBehaviour
 
     /// <summary>
     /// Puts up the home dialog for this shop and makes it the bottom of the dialog stack.
-    /// The village hands the entered spot over zero-based; the dialog's shop kinds are
-    /// numbered from one (1=ItemShop .. 5=SecretShop), so spot+1 is the shop kind -- the
-    /// same +1 ShowBackground uses to reach VillageShop-01-1 from the middle spot, keeping
-    /// the greeting and the picture on the same shop. The chapter comes off the party
-    /// record so the deeper dialogs have it.
+    /// The village hands the entered spot over as the shop index directly: pos 1-5 are the
+    /// shops, matched one-to-one to the shop kinds (1=ItemShop .. 5=SecretShop), so the
+    /// index is the shop kind with no offset -- pos 0 is the way on to the next chapter,
+    /// never a shop, so a shop index is always 1-5. The chapter comes off the party record
+    /// so the deeper dialogs have it.
     /// </summary>
     private void ShowHomeDialog(int shopIndex)
     {
@@ -129,7 +129,7 @@ public class ShoppingScene : MonoBehaviour
         homeDialog.OnActionSelected = OnHomeAction;
 
         int chapterId = record != null ? record.ChapterId : 0;
-        homeDialog.Init(chapterId, shopIndex + 1, record);
+        homeDialog.Init(chapterId, shopIndex, record);
 
         // The home dialog is the bottom of the stack rather than a pushed dialog, so its
         // Init (which shows the greeting) has already run; just register it.
@@ -405,9 +405,9 @@ public class ShoppingScene : MonoBehaviour
             return;
         }
 
-        //// Spots are numbered from zero, the pictures from one, so the middle spot shows
-        //// VillageShop-01-1. Clamped to the pictures that exist.
-        int pictureNo = Mathf.Clamp(shopIndex + 1, 1, ShopPictureCount);
+        //// The shop index is the picture number directly: pos 1-5 show VillageShop-01-1
+        //// through -5. Clamped to the pictures that exist.
+        int pictureNo = Mathf.Clamp(shopIndex, 1, ShopPictureCount);
         string spritePath = string.Format("Shops/VillageShop-01-{0}", pictureNo);
         Sprite sprite = Resources.Load<Sprite>(spritePath);
         if (sprite == null)

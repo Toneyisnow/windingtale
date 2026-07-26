@@ -156,6 +156,7 @@
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureSynced.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDMessage.cs" />
     <Compile Include="Assets\MapObjects\GameMap\MapObjectFade.cs" />
+    <Compile Include="Assets\Scripts\Core\Definitions\SecretSequenceDefinition.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDefensiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\FDMovePath.cs" />
     <Compile Include="Assets\Scripts\UI\Utils\GlobalVariables.cs" />
@@ -313,6 +314,7 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_13_Creature.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-11.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_20_ConversationId.txt" />
+    <None Include="Assets\Resources\Data\SecretSequence.txt" />
     <None Include="Assets\Resources\Strings\Race.strings.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-06.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-31.txt" />

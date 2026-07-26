@@ -41,6 +41,8 @@ namespace WindingTale.Core.Definitions
 
         private Dictionary<int, FightAnimation> fightAnimations = null;
 
+        private Dictionary<int, SecretSequenceDefinition> secretSequenceDefinitions = null;
+
         #endregion
 
         private DefinitionStore()
@@ -74,6 +76,7 @@ namespace WindingTale.Core.Definitions
             LoadLevelUpMagicDefinitions();
             LoadTransfersDefinitions();
             LoadShopDefinitions();
+            LoadSecretSequenceDefinitions();
 
             LoadFightAnimations();
         }
@@ -267,6 +270,24 @@ namespace WindingTale.Core.Definitions
             }
         }
 
+        private void LoadSecretSequenceDefinitions()
+        {
+            secretSequenceDefinitions = new Dictionary<int, SecretSequenceDefinition>();
+            ResourceDataFile fileReader = new ResourceDataFile(@"Data/SecretSequence");
+
+            int count = fileReader.ReadInt();
+            for (int i = 0; i < count; i++)
+            {
+                SecretSequenceDefinition def = SecretSequenceDefinition.ReadFromFile(fileReader);
+                if (def == null)
+                {
+                    break;
+                }
+
+                secretSequenceDefinitions[def.ChapterId] = def;
+            }
+        }
+
         private void LoadFightAnimations()
         {
             fightAnimations = new Dictionary<int, FightAnimation>();
@@ -408,6 +429,15 @@ namespace WindingTale.Core.Definitions
             if (this.fightAnimations.ContainsKey(animationId))
             {
                 return this.fightAnimations[animationId];
+            }
+            return null;
+        }
+
+        public SecretSequenceDefinition GetSecretSequenceDefinition(int chapterId)
+        {
+            if (this.secretSequenceDefinitions.ContainsKey(chapterId))
+            {
+                return this.secretSequenceDefinitions[chapterId];
             }
             return null;
         }
