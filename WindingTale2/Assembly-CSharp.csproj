@@ -200,6 +200,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter3.cs" />
+    <Compile Include="Assets\Scenes\ShoppingScene\ShoppingCreaturesDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ObstacleDefinition.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIEscapeDelegate.cs" />
     <Compile Include="Assets\Scenes\TitleScene\TitleSceneLoader.cs" />

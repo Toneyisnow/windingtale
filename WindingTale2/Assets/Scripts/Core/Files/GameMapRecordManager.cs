@@ -293,6 +293,17 @@ namespace WindingTale.Core.Files
 
         private FDCreature ConvertRecordToCreature(CreatureMapRecord record)
         {
+            return CreateCreatureFromRecord(record);
+        }
+
+        /// <summary>
+        /// Rebuilds a live creature from a saved record: the same conversion the battle load
+        /// uses, exposed so a creature can be reconstructed outside a battle too -- the shop's
+        /// creature picker turns each GameRecord.Friends entry back into an FDCreature this way
+        /// to show its icon, name and info panel.
+        /// </summary>
+        public static FDCreature CreateCreatureFromRecord(CreatureMapRecord record)
+        {
             CreatureDefinition definition = DefinitionStore.Instance.GetCreatureDefinition(record.DefinitionId);
             FDCreature creature = record.Faction == CreatureFaction.Friend ?
                 new FDCreature(record.Id, definition, record.Faction) :

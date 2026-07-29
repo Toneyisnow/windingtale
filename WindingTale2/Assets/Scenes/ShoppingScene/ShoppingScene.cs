@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using WindingTale.Core.Files;
+using WindingTale.UI.Dialogs;
 using WindingTale.UI.Utils;
 
 /// <summary>
@@ -54,6 +55,12 @@ public class ShoppingScene : MonoBehaviour
     /// Save or Load at the bar. See ShoppingRecordDialog.
     /// </summary>
     public GameObject shoppingRecordDialogPrefab = null;
+
+    /// <summary>
+    /// The party creature picker, pushed over the home dialog when the player chooses Sell.
+    /// See ShoppingCreaturesDialog.
+    /// </summary>
+    public GameObject shoppingCreaturesDialogPrefab = null;
 
     /// <summary>The one-line notice shown after a save. See ShoppingMessageDialog.</summary>
     public GameObject shoppingMessageDialogPrefab = null;
@@ -221,6 +228,10 @@ public class ShoppingScene : MonoBehaviour
             case ShoppingHomeDialog.ShopAction.LoadRecord:
                 OpenRecordDialog(isSave: false);
                 break;
+
+            case ShoppingHomeDialog.ShopAction.SellAny:
+                OpenCreaturesDialog();
+                break;
         }
     }
 
@@ -248,6 +259,32 @@ public class ShoppingScene : MonoBehaviour
         // Saving may pick an empty slot (a fresh slot to write into); loading may not, since
         // there is nothing there to read.
         dialog.Init(slotIndex => OnRecordSlotSelected(isSave, slotIndex), allowEmpty: isSave);
+        PushDialog(dialogObject);
+    }
+
+    /// <summary>
+    /// Opens the party creature picker over the home dialog (the Sell action). It shows the
+    /// whole party for the info panel; backing out of it (Esc) reports through OnClosed, which
+    /// pops it back to the home dialog the same way the record picker's cancel does.
+    /// </summary>
+    private void OpenCreaturesDialog()
+    {
+        if (shoppingCreaturesDialogPrefab == null)
+        {
+            Debug.LogWarning("Shopping scene has no creatures dialog prefab to show.");
+            return;
+        }
+
+        GameObject dialogObject = Instantiate(shoppingCreaturesDialogPrefab);
+        ShoppingCreaturesDialog dialog = dialogObject.GetComponent<ShoppingCreaturesDialog>();
+        if (dialog == null)
+        {
+            Debug.LogWarning("Creatures dialog prefab has no ShoppingCreaturesDialog component.");
+            Destroy(dialogObject);
+            return;
+        }
+
+        dialog.Init(record, ShoppingCreaturesDialog.CreatureSelectType.All, CreatureInfoType.SelectAllItem, PopDialog);
         PushDialog(dialogObject);
     }
 

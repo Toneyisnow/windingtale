@@ -348,6 +348,7 @@ MonoBehaviour:
   fadeDuration: 0.3
   shoppingHomeDialogPrefab: {fileID: 7093481016160480659, guid: 771da27c82885d14c9a247da05ce35aa, type: 3}
   shoppingRecordDialogPrefab: {fileID: 2694091083722347790, guid: bf08802685ebf9d4d9672010cd4156e8, type: 3}
+  shoppingCreaturesDialogPrefab: {fileID: 7093481016160480659, guid: c27738c9e761e824b9137146ec3acb78, type: 3}
   shoppingMessageDialogPrefab: {fileID: 1000000000000000001, guid: b9ea13a12d894daba13e9267cfb3654a, type: 3}
   shoppingConfirmDialogPrefab: {fileID: 2000000000000000001, guid: 81b649b9859e45e9b9fb7b362dccd956, type: 3}
 --- !u!4 &1129689311

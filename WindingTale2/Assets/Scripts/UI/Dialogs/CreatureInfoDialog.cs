@@ -81,6 +81,13 @@ namespace WindingTale.UI.Dialogs
 
         private GameMain gameMain = null;
 
+        // The map the attribute formulas read (only to look up terrain, which the panel does
+        // not actually use), and the action that tears the dialog down. Both are injected in
+        // Init so the dialog can run outside a battle -- the shop's creature picker opens it
+        // with a null map and its own close, where there is no GameMain to lean on.
+        private FDMap map = null;
+        private Action onClose = null;
+
         private FDCreature creature = null;
         private CreatureInfoType infoType = CreatureInfoType.View;
         private Action<int> onSelected = null;
@@ -423,10 +430,28 @@ namespace WindingTale.UI.Dialogs
             }
         }
 
+        /// <summary>
+        /// The battlefield entry point: closes through the shared GameCanvas and reads the
+        /// live battle map. A thin wrapper over the scene-independent overload below so the
+        /// two paths stay in step.
+        /// </summary>
         public void Init(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected, GameMain gameMain)
         {
             this.gameMain = gameMain;
-            FDMap map = gameMain.gameMap.Map;
+            Init(creature, infoType, onSelected, gameMain.gameMap.Map,
+                () => GameMain.getDefault().gameCanvas.CloseDialog());
+        }
+
+        /// <summary>
+        /// The scene-independent entry point. <paramref name="map"/> may be null when the
+        /// creature is shown outside a battle (the attribute formulas tolerate it), and
+        /// <paramref name="onClose"/> is what takes the dialog down once its closing
+        /// animation has finished -- the caller owns whether that hides or destroys it.
+        /// </summary>
+        public void Init(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected, FDMap map, Action onClose)
+        {
+            this.map = map;
+            this.onClose = onClose;
 
             int animationId = creature.Definition.AnimationId;
             string id = StringUtils.Digit3(animationId);
@@ -583,7 +608,7 @@ namespace WindingTale.UI.Dialogs
             startSlide(false, () =>
             {
                 onClosed?.Invoke();
-                GameMain.getDefault().gameCanvas.CloseDialog();
+                this.onClose?.Invoke();
             });
         }
 

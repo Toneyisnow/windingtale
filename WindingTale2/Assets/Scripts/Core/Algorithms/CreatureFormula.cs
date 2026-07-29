@@ -83,7 +83,9 @@ namespace WindingTale.Core.Algorithms
         public static int GetCalculatedAp(FDCreature creature, FDMap map)
         {
             FDPosition position = creature.Position;
-            ShapeDefinition shape = map.Field.GetShapeAt(position);
+            // map is null when the creature is shown outside a battle (e.g. the shop's
+            // creature picker); the shape it would give is unused here anyway.
+            ShapeDefinition shape = map != null ? map.Field.GetShapeAt(position) : null;
 
             AttackItemDefinition attackItem = creature.GetAttackItem();
             if (attackItem == null)
@@ -102,8 +104,9 @@ namespace WindingTale.Core.Algorithms
         public static int GetCalculatedDp(FDCreature creature, FDMap map)
         {
             FDPosition position = creature.Position;
-            ShapeDefinition shape = map.Field.GetShapeAt(position);
-            
+            // See GetCalculatedAp: map may be null when shown outside a battle.
+            ShapeDefinition shape = map != null ? map.Field.GetShapeAt(position) : null;
+
             AttackItemDefinition attackItem = creature.GetAttackItem();
             DefendItemDefinition defendItem = creature.GetDefendItem();
 
