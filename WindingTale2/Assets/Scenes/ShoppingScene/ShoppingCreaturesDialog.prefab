@@ -646,21 +646,23 @@ MonoBehaviour:
   ButtonDown: {fileID: 4233552983475451265}
   Indicator: {fileID: 7965777528781008302}
   creatureInfoDialogPrefab: {fileID: 834348201481903753, guid: 20cc618dc3898a544a9fba3982707087, type: 3}
-  IconScale: 0.5
-  IconOffsetX: -2.5
-  IconOffsetY: -3.5
-  IconYaw: 13.3
+  IconScale: -0.01
+  IconOffsetX: -6.99
+  IconOffsetY: -4.4
+  IconYaw: 30
   IconDistance: 12
-  PanelDistanceBehindIcons: 6.09
-  GridViewportCenter: {x: 0.5, y: 0.34}
-  GridViewportSpacing: {x: 0.24, y: 0.15}
-  NameFontSize: 28
-  NameOffsetX: 0
-  NameOffsetY: -70
-  IndicatorOffsetY: -84.9
+  PanelDistanceBehindIcons: 6
+  GridViewportCenter: {x: 0.5, y: 0.46}
+  GridGapX: 6.09
+  GridGapY: 2
+  NameFontSize: 11.5
+  NameOffsetX: -0.33
+  NameOffsetY: -3.7
+  IndicatorScale: 4.06
+  IndicatorOffsetY: -3.51
   IndicatorAlpha: 0.2
   IndicatorAlphaMin: 0.05
-  IndicatorFadePeriod: 2.71
+  IndicatorFadePeriod: 2.5
 --- !u!1 &7965777528781008302
 GameObject:
   m_ObjectHideFlags: 0

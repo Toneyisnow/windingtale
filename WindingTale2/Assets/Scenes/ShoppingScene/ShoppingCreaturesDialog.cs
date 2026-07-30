@@ -17,6 +17,14 @@ using WindingTale.UI.Dialogs;
 /// over the selected cell and the arrow keys walk it; a party larger than nine pages with
 /// the up / down buttons, exactly the way ShoppingRecordDialog does.
 ///
+/// Everything a cell is made of lives in one world-space GameObject: the slot carries its
+/// voxel icon and a 3D TextMeshPro name label as children, at fixed local offsets, and the
+/// nine slots are fixed local cells of a single Grid placed in front of the camera. Because
+/// icon, name and indicator all share the one 3D coordinate system, they stay locked
+/// together at any resolution -- no per-frame projection of world points onto a canvas, and
+/// no second coordinate system to keep in step. Only the shop's background frame and the
+/// page buttons stay on the dialog's canvas, drawn on a plane behind the icons.
+///
 /// Confirming a cell opens the shared CreatureInfoDialog for that creature, reusing the
 /// battlefield slide-in / slide-out animation. The picker stays up behind it and only
 /// resumes taking input once the info dialog has closed (Esc). Backing out of the picker
@@ -57,6 +65,11 @@ public class ShoppingCreaturesDialog : MonoBehaviour
 
     public GameObject ButtonDown;
 
+    /// <summary>
+    /// The authored highlight sprite, a canvas Image in the prefab. Its sprite is lifted into
+    /// a world-space SpriteRenderer at Init (so the highlight lives in the same 3D space as
+    /// the icons it frames) and this canvas Image is then hidden.
+    /// </summary>
     public GameObject Indicator;
 
     /// <summary>
@@ -70,55 +83,68 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     public float IconScale = 0.5f;
 
     /// <summary>
-    /// Nudge of each icon off its cell centre, in world units on the icon plane. Shifts only
-    /// the icon, not the cell anchor -- the name label and indicator stay put over the cell.
+    /// Nudge of each icon off its cell centre, in world units on the grid plane (local x
+    /// right, local y up). Shifts only the icon within its cell; the name label and the
+    /// indicator keep their own offsets, so the three can be spaced apart inside the cell.
     /// </summary>
     public float IconOffsetX = 0f;
 
-    public float IconOffsetY = 0f;
+    public float IconOffsetY = 0.4f;
 
     /// <summary>
     /// Yaw each icon is turned by after it is squared up to face the camera, in degrees.
-    /// Applied to every icon alike, so they all present the same angle wherever they sit in
-    /// the grid (e.g. 30 turns them all a little to one side) rather than fanning out around
-    /// the perspective vanishing point the way a single fixed world rotation would.
+    /// Applied to every icon alike (the grid already faces the camera, so this is a shared
+    /// local turn), so they all present the same angle wherever they sit in the grid.
     /// </summary>
-    public float IconYaw = 30f;
+    public float IconYaw = 13.3f;
 
     /// <summary>
-    /// How far in front of the camera the icon grid sits, in world units. Must be nearer than
-    /// the shop background (drawn at plane distance 32) so the icons show in front of it, and
-    /// within the camera's far clip. The slot transforms shipped in the prefab sit at
-    /// placeholder world coordinates far past the far clip, so the grid is laid out here in
-    /// front of the camera instead -- the same way VillageScene places its cursor spots.
+    /// How far in front of the camera the grid sits, in world units. Must be nearer than the
+    /// shop background (drawn at plane distance 32) so the icons show in front of it, and
+    /// within the camera's far clip. The grid is placed here in front of the camera each
+    /// frame -- the same way VillageScene places its cursor spots.
     /// </summary>
     public float IconDistance = 12f;
 
     /// <summary>
     /// How far behind the icon plane the dialog's own canvas is pushed, in world units. The
-    /// canvas is switched to Screen Space - Camera at IconDistance + this, so its panel and
-    /// labels sit behind the 3 x 3 of world-space icons -- an overlay canvas would always
-    /// draw on top of them. Kept well in front of the shop background (plane distance 32).
+    /// canvas is switched to Screen Space - Camera at IconDistance + this, so its background
+    /// frame and page buttons sit behind the world-space icons -- an overlay canvas would
+    /// always draw on top of them. Kept well in front of the shop background (plane 32).
     /// </summary>
-    public float PanelDistanceBehindIcons = 4f;
+    public float PanelDistanceBehindIcons = 6f;
 
-    /// <summary>Viewport point (0..1) the 3 x 3 grid is centred on; 0.5,0.5 is screen centre.</summary>
-    public Vector2 GridViewportCenter = new Vector2(0.5f, 0.34f);
+    /// <summary>Viewport point (0..1) the whole 3 x 3 grid is centred on; 0.5,0.5 is screen centre.</summary>
+    public Vector2 GridViewportCenter = new Vector2(0.5f, 0.46f);
 
-    /// <summary>Viewport gap between neighbouring cells, x across columns and y between rows.</summary>
-    public Vector2 GridViewportSpacing = new Vector2(0.24f, 0.15f);
+    /// <summary>
+    /// Gap across columns between neighbouring cells, in world units. World units (not a
+    /// viewport fraction) so the columns stay an equal distance apart whatever the aspect
+    /// ratio -- they no longer spread on a wider screen.
+    /// </summary>
+    public float GridGapX = 8.4f;
 
-    /// <summary>Point size of the name labels, in the Chinese message font.</summary>
-    public float NameFontSize = 28f;
+    /// <summary>Gap between rows of cells, in world units.</summary>
+    public float GridGapY = 1.8f;
 
-    /// <summary>Horizontal nudge of a cell's name label off the cell centre, in canvas pixels.</summary>
-    public float NameOffsetX = 0f;
+    /// <summary>Point size of the name labels (3D TextMeshPro, rendered in world space).</summary>
+    public float NameFontSize = 12f;
 
-    /// <summary>How far below a cell's icon its name label sits, in canvas pixels.</summary>
-    public float NameOffsetY = -95f;
+    /// <summary>
+    /// Left edge of a cell's name label, in world units off the cell centre. The label is
+    /// left-anchored, so this fixes where the name starts and the text only ever grows to the
+    /// right -- the left padding stays put whatever the name's length.
+    /// </summary>
+    public float NameOffsetX = -1.4f;
 
-    /// <summary>Vertical nudge of the indicator off the cell's icon centre, in canvas pixels.</summary>
-    public float IndicatorOffsetY = 0f;
+    /// <summary>How far below a cell's centre its name label sits, in world units.</summary>
+    public float NameOffsetY = -1.6f;
+
+    /// <summary>World-space size of the highlight sprite; scales the lifted indicator sprite.</summary>
+    public float IndicatorScale = 2f;
+
+    /// <summary>Vertical nudge of the indicator off the cell centre, in world units.</summary>
+    public float IndicatorOffsetY = 0.2f;
 
     /// <summary>The indicator's brightest opacity, the high point of its pulse.</summary>
     public float IndicatorAlpha = 0.2f;
@@ -144,6 +170,11 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     // CreatureIdleSynced run at, so every icon in the game breathes in step.
     private const int IdleAnimationSpeed = 30;
 
+    // How far behind the icon plane the highlight sprite sits, in world units. Behind, so the
+    // opaque voxel draws over it and it reads as a glow framing the creature rather than a
+    // tint laid over its face.
+    private const float IndicatorBehindIcons = 0.2f;
+
     private GameObject[] slots = null;
 
     // The whole party slice being shown, ordered by id (001, 002, ...). A page is nine of
@@ -154,20 +185,22 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     private CreatureInfoType infoType = CreatureInfoType.View;
 
     // Per-cell built pieces, rebuilt each time the page turns: the three idle-frame holders
-    // whose visibility AnimateIcons cycles, and the name label (kept on the canvas so the
-    // text stays crisp UI while the icon lives out in the world).
+    // whose visibility AnimateIcons cycles, and the world-space name label, both parented
+    // under the slot so a cell is one GameObject carrying everything it shows.
     private readonly GameObject[][] slotClips = new GameObject[SlotsPerPage][];
-    private readonly TextMeshProUGUI[] nameLabels = new TextMeshProUGUI[SlotsPerPage];
+    private readonly TextMeshPro[] nameTexts = new TextMeshPro[SlotsPerPage];
     private readonly bool[] slotFilled = new bool[SlotsPerPage];
 
-    private Canvas canvas = null;
-    private RectTransform canvasRect = null;
+    // The one rigid grid the nine slots are fixed local cells of; placed in front of the
+    // camera each frame, so the whole cell layout moves and turns as a single unit.
+    private Transform gridRoot = null;
 
-    // The camera the icons are placed and squared up against, cached in Init.
+    // The camera the grid is placed and squared up against, cached in Init.
     private Camera mainCamera = null;
 
-    private Image indicatorImage = null;
-    private RectTransform indicatorRect = null;
+    // The world-space highlight lifted from the authored canvas Indicator, moved onto the
+    // selected cell each frame.
+    private SpriteRenderer indicatorRenderer = null;
     private float alphaElapsed = 0f;
 
     private int pageCount = 1;
@@ -201,24 +234,10 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         mainCamera = Camera.main;
 
         slots = new[] { Creature0, Creature1, Creature2, Creature3, Creature4, Creature5, Creature6, Creature7, Creature8 };
-        SetupSlotPositions();
 
-        canvas = GetComponentInChildren<Canvas>(true);
-        canvasRect = canvas != null ? canvas.transform as RectTransform : null;
-
-        // Draw the canvas through the camera on a plane behind the icons, so the world-space
-        // voxel icons sit in front of the panel and labels. As an overlay canvas (its authored
-        // mode) it would always paint over the icons, dropping them behind it.
-        if (canvas != null && mainCamera != null)
-        {
-            canvas.renderMode = RenderMode.ScreenSpaceCamera;
-            canvas.worldCamera = mainCamera;
-            canvas.planeDistance = Mathf.Max(0.1f, IconDistance) + Mathf.Max(0f, PanelDistanceBehindIcons);
-        }
-
-        indicatorImage = Indicator != null ? Indicator.GetComponent<Image>() : null;
-        indicatorRect = Indicator != null ? Indicator.GetComponent<RectTransform>() : null;
-        CenterAnchors(indicatorRect);
+        BuildGrid();
+        SetupPanelCanvas();
+        SetupIndicator();
 
         creatures = BuildCreatureList(record, creatureType);
 
@@ -229,24 +248,25 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         WireNavButtons();
         RefreshPage();
 
+        // Place everything once here so the first drawn frame is already laid out, rather
+        // than flashing at the slots' placeholder positions before the first Update.
+        PositionGrid();
+
         alphaElapsed = 0f;
         firstFrame = true;
         initialized = true;
     }
 
     /// <summary>
-    /// Lays the nine slot transforms out as a 3 x 3 grid on a plane in front of the camera,
-    /// so their voxel icons sit within the far clip and ahead of the shop background. The
-    /// grid's placeholder prefab coordinates are overwritten here; the cells are placed by
-    /// viewport point so the layout holds at any resolution.
+    /// Gathers the nine slot transforms under one Grid node so the cells move as a rigid
+    /// unit. The slots keep their serialized references (Creature0..8), only their parent
+    /// changes; their local cell positions are set every frame in PositionGrid.
     /// </summary>
-    private void SetupSlotPositions()
+    private void BuildGrid()
     {
-        Camera camera = mainCamera;
-        if (camera == null)
-        {
-            return;
-        }
+        GameObject gridObject = new GameObject("Grid");
+        gridRoot = gridObject.transform;
+        gridRoot.SetParent(this.transform, false);
 
         for (int i = 0; i < SlotsPerPage; i++)
         {
@@ -255,15 +275,54 @@ public class ShoppingCreaturesDialog : MonoBehaviour
                 continue;
             }
 
-            int column = i % Columns;
-            int row = i / Columns;
-
-            float viewportX = GridViewportCenter.x + (column - 1) * GridViewportSpacing.x;
-            float viewportY = GridViewportCenter.y - (row - 1) * GridViewportSpacing.y;
-
-            // Distance must be positive, else the grid lands behind the camera and vanishes.
-            slots[i].transform.position = camera.ViewportToWorldPoint(new Vector3(viewportX, viewportY, Mathf.Max(0.1f, IconDistance)));
+            slots[i].transform.SetParent(gridRoot, false);
         }
+    }
+
+    /// <summary>
+    /// Draws the dialog's own canvas -- the background frame and the page buttons -- through
+    /// the camera on a plane behind the icons, so the world-space voxel icons sit in front of
+    /// it. As an overlay canvas (its authored mode) the frame would paint over the icons.
+    /// </summary>
+    private void SetupPanelCanvas()
+    {
+        Canvas canvas = GetComponentInChildren<Canvas>(true);
+        if (canvas != null && mainCamera != null)
+        {
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = mainCamera;
+            canvas.planeDistance = Mathf.Max(0.1f, IconDistance) + Mathf.Max(0f, PanelDistanceBehindIcons);
+        }
+    }
+
+    /// <summary>
+    /// Lifts the authored highlight sprite off the canvas Indicator into a world-space
+    /// SpriteRenderer under the grid, and hides the canvas Indicator. The highlight then
+    /// lives in the same 3D space as the icons and can be locked onto the selected cell.
+    /// </summary>
+    private void SetupIndicator()
+    {
+        Sprite sprite = null;
+        if (Indicator != null)
+        {
+            Image image = Indicator.GetComponent<Image>();
+            if (image != null)
+            {
+                sprite = image.sprite;
+            }
+
+            Indicator.SetActive(false);
+        }
+
+        GameObject indicatorObject = new GameObject("SelectIndicatorWorld");
+        indicatorObject.transform.SetParent(gridRoot, false);
+
+        indicatorRenderer = indicatorObject.AddComponent<SpriteRenderer>();
+        indicatorRenderer.sprite = sprite;
+
+        Color color = Color.white;
+        color.a = Mathf.Clamp01(IndicatorAlphaMin);
+        indicatorRenderer.color = color;
     }
 
     /// <summary>
@@ -304,15 +363,14 @@ public class ShoppingCreaturesDialog : MonoBehaviour
             return;
         }
 
-        // While the info dialog is up the icons are hidden (they sit in front of its plane and
-        // would otherwise poke through it), so there is nothing to animate; the labels and
-        // indicator are left to settle behind it.
+        // While the info dialog is up the whole grid is hidden (its icons and names stand in
+        // front of the dialog's plane and would otherwise poke through it), so there is
+        // nothing to lay out or animate.
         if (!infoDialogOpen)
         {
+            PositionGrid();
             AnimateIcons();
-            PositionIcons();
         }
-        PositionOverlays();
         AnimateIndicatorAlpha();
 
         if (infoDialogOpen)
@@ -492,8 +550,8 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     /// <summary>
     /// (Re)builds one cell's voxel icon: three idle-frame models under a shared holder, the
     /// same three GameMap.AddCreatureUI hangs off a battlefield creature. AnimateIcons cycles
-    /// which one shows; PositionIcons places and squares the holder up to the camera each
-    /// frame, so the icon's world position and facing are not set here.
+    /// which one shows; PositionGrid places and squares the holder up each frame, so the
+    /// icon's local position and facing are not set here.
     /// </summary>
     private void BuildSlotIcon(int slotIndex, int animationId)
     {
@@ -536,18 +594,18 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         slotClips[slotIndex] = clips;
     }
 
-    /// <summary>Puts the creature's localized name on the cell's label, in the Chinese font.</summary>
+    /// <summary>Puts the creature's localized name on the cell's world-space label, in the Chinese font.</summary>
     private void SetSlotName(int slotIndex, int definitionId)
     {
-        TextMeshProUGUI label = GetOrCreateNameLabel(slotIndex);
-        if (label == null)
+        TextMeshPro text = GetOrCreateNameText(slotIndex);
+        if (text == null)
         {
             return;
         }
 
-        label.gameObject.SetActive(true);
-        label.text = LocalizationManager.GetCreatureString(definitionId).GetLocalizedString();
-        label.ForceMeshUpdate();
+        text.gameObject.SetActive(true);
+        text.text = LocalizationManager.GetCreatureString(definitionId).GetLocalizedString();
+        text.ForceMeshUpdate();
     }
 
     /// <summary>Hides an empty cell's icon and name so nothing lingers on a short last page.</summary>
@@ -563,31 +621,22 @@ public class ShoppingCreaturesDialog : MonoBehaviour
             }
         }
 
-        if (nameLabels[slotIndex] != null)
+        if (nameTexts[slotIndex] != null)
         {
-            nameLabels[slotIndex].gameObject.SetActive(false);
+            nameTexts[slotIndex].gameObject.SetActive(false);
         }
     }
 
     /// <summary>
-    /// Shows or hides the filled cells' icons. Used to pull them off screen while the info
-    /// dialog is open: the icons stand in front of the dialog's plane and would otherwise
-    /// show through it.
+    /// Shows or hides the whole grid -- icons, names and the highlight. Used to pull it off
+    /// screen while the info dialog is open: the cells stand in front of the dialog's plane
+    /// and would otherwise show through it.
     /// </summary>
-    private void SetIconsActive(bool active)
+    private void SetGridActive(bool active)
     {
-        for (int i = 0; i < SlotsPerPage; i++)
+        if (gridRoot != null)
         {
-            if (slots[i] == null)
-            {
-                continue;
-            }
-
-            Transform iconRoot = slots[i].transform.Find("IconRoot");
-            if (iconRoot != null)
-            {
-                iconRoot.gameObject.SetActive(active && slotFilled[i]);
-            }
+            gridRoot.gameObject.SetActive(active);
         }
     }
 
@@ -624,96 +673,97 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     }
 
     /// <summary>
-    /// Places and squares each filled cell's icon up to the camera every frame. The offset is
-    /// applied along the camera's own right / up axes so it always reads as a screen-space
-    /// nudge, whatever way the camera is turned; and the facing is a look-at-camera plus a
-    /// uniform IconYaw, so every icon presents the same angle to the viewer rather than fanning
-    /// out around the perspective vanishing point. Done per frame so the inspector fields tune
-    /// it live, the way the name offset already does.
+    /// Places the grid in front of the camera and lays its cells out. The grid is turned to
+    /// face the camera, so each cell's local x / y read as screen right / up; the nine slots
+    /// take fixed local cell positions (equal world spacing), and each filled cell's icon and
+    /// name take their own fixed local offsets. Because all of this is one rigid local layout
+    /// under the grid, icon and name never drift apart at a different resolution. Run per
+    /// frame so the inspector fields tune it live and the layout follows the camera.
     /// </summary>
-    private void PositionIcons()
+    private void PositionGrid()
     {
-        if (mainCamera == null)
+        if (mainCamera == null || gridRoot == null)
         {
             return;
         }
 
-        Vector3 right = mainCamera.transform.right;
-        Vector3 up = mainCamera.transform.up;
+        // Distance must be positive, else the grid lands behind the camera and vanishes.
+        gridRoot.position = mainCamera.ViewportToWorldPoint(
+            new Vector3(GridViewportCenter.x, GridViewportCenter.y, Mathf.Max(0.1f, IconDistance)));
+        gridRoot.rotation = mainCamera.transform.rotation;
 
-        // One rotation shared by every icon: the camera's own orientation (plus a half turn
-        // so the front faces the camera) and the uniform IconYaw. Every icon gets this same
-        // facing -- parallel, not fanned -- unlike aiming each at the camera's position, which
-        // gives a different rotation per cell.
-        Quaternion iconRotation = mainCamera.transform.rotation * Quaternion.Euler(0f, 180f + IconYaw, 0f);
+        Quaternion iconRotation = Quaternion.Euler(0f, 180f + IconYaw, 0f);
 
         for (int i = 0; i < SlotsPerPage; i++)
         {
-            if (!slotFilled[i] || slots[i] == null)
+            if (slots[i] == null)
             {
                 continue;
             }
 
-            Transform iconRoot = slots[i].transform.Find("IconRoot");
-            if (iconRoot == null)
+            Transform slot = slots[i].transform;
+            slot.localPosition = CellLocalPosition(i);
+            slot.localRotation = Quaternion.identity;
+            slot.localScale = Vector3.one;
+
+            if (!slotFilled[i])
             {
                 continue;
             }
 
-            iconRoot.position = slots[i].transform.position + right * IconOffsetX + up * IconOffsetY;
-            iconRoot.rotation = iconRotation;
+            Transform iconRoot = slot.Find("IconRoot");
+            if (iconRoot != null)
+            {
+                iconRoot.localPosition = new Vector3(IconOffsetX, IconOffsetY, 0f);
+                iconRoot.localRotation = iconRotation;
 
-            // Scale must not go negative, which would mirror the mesh (a "negative scale").
-            iconRoot.localScale = Vector3.one * Mathf.Max(0f, IconScale);
+                // Scale must not go negative, which would mirror the mesh (a "negative scale").
+                iconRoot.localScale = Vector3.one * Mathf.Max(0f, IconScale);
+            }
+
+            if (nameTexts[i] != null)
+            {
+                Transform nameTransform = nameTexts[i].transform;
+                nameTransform.localPosition = new Vector3(NameOffsetX, NameOffsetY, 0f);
+                nameTransform.localRotation = Quaternion.identity;
+            }
         }
+
+        PositionIndicator();
+    }
+
+    /// <summary>The fixed local position of cell <paramref name="index"/> in the 3 x 3 grid.</summary>
+    private Vector3 CellLocalPosition(int index)
+    {
+        int column = index % Columns;
+        int row = index / Columns;
+        return new Vector3((column - 1) * GridGapX, (1 - row) * GridGapY, 0f);
     }
 
     /// <summary>
-    /// Slides the name labels and the indicator onto their cells. The cells are world-space
-    /// anchors and the labels / indicator are canvas UI, so each cell's world position is
-    /// projected onto the canvas -- everything then tracks wherever the cells are placed.
+    /// Moves the highlight onto the selected filled cell, a touch behind the icon plane, and
+    /// hides it when the selected cell is empty. Its pulse is driven separately in
+    /// AnimateIndicatorAlpha.
     /// </summary>
-    private void PositionOverlays()
+    private void PositionIndicator()
     {
-        for (int i = 0; i < SlotsPerPage; i++)
+        if (indicatorRenderer == null)
         {
-            if (!slotFilled[i] || nameLabels[i] == null || slots[i] == null)
-            {
-                continue;
-            }
-
-            if (TryGetCanvasPoint(slots[i].transform.position, out Vector2 point))
-            {
-                nameLabels[i].rectTransform.anchoredPosition = point + new Vector2(NameOffsetX, NameOffsetY);
-            }
+            return;
         }
 
-        if (indicatorRect != null && slotFilled[selectedIndex] && slots[selectedIndex] != null)
+        bool show = slotFilled[selectedIndex] && slots[selectedIndex] != null;
+        indicatorRenderer.enabled = show;
+        if (!show)
         {
-            if (TryGetCanvasPoint(slots[selectedIndex].transform.position, out Vector2 point))
-            {
-                indicatorRect.anchoredPosition = point + new Vector2(0f, IndicatorOffsetY);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Projects a world point onto the dialog's canvas. Uses no UI camera for an overlay
-    /// canvas (the screen point is already the canvas point), or the canvas camera otherwise.
-    /// </summary>
-    private bool TryGetCanvasPoint(Vector3 worldPosition, out Vector2 localPoint)
-    {
-        localPoint = Vector2.zero;
-
-        if (canvasRect == null || mainCamera == null)
-        {
-            return false;
+            return;
         }
 
-        Vector3 screenPoint = mainCamera.WorldToScreenPoint(worldPosition);
-        Camera uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
-
-        return RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPoint, uiCamera, out localPoint);
+        Vector3 cell = CellLocalPosition(selectedIndex);
+        Transform indicatorTransform = indicatorRenderer.transform;
+        indicatorTransform.localPosition = new Vector3(cell.x, cell.y + IndicatorOffsetY, IndicatorBehindIcons);
+        indicatorTransform.localRotation = Quaternion.identity;
+        indicatorTransform.localScale = Vector3.one * Mathf.Max(0f, IndicatorScale);
     }
 
     /// <summary>
@@ -723,7 +773,7 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     /// </summary>
     private void AnimateIndicatorAlpha()
     {
-        if (indicatorImage == null)
+        if (indicatorRenderer == null)
         {
             return;
         }
@@ -734,9 +784,9 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         float t = 0.5f + 0.5f * Mathf.Cos(2f * Mathf.PI * alphaElapsed / period);
 
         // Opacity is 0..1; clamp so an out-of-range field cannot blow the highlight out.
-        Color color = indicatorImage.color;
+        Color color = indicatorRenderer.color;
         color.a = Mathf.Lerp(Mathf.Clamp01(IndicatorAlphaMin), Mathf.Clamp01(IndicatorAlpha), t);
-        indicatorImage.color = color;
+        indicatorRenderer.color = color;
     }
 
     private void Confirm()
@@ -759,8 +809,8 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     /// Opens the shared CreatureInfoDialog for the confirmed creature, under this dialog's
     /// canvas so it renders. No battle map is in play here, so a null map is passed (the
     /// attribute formulas tolerate it) and the close is handled locally: the instance is
-    /// destroyed and the picker resumes taking input. The picker stays visible behind it,
-    /// as the field does on the battlefield.
+    /// destroyed and the picker resumes taking input. The picker's canvas stays visible
+    /// behind it; its world-space grid is hidden so the icons do not poke through the dialog.
     /// </summary>
     private void OpenInfoDialog(FDCreature creature)
     {
@@ -770,6 +820,7 @@ public class ShoppingCreaturesDialog : MonoBehaviour
             return;
         }
 
+        Canvas canvas = GetComponentInChildren<Canvas>(true);
         Transform parent = canvas != null ? canvas.transform : this.transform;
         GameObject dialogObject = Instantiate(creatureInfoDialogPrefab, parent, false);
 
@@ -783,7 +834,7 @@ public class ShoppingCreaturesDialog : MonoBehaviour
 
         infoDialogObject = dialogObject;
         infoDialogOpen = true;
-        SetIconsActive(false);
+        SetGridActive(false);
 
         dialog.Init(creature, infoType, _ => { }, (FDMap)null, () =>
         {
@@ -793,7 +844,7 @@ public class ShoppingCreaturesDialog : MonoBehaviour
                 infoDialogObject = null;
             }
             infoDialogOpen = false;
-            SetIconsActive(true);
+            SetGridActive(true);
         });
     }
 
@@ -816,39 +867,46 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         button.onClick.AddListener(() => TurnPage(direction));
     }
 
-    /// <summary>The cell's name label, created under the canvas on first use and then reused.</summary>
-    private TextMeshProUGUI GetOrCreateNameLabel(int slotIndex)
+    /// <summary>
+    /// The cell's world-space name label, a 3D TextMeshPro created under the slot on first
+    /// use and then reused, so a cell's icon and name are children of the one GameObject.
+    /// </summary>
+    private TextMeshPro GetOrCreateNameText(int slotIndex)
     {
-        if (nameLabels[slotIndex] != null)
+        if (nameTexts[slotIndex] != null)
         {
-            return nameLabels[slotIndex];
+            return nameTexts[slotIndex];
         }
 
-        if (canvasRect == null)
+        if (slots[slotIndex] == null)
         {
             return null;
         }
 
-        GameObject labelObject = new GameObject("CreatureName_" + slotIndex, typeof(RectTransform));
-        labelObject.transform.SetParent(canvasRect, false);
+        GameObject textObject = new GameObject("CreatureName", typeof(TextMeshPro));
+        textObject.transform.SetParent(slots[slotIndex].transform, false);
 
-        TextMeshProUGUI label = labelObject.AddComponent<TextMeshProUGUI>();
-        label.alignment = TextAlignmentOptions.Center;
-        label.fontSize = NameFontSize;
-        label.color = Color.white;
+        TextMeshPro text = textObject.GetComponent<TextMeshPro>();
+        text.alignment = TextAlignmentOptions.Left;
+        text.enableAutoSizing = false;
+        text.fontSize = NameFontSize;
+        text.color = Color.white;
 
         TMP_FontAsset messageFont = Resources.Load<TMP_FontAsset>(@"Fonts/FontAssets/zh/FZB_Message");
         if (messageFont != null)
         {
-            label.font = messageFont;
+            text.font = messageFont;
         }
 
-        RectTransform rect = label.rectTransform;
-        CenterAnchors(rect);
-        rect.sizeDelta = new Vector2(300f, 60f);
+        // Anchored at its left edge (pivot x = 0, left-aligned) so the name grows only to the
+        // right -- a longer name keeps the same left edge, and its left padding does not shrink
+        // the way centred text's would. A generous box (TMP point units) leaves room to grow.
+        RectTransform rect = text.rectTransform;
+        rect.pivot = new Vector2(0f, 0.5f);
+        rect.sizeDelta = new Vector2(200f, 40f);
 
-        nameLabels[slotIndex] = label;
-        return label;
+        nameTexts[slotIndex] = text;
+        return text;
     }
 
     private static Transform FindOrCreateChild(Transform parent, string name)
@@ -863,18 +921,5 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         created.transform.SetParent(parent, false);
         created.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         return created.transform;
-    }
-
-    /// <summary>Anchors and pivots a rect to the canvas centre, so a projected point places it directly.</summary>
-    private static void CenterAnchors(RectTransform rect)
-    {
-        if (rect == null)
-        {
-            return;
-        }
-
-        rect.anchorMin = new Vector2(0.5f, 0.5f);
-        rect.anchorMax = new Vector2(0.5f, 0.5f);
-        rect.pivot = new Vector2(0.5f, 0.5f);
     }
 }
