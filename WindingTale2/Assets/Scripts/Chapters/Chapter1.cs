@@ -282,5 +282,11 @@ namespace WindingTale.Chapters
             // behind the conversation above, so the closing lines play out first.
             gameMain.OnGameWin();
         };
+
+        internal override void AdjustFriendsAfterWon()
+        {
+            // After winning, remove the 6th that were added in turn 3. They are not part of the player's permanent team.
+            gameMain.gameMap.RemoveCreature(6);
+        }
     }
 }

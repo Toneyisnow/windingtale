@@ -69,11 +69,53 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     /// <summary>Size of each voxel icon relative to the map model it is built from.</summary>
     public float IconScale = 0.5f;
 
+    /// <summary>
+    /// Nudge of each icon off its cell centre, in world units on the icon plane. Shifts only
+    /// the icon, not the cell anchor -- the name label and indicator stay put over the cell.
+    /// </summary>
+    public float IconOffsetX = 0f;
+
+    public float IconOffsetY = 0f;
+
+    /// <summary>
+    /// Yaw each icon is turned by after it is squared up to face the camera, in degrees.
+    /// Applied to every icon alike, so they all present the same angle wherever they sit in
+    /// the grid (e.g. 30 turns them all a little to one side) rather than fanning out around
+    /// the perspective vanishing point the way a single fixed world rotation would.
+    /// </summary>
+    public float IconYaw = 30f;
+
+    /// <summary>
+    /// How far in front of the camera the icon grid sits, in world units. Must be nearer than
+    /// the shop background (drawn at plane distance 32) so the icons show in front of it, and
+    /// within the camera's far clip. The slot transforms shipped in the prefab sit at
+    /// placeholder world coordinates far past the far clip, so the grid is laid out here in
+    /// front of the camera instead -- the same way VillageScene places its cursor spots.
+    /// </summary>
+    public float IconDistance = 12f;
+
+    /// <summary>
+    /// How far behind the icon plane the dialog's own canvas is pushed, in world units. The
+    /// canvas is switched to Screen Space - Camera at IconDistance + this, so its panel and
+    /// labels sit behind the 3 x 3 of world-space icons -- an overlay canvas would always
+    /// draw on top of them. Kept well in front of the shop background (plane distance 32).
+    /// </summary>
+    public float PanelDistanceBehindIcons = 4f;
+
+    /// <summary>Viewport point (0..1) the 3 x 3 grid is centred on; 0.5,0.5 is screen centre.</summary>
+    public Vector2 GridViewportCenter = new Vector2(0.5f, 0.34f);
+
+    /// <summary>Viewport gap between neighbouring cells, x across columns and y between rows.</summary>
+    public Vector2 GridViewportSpacing = new Vector2(0.24f, 0.15f);
+
     /// <summary>Point size of the name labels, in the Chinese message font.</summary>
     public float NameFontSize = 28f;
 
+    /// <summary>Horizontal nudge of a cell's name label off the cell centre, in canvas pixels.</summary>
+    public float NameOffsetX = 0f;
+
     /// <summary>How far below a cell's icon its name label sits, in canvas pixels.</summary>
-    public float NameOffsetY = -60f;
+    public float NameOffsetY = -95f;
 
     /// <summary>Vertical nudge of the indicator off the cell's icon centre, in canvas pixels.</summary>
     public float IndicatorOffsetY = 0f;
@@ -121,6 +163,9 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     private Canvas canvas = null;
     private RectTransform canvasRect = null;
 
+    // The camera the icons are placed and squared up against, cached in Init.
+    private Camera mainCamera = null;
+
     private Image indicatorImage = null;
     private RectTransform indicatorRect = null;
     private float alphaElapsed = 0f;
@@ -153,10 +198,23 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         this.infoType = dialogType;
         this.OnClosed = onClosed;
 
+        mainCamera = Camera.main;
+
         slots = new[] { Creature0, Creature1, Creature2, Creature3, Creature4, Creature5, Creature6, Creature7, Creature8 };
+        SetupSlotPositions();
 
         canvas = GetComponentInChildren<Canvas>(true);
         canvasRect = canvas != null ? canvas.transform as RectTransform : null;
+
+        // Draw the canvas through the camera on a plane behind the icons, so the world-space
+        // voxel icons sit in front of the panel and labels. As an overlay canvas (its authored
+        // mode) it would always paint over the icons, dropping them behind it.
+        if (canvas != null && mainCamera != null)
+        {
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = mainCamera;
+            canvas.planeDistance = Mathf.Max(0.1f, IconDistance) + Mathf.Max(0f, PanelDistanceBehindIcons);
+        }
 
         indicatorImage = Indicator != null ? Indicator.GetComponent<Image>() : null;
         indicatorRect = Indicator != null ? Indicator.GetComponent<RectTransform>() : null;
@@ -174,6 +232,38 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         alphaElapsed = 0f;
         firstFrame = true;
         initialized = true;
+    }
+
+    /// <summary>
+    /// Lays the nine slot transforms out as a 3 x 3 grid on a plane in front of the camera,
+    /// so their voxel icons sit within the far clip and ahead of the shop background. The
+    /// grid's placeholder prefab coordinates are overwritten here; the cells are placed by
+    /// viewport point so the layout holds at any resolution.
+    /// </summary>
+    private void SetupSlotPositions()
+    {
+        Camera camera = mainCamera;
+        if (camera == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < SlotsPerPage; i++)
+        {
+            if (slots[i] == null)
+            {
+                continue;
+            }
+
+            int column = i % Columns;
+            int row = i / Columns;
+
+            float viewportX = GridViewportCenter.x + (column - 1) * GridViewportSpacing.x;
+            float viewportY = GridViewportCenter.y - (row - 1) * GridViewportSpacing.y;
+
+            // Distance must be positive, else the grid lands behind the camera and vanishes.
+            slots[i].transform.position = camera.ViewportToWorldPoint(new Vector3(viewportX, viewportY, Mathf.Max(0.1f, IconDistance)));
+        }
     }
 
     /// <summary>
@@ -214,9 +304,14 @@ public class ShoppingCreaturesDialog : MonoBehaviour
             return;
         }
 
-        // The picker keeps breathing even while the info dialog is up, so the grid does not
-        // freeze behind it.
-        AnimateIcons();
+        // While the info dialog is up the icons are hidden (they sit in front of its plane and
+        // would otherwise poke through it), so there is nothing to animate; the labels and
+        // indicator are left to settle behind it.
+        if (!infoDialogOpen)
+        {
+            AnimateIcons();
+            PositionIcons();
+        }
         PositionOverlays();
         AnimateIndicatorAlpha();
 
@@ -396,8 +491,9 @@ public class ShoppingCreaturesDialog : MonoBehaviour
 
     /// <summary>
     /// (Re)builds one cell's voxel icon: three idle-frame models under a shared holder, the
-    /// same three GameMap.AddCreatureUI hangs off a battlefield creature, turned to face the
-    /// shop camera and scaled down to cell size. AnimateIcons cycles which one shows.
+    /// same three GameMap.AddCreatureUI hangs off a battlefield creature. AnimateIcons cycles
+    /// which one shows; PositionIcons places and squares the holder up to the camera each
+    /// frame, so the icon's world position and facing are not set here.
     /// </summary>
     private void BuildSlotIcon(int slotIndex, int animationId)
     {
@@ -414,13 +510,6 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         {
             Destroy(iconRoot.GetChild(c).gameObject);
         }
-
-        iconRoot.localPosition = Vector3.zero;
-        //// The map icons face away from the battlefield camera; the shop camera stands in
-        //// front of the cell, so the model is turned round to face the player, as the
-        //// village cursor is.
-        iconRoot.localRotation = Quaternion.Euler(0f, 180f, 0f);
-        iconRoot.localScale = Vector3.one * IconScale;
 
         GameObject[] clips = new GameObject[3];
         for (int frame = 0; frame < 3; frame++)
@@ -481,6 +570,28 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     }
 
     /// <summary>
+    /// Shows or hides the filled cells' icons. Used to pull them off screen while the info
+    /// dialog is open: the icons stand in front of the dialog's plane and would otherwise
+    /// show through it.
+    /// </summary>
+    private void SetIconsActive(bool active)
+    {
+        for (int i = 0; i < SlotsPerPage; i++)
+        {
+            if (slots[i] == null)
+            {
+                continue;
+            }
+
+            Transform iconRoot = slots[i].transform.Find("IconRoot");
+            if (iconRoot != null)
+            {
+                iconRoot.gameObject.SetActive(active && slotFilled[i]);
+            }
+        }
+    }
+
+    /// <summary>
     /// Cycles every filled cell's icon through the idle loop -- frames 01, 02, 03, 02, each
     /// held for IdleAnimationSpeed hundredths of a second -- off Time.fixedTime, so all nine
     /// stay in step with each other and with the rest of the game's icons.
@@ -513,6 +624,51 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     }
 
     /// <summary>
+    /// Places and squares each filled cell's icon up to the camera every frame. The offset is
+    /// applied along the camera's own right / up axes so it always reads as a screen-space
+    /// nudge, whatever way the camera is turned; and the facing is a look-at-camera plus a
+    /// uniform IconYaw, so every icon presents the same angle to the viewer rather than fanning
+    /// out around the perspective vanishing point. Done per frame so the inspector fields tune
+    /// it live, the way the name offset already does.
+    /// </summary>
+    private void PositionIcons()
+    {
+        if (mainCamera == null)
+        {
+            return;
+        }
+
+        Vector3 right = mainCamera.transform.right;
+        Vector3 up = mainCamera.transform.up;
+
+        // One rotation shared by every icon: the camera's own orientation (plus a half turn
+        // so the front faces the camera) and the uniform IconYaw. Every icon gets this same
+        // facing -- parallel, not fanned -- unlike aiming each at the camera's position, which
+        // gives a different rotation per cell.
+        Quaternion iconRotation = mainCamera.transform.rotation * Quaternion.Euler(0f, 180f + IconYaw, 0f);
+
+        for (int i = 0; i < SlotsPerPage; i++)
+        {
+            if (!slotFilled[i] || slots[i] == null)
+            {
+                continue;
+            }
+
+            Transform iconRoot = slots[i].transform.Find("IconRoot");
+            if (iconRoot == null)
+            {
+                continue;
+            }
+
+            iconRoot.position = slots[i].transform.position + right * IconOffsetX + up * IconOffsetY;
+            iconRoot.rotation = iconRotation;
+
+            // Scale must not go negative, which would mirror the mesh (a "negative scale").
+            iconRoot.localScale = Vector3.one * Mathf.Max(0f, IconScale);
+        }
+    }
+
+    /// <summary>
     /// Slides the name labels and the indicator onto their cells. The cells are world-space
     /// anchors and the labels / indicator are canvas UI, so each cell's world position is
     /// projected onto the canvas -- everything then tracks wherever the cells are placed.
@@ -528,7 +684,7 @@ public class ShoppingCreaturesDialog : MonoBehaviour
 
             if (TryGetCanvasPoint(slots[i].transform.position, out Vector2 point))
             {
-                nameLabels[i].rectTransform.anchoredPosition = point + new Vector2(0f, NameOffsetY);
+                nameLabels[i].rectTransform.anchoredPosition = point + new Vector2(NameOffsetX, NameOffsetY);
             }
         }
 
@@ -549,13 +705,12 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     {
         localPoint = Vector2.zero;
 
-        Camera camera = Camera.main;
-        if (canvasRect == null || camera == null)
+        if (canvasRect == null || mainCamera == null)
         {
             return false;
         }
 
-        Vector3 screenPoint = camera.WorldToScreenPoint(worldPosition);
+        Vector3 screenPoint = mainCamera.WorldToScreenPoint(worldPosition);
         Camera uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
 
         return RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPoint, uiCamera, out localPoint);
@@ -578,8 +733,9 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         float period = IndicatorFadePeriod > 0.01f ? IndicatorFadePeriod : 2f;
         float t = 0.5f + 0.5f * Mathf.Cos(2f * Mathf.PI * alphaElapsed / period);
 
+        // Opacity is 0..1; clamp so an out-of-range field cannot blow the highlight out.
         Color color = indicatorImage.color;
-        color.a = Mathf.Lerp(IndicatorAlphaMin, IndicatorAlpha, t);
+        color.a = Mathf.Lerp(Mathf.Clamp01(IndicatorAlphaMin), Mathf.Clamp01(IndicatorAlpha), t);
         indicatorImage.color = color;
     }
 
@@ -627,6 +783,7 @@ public class ShoppingCreaturesDialog : MonoBehaviour
 
         infoDialogObject = dialogObject;
         infoDialogOpen = true;
+        SetIconsActive(false);
 
         dialog.Init(creature, infoType, _ => { }, (FDMap)null, () =>
         {
@@ -636,6 +793,7 @@ public class ShoppingCreaturesDialog : MonoBehaviour
                 infoDialogObject = null;
             }
             infoDialogOpen = false;
+            SetIconsActive(true);
         });
     }
 

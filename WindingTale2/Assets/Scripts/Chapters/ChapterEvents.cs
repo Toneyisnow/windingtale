@@ -75,5 +75,11 @@ namespace WindingTale.Chapters
                 gameMain.PushActivity(new TalkActivity(conversation, creatureId ));
             }
         }
+
+
+        internal virtual void AdjustFriendsAfterWon()
+        {
+            // By default, do nothing. Each chapter can override this to adjust the friends after winning.
+        }
     }
 }

@@ -647,12 +647,20 @@ MonoBehaviour:
   Indicator: {fileID: 7965777528781008302}
   creatureInfoDialogPrefab: {fileID: 834348201481903753, guid: 20cc618dc3898a544a9fba3982707087, type: 3}
   IconScale: 0.5
+  IconOffsetX: -2.5
+  IconOffsetY: -3.5
+  IconYaw: 13.3
+  IconDistance: 12
+  PanelDistanceBehindIcons: 6.09
+  GridViewportCenter: {x: 0.5, y: 0.34}
+  GridViewportSpacing: {x: 0.24, y: 0.15}
   NameFontSize: 28
-  NameOffsetY: -60
-  IndicatorOffsetY: 0
+  NameOffsetX: 0
+  NameOffsetY: -70
+  IndicatorOffsetY: -84.9
   IndicatorAlpha: 0.2
   IndicatorAlphaMin: 0.05
-  IndicatorFadePeriod: 2
+  IndicatorFadePeriod: 2.71
 --- !u!1 &7965777528781008302
 GameObject:
   m_ObjectHideFlags: 0

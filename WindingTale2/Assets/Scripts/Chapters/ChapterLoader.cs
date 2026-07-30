@@ -31,7 +31,7 @@ namespace WindingTale.Chapters
         //    return definition;
         //}
 
-        public static List<FDEvent> LoadEvents(GameMain gameMain, int chapterId)
+        public static ChapterEvents CreateChapter(GameMain gameMain, int chapterId)
         {
             ChapterEvents chapter = null;
             switch (chapterId)
@@ -51,7 +51,21 @@ namespace WindingTale.Chapters
                 throw new Exception("Cannot find definition for chapter " + chapterId);
             }
 
+            return chapter;
+        }
+
+
+        public static List<FDEvent> LoadEvents(GameMain gameMain, int chapterId)
+        {
+            ChapterEvents chapter = CreateChapter(gameMain, chapterId);
+
             return chapter.AllEvents;
+        }
+
+        public static void AdjustFriendsAfterWon(GameMain gameMain, int chapterId)
+        {
+            ChapterEvents chapter = CreateChapter(gameMain, chapterId);
+            chapter.AdjustFriendsAfterWon();
         }
         
     }

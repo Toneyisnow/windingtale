@@ -248,6 +248,7 @@ namespace WindingTale.Scenes.GameFieldScene
         /// </summary>
         private void EnterVillage()
         {
+            ChapterLoader.AdjustFriendsAfterWon(this, ChapterId);
             GameMapRecord mapRecord = new GameMapRecordManager().BuildRecord(this);
             GameRecord record = GameRecordManager.CreateFromMapRecord(mapRecord);
 
