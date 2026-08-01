@@ -51,6 +51,15 @@ public class VillageScene : MonoBehaviour
         public List<Vector3> Spots;
         public int SpotIndex;
         public Vector3 Spot;
+
+        /// <summary>
+        /// The village music that was playing when the shop was entered, and how far into
+        /// it -- so the walk back out resumes it where it left off rather than restarting.
+        /// The shop plays its own music in between; this is only the village's, saved and
+        /// restored around the visit. Null when the village had no music to save.
+        /// </summary>
+        public string MusicClip;
+        public float MusicTime;
     }
 
     /// <summary>Time the village takes to come up out of black, in seconds.</summary>
@@ -226,6 +235,7 @@ public class VillageScene : MonoBehaviour
         this.secretSequence = DefinitionStore.Instance.GetSecretSequenceDefinition(record.ChapterId);
 
         ShowBackground(this.villageId);
+        PlayVillageMusic(returnInfo);
         SetupCursor();
 
         if (returnInfo != null && returnInfo.Spots != null && returnInfo.Spots.Count > 0)
@@ -254,6 +264,31 @@ public class VillageScene : MonoBehaviour
     {
         AnimateCursor();
         HandleInput();
+    }
+
+    /// <summary>
+    /// Starts this village's music: the Village track of the chapter that was just won,
+    /// faded in. A chapter with no village music (chapter 1) leaves the village silent.
+    ///
+    /// Coming back out of a shop (returnInfo carries the saved village music), the same
+    /// track is resumed where it left off rather than restarted -- the shop's own music
+    /// played over the top in between. Every other entry (won into from a battle) starts
+    /// the track from the beginning.
+    /// </summary>
+    private void PlayVillageMusic(ShopReturnInfo returnInfo)
+    {
+        if (returnInfo != null && !string.IsNullOrEmpty(returnInfo.MusicClip))
+        {
+            BackgroundMusic.GetOrCreate().PlayClipByName(returnInfo.MusicClip, returnInfo.MusicTime);
+            return;
+        }
+
+        ChapterDefinition chapter = DefinitionStore.Instance.LoadChapter(Record.ChapterId);
+        string clipName = chapter != null && chapter.BackgroundMusic != null
+            ? chapter.BackgroundMusic.Village
+            : null;
+        string path = string.IsNullOrEmpty(clipName) ? null : "Audios/" + clipName;
+        BackgroundMusic.GetOrCreate().PlayClipByName(path);
     }
 
     /// <summary>
@@ -663,6 +698,10 @@ public class VillageScene : MonoBehaviour
         fader.FadeTo(1.0f, shopTransitionDuration);
         yield return LerpCameraPosition(camera, from, to, shopTransitionDuration);
 
+        // Save the village music's progress so the walk back out of the shop resumes it
+        // where it stands now, rather than restarting the track.
+        BackgroundMusic music = BackgroundMusic.GetOrCreate();
+
         GlobalVariables.Set(RecordVariableName, Record);
         GlobalVariables.Set(ShopIndexVariableName, spotIndex);
         GlobalVariables.Set(ShopReturnVariableName, new ShopReturnInfo
@@ -670,6 +709,8 @@ public class VillageScene : MonoBehaviour
             Spots = spots,
             SpotIndex = spotIndex,
             Spot = spot,
+            MusicClip = music.CurrentClipName,
+            MusicTime = music.CurrentTime,
         });
 
         SceneManager.LoadScene("ShoppingScene", LoadSceneMode.Single);

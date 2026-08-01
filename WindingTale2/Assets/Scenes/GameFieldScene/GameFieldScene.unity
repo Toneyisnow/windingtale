@@ -1650,7 +1650,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundMusic: {fileID: 8300000, guid: 7b1d86dea43064f4da156b71e493effa, type: 3}
-  fadeDuration: 1.5
+  fadeDuration: 2
 --- !u!1 &2080578391
 GameObject:
   m_ObjectHideFlags: 0

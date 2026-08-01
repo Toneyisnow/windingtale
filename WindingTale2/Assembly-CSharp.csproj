@@ -57,11 +57,13 @@
     <Compile Include="Assets\Scripts\Core\Events\FDConditionEvent.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Scripts\Core\Common\Conversation.cs" />
+    <Compile Include="Assets\Scenes\ShoppingScene\ShoppingItemsDialog.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\SkySphere.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\MovePathFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDEnemy.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\DistanceResolver.cs" />
     <Compile Include="Assets\Scripts\Core\Map\FDField.cs" />
+    <Compile Include="Assets\Scripts\Core\Definitions\BackgroundMusicDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\GameMain.cs" />
     <Compile Include="Assets\Scripts\Chapters\ChapterLoader.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
@@ -217,6 +219,7 @@
     <Compile Include="Assets\MapObjects\Blocks\Shape.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\IdleState.cs" />
     <Compile Include="Assets\Scripts\Core\Common\SingleSelectCallback.cs" />
+    <Compile Include="Assets\Scripts\UI\Utils\ItemIconHelper.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\FDMoveRange.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />

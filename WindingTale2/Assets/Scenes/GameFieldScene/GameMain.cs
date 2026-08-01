@@ -257,11 +257,46 @@ namespace WindingTale.Scenes.GameFieldScene
             QuitToScene("VillageScene");
         }
 
+        /// <summary>
+        /// Starts the battlefield's music: the chapter's Field track, the one the player's
+        /// turn runs on. This is the entry point the chapter scripts and the continue path
+        /// call to get the music going; the turn cycle then swaps it for the enemy track and
+        /// back (see onNpcTurn / onEnemyTurn / onPlayerTurn).
+        /// </summary>
         public void PlayBackgroundMusic()
         {
-            BackgroundMusic musicPlayer = FindFirstObjectByType<BackgroundMusic>();
-            musicPlayer.SetAudioClipName("Audios/Battle_2_HD_Final_V3");
-            musicPlayer.PlayMusic();
+            PlayFieldMusic();
+        }
+
+        /// <summary>The Field track, played through the player's turn.</summary>
+        private void PlayFieldMusic()
+        {
+            BackgroundMusicDefinition music = GetBackgroundMusic();
+            BackgroundMusic.GetOrCreate().PlayClipByName(ResolveAudioPath(music?.Field));
+        }
+
+        /// <summary>The Enemy track, played through the enemy's turn.</summary>
+        private void PlayEnemyMusic()
+        {
+            BackgroundMusicDefinition music = GetBackgroundMusic();
+            BackgroundMusic.GetOrCreate().PlayClipByName(ResolveAudioPath(music?.Enemy));
+        }
+
+        /// <summary>This chapter's background music config, or null if it defines none.</summary>
+        private BackgroundMusicDefinition GetBackgroundMusic()
+        {
+            ChapterDefinition chapter = DefinitionStore.Instance.LoadChapter(ChapterId);
+            return chapter != null ? chapter.BackgroundMusic : null;
+        }
+
+        /// <summary>
+        /// Turns a chapter's bare clip name ("Battle_2_HD_Final_V3") into the Resources path
+        /// under Audios; an empty name (a situation with no music) resolves to null, which
+        /// PlayClipByName reads as "stop".
+        /// </summary>
+        private static string ResolveAudioPath(string clipName)
+        {
+            return string.IsNullOrEmpty(clipName) ? null : "Audios/" + clipName;
         }
 
         public void StopBackgroundMusic()
@@ -659,6 +694,10 @@ namespace WindingTale.Scenes.GameFieldScene
 
         private void onPlayerTurn()
         {
+            // Back to the player's turn: bring the Field music back (a no-op if it is
+            // already the track playing, e.g. after a turn with no enemy music).
+            PlayFieldMusic();
+
             // Reactivate all the creatures
             gameMap.Map.Creatures.ForEach(creature =>
             {
@@ -675,6 +714,9 @@ namespace WindingTale.Scenes.GameFieldScene
 
         private void onNpcTurn()
         {
+            // The NPC turn plays in silence.
+            StopBackgroundMusic();
+
             if (gameMap.Map.Npcs.Count > 0)
             {
                 //// Start AI Handler to process the NPC turn
@@ -688,6 +730,9 @@ namespace WindingTale.Scenes.GameFieldScene
 
         private void onEnemyTurn()
         {
+            // The enemy's turn swaps in the Enemy track.
+            PlayEnemyMusic();
+
             // Reactivate all the creatures
             gameMap.Map.Creatures.ForEach(creature =>
             {

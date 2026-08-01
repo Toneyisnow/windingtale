@@ -62,6 +62,12 @@ public class ShoppingScene : MonoBehaviour
     /// </summary>
     public GameObject shoppingCreaturesDialogPrefab = null;
 
+    /// <summary>
+    /// The item picker (Buy), pushed over the home dialog when the player chooses one of the
+    /// Buy actions at an item / armor / secret shop. See ShoppingItemsDialog.
+    /// </summary>
+    public GameObject shoppingItemsDialogPrefab = null;
+
     /// <summary>The one-line notice shown after a save. See ShoppingMessageDialog.</summary>
     public GameObject shoppingMessageDialogPrefab = null;
 
@@ -101,6 +107,7 @@ public class ShoppingScene : MonoBehaviour
         record = GlobalVariables.Get<GameRecord>(RecordVariableName);
 
         ShowBackground(shopIndex);
+        PlayShopMusic(shopIndex);
 
         // The shop picture fades up out of the black the village handed over on; the home
         // dialog is only put up once that has finished, so it appears on the shop rather
@@ -232,6 +239,12 @@ public class ShoppingScene : MonoBehaviour
             case ShoppingHomeDialog.ShopAction.SellAny:
                 OpenCreaturesDialog();
                 break;
+
+            case ShoppingHomeDialog.ShopAction.BuyItem:
+            case ShoppingHomeDialog.ShopAction.BuyAmor:
+            case ShoppingHomeDialog.ShopAction.BuySecret:
+                OpenItemsDialog();
+                break;
         }
     }
 
@@ -286,6 +299,70 @@ public class ShoppingScene : MonoBehaviour
 
         dialog.Init(record, ShoppingCreaturesDialog.CreatureSelectType.All, CreatureInfoType.SelectAllItem, PopDialog);
         PushDialog(dialogObject);
+    }
+
+    /// <summary>
+    /// Opens the item picker (Buy) over the home dialog. The stock shown is the Shop.txt
+    /// column for the shop the player is standing in -- see ShopIdForBuy -- and backing out
+    /// (Esc) pops back to the home dialog through OnClosed, the same way the other pickers do.
+    /// Confirming an item reports through OnItemSelected (OnItemToBuy).
+    /// </summary>
+    private void OpenItemsDialog()
+    {
+        if (shoppingItemsDialogPrefab == null)
+        {
+            Debug.LogWarning("Shopping scene has no items dialog prefab to show.");
+            return;
+        }
+
+        int shopId = ShopIdForBuy(shopIndex);
+        if (shopId < 0)
+        {
+            Debug.LogWarning("Shopping scene: shop index " + shopIndex + " has no Buy action.");
+            return;
+        }
+
+        GameObject dialogObject = Instantiate(shoppingItemsDialogPrefab);
+        ShoppingItemsDialog dialog = dialogObject.GetComponent<ShoppingItemsDialog>();
+        if (dialog == null)
+        {
+            Debug.LogWarning("Items dialog prefab has no ShoppingItemsDialog component.");
+            Destroy(dialogObject);
+            return;
+        }
+
+        int chapterId = record != null ? record.ChapterId : 0;
+        dialog.OnClosed = PopDialog;
+        dialog.OnItemSelected = OnItemToBuy;
+        dialog.Init(chapterId, shopId);
+        PushDialog(dialogObject);
+    }
+
+    /// <summary>
+    /// The Shop.txt shop column (its ShopDefinition.ShopType id) a village shop buys from,
+    /// keyed by the spot the player entered on: the item shop (1) buys the Item column (2),
+    /// the armor shop (4) the Amor column (1), the secret shop (5) the Secret column (3). The
+    /// church (2) and bar (3) have no Buy action and never reach here, so they map to -1.
+    /// </summary>
+    private static int ShopIdForBuy(int shopIndex)
+    {
+        switch (shopIndex)
+        {
+            case 1: return 2;   // ItemShop   -> Item column
+            case 4: return 1;   // AmorShop   -> Amor column
+            case 5: return 3;   // SecretShop -> Secret column
+            default: return -1; // church / bar: no Buy
+        }
+    }
+
+    /// <summary>
+    /// A player picked an item to buy. The purchase itself -- the price, the purse, dropping
+    /// it into a creature's pack -- is not built yet; for now the choice is only logged and
+    /// the picker stays up for another pick. Esc backs out through OnClosed.
+    /// </summary>
+    private void OnItemToBuy(int itemId)
+    {
+        Debug.Log("ShoppingScene: buy item " + itemId + " (purchase flow not implemented yet).");
     }
 
     /// <summary>
@@ -425,6 +502,37 @@ public class ShoppingScene : MonoBehaviour
             {
                 dialog.SetActive(false);
             }
+        }
+    }
+
+    /// <summary>
+    /// Starts this shop's music, faded in, chosen by the spot the village entered on: the
+    /// armor and secret shops share the Amor track, the item shop the Item track, and the
+    /// bar and church each their own. Pos 0 (the way on to the next chapter) never opens a
+    /// shop, so it has no music and is left silent.
+    /// </summary>
+    private void PlayShopMusic(int shopIndex)
+    {
+        string clipName = ShopMusicName(shopIndex);
+        string path = string.IsNullOrEmpty(clipName) ? null : "Audios/" + clipName;
+        BackgroundMusic.GetOrCreate().PlayClipByName(path);
+    }
+
+    /// <summary>
+    /// The Resources/Audios clip name for each shop, keyed by the spot the cursor entered
+    /// on: item shop (1), church (2), bar (3), armor shop (4), secret shop (5). The armor
+    /// and secret shops share the Amor track. Anything else has no music.
+    /// </summary>
+    private static string ShopMusicName(int shopIndex)
+    {
+        switch (shopIndex)
+        {
+            case 1: return "Shop_Item_HD_Final_V1"; // ItemShop
+            case 2: return "Shop_Church_HD_Final";  // Church
+            case 3: return "Shop_Bar_HD_Final";     // Bar
+            case 4: return "Shop_Amor_HD_Final";    // AmorShop
+            case 5: return "Shop_Amor_HD_Final";    // SecretShop -> Amor track
+            default: return null;
         }
     }
 

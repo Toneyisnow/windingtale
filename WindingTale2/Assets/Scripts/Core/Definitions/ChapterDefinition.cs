@@ -58,6 +58,12 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        [JsonProperty(PropertyName = "BackgroundMusic")]
+        public BackgroundMusicDefinition BackgroundMusic
+        {
+            get; set;
+        }
+
         public List<CreatureDefinition> CreatureDefinitions
         {
             get; set;

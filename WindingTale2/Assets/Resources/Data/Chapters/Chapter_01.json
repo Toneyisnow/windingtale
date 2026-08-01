@@ -1,12 +1,17 @@
 {
+  "Index": 0,
+  "Width": 24,
+  "Height": 24,
   "Treasures": [
     { "Id": 1, "Type": 1, "Position": { "X": 8, "Y": 14 }, "ItemId": 101 },
     { "Id": 2, "Type": 2, "Position": { "X": 4, "Y": 13 }, "ItemId": 901 },
     { "Id": 3, "Type": 3, "Position": { "X": 1, "Y": 11 }, "ItemId": 902 }
   ],
-  "Index": 0,
-  "Width": 24,
-  "Height": 24,
+  "BackgroundMusic": {
+	  "Field": "Battle_2_HD_Final_V3",
+	  "Enemy": "Battle_Enemy_1_HD_1_Final",
+	  "Village": ""
+  },
   "DefaultTais": [
     1,
     2,

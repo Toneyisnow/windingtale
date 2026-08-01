@@ -138,6 +138,16 @@ namespace WindingTale.UI.Dialogs
         private const int MaxItemCount = 8;
         private const int MaxMagicCount = MagicColumns * MagicRows;
 
+        // The item type icon (attack / defend / usable) shown before each item's name, the
+        // same face the shop's Buy list uses (see ItemIconHelper). It is built once per item
+        // slot and parented after the name / attribute labels, so getChild(0) / (1) stay the
+        // name and attribute; the name is slid right by ItemNameShiftX to clear it. Magics
+        // keep their plain name / cost layout.
+        private const string ItemIconName = "TypeIcon";
+        private const float ItemIconSize = 24f;
+        private const float ItemIconInset = 2f;
+        private const float ItemNameShiftX = 28f;
+
         private static readonly Color SelectableTextColor = Color.white;
 
         // Softened rather than pure red: pure red on the dark panel is hard to read at the
@@ -431,6 +441,64 @@ namespace WindingTale.UI.Dialogs
         }
 
         /// <summary>
+        /// Shows the item's type icon (attack / defend / usable) before its name, the same face
+        /// the shop's Buy list uses (see ItemIconHelper). The icon is created once per slot and
+        /// reused -- the dialog is a scene object reused across opens, so a fresh one each time
+        /// would stack -- and appended after the name / attribute labels so getChild(0) / (1)
+        /// keep pointing at them.
+        /// </summary>
+        private void setupItemIcon(GameObject slot, ItemDefinition item)
+        {
+            Image icon = ensureItemIcon(slot);
+            if (icon == null)
+            {
+                return;
+            }
+
+            Sprite sprite = ItemIconHelper.LoadIcon(item);
+            icon.sprite = sprite;
+            icon.enabled = sprite != null;
+            icon.gameObject.SetActive(true);
+        }
+
+        /// <summary>
+        /// The slot's type-icon Image: built on first use at the slot's left edge, with the
+        /// name label (getChild(0)) slid right past it once so the two do not overlap, and then
+        /// found and reused on later opens. The attribute label keeps its authored place.
+        /// </summary>
+        private Image ensureItemIcon(GameObject slot)
+        {
+            Transform existing = slot.transform.Find(ItemIconName);
+            if (existing != null)
+            {
+                return existing.GetComponent<Image>();
+            }
+
+            GameObject iconObject = new GameObject(ItemIconName, typeof(RectTransform), typeof(Image));
+            RectTransform rect = iconObject.GetComponent<RectTransform>();
+            rect.SetParent(slot.transform, false);
+            rect.anchorMin = new Vector2(0f, 0.5f);
+            rect.anchorMax = new Vector2(0f, 0.5f);
+            rect.pivot = new Vector2(0f, 0.5f);
+            rect.sizeDelta = new Vector2(ItemIconSize, ItemIconSize);
+            rect.anchoredPosition = new Vector2(ItemIconInset, 0f);
+
+            Image image = iconObject.GetComponent<Image>();
+            image.raycastTarget = false;
+            image.preserveAspect = true;
+
+            RectTransform nameRect = slot.transform.GetChild(0) as RectTransform;
+            if (nameRect != null)
+            {
+                Vector2 pos = nameRect.anchoredPosition;
+                pos.x = ItemNameShiftX;
+                nameRect.anchoredPosition = pos;
+            }
+
+            return image;
+        }
+
+        /// <summary>
         /// The battlefield entry point: closes through the shared GameCanvas and reads the
         /// live battle map. A thin wrapper over the scene-independent overload below so the
         /// two paths stay in step.
@@ -524,6 +592,10 @@ namespace WindingTale.UI.Dialogs
 
                     var selectableAttr = selectable.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
                     selectableAttr.text = item.ToAttributeString();
+
+                    // The type icon (attack / defend / usable) before the name, the same face
+                    // the shop's Buy list shows.
+                    setupItemIcon(selectable, item);
 
                     setupSlot(selectable, itemIndex, isItemSelectable(itemIndex, item), selectableText, selectableAttr);
                 }
