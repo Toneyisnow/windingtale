@@ -9,7 +9,7 @@
   ],
   "BackgroundMusic": {
 	  "Field": "Battle_2_HD_Final_V3",
-	  "Enemy": "Battle_Enemy_1_HD_1_Final",
+	  "Enemy": "Battle_Enemy_Turn_1",
 	  "Village": ""
   },
   "DefaultTais": [

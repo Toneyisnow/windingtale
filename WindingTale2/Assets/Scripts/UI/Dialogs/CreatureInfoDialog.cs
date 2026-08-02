@@ -144,9 +144,9 @@ namespace WindingTale.UI.Dialogs
         // name and attribute; the name is slid right by ItemNameShiftX to clear it. Magics
         // keep their plain name / cost layout.
         private const string ItemIconName = "TypeIcon";
-        private const float ItemIconSize = 24f;
-        private const float ItemIconInset = 2f;
-        private const float ItemNameShiftX = 28f;
+        private const float ItemIconSize = 32f;
+        private const float ItemIconInset = 0f;
+        private const float ItemNameShiftX = 36f;
 
         private static readonly Color SelectableTextColor = Color.white;
 
