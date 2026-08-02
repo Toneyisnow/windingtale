@@ -46,6 +46,12 @@ public class ShoppingScene : MonoBehaviour
     /// <summary>CommonStrings "Message-62" shown when a creature's pack is full: "{名字}带不动了！".</summary>
     private const int ItemsFullMessageId = 62;
 
+    /// <summary>CommonStrings "Message-58" that opens the Give flow: "谁的东西呢？" (whose item?).</summary>
+    private const int GiveFromMessageId = 58;
+
+    /// <summary>CommonStrings "Message-59" asked before picking the recipient: "要给谁呢？" (give to whom?).</summary>
+    private const int GiveToMessageId = 59;
+
     /// <summary>CommonStrings "Confirm-54" asked before a buy: "这个{名字}，#{价格}元，要不要啊？".</summary>
     private const int BuyConfirmId = 54;
 
@@ -142,6 +148,14 @@ public class ShoppingScene : MonoBehaviour
     /// </summary>
     private CreatureMapRecord pendingBuyFriend = null;
 
+    /// <summary>
+    /// The Give flow's chosen giver and the index of the item being given from its pack,
+    /// carried from the first creature picker (whose item?) to the second (give to whom?).
+    /// </summary>
+    private CreatureMapRecord pendingGiveFriend = null;
+
+    private int pendingGiveItemIndex = -1;
+
     void Start()
     {
         shopIndex = GlobalVariables.Get<int>(ShopIndexVariableName);
@@ -189,6 +203,19 @@ public class ShoppingScene : MonoBehaviour
 
         RefreshMoneyBar();
         moneyBarObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// Tucks the purse read-out out of sight while the CreatureInfoDialog is up -- the bar is a
+    /// screen-space overlay that would otherwise draw over that dialog, so it is hidden rather
+    /// than left in front and shown again (ShowMoneyBar) when the dialog closes.
+    /// </summary>
+    private void HideMoneyBar()
+    {
+        if (moneyBarObject != null)
+        {
+            moneyBarObject.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -329,6 +356,18 @@ public class ShoppingScene : MonoBehaviour
     }
 
     /// <summary>
+    /// Pops every dialog above the home dialog, landing back on it. The Give flow uses this to
+    /// collapse its whole picker chain before restarting from the top (see RestartGiveFlow).
+    /// </summary>
+    private void PopToHome()
+    {
+        while (dialogStack.Count > 1)
+        {
+            PopDialog();
+        }
+    }
+
+    /// <summary>
     /// The home dialog's action buttons land here. Only the bar's Save and Load open a
     /// further dialog; the rest are not wired up yet.
     /// </summary>
@@ -346,6 +385,14 @@ public class ShoppingScene : MonoBehaviour
 
             case ShoppingHomeDialog.ShopAction.SellAny:
                 OpenCreaturesDialog();
+                break;
+
+            case ShoppingHomeDialog.ShopAction.Give:
+                OpenGiveFlow();
+                break;
+
+            case ShoppingHomeDialog.ShopAction.Equip:
+                OpenEquipCreaturesDialog();
                 break;
 
             case ShoppingHomeDialog.ShopAction.BuyItem:
@@ -405,6 +452,8 @@ public class ShoppingScene : MonoBehaviour
             return;
         }
 
+        dialog.OnInfoDialogOpened = HideMoneyBar;
+        dialog.OnInfoDialogClosed = ShowMoneyBar;
         dialog.Init(record, ShoppingCreaturesDialog.CreatureSelectType.All, CreatureInfoType.SelectAllItem, PopDialog);
         PushDialog(dialogObject);
     }
@@ -683,6 +732,233 @@ public class ShoppingScene : MonoBehaviour
     }
 
     /// <summary>
+    /// The Give flow: hand one creature's item to another. It opens on "谁的东西呢？" (Message-58)
+    /// leading into the giver picker; a giver and one of its items chosen there leads on through
+    /// "要给谁呢？" (Message-59) to the recipient picker; and the item is moved across if the
+    /// recipient has room, or "{名字}带不动了！" (Message-62) is shown if not. Every "back to the
+    /// start" branch -- backing out of the recipient picker, or a completed give -- re-enters
+    /// here, so Message-58 is always shown afresh (see RestartGiveFlow). Backing out of the
+    /// giver picker leaves the flow entirely, back to the home dialog.
+    /// </summary>
+    private void OpenGiveFlow()
+    {
+        pendingGiveFriend = null;
+        pendingGiveItemIndex = -1;
+
+        // "谁的东西呢？" -> the giver picker.
+        OpenMessageDialog(GiveFromMessageId, OpenGiveFromCreaturesDialog);
+    }
+
+    /// <summary>
+    /// Collapses the Give flow's picker chain and reopens it from Message-58 -- what "back to
+    /// the start" means, both for backing out of the recipient picker and after a give is done.
+    /// </summary>
+    private void RestartGiveFlow()
+    {
+        PopToHome();
+        OpenGiveFlow();
+    }
+
+    /// <summary>
+    /// Opens the "whose item?" picker (Give). Confirming a creature opens the info dialog to
+    /// pick one of its items, reported back through OnGiveItemChosen; backing out (Esc) pops
+    /// this picker -- Message-58 has already popped itself -- to land back on the home dialog.
+    /// </summary>
+    private void OpenGiveFromCreaturesDialog()
+    {
+        if (shoppingCreaturesDialogPrefab == null)
+        {
+            Debug.LogWarning("Shopping scene has no creatures dialog prefab to show.");
+            return;
+        }
+
+        GameObject dialogObject = Instantiate(shoppingCreaturesDialogPrefab);
+        ShoppingCreaturesDialog dialog = dialogObject.GetComponent<ShoppingCreaturesDialog>();
+        if (dialog == null)
+        {
+            Debug.LogWarning("Creatures dialog prefab has no ShoppingCreaturesDialog component.");
+            Destroy(dialogObject);
+            return;
+        }
+
+        dialog.OnInfoDialogOpened = HideMoneyBar;
+        dialog.OnInfoDialogClosed = ShowMoneyBar;
+        dialog.Init(record, ShoppingCreaturesDialog.CreatureSelectType.All, CreatureInfoType.SelectAllItem,
+            PopDialog, null, OnGiveItemChosen);
+        PushDialog(dialogObject);
+    }
+
+    /// <summary>
+    /// The giver and the item to give are settled (the info dialog reported an item index).
+    /// They are kept for the move, then "要给谁呢？" (Message-59) leads into the recipient picker.
+    /// </summary>
+    private void OnGiveItemChosen(FDCreature creature, int itemIndex)
+    {
+        CreatureMapRecord giver = FindFriendById(creature.Id);
+        if (giver == null)
+        {
+            Debug.LogWarning("ShoppingScene: no party record for creature " + creature.Id);
+            return;
+        }
+
+        pendingGiveFriend = giver;
+        pendingGiveItemIndex = itemIndex;
+
+        // "要给谁呢？" -> the recipient picker.
+        OpenMessageDialog(GiveToMessageId, OpenGiveToCreaturesDialog);
+    }
+
+    /// <summary>
+    /// Opens the "give to whom?" picker (Give). Confirming a creature reports it straight back
+    /// through OnGiveRecipientChosen (no item pick this time); backing out (Esc) restarts the
+    /// Give flow at Message-58.
+    /// </summary>
+    private void OpenGiveToCreaturesDialog()
+    {
+        if (shoppingCreaturesDialogPrefab == null)
+        {
+            Debug.LogWarning("Shopping scene has no creatures dialog prefab to show.");
+            return;
+        }
+
+        GameObject dialogObject = Instantiate(shoppingCreaturesDialogPrefab);
+        ShoppingCreaturesDialog dialog = dialogObject.GetComponent<ShoppingCreaturesDialog>();
+        if (dialog == null)
+        {
+            Debug.LogWarning("Creatures dialog prefab has no ShoppingCreaturesDialog component.");
+            Destroy(dialogObject);
+            return;
+        }
+
+        dialog.Init(record, ShoppingCreaturesDialog.CreatureSelectType.All, CreatureInfoType.SelectAllItem,
+            RestartGiveFlow, OnGiveRecipientChosen);
+        PushDialog(dialogObject);
+    }
+
+    /// <summary>
+    /// The player chose who receives the pending item. A full pack takes nothing: the
+    /// "{名字}带不动了！" notice is shown over the picker (any key pops back to it) and no move is
+    /// made. Otherwise the item is moved across and the Give flow restarts at Message-58.
+    /// </summary>
+    private void OnGiveRecipientChosen(FDCreature creature)
+    {
+        if (pendingGiveFriend == null || creature == null)
+        {
+            return;
+        }
+
+        CreatureMapRecord recipient = FindFriendById(creature.Id);
+        if (recipient == null)
+        {
+            Debug.LogWarning("ShoppingScene: no party record for creature " + creature.Id);
+            return;
+        }
+
+        // A record with no pack list yet would leave the live creature's Items null, which
+        // AddItem cannot append to; give it an empty list before the live creature shares it.
+        if (recipient.ItemIds == null)
+        {
+            recipient.ItemIds = new List<int>();
+        }
+
+        FDCreature recipientLive = GameMapRecordManager.CreateCreatureFromRecord(recipient);
+        if (recipientLive.IsItemsFull())
+        {
+            // "{名字}带不动了！" -- shown over the recipient picker, which any key pops back to.
+            string name = LocalizationManager.GetCreatureString(recipient.DefinitionId).GetLocalizedString();
+            OpenMessageDialog(FDMessage.Create(FDMessage.MessageTypes.Information, ItemsFullMessageId, 0, 0, name));
+            return;
+        }
+
+        ExecuteGive(pendingGiveFriend, pendingGiveItemIndex, recipient);
+        RestartGiveFlow();
+    }
+
+    /// <summary>
+    /// Moves the pending item from the giver's pack to the recipient's: it is pulled from the
+    /// giver at pendingGiveItemIndex and appended to the recipient. Both packs are the records'
+    /// own lists (CreateCreatureFromRecord shares them) and the shifted equip indices are
+    /// written back, so the move survives the trip back to the village. The recipient has
+    /// already been checked to have room.
+    /// </summary>
+    private void ExecuteGive(CreatureMapRecord giver, int itemIndex, CreatureMapRecord recipient)
+    {
+        if (giver == null || recipient == null)
+        {
+            return;
+        }
+
+        FDCreature giverLive = GameMapRecordManager.CreateCreatureFromRecord(giver);
+        int itemId = giverLive.GetItemAt(itemIndex);
+        if (itemId < 0)
+        {
+            Debug.LogWarning("ShoppingScene: give item index " + itemIndex + " is out of range.");
+            return;
+        }
+
+        giverLive.RemoveItemAt(itemIndex);
+        WriteBackItems(giver, giverLive);
+
+        FDCreature recipientLive = GameMapRecordManager.CreateCreatureFromRecord(recipient);
+        recipientLive.AddItem(itemId);
+        WriteBackItems(recipient, recipientLive);
+    }
+
+    /// <summary>
+    /// The Equip flow: opens the creature picker; a chosen creature opens the info dialog in
+    /// its equip role (CreatureInfoType.SelectEquipItem). Picking an item there equips it and
+    /// keeps the info dialog open on the now-updated creature (see the picker's
+    /// reopenInfoAfterSelect path and OnEquipItemSelected), so the player can re-equip in place;
+    /// Esc backs out of the info dialog to the picker, and Esc again to the home dialog.
+    /// </summary>
+    private void OpenEquipCreaturesDialog()
+    {
+        if (shoppingCreaturesDialogPrefab == null)
+        {
+            Debug.LogWarning("Shopping scene has no creatures dialog prefab to show.");
+            return;
+        }
+
+        GameObject dialogObject = Instantiate(shoppingCreaturesDialogPrefab);
+        ShoppingCreaturesDialog dialog = dialogObject.GetComponent<ShoppingCreaturesDialog>();
+        if (dialog == null)
+        {
+            Debug.LogWarning("Creatures dialog prefab has no ShoppingCreaturesDialog component.");
+            Destroy(dialogObject);
+            return;
+        }
+
+        dialog.OnInfoDialogOpened = HideMoneyBar;
+        dialog.OnInfoDialogClosed = ShowMoneyBar;
+        dialog.Init(record, ShoppingCreaturesDialog.CreatureSelectType.All, CreatureInfoType.SelectEquipItem,
+            PopDialog, null, OnEquipItemSelected, reopenInfoAfterSelect: true);
+        PushDialog(dialogObject);
+    }
+
+    /// <summary>
+    /// Equips the item the info dialog picked on the creature shown there, and writes the moved
+    /// equip indices back to that creature's party record so the change survives the trip back
+    /// to the village. The info dialog only lets equipment that is not already worn be picked,
+    /// so the index is always a valid, un-equipped equippable item. The picker reopens the
+    /// info dialog after this, leaving the player on the equip page.
+    /// </summary>
+    private void OnEquipItemSelected(FDCreature creature, int itemIndex)
+    {
+        if (creature == null)
+        {
+            return;
+        }
+
+        creature.EquipItemAt(itemIndex);
+
+        CreatureMapRecord friend = FindFriendById(creature.Id);
+        if (friend != null)
+        {
+            WriteBackItems(friend, creature);
+        }
+    }
+
+    /// <summary>
     /// The slot picker has closed on a choice. It is popped first, whichever way this goes;
     /// a negative slot means the player backed out and nothing more happens. Otherwise the
     /// save flow writes the record and shows the "saved" notice, and the load flow reads the
@@ -754,6 +1030,28 @@ public class ShoppingScene : MonoBehaviour
         }
 
         dialog.Init(messageId, PopDialog);
+        PushDialog(dialog.gameObject);
+    }
+
+    /// <summary>
+    /// Pushes a one-line notice that, on the first key, pops itself and then runs
+    /// <paramref name="onDismissed"/> -- a prompt that leads straight into the dialog which
+    /// follows it, the way the Give flow's "谁的东西呢？" leads into its picker. The plain
+    /// OpenMessageDialog only pops back to whatever pushed it.
+    /// </summary>
+    private void OpenMessageDialog(int messageId, System.Action onDismissed)
+    {
+        ShoppingMessageDialog dialog = InstantiateMessageDialog();
+        if (dialog == null)
+        {
+            return;
+        }
+
+        dialog.Init(messageId, () =>
+        {
+            PopDialog();
+            onDismissed?.Invoke();
+        });
         PushDialog(dialog.gameObject);
     }
 

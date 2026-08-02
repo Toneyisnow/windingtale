@@ -161,6 +161,16 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     /// </summary>
     public Action OnClosed = null;
 
+    /// <summary>
+    /// Raised when the nested CreatureInfoDialog opens and, again, when it finally closes back
+    /// to the picker (not across an Equip reopen, which stays on the info page). The shop uses
+    /// this to pull its money-bar HUD behind the info dialog while it is up -- the bar is a
+    /// screen-space overlay that would otherwise draw over the dialog.
+    /// </summary>
+    public Action OnInfoDialogOpened = null;
+
+    public Action OnInfoDialogClosed = null;
+
     // Nine cells to a page, a 3 x 3 grid walked row-major.
     private const int Columns = 3;
     private const int Rows = 3;
@@ -188,6 +198,19 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     // opening the info dialog, so the shop can hand its bought item to that creature. When
     // null (the Sell flow) a confirm opens the info dialog the old way.
     private Action<FDCreature> onCreatureConfirmed = null;
+
+    // Set when a confirmed cell should open the info dialog to pick one of that creature's
+    // items -- the Give flow's "whose item?" step and the Equip flow both use this. The chosen
+    // creature and item index are reported here; only an actual pick fires it, backing out of
+    // the info dialog just returns to the picker. Left null the info dialog's selection is
+    // ignored (the Sell flow).
+    private Action<FDCreature, int> onItemSelected = null;
+
+    // Set with onItemSelected: when true the info dialog is reopened for the same creature
+    // after each pick, so the player stays on the item page and can act again (Equip re-equips
+    // in place). When false the pick closes the info dialog back to the picker (Give reads the
+    // one item and moves on).
+    private bool reopenInfoAfterSelect = false;
 
     // Per-cell built pieces, rebuilt each time the page turns: the three idle-frame holders
     // whose visibility AnimateIcons cycles, and the world-space name label, both parented
@@ -235,12 +258,22 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     /// "pick who gets it" role: a confirmed cell reports that creature here instead of opening
     /// the info dialog, and <paramref name="dialogType"/> is then unused. Left null (the Sell
     /// flow) a confirm opens the info dialog the old way.
+    ///
+    /// <paramref name="onItemSelected"/> switches the picker into a "pick a creature, then one
+    /// of its items" role (the Give flow's "whose item?" step, and the Equip flow): a confirmed
+    /// cell opens the info dialog (of <paramref name="dialogType"/>) to pick an item, and the
+    /// creature and chosen item index are reported here. It is only consulted when
+    /// <paramref name="onCreatureConfirmed"/> is null. With <paramref name="reopenInfoAfterSelect"/>
+    /// the info dialog reopens after each pick so the player stays on the item page (Equip);
+    /// without it the pick closes back to the picker (Give reads the one item and moves on).
     /// </summary>
-    public void Init(GameRecord record, CreatureSelectType creatureType, CreatureInfoType dialogType, Action onClosed, Action<FDCreature> onCreatureConfirmed = null)
+    public void Init(GameRecord record, CreatureSelectType creatureType, CreatureInfoType dialogType, Action onClosed, Action<FDCreature> onCreatureConfirmed = null, Action<FDCreature, int> onItemSelected = null, bool reopenInfoAfterSelect = false)
     {
         this.infoType = dialogType;
         this.OnClosed = onClosed;
         this.onCreatureConfirmed = onCreatureConfirmed;
+        this.onItemSelected = onItemSelected;
+        this.reopenInfoAfterSelect = reopenInfoAfterSelect;
 
         mainCamera = Camera.main;
 
@@ -811,7 +844,8 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         FDCreature creature = creatures[creatureIndex];
 
         // Buy flow: hand the chosen creature back to the shop, which drops the bought item
-        // into its pack. Sell flow (no callback): open the info dialog as before.
+        // into its pack. Sell / Give / Equip (no creature callback): open the info dialog --
+        // Give and Equip read back which item was picked (onItemSelected), Sell ignores it.
         if (onCreatureConfirmed != null)
         {
             onCreatureConfirmed(creature);
@@ -857,16 +891,39 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         infoDialogObject = dialogObject;
         infoDialogOpen = true;
         SetGridActive(false);
+        OnInfoDialogOpened?.Invoke();
 
-        dialog.Init(creature, infoType, _ => { }, (FDMap)null, () =>
+        // Report the creature and the item it picked (index >= 0) back to the shop. Equip
+        // (reopenInfoAfterSelect) equips it and reopens this dialog so the player stays on the
+        // item page; Give reads the one item and lets the shop move on; a cancel (index -1)
+        // falls through and resumes the picker. Sell (no callback): the selection is ignored.
+        bool reopen = false;
+        dialog.Init(creature, infoType, selectedItemIndex =>
+        {
+            if (onItemSelected != null && selectedItemIndex >= 0)
+            {
+                onItemSelected(creature, selectedItemIndex);
+                reopen = reopenInfoAfterSelect;
+            }
+        }, (FDMap)null, () =>
         {
             if (infoDialogObject != null)
             {
                 Destroy(infoDialogObject);
                 infoDialogObject = null;
             }
+
+            // Equip: reopen for the same, now-updated creature -- the player stays on the item
+            // page rather than falling back to the picker, and the money bar stays behind it.
+            if (reopen)
+            {
+                OpenInfoDialog(creature);
+                return;
+            }
+
             infoDialogOpen = false;
             SetGridActive(true);
+            OnInfoDialogClosed?.Invoke();
         });
     }
 
