@@ -184,6 +184,11 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     // Which info dialog this picker opens on a confirm.
     private CreatureInfoType infoType = CreatureInfoType.View;
 
+    // Set in the Buy flow: confirming a cell reports the chosen creature here rather than
+    // opening the info dialog, so the shop can hand its bought item to that creature. When
+    // null (the Sell flow) a confirm opens the info dialog the old way.
+    private Action<FDCreature> onCreatureConfirmed = null;
+
     // Per-cell built pieces, rebuilt each time the page turns: the three idle-frame holders
     // whose visibility AnimateIcons cycles, and the world-space name label, both parented
     // under the slot so a cell is one GameObject carrying everything it shows.
@@ -225,11 +230,17 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     /// Builds the picker over the given party slice. <paramref name="dialogType"/> is the
     /// CreatureInfoDialog kind a confirmed cell opens (Sell uses SelectAllItem), and
     /// <paramref name="onClosed"/> is raised when the player backs out.
+    ///
+    /// <paramref name="onCreatureConfirmed"/> switches the picker into the Buy flow's
+    /// "pick who gets it" role: a confirmed cell reports that creature here instead of opening
+    /// the info dialog, and <paramref name="dialogType"/> is then unused. Left null (the Sell
+    /// flow) a confirm opens the info dialog the old way.
     /// </summary>
-    public void Init(GameRecord record, CreatureSelectType creatureType, CreatureInfoType dialogType, Action onClosed)
+    public void Init(GameRecord record, CreatureSelectType creatureType, CreatureInfoType dialogType, Action onClosed, Action<FDCreature> onCreatureConfirmed = null)
     {
         this.infoType = dialogType;
         this.OnClosed = onClosed;
+        this.onCreatureConfirmed = onCreatureConfirmed;
 
         mainCamera = Camera.main;
 
@@ -797,7 +808,18 @@ public class ShoppingCreaturesDialog : MonoBehaviour
             return;
         }
 
-        OpenInfoDialog(creatures[creatureIndex]);
+        FDCreature creature = creatures[creatureIndex];
+
+        // Buy flow: hand the chosen creature back to the shop, which drops the bought item
+        // into its pack. Sell flow (no callback): open the info dialog as before.
+        if (onCreatureConfirmed != null)
+        {
+            onCreatureConfirmed(creature);
+        }
+        else
+        {
+            OpenInfoDialog(creature);
+        }
     }
 
     private void Cancel()

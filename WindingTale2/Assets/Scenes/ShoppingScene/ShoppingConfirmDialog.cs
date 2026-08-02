@@ -2,12 +2,17 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using WindingTale.Core.Common;
 
 /// <summary>
 /// A yes / no question pushed over the shop's dialog stack -- "确定要读取游戏吗？" before a
 /// load, for one. It shows a single CommonStrings "Confirm-NN" line and a Yes / No pair;
 /// Left / Right move between them, Space / Enter answers with whichever is selected. The
 /// answer goes back through onSelected(true|false); the shop scene decides what it means.
+///
+/// Some questions carry parameters -- "这个{StrParam1}，#{IntParam1}元，要不要啊？" names the
+/// item and its price when buying -- so the FDMessage overload resolves the "Confirm-NN" line
+/// with its arguments filled in, the same way the field dialogs do.
 /// </summary>
 public class ShoppingConfirmDialog : MonoBehaviour
 {
@@ -44,10 +49,25 @@ public class ShoppingConfirmDialog : MonoBehaviour
     /// </summary>
     public void Init(int confirmId, Action<bool> onSelected)
     {
+        Init(LocalizationManager.GetConfirmString(confirmId).GetLocalizedString(), onSelected);
+    }
+
+    /// <summary>
+    /// Shows a "Confirm-NN" line with its parameters filled in ({StrParam1}, {IntParam1}) and
+    /// a Yes / No pair -- for the questions the shop's Buy flow raises, whose text names the
+    /// item and its price. onSelected fires once, on the first Space / Enter after this frame.
+    /// </summary>
+    public void Init(FDMessage message, Action<bool> onSelected)
+    {
+        Init(LocalizationManager.GetFDMessageString(message).GetLocalizedString(), onSelected);
+    }
+
+    private void Init(string messageText, Action<bool> onSelected)
+    {
         this.OnSelected = onSelected;
 
         CaptureButtonBaseY();
-        ShowMessage(confirmId);
+        ShowText(messageText);
         SetButtonLabel(YesButton, "是");
         SetButtonLabel(NoButton, "否");
         WireButtonClicks();
@@ -184,11 +204,11 @@ public class ShoppingConfirmDialog : MonoBehaviour
     }
 
     /// <summary>
-    /// Resolves the "Confirm-NN" line and drops it on, in the Chinese message font -- the
-    /// whole FZB_Message font asset, as the other shop dialogs do, since the prefab ships
-    /// with LiberationSans and no Chinese glyphs.
+    /// Drops the resolved line on, in the Chinese message font -- the whole FZB_Message font
+    /// asset, as the other shop dialogs do, since the prefab ships with LiberationSans and no
+    /// Chinese glyphs.
     /// </summary>
-    private void ShowMessage(int confirmId)
+    private void ShowText(string text)
     {
         TextMeshProUGUI textMesh = MessageText != null ? MessageText.GetComponent<TextMeshProUGUI>() : null;
         if (textMesh == null)
@@ -203,8 +223,7 @@ public class ShoppingConfirmDialog : MonoBehaviour
         }
 
         // '#' is the source line-break marker, same as the field dialogs use.
-        string text = LocalizationManager.GetConfirmString(confirmId).GetLocalizedString().Replace("#", "\n");
-        textMesh.text = text;
+        textMesh.text = text.Replace("#", "\n");
         textMesh.ForceMeshUpdate();
     }
 }

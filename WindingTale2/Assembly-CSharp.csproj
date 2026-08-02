@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Chapters\ChapterLoader.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureRecovering.cs" />
+    <Compile Include="Assets\Scenes\ShoppingScene\BoughtItemAnimationDialog.cs" />
     <Compile Include="Assets\Scenes\GameBattleScene\BattleCameraIntro.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuSystemState.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpDefinition.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\TreasureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Map\FDMap.cs" />
     <Compile Include="Assets\Scenes\ShoppingScene\ShoppingHomeDialog.cs" />
+    <Compile Include="Assets\Scenes\ShoppingScene\MoneyBar.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
     <Compile Include="Assets\MapObjects\Cursors\Cursor.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\GameCanvas.cs" />
