@@ -13,16 +13,17 @@ namespace WindingTale.Core.Files
     public class UserSettings
     {
         /// <summary>
-        /// Chosen window/backbuffer size. 0x0 means "never chosen" -- the game keeps the
-        /// display's native resolution on first run rather than forcing a fixed size.
+        /// Chosen window/backbuffer size. Defaults to 1280x768 so the game comes up windowed
+        /// at that size on first run; a 0x0 value (from an older saved file) still means
+        /// "never chosen" and keeps the display's native resolution.
         /// </summary>
-        public int ScreenWidth { get; set; } = 0;
-        public int ScreenHeight { get; set; } = 0;
+        public int ScreenWidth { get; set; } = 1280;
+        public int ScreenHeight { get; set; } = 768;
 
         /// <summary>
-        /// Fullscreen vs. windowed. Defaults to fullscreen, the usual first-run expectation
-        /// on both PC and tablet.
+        /// Fullscreen vs. windowed. Defaults to windowed, matching the fixed 1280x768 window
+        /// the desktop build ships with.
         /// </summary>
-        public bool IsFullScreen { get; set; } = true;
+        public bool IsFullScreen { get; set; } = false;
     }
 }

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Assets\codeandweb.com\Editor\UIImageSetSizeAndPivot.cs" />
     <Compile Include="Assets\codeandweb.com\Editor\SpritesheetImporter.cs" />
+    <Compile Include="Assets\Editor\WindowsBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Lib\Editor\Localization\cm-help.zh-Hans.txt" />

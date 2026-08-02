@@ -342,6 +342,7 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_15_ConversationId.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-26.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_04_Creature.txt" />
+    <None Include="Assets\AddressableAssetsData\link.xml" />
     <None Include="Assets\TextMesh Pro\Shaders\SDFFunctions.hlsl" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_25_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_09_ConversationId.txt" />
