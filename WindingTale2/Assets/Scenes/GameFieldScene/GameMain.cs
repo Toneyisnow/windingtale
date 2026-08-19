@@ -69,6 +69,17 @@ namespace WindingTale.Scenes.GameFieldScene
             get { return (gameMap != null && gameMap.Map != null) ? gameMap.Map.ChapterId : chapterId; }
         }
 
+        /// <summary>
+        /// The party that walked in from the village, as the last won battle and the shops
+        /// left it. The chapter's own script decides who takes the field; whoever it spawns
+        /// is restored from this rather than built from the definition, so levels, items,
+        /// magic and experience carry across chapters. See LoadGame.
+        ///
+        /// Null for a battle nobody walked into -- a New Game, or the scene opened on its
+        /// own -- and for a resumed save, whose creatures come from the save itself.
+        /// </summary>
+        public GameRecord PartyRecord { get; private set; }
+
         #endregion
 
         private int chapterId = 0;
@@ -99,7 +110,9 @@ namespace WindingTale.Scenes.GameFieldScene
             }
             else
             {
-                StartChapter(1);
+                // The village hands its party over on GlobalVariables, the same key the
+                // won battle handed it to the village on. A New Game has none.
+                LoadGame(GlobalVariables.Take<GameRecord>(VillageScene.RecordVariableName));
             }
         }
 
@@ -128,7 +141,7 @@ namespace WindingTale.Scenes.GameFieldScene
                 // sending us here, so this means the file went missing in between. Fall
                 // back to a fresh chapter 1.
                 Debug.LogWarning("No save file to continue from; starting chapter 1 instead.");
-                StartChapter(1);
+                LoadGame(null);
                 return;
             }
 
@@ -250,7 +263,7 @@ namespace WindingTale.Scenes.GameFieldScene
         {
             ChapterLoader.AdjustFriendsAfterWon(this, ChapterId);
             GameMapRecord mapRecord = new GameMapRecordManager().BuildRecord(this);
-            GameRecord record = GameRecordManager.CreateFromMapRecord(mapRecord);
+            GameRecord record = GameRecordManager.CreateFromMapRecord(mapRecord, PartyRecord);
 
             GlobalVariables.Set(VillageScene.RecordVariableName, record);
 
@@ -590,11 +603,53 @@ namespace WindingTale.Scenes.GameFieldScene
             eventHandler = new EventHandler(chapterEvents, this);
         }
 
-        private void StartChapter(int chapterId)
+        /// <summary>
+        /// Starts a chapter from its beginning, with the party the village handed over.
+        /// The other way into a battle is ContinueFromRecord, which resumes a saved one
+        /// instead; this one always begins at turn 1 and lets the chapter script play.
+        ///
+        /// The record is what the party carries between chapters -- levels, items, magic,
+        /// experience and the purse. It is not laid over the map here: a chapter decides
+        /// for itself who takes the field and where, so each friend is restored from the
+        /// record at the moment the chapter's script spawns it (ChapterEvents.AddCreatureToMap).
+        /// The purse has nowhere else to be applied, so it is applied here.
+        ///
+        /// A null record -- a New Game, or the field scene opened on its own -- starts
+        /// everyone from their definitions, which is where chapter 1 begins from anyway.
+        /// </summary>
+        public void LoadGame(GameRecord record)
         {
-            LoadChapter(chapterId);
+            this.PartyRecord = record;
+
+            LoadChapter(ResolveChapterId(record));
+
+            if (record != null)
+            {
+                gameMap.Map.TotalMoney = record.TotalMoney;
+            }
 
             onKickOff();
+        }
+
+        /// <summary>
+        /// Which chapter LoadGame opens: the party's own, if it walked in with one -- the
+        /// won battle already advanced it, so it names the chapter to play, not the one
+        /// just finished. Otherwise the chapter handed over on GlobalVariables (the title's
+        /// New Game sets 1), and failing that the first.
+        ///
+        /// The variable is taken whether it is used or not, so a stale one cannot outlive
+        /// the load it was set for.
+        /// </summary>
+        private static int ResolveChapterId(GameRecord record)
+        {
+            int handedOverChapterId = GlobalVariables.Take<int>(GameFiledSceneParams.ChapterIdVariableName);
+
+            if (record != null && record.ChapterId > 0)
+            {
+                return record.ChapterId;
+            }
+
+            return handedOverChapterId > 0 ? handedOverChapterId : 1;
         }
 
         private void onKickOff()

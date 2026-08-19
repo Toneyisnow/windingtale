@@ -14,6 +14,10 @@ Model space (see references/formats.md):
     z  0..H-1   up
 
 Colours are the palette entries the chapter 02 artwork actually resolves to.
+
+Heights are written at the scale the 2D art implies and squashed on the way out
+-- see BODY_SCALE / ROOF_SCALE. Only z is touched, so the footprints, and with
+them the cleaned map, are unaffected by retuning them.
 """
 
 import os
@@ -33,6 +37,28 @@ GLASS = voxlib.palette_index((196, 84, 28))         # stained glass
 CROSS = voxlib.palette_index((232, 232, 240))
 
 SHELL = 4          # wall / roof thickness in voxels
+
+# The churches were first built at the height the 2D art implies, which reads as
+# a tower once they stand up on the board next to 40-voxel tiles. Everything
+# below the eaves is squashed to half, the roof pitch to a third. The numbers in
+# the builders below are still the original, art-derived ones -- squashing
+# happens in one place, so the models stay readable as descriptions of the
+# buildings and the ratios can be retuned by editing these two constants.
+BODY_SCALE = 1.0 / 2      # plinth + walls + everything standing on them
+ROOF_SCALE = 1.0 / 3      # eaves -> ridge
+
+
+def squash(z, wall_top):
+    """Original z -> squashed z, for a feature on a wing with this wall top.
+
+    Piecewise: below the eaves it is the body scale, above it the roof scale, so
+    a door keeps sitting on the ground and a rose window keeps sitting in the
+    gable instead of drifting through the roof.
+    """
+    body = int(round(wall_top * BODY_SCALE))
+    if z <= wall_top:
+        return int(round(z * BODY_SCALE))
+    return body + int(round((z - wall_top) * ROOF_SCALE))
 
 
 class Model(object):
@@ -61,6 +87,20 @@ class Model(object):
                             z < z0 + SHELL or z > z1 - SHELL):
                         continue
                     self.set(x, y, z, c)
+
+    def require_wall(self, x, y, z, what):
+        """Fail loudly when a door or window is placed off the building.
+
+        Openings are painted onto a facade, so if there is no geometry at the
+        spot they are asked for they end up hanging in mid-air next to the
+        house -- which is exactly what happened to blue_house_1's right-hand
+        window, and it is invisible in every check except looking at it.
+        """
+        if (x, y, z) not in self.v:
+            raise AssertionError(
+                '%s at x=%d y=%d z=%d has no wall behind it: it would float '
+                'beside the building. Move it onto a wing, or build the wing '
+                'before the opening.' % (what, x, y, z))
 
     def carve(self, x0, x1, y0, y1, z0, z1):
         for x in range(x0, x1 + 1):
@@ -107,27 +147,35 @@ def wing(m, x0, x1, y0, y1, wall_top, ridge_top, plinth=6):
 
     The ridge sits over the wing's centre line in x, so the gable triangle
     faces the viewer at y = y0 -- which is how the 2D art draws them.
+
+    ``wall_top`` and ``ridge_top`` are the original art heights; the wing is
+    built at the squashed ones. Only z is scaled -- the footprint, the shell
+    thickness and the eave overhang are unchanged.
     """
+    base = max(SHELL, squash(plinth, wall_top))
+    top_of_wall = squash(wall_top, wall_top)
+    top_of_ridge = squash(ridge_top, wall_top)
+
     # plinth + walls
-    m.box(x0, x1, y0, y1, 0, plinth - 1, PLINTH)
-    m.box(x0, x1, y0, y1, plinth, wall_top, WALL)
+    m.box(x0, x1, y0, y1, 0, base - 1, PLINTH)
+    m.box(x0, x1, y0, y1, base, top_of_wall, WALL)
     # shade the left third of every wall face, like the art does
     for x in range(x0, x0 + (x1 - x0) // 3):
         for y in range(y0, y1 + 1):
-            for z in range(plinth, wall_top + 1):
+            for z in range(base, top_of_wall + 1):
                 if (x, y, z) in m.v:
                     m.set(x, y, z, WALL_DARK)
 
     cx = (x0 + x1) / 2.0
     half = (x1 - x0) / 2.0
-    rise = ridge_top - wall_top
+    rise = top_of_ridge - top_of_wall
     eave = 3                      # roof overhang past the wall
 
     for x in range(x0 - eave, x1 + eave + 1):
         d = abs(x - cx)
         if d > half + eave:
             continue
-        top = wall_top + int(round(rise * max(0.0, 1.0 - d / (half + eave))))
+        top = top_of_wall + int(round(rise * max(0.0, 1.0 - d / (half + eave))))
         colour = ROOF_LIGHT if x > cx else ROOF_DARK
         if abs(x - cx) <= 1:
             colour = ROOF_MID
@@ -137,39 +185,56 @@ def wing(m, x0, x1, y0, y1, wall_top, ridge_top, plinth=6):
                 m.set(x, y, z, ROOF_EDGE if edge and z == top - SHELL + 1 else colour)
         # gable infill: the triangle of wall under the front and back slopes
         for y in (y0, y1):
-            for z in range(wall_top + 1, top - SHELL + 1):
+            for z in range(top_of_wall + 1, top - SHELL + 1):
                 m.set(x, y, z, WALL if x <= x1 and x >= x0 else ROOF_EDGE)
 
 
-def arch(m, cx, y, w, h, z0=0, colour=OPENING, depth=8):
-    """A round-topped opening punched into the facade at y (facing front)."""
-    r = w // 2
-    for dx in range(-r, r + 1):
-        for z in range(z0, z0 + h + 1):
-            over = z - (z0 + h - r)
-            if over > 0 and dx * dx + over * over > r * r:
+def arch(m, cx, y, w, h, wall_top, z0=0, colour=OPENING, depth=8):
+    """A round-topped opening punched into the facade at y (facing front).
+
+    ``h`` and ``z0`` are original heights on a wing whose wall top is
+    ``wall_top``; the opening is cut at the squashed ones. Its round head is an
+    ellipse rather than a circle, because x is not squashed and z is -- a
+    circular head would poke out of the top of the squashed opening.
+    """
+    zb = squash(z0, wall_top)
+    zt = squash(z0 + h, wall_top)
+    m.require_wall(cx, y, (zb + zt) // 2, 'arch')
+    rx = max(1, w // 2)
+    rz = max(1, min(rx, zt - zb))
+    for dx in range(-rx, rx + 1):
+        for z in range(zb, zt + 1):
+            over = z - (zt - rz)
+            if over > 0 and (dx / float(rx)) ** 2 + (over / float(rz)) ** 2 > 1.0:
                 continue
             for dy in range(depth):
                 m.set(cx + dx, y + dy, z, colour)
 
 
-def window(m, cx, y, w, h, z0, colour=GLASS, frame=WALL_DARK):
+def window(m, cx, y, w, h, z0, wall_top, colour=GLASS, frame=WALL_DARK):
+    zb = squash(z0, wall_top)
+    zt = squash(z0 + h, wall_top)
+    m.require_wall(cx, y, (zb + zt) // 2, 'window')
     for dx in range(-w // 2 - 1, w // 2 + 2):
-        for z in range(z0 - 1, z0 + h + 2):
-            inside = abs(dx) <= w // 2 and z0 <= z <= z0 + h
+        for z in range(zb - 1, zt + 2):
+            inside = abs(dx) <= w // 2 and zb <= z <= zt
             for dy in range(4):
                 m.set(cx + dx, y + dy, z, colour if inside else frame)
 
 
-def cross(m, cx, y, z0, size=14):
+def cross(m, cx, y, z0, wall_top, size=14):
+    """Roof furniture, so it scales with the roof rather than with the walls."""
+    z0 = squash(z0, wall_top)
+    size = max(4, int(round(size * ROOF_SCALE)))
+    arm = max(1, size // 3)
     for z in range(z0, z0 + size):
         for dy in range(3):
             m.set(cx, y + dy, z, CROSS)
             m.set(cx + 1, y + dy, z, CROSS)
-    for dx in range(-size // 3, size // 3 + 1):
+    for dx in range(-arm, arm + 1):
         for dy in range(3):
-            m.set(cx + dx, y + dy, z0 + size - size // 3, CROSS)
-            m.set(cx + dx, y + dy, z0 + size - size // 3 + 1, CROSS)
+            m.set(cx + dx, y + dy, z0 + size - arm, CROSS)
+            m.set(cx + dx, y + dy, z0 + size - arm + 1, CROSS)
 
 
 # --------------------------------------------------------------------------
@@ -182,70 +247,77 @@ def blue_house_1():
     Four flanking wings with two tall gabled halls between them, a central
     entrance and a stone gatehouse in front.
     """
-    m = Model(10, 9, 180)
+    m = Model(10, 9, squash(180, 80))
     wing(m, 6, 57, 40, 190, 66, 118)
     wing(m, 58, 105, 40, 200, 74, 150)
     wing(m, 106, 153, 40, 200, 74, 150)
     wing(m, 154, 205, 40, 190, 66, 118)
     wing(m, 90, 149, 12, 60, 80, 158)          # entrance porch, pushed forward
-    arch(m, 119, 12, 30, 54)                   # main door
-    window(m, 119, 12, 20, 26, 92)             # rose window over the door
-    cross(m, 119, 12, 150, 20)
-    arch(m, 47, 40, 24, 46)
-    arch(m, 192, 40, 24, 46)
-    window(m, 20, 40, 16, 14, 40)
-    window(m, 219, 40, 16, 14, 40)
+    arch(m, 119, 12, 30, 54, 80)               # main door
+    window(m, 119, 12, 20, 26, 92, 80)         # rose window over the door
+    cross(m, 119, 12, 150, 80, 20)
+    # The four wings run x 6..205, so they are centred on 105 rather than on the
+    # 240-wide box. Mirror the end-wing openings about that, not about the box,
+    # or the right-hand pair lands past the wall.
+    arch(m, 47, 40, 24, 46, 66)
+    arch(m, 164, 40, 24, 46, 66)
+    window(m, 20, 40, 16, 14, 40, 66)
+    window(m, 191, 40, 16, 14, 40, 66)
     return m
 
 
 def blue_house_2():
     """Repeated twice (top-right and bottom-left): 7 cols x 7 rows."""
-    m = Model(7, 7, 150)
+    m = Model(7, 7, squash(150, 70))
     wing(m, 4, 55, 30, 150, 62, 112)
     wing(m, 56, 111, 24, 156, 70, 140)
     wing(m, 112, 163, 30, 150, 62, 112)
-    arch(m, 83, 24, 28, 52)
-    cross(m, 40, 30, 116, 16)
-    window(m, 28, 30, 18, 14, 36)
-    window(m, 138, 30, 18, 14, 36)
+    arch(m, 83, 24, 28, 52, 70)
+    cross(m, 40, 30, 116, 62, 16)
+    window(m, 28, 30, 18, 14, 36, 62)
+    window(m, 138, 30, 18, 14, 36, 62)
     return m
 
 
 def blue_house_3():
     """Centre church: 8 cols x 8 rows, tall nave with a cross."""
-    m = Model(8, 8, 168)
+    m = Model(8, 8, squash(168, 78))
     wing(m, 4, 59, 40, 170, 66, 112)
     wing(m, 60, 131, 20, 180, 78, 156)
     wing(m, 132, 187, 40, 170, 66, 112)
-    arch(m, 95, 20, 32, 58)
-    window(m, 95, 20, 22, 28, 96)
-    cross(m, 95, 20, 156, 18)
+    arch(m, 95, 20, 32, 58, 78)
+    window(m, 95, 20, 22, 28, 96, 78)
+    cross(m, 95, 20, 156, 78, 18)
     for cx in (24, 44, 148, 168):
-        window(m, cx, 40, 14, 20, 44)
+        window(m, cx, 40, 14, 20, 44, 66)
     return m
 
 
 def blue_house_4():
     """Right-hand house: 6 cols x 7 rows, runs off the right edge of the map."""
-    m = Model(6, 7, 150)
+    m = Model(6, 7, squash(150, 72))
     wing(m, 4, 55, 36, 156, 64, 114)
     wing(m, 56, 111, 28, 162, 72, 142)
     wing(m, 112, 143, 36, 156, 64, 110)
-    arch(m, 128, 28, 26, 50)
-    window(m, 26, 36, 16, 22, 42)
-    window(m, 83, 36, 20, 16, 40)
+    # The centre wing is pushed forward, so its openings go on y = 28 and the
+    # side wings' on y = 36. Mixing the two leaves them floating in the gap.
+    arch(m, 83, 28, 26, 50, 72)
+    window(m, 26, 36, 16, 22, 42, 64)
+    window(m, 127, 36, 16, 22, 42, 64)
     return m
 
 
 def blue_house_5():
-    """Bottom-centre house: 4 cols x 8 rows, runs off the bottom of the map."""
-    m = Model(4, 8, 156)
-    wing(m, 4, 27, 60, 180, 60, 100)
-    wing(m, 28, 67, 30, 186, 70, 146)
-    wing(m, 68, 91, 60, 180, 60, 100)
-    arch(m, 47, 30, 26, 52)
-    window(m, 47, 30, 18, 24, 92)
-    cross(m, 47, 30, 146, 14)
+    """Bottom-centre house: 4 cols x 8 rows, runs off the bottom of the map.
+
+    One hall under one ridge -- the art shows a single peak over the entrance,
+    so this must not be built from flanking wings the way the wider houses are.
+    """
+    m = Model(4, 8, squash(160, 74))
+    wing(m, 4, 91, 30, 186, 74, 140)
+    arch(m, 47, 30, 26, 52, 74)
+    window(m, 47, 30, 18, 24, 92, 74)
+    cross(m, 47, 30, 140, 74, 16)
     return m
 
 

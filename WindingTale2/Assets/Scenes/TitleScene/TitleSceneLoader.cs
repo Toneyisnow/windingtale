@@ -46,7 +46,7 @@ namespace WindingTale.Scenes.TitleScene
 
         public void OnStartNewGame()
         {
-            GlobalVariables.Set("ChapterId", 1);
+            GlobalVariables.Set(GameFiledSceneParams.ChapterIdVariableName, 1);
 
             // The flag is static and survives scene loads, so a New Game after returning to
             // the title from a continued session has to clear it explicitly.

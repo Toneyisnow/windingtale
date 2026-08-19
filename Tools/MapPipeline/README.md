@@ -36,7 +36,8 @@ pip install Pillow
 | `voxlib.py` | 公共库：`.vox` 读写、MagicaVoxel 调色板、颜色→索引、地形分类、路径 |
 | `chapter_map.py` | `info` / `render` / `crop` / `verify`：看懂一关的地图数据，并把 ShapeMatrix 重新画回 PNG |
 | `map_clean.py` | 按 obstacle 列表把 footprint 抠掉换成普通地砖，产出 `Chapter_NN_Cleaned.json` |
-| `shapes_to_vox.py` | tile PNG → 40³ 的 `Shape_1_<id>.vox` |
+| `shapes_to_vox.py` | tile PNG → 40³ 的 `Shape_<NN>_<id>.vox`（源 PNG 前缀是 `NN-1`，差一位） |
+| `install_chapter.py` | 把清洗后的地图作为 `RenderMatrix` 装进 `Chapter_NN.json`，`ShapeMatrix` 保持原样 |
 | `validate_shapes.py` | 拿第 01 关做回归：重新生成并与参考 VOX 逐体素比对 |
 | `vox_preview.py` | 把 `.vox` 渲染成正交 + 等轴测的 PNG 联系表，用来肉眼检查模型 |
 | `vox_batch_to_obj.py` | 批量 `vox/` → `../obj/`（`.obj` + `.mtl` + 调色板 `.png`） |
@@ -58,10 +59,27 @@ python map_clean.py 02 --obstacles obstacles_02.json
 # 第三步：生成 shape VOX
 python shapes_to_vox.py 02 --used-tiles .../Chapter_02_UsedTiles.json --tree 71:44
 
-# 收尾：导出 OBJ
+# 第四步：导出 OBJ
 python vox_batch_to_obj.py --shapes 02
 python vox_batch_to_obj.py --obstacles
+
+# 第五步：装进游戏读的 Chapter_02.json
+python install_chapter.py 02 --dry-run
+python install_chapter.py 02
 ```
+
+### 一关有两张地图
+
+`Chapter_NN.json` 同时带着两张同尺寸的矩阵，**不能互相替代**：
+
+| key | 哪张图 | 谁读 |
+|---|---|---|
+| `ShapeMatrix` | 原始画好的地图，不动 | 战斗逻辑：`ShapeType` 决定移动力消耗、AP/DP 加成、能不能进 |
+| `RenderMatrix` | 抠掉 obstacle footprint 的地图 | 只有 `ShapesLayer`，用来决定这一格摆哪个 tile 模型 |
+
+把清洗后的地图写进 `ShapeMatrix` 是错的：房子底下的格子会变成平地草砖，
+房子就能穿行了（第 02 关清洗后的地图里 `Blocked` 格子是 **0** 个）。
+房子挡路靠的是它底下那格原始瓦片，obstacle 模型只是布景。
 
 ### 生成规则（`shapes_to_vox.py`）
 
@@ -69,7 +87,8 @@ python vox_batch_to_obj.py --obstacles
    平局取小索引——这样纯黑落在 225 而不是 256，跟参考素材一致）。
 2. 每个像素放一个体素，高度按地形分类：沙滩比陆地低 1、水再低 1、深水再低 1。
 3. 深绿 `(51,102,0)` 是草：往上再叠 2 个同色体素，形成 3 格高的草。
-4. 有树的 tile：地面**整块换成**平地草砖 `Shape_0_52`（2D 的树因此消失），
+4. 有树的 tile：地面**整块换成**本关的平地草砖（`--grass-tile`，第 01 关是 52、
+   第 02 关是 153；2D 的树因此消失），
    然后从第 01 关的 6 棵参考树里挑一棵，把树冠原样盖上去。这类 tile 不长草。
 
 第 01 关手工做好的 6 棵参考树，由矮到高：

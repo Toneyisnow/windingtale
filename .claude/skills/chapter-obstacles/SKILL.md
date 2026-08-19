@@ -23,7 +23,10 @@ what is on the map.
 ## Outputs
 
 - `Chapter_NN_Cleaned.json` — chapter with footprints cleared and an
-  `Obstacles` array inserted immediately before `ShapeMatrix`
+  `Obstacles` array inserted immediately before `ShapeMatrix`. This file is a
+  **rendering** map, not a replacement chapter: step 5 installs its matrix as
+  `RenderMatrix` and leaves the painted `ShapeMatrix` alone, because that is
+  what the battle reads terrain from. Never copy it over `Chapter_NN.json`.
 - `Chapter_NN_UsedTiles.json` — the tile ids that survive, for step 3
 - `Resources/Remastered/Obstacles/vox/<definition_key>.vox` for each **new**
   object
@@ -86,6 +89,15 @@ normal and is how the object gets positioned inside its footprint.
 Height comes from how tall the object reads in the art, in tile units: a barrel
 stack that looks 1.5 tiles high is `1.5 * 24 = 36` voxels.
 
+That reading is a starting point, not the answer, for anything tall. The 2D art
+draws a church in elevation, so taking its height literally gives a model that
+stands up on the board as a tower — chapter 02's churches were built that way
+and then cut down to roughly a third. `build_obstacles_02.py` keeps the
+art-derived numbers and squashes them in one place (`BODY_SCALE` for everything
+below the eaves, `ROOF_SCALE` for the pitch), which is worth copying: the ratio
+is the thing you will want to retune after seeing it in the game, and doing it
+this way leaves the footprints — and so the cleaned map — untouched.
+
 Existing models to match in style and scale:
 
 | key | SIZE | footprint |
@@ -142,6 +154,15 @@ other, so chapter 02's left barrel group genuinely starts one tile inside the
 church next to it. Read each warning and decide; both tiles clear to ground
 either way.
 
+But an overlap the art does not show means a footprint is in the wrong place.
+Chapter 02's `thatched_hut_1` sat at `Y: 17` for a while and overlapped the
+barrels stacked above it in three tiles; the art has a clear gap there. It was
+one row too high — the roof apex is at Y 18 and the wall base at Y 21 — which
+also left the hut's two painted wall tiles (184, 185) lying on the ground south
+of the 3D model. Moving it to `Y: 18` removed both the phantom overlap and the
+stray tiles. Treat a warning you cannot see in the crop as a placement bug, not
+as noise.
+
 Keep an eye on the "no longer used" tile list: a chapter that is mostly
 buildings loses most of its tile ids here, which is expected, but a tile that
 disappears from a chapter you thought was mostly open ground means a footprint
@@ -155,6 +176,21 @@ python chapter_map.py verify NN --chapter-json <path>/Chapter_NN_Cleaned.json
 
 The `#` clusters should now be exactly the obstacle footprints and nothing
 else. Anything left over is an object you missed.
+
+`map_clean.py` is deterministic — same map plus same obstacle list gives the
+same output, and the order the obstacles are listed in does not matter. So the
+cleaned map can be re-derived from the chapter at any time, and that round trip
+is the check that the two have not drifted apart:
+
+```bash
+# obstacle list back out of the installed chapter, then clean again
+python map_clean.py NN --obstacles <that list> -o /tmp/repro.json
+# /tmp/repro.json's ShapeMatrix must equal Chapter_NN_Cleaned.json's
+```
+
+A mismatch means the obstacle list was edited after the cleaned map was
+generated and the cleaned map was never regenerated — chapter 02 drifted by 5
+tiles exactly that way.
 
 Report which tile ids stopped being used and which appeared — a large jump
 usually means the fill tile was a poor choice.

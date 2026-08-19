@@ -618,6 +618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f08939ba25369b840b0855d2016be2e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VillageScene
+  confirmDialogPrefab: {fileID: 2000000000000000001, guid: 81b649b9859e45e9b9fb7b362dccd956, type: 3}
 --- !u!4 &1720646334
 Transform:
   m_ObjectHideFlags: 0

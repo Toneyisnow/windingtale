@@ -9,8 +9,8 @@ guess at any of it.
 |---|---|
 | chapter data | `WindingTale2/Assets/Resources/Data/Chapters/Chapter_NN.json` |
 | original map art | `Resources/Original/Maps/NN/Chapter-NN.png` (+ `-grid.png`, `-Cover.png`) |
-| original tile art | `Resources/Original/Shapes/ShapePanelNN/Shape_0_<id>.png` |
-| remastered tiles | `Resources/Remastered/Shapes/Shapes_NN/{vox,obj}/Shape_1_<id>.*` |
+| original tile art | `Resources/Original/Shapes/ShapePanelNN/Shape_<NN-1>_<id>.png` |
+| remastered tiles | `Resources/Remastered/Shapes/Shapes_NN/{vox,obj}/Shape_<NN>_<id>.*` |
 | remastered obstacles | `Resources/Remastered/Obstacles/{vox,obj}/<definition_key>.*` |
 | what the game loads | `WindingTale2/Assets/Resources/Shapes/Shapes_NN/`, `.../Resources/Obstacles/` |
 
@@ -41,7 +41,8 @@ the chapter's **1-based** index, so they are always one apart. `voxlib`'s
   "Obstacles": [                       // inserted by step 2, before ShapeMatrix
     { "Id": 1, "DefinitionKey": "dwelling_house_1", "Position": { "X": 10, "Y": 9 } }
   ],
-  "ShapeMatrix": [ [ ... ], ... ],     // ShapeMatrix[x][y]
+  "ShapeMatrix":  [ [ ... ], ... ],    // the painted map    -- ShapeMatrix[x][y]
+  "RenderMatrix": [ [ ... ], ... ],    // the cleaned map    -- inserted by step 5
   "Shapes": { "49": { "Type": 0, "bg": 6 }, ... }   // per-tile-id properties
 }
 ```
@@ -49,6 +50,22 @@ the chapter's **1-based** index, so they are always one apart. `voxlib`'s
 `Shapes` keys the tile ids used by `ShapeMatrix`; `Type` is the movement class
 and `bg` the background group. Step 2 must not drop entries for tiles that
 survive the clean.
+
+### The two maps
+
+`ShapeMatrix` is the map as painted and is the **only** one the game logic
+reads: `FDField.GetShapeAt` resolves it to a `ShapeDefinition`, whose
+`ShapeType` decides move cost, the AP/DP terrain bonus, and whether a tile can
+be entered at all. Lifting a house out into an obstacle must not change it —
+the house blocks movement because its tiles are `Blocked` here.
+
+`RenderMatrix` is the same map with every obstacle footprint cleared, and is
+read only by `ShapesLayer` via `FDField.GetRenderShapeIdAt`, to choose the tile
+model. Without it the ground would draw the painted building a second time,
+underneath the obstacle model standing on it.
+
+It is optional: `FDField` falls back to `ShapeMatrix` for chapters that have
+not been converted, which is why those still render.
 
 ## Coordinates
 

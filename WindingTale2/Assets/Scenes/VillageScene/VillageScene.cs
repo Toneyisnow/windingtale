@@ -168,6 +168,16 @@ public class VillageScene : MonoBehaviour
     /// </summary>
     public float backgroundDistanceBehindCursor = 2.0f;
 
+    /// <summary>
+    /// The yes / no question pos 0 asks before the battlefield -- the shop's confirm dialog
+    /// prefab, reused as is. It carries its own overlay canvas and depends on nothing from
+    /// the shop, so any scene can push it. See OnProceed.
+    /// </summary>
+    public GameObject confirmDialogPrefab = null;
+
+    /// <summary>CommonStrings "Confirm-08": 确定要进入战场吗？</summary>
+    private const int EnterBattleConfirmId = 8;
+
     /// <summary>The party that walked into the village, as the won battle left them.</summary>
     public GameRecord Record { get; private set; }
 
@@ -208,6 +218,12 @@ public class VillageScene : MonoBehaviour
 
     /// <summary>True while the camera is pulling into a shop; input is shut off until the scene changes.</summary>
     private bool transitioning = false;
+
+    /// <summary>
+    /// The question currently up, or null. It takes the keyboard for itself while it stands,
+    /// so the village walks nowhere behind it.
+    /// </summary>
+    private GameObject confirmDialog = null;
 
     void Start()
     {
@@ -560,11 +576,13 @@ public class VillageScene : MonoBehaviour
     /// <summary>
     /// Left and right walk the round, wrapping at both ends. Nothing is accepted until
     /// the village is fully up: a key pressed during the fade in is the tail of whatever
-    /// ended the battle, not an answer to this screen.
+    /// ended the battle, not an answer to this screen. Nor while a question is up -- those
+    /// keys are the question's to read.
     /// </summary>
     private void HandleInput()
     {
-        if (spots == null || spots.Count == 0 || transitioning || fader == null || fader.IsFading)
+        if (spots == null || spots.Count == 0 || transitioning || confirmDialog != null
+            || fader == null || fader.IsFading)
         {
             return;
         }
@@ -672,13 +690,88 @@ public class VillageScene : MonoBehaviour
     }
 
     /// <summary>
-    /// Pos 0 is not a shop but the way on to the next chapter's battle. Loading that field
-    /// scene is left for later; for now this only notes it was reached, so the spot is
-    /// walkable and selectable while the route behind it is built out.
+    /// Pos 0 is not a shop but the way on to the next chapter's battle. It asks first --
+    /// "确定要进入战场吗？", the same yes / no question the battlefield puts up -- and only a
+    /// Yes leaves the village (see EnterBattlefieldRoutine).
     /// </summary>
     private void OnProceed()
     {
-        Debug.Log("Village proceed (pos 0) selected; the next battlefield is not wired up yet.");
+        if (confirmDialogPrefab == null)
+        {
+            Debug.LogWarning("Village scene has no confirm dialog prefab to ask with.");
+            return;
+        }
+
+        GameObject dialogObject = Instantiate(confirmDialogPrefab);
+
+        // Draw it above the village picture, whatever that canvas's sorting turns out to be.
+        Canvas canvas = dialogObject.GetComponentInChildren<Canvas>();
+        if (canvas != null)
+        {
+            canvas.sortingOrder = 100;
+        }
+
+        ShoppingConfirmDialog dialog = dialogObject.GetComponent<ShoppingConfirmDialog>();
+        if (dialog == null)
+        {
+            Debug.LogWarning("Confirm dialog prefab has no ShoppingConfirmDialog component.");
+            Destroy(dialogObject);
+            return;
+        }
+
+        confirmDialog = dialogObject;
+        dialog.Init(EnterBattleConfirmId, OnEnterBattleConfirmed);
+    }
+
+    /// <summary>
+    /// The question has been answered. No only puts it away, leaving the cursor where it
+    /// stands; Yes takes the party out of the village and on to the battlefield.
+    /// </summary>
+    private void OnEnterBattleConfirmed(bool yes)
+    {
+        CloseConfirmDialog();
+
+        if (yes)
+        {
+            StartCoroutine(EnterBattlefieldRoutine());
+        }
+    }
+
+    private void CloseConfirmDialog()
+    {
+        if (confirmDialog != null)
+        {
+            Destroy(confirmDialog);
+            confirmDialog = null;
+        }
+    }
+
+    /// <summary>
+    /// Leaves the village for the battle: the whole picture fades to black, the village
+    /// music stops with it, and the field scene is loaded on that black.
+    ///
+    /// The party goes with it -- the record carries the levels, items and purse the player
+    /// has built up, and names the chapter to play (the won battle already advanced it, so
+    /// it is the chapter the party is up to, not the one it just finished). GameMain.LoadGame
+    /// picks it up on the other side.
+    /// </summary>
+    private IEnumerator EnterBattlefieldRoutine()
+    {
+        transitioning = true;
+
+        // A chapter to be played from its start, not a saved battle to be resumed.
+        GameFiledSceneParams.isContinue = false;
+        GlobalVariables.Set(RecordVariableName, Record);
+
+        fader.FadeTo(1.0f, shopTransitionDuration);
+        while (fader.IsFading)
+        {
+            yield return null;
+        }
+
+        BackgroundMusic.GetOrCreate().StopMusic();
+
+        SceneManager.LoadScene("GameFieldScene", LoadSceneMode.Single);
     }
 
     /// <summary>

@@ -38,8 +38,9 @@ than improvising.
 |---|---|---|
 | 1 | `chapter-schema` | understanding only — dimensions, tile ids, how the map PNG is assembled |
 | 2 | `chapter-obstacles` | `Chapter_NN_Cleaned.json`, obstacle VOX models, the obstacle list, used tile ids |
-| 3 | `chapter-shape-vox` | `Resources/Remastered/Shapes/Shapes_NN/vox/Shape_1_*.vox` |
+| 3 | `chapter-shape-vox` | `Resources/Remastered/Shapes/Shapes_NN/vox/Shape_<NN>_*.vox` |
 | 4 | `vox-to-obj` | `obj/` next to each `vox/` folder |
+| 5 | — (below) | `Chapter_NN.json` carrying both the painted and the cleaned map |
 
 ### Step 1 — understand the chapter schema
 
@@ -65,6 +66,50 @@ Invoke `vox-to-obj` for both `Resources/Remastered/Obstacles/vox` and
 `Resources/Remastered/Shapes/Shapes_NN/vox`, then copy the results into
 `WindingTale2/Assets/Resources/`.
 
+### Step 5 — install the cleaned map
+
+**The conversion is not finished until this happens.** Steps 2–4 only ever
+write `Chapter_NN_Cleaned.json`; the game reads `Chapter_NN.json`.
+
+The finished chapter carries **both** maps, and they are not interchangeable:
+
+| key | which map | who reads it |
+|---|---|---|
+| `ShapeMatrix` | the **painted** one, unchanged | the battle — `ShapeType` gives move cost, AP/DP, whether a tile blocks |
+| `RenderMatrix` | the **cleaned** one from step 2 | `ShapesLayer` only, to pick which tile model to draw |
+
+Do not overwrite `ShapeMatrix` with the cleaned map. Clearing a footprint turns
+the tiles a house stood on into plain grass, and if that reaches `ShapeMatrix`
+the house becomes walkable — chapter 02's cleaned map has **zero** `Blocked`
+tiles. The building blocks movement because the painted tile under it still
+says so; the obstacle model is scenery.
+
+```bash
+cd Tools/MapPipeline
+python install_chapter.py NN --dry-run
+python install_chapter.py NN
+```
+
+It takes `ShapeMatrix` from the current `Chapter_NN.json` (still the painted
+map at that point), everything else — including `Obstacles` — from
+`Chapter_NN_Cleaned.json`, and writes the cleaned map in as `RenderMatrix`.
+Re-running is safe.
+
+It also refuses to install unless every `RenderMatrix` tile id has an OBJ,
+every `ShapeMatrix` id has a `Shapes` entry, and every obstacle has a model —
+worth having, because `ShapesLayer` silently skips a tile whose model is
+missing, leaving a hole in the board rather than an error.
+
+Chapter 01 predates the pipeline: its `Chapter_01.json` was already the cleaned
+map and the painted original survives as `ChapterLegacy_01.txt`, so it was
+installed with both sides named explicitly:
+
+```bash
+python install_chapter.py 01 \
+    --original ../../WindingTale2/Assets/Resources/Data/Chapters/ChapterLegacy_01.txt \
+    --cleaned  ../../WindingTale2/Assets/Resources/Data/Chapters/Chapter_01.json
+```
+
 ## Finishing
 
 After step 4, report:
@@ -74,9 +119,11 @@ After step 4, report:
 - anything you were unsure about (a footprint you had to guess, a tree you were
   not certain about) — say so plainly rather than presenting it as settled
 
-## Known gap in the game side
+## How the game picks the tile set
 
-`ShapesLayer.cs` still hard-codes `Shapes/Shapes_01/Shape_1_{id}`, so a chapter
-whose shapes live in `Shapes_02` will not load them until that path is made
-per-chapter. Point this out when you finish a chapter other than 01; do not
-silently change it as part of an asset conversion.
+`ShapesLayer.cs` builds the path from `FDField.ChapterId`
+(`Shapes/Shapes_NN/Shape_N_{id}`), so a chapter picks up its own models with no
+code change. A chapter with no `Shapes_NN` folder falls back to chapter 01's
+tiles and logs a warning once — that fallback is what makes an unconverted
+chapter still render, and seeing chapter 01's art on chapter NN means either
+step 5 was skipped or the OBJs never reached `Assets/Resources/Shapes/Shapes_NN/`.

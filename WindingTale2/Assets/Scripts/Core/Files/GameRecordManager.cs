@@ -39,8 +39,12 @@ namespace WindingTale.Core.Files
         /// Enemies and NPCs are dropped: they belong to the chapter, not to the player.
         /// Positions are carried across untouched but mean nothing off the battlefield --
         /// the next chapter places the party itself.
+        ///
+        /// <paramref name="carriedParty"/> is the party that walked into the battle, if it
+        /// walked in with one. Only the members the chapter never put on the field are read
+        /// out of it -- see the tail of this method for why they cannot be left behind.
         /// </summary>
-        public static GameRecord CreateFromMapRecord(GameMapRecord mapRecord)
+        public static GameRecord CreateFromMapRecord(GameMapRecord mapRecord, GameRecord carriedParty = null)
         {
             GameRecord record = new GameRecord();
             record.Friends = new List<CreatureMapRecord>();
@@ -81,6 +85,24 @@ namespace WindingTale.Core.Files
                 revived.Effects = new List<CreatureEffects>();
 
                 record.Friends.Add(revived);
+            }
+
+            // Party members the chapter never put on the field are in neither of the map's
+            // lists, so they have to be read back out of the party that walked in or they
+            // would quietly leave it for good. That is above all the fallen still waiting to
+            // be revived -- a chapter does not spawn them (ChapterEvents.AddCreatureToMap) --
+            // and they are carried across untouched, still at 0 HP and still to be revived.
+            if (carriedParty != null && carriedParty.Friends != null)
+            {
+                foreach (CreatureMapRecord absent in carriedParty.Friends)
+                {
+                    if (record.Friends.Exists(friend => friend.Id == absent.Id))
+                    {
+                        continue;
+                    }
+
+                    record.Friends.Add(absent.Clone());
+                }
             }
 
             return record;

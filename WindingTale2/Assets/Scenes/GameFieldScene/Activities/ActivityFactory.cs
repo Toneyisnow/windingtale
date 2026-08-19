@@ -13,21 +13,37 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
 {
     public class ActivityFactory
     {
+        /// <summary>
+        /// Walks a creature along a path, finishing when the walk animation does.
+        ///
+        /// A creature that is not on the map is walked over in silence: a chapter script
+        /// spawns and walks the party in one breath, and a friend who fell in an earlier
+        /// chapter is never spawned (see ChapterEvents.AddCreatureToMap), so the walk its
+        /// script queued has nobody to move.
+        /// </summary>
         public static DurationActivity CreatureWalkActivity(int creatureId, FDMovePath movePath)
         {
             Action<GameMain> startAction = gameMain =>
             {
                 FDCreature creature = gameMain.gameMap.Map.GetCreatureById(creatureId);
+                if (creature == null)
+                {
+                    return;
+                }
 
                 // Save the current position
                 creature.PrePosition = creature.Position;
                 gameMain.gameMap.MoveCreature(creature, movePath);
             };
 
-            Func<GameMain, bool> checkEnd = 
+            Func<GameMain, bool> checkEnd =
                 gameMain =>
                 {
                     FDCreature creature = gameMain.gameMap.Map.GetCreatureById(creatureId);
+                    if (creature == null)
+                    {
+                        return true;
+                    }
 
                     Creature creatureObj = gameMain.gameMap.GetCreature(creature);
                     return creatureObj.GetComponent<CreatureWalk>() == null;
@@ -35,6 +51,11 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             Action<GameMain> endAction = gameMain =>
             {
                 FDCreature creature = gameMain.gameMap.Map.GetCreatureById(creatureId);
+                if (creature == null)
+                {
+                    return;
+                }
+
                 creature.Position = movePath.Desitination;
             };
 

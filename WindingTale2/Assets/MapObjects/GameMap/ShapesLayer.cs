@@ -13,7 +13,13 @@ namespace WindingTale.MapObjects.GameMap
 
     public class ShapesLayer : MonoBehaviour
     {
+        // Chapters that have not been remastered yet borrow this one's tile models.
+        private const int FallbackShapeChapter = 1;
+
         private bool initialized = false;
+
+        // One warning per field build, not one per tile.
+        private bool warnedMissingShapeSet = false;
 
         private Material defaultMaterial = null;
 
@@ -50,7 +56,9 @@ namespace WindingTale.MapObjects.GameMap
                     FDPosition pos = FDPosition.At(i, j);
                     ShapeDefinition shapeDef = field.GetShapeAt(pos);
 
-                    GameObject shapePrefab = Resources.Load<GameObject>(string.Format("Shapes/Shapes_01/Shape_1_{0}", shapeDef.Id));
+                    // The model comes from the cleaned map (no buildings painted into the
+                    // ground), the ShapeDefinition handed to Shape from the painted one.
+                    GameObject shapePrefab = LoadShape(field.ChapterId, field.GetRenderShapeIdAt(pos));
                     if (shapePrefab != null)
                     {
                         GameObject shapeObj = Instantiate(shapePrefab);
@@ -59,9 +67,9 @@ namespace WindingTale.MapObjects.GameMap
                         shapeObj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
                         Transform inner = shapeObj.transform.Find("default");
-                        // New Shapes_01 OBJs are exported centered (center=true, scale=0.1),
+                        // Remastered shape OBJs are exported centered (center=true, scale=0.1),
                         // so the mesh origin is already at the tile centre -> no offset.
-                        // (The old (24,-24,0) was to re-centre the corner-origin ShapePanel01
+                        // (The old (24,-24,0) was to re-centre the corner-origin ShapePanel
                         // meshes; at scale 1.0 it shifted every tile by ~half the map.)
                         inner.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.Euler(180, 0, 0));
 
@@ -74,6 +82,47 @@ namespace WindingTale.MapObjects.GameMap
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// The tile model for one shape id, out of the chapter's own set. Chapters that
+        /// have not been remastered yet borrow chapter 01's tiles, so their maps still
+        /// render something instead of an empty board.
+        /// </summary>
+        private GameObject LoadShape(int chapterId, int shapeId)
+        {
+            if (shapeId < 0)
+            {
+                return null;
+            }
+
+            GameObject prefab = chapterId > 0
+                ? Resources.Load<GameObject>(ShapeResourcePath(chapterId, shapeId))
+                : null;
+            if (prefab != null)
+            {
+                return prefab;
+            }
+
+            if (chapterId != FallbackShapeChapter && !warnedMissingShapeSet)
+            {
+                warnedMissingShapeSet = true;
+                Debug.LogWarning(string.Format(
+                    "Shape {0} is missing from Resources/Shapes/Shapes_{1:D2}, falling back to chapter {2:D2}'s tiles.",
+                    shapeId, chapterId, FallbackShapeChapter));
+            }
+
+            return Resources.Load<GameObject>(ShapeResourcePath(FallbackShapeChapter, shapeId));
+        }
+
+        /// <summary>
+        /// Resource path of one remastered tile model. Each chapter has its own set,
+        /// laid out as Resources/Shapes/Shapes_NN/Shape_N_&lt;tileId&gt; -- the folder uses
+        /// the two-digit chapter number, the file the plain one (Shapes_02/Shape_2_153).
+        /// </summary>
+        private static string ShapeResourcePath(int chapterId, int shapeId)
+        {
+            return string.Format("Shapes/Shapes_{0:D2}/Shape_{0}_{1}", chapterId, shapeId);
         }
 
         /// <summary>

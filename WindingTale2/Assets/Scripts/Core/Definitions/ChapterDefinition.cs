@@ -28,8 +28,25 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        /// <summary>
+        /// The original painted map. Its tile ids carry the terrain the battle runs on
+        /// (ShapeType -> move cost, AP/DP), so the tiles a building was painted onto are
+        /// still Blocked/Forest here even though the building is now a separate obstacle.
+        /// </summary>
         [JsonProperty(PropertyName = "ShapeMatrix")]
         public int[,] Map
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// The same map with every obstacle footprint cleared back to plain ground, used
+        /// only to pick which tile model to draw -- the building stands there as its own
+        /// model now, so the ground under it must not draw the painted one again.
+        /// Optional: a chapter without it draws <see cref="Map"/>.
+        /// </summary>
+        [JsonProperty(PropertyName = "RenderMatrix")]
+        public int[,] RenderMap
         {
             get; set;
         }

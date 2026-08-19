@@ -107,13 +107,20 @@ def clean_matrix_nearest(matrix, width, height, cleared, common):
             break
 
         def resolve(cell, c, pool):
-            # most votes wins; ties go to the tile that is commonest map-wide
+            # most votes wins; ties go to the tile that is commonest map-wide, and
+            # then to the lowest id. That last key is what makes the result depend
+            # only on the map: without it a tie is broken by whichever neighbour
+            # happened to be counted first, i.e. by set iteration order.
             x, y = cell
-            new[x - 1][y - 1] = max(pool, key=lambda t: (c[t], common.get(t, 0)))
+            new[x - 1][y - 1] = max(pool, key=lambda t: (c[t], common.get(t, 0), -t))
             pending.discard(cell)
 
+        # Cells are resolved from a snapshot of `votes`, so the order within a wave
+        # cannot change the outcome -- sorted only to keep runs comparable.
+        wave = sorted(votes.items())
+
         progressed = False
-        for cell, c in votes.items():
+        for cell, c in wave:
             ground = [t for t in c if common.get(t, 0) >= MIN_COMMON]
             if ground:
                 resolve(cell, c, ground)
@@ -121,7 +128,7 @@ def clean_matrix_nearest(matrix, width, height, cleared, common):
         if not progressed:
             # every reachable neighbour is one-off scenery; take the best of a
             # bad set rather than spinning
-            for cell, c in votes.items():
+            for cell, c in wave:
                 resolve(cell, c, list(c))
     # anything still pending is enclosed by cleared tiles only; leave it to the
     # caller's fallback rather than guessing
@@ -129,15 +136,21 @@ def clean_matrix_nearest(matrix, width, height, cleared, common):
 
 
 # --------------------------------------------------------------------------
-# serialisation: keep the file readable, one ShapeMatrix column per line
+# serialisation: keep the file readable, one map column per line
 # --------------------------------------------------------------------------
+
+# The chapter's two maps: ShapeMatrix is the painted one the battle runs on,
+# RenderMatrix the cleaned one ShapesLayer draws. Both print a column per line
+# so they can be diffed against each other by eye.
+MATRIX_KEYS = ('ShapeMatrix', 'RenderMatrix')
+
 
 def dump_chapter(chapter, path):
     parts = []
     for key, value in chapter.items():
-        if key == 'ShapeMatrix':
+        if key in MATRIX_KEYS:
             rows = ',\n'.join('    [%s]' % ', '.join(str(v) for v in col) for col in value)
-            parts.append('  "ShapeMatrix": [\n%s\n  ]' % rows)
+            parts.append('  "%s": [\n%s\n  ]' % (key, rows))
         else:
             body = json.dumps(value, indent=2, ensure_ascii=False)
             body = '\n'.join(('  ' + line) if i else line
@@ -185,6 +198,11 @@ def main():
     src = args.chapter_json or voxlib.chapter_json_path(root, nn)
     with open(src, 'r', encoding='utf-8-sig') as f:
         chapter = json.load(f, object_pairs_hook=OrderedDict)
+
+    # Cleaning always starts from the painted ShapeMatrix. If the source is an
+    # already-installed chapter its RenderMatrix is the previous run's output --
+    # drop it rather than carry a stale copy into the new one.
+    chapter.pop('RenderMatrix', None)
 
     with open(args.obstacles, 'r', encoding='utf-8-sig') as f:
         obstacles = json.load(f)

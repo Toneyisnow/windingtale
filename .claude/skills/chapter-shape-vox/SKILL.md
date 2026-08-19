@@ -5,19 +5,24 @@ description: Step 3 of the 2D-to-3D map workflow — generate 40³ shape VOX mod
 
 # Step 3: generate the shape VOXs
 
-Every tile id the cleaned chapter still uses becomes a `Shape_1_<id>.vox` on a
-40³ canvas. The generation rules were reverse-engineered from chapter 01 and
+Every tile id the cleaned chapter still uses becomes a `Shape_<NN>_<id>.vox` on
+a 40³ canvas. The generation rules were reverse-engineered from chapter 01 and
 reproduce all 96 of its reference models byte-for-byte, so the tool is the
 authority — do not hand-write these.
 
 ## Inputs
 
 - `Chapter_NN_UsedTiles.json` from step 2
-- `Resources/Original/Shapes/ShapePanelNN/Shape_0_*.png`
+- `Resources/Original/Shapes/ShapePanelNN/Shape_<NN-1>_*.png`
 
 ## Output
 
-`Resources/Remastered/Shapes/Shapes_NN/vox/Shape_1_<id>.vox`
+`Resources/Remastered/Shapes/Shapes_NN/vox/Shape_<NN>_<id>.vox`
+
+The prefixes are one apart — the source PNG's is the panel's 0-based index, the
+VOX's is the chapter's 1-based one (`ShapePanel02/Shape_1_153.png` →
+`Shapes_02/vox/Shape_2_153.vox`). `voxlib.tile_png_name()` /
+`shape_vox_name()` own this; never build the names by hand.
 
 ## The rules the tool applies
 
@@ -96,7 +101,7 @@ Then eyeball a handful of the new tiles, especially every tree tile and any
 tile with a shoreline:
 
 ```bash
-python vox_preview.py ../../Resources/Remastered/Shapes/Shapes_NN/vox/Shape_1_<id>.vox \
+python vox_preview.py ../../Resources/Remastered/Shapes/Shapes_NN/vox/Shape_<NN>_<id>.vox \
     -o out/ --views front,iso --scale 5
 ```
 
