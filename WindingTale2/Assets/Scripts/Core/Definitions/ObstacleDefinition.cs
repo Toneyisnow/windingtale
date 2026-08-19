@@ -6,7 +6,7 @@ namespace WindingTale.Core.Definitions
     /// An obstacle placed on the map: a 3D model (DefinitionKey) standing at a
     /// tile Position. Matches the "Obstacles" array in the chapter JSON, e.g.
     ///   { "Id": 1, "DefinitionKey": "dwelling_house_1", "Position": { "X": 10, "Y": 10 } }
-    /// The model is loaded from Resources/Obstacles/Obstacles_01/{DefinitionKey}.obj
+    /// The model is loaded from Resources/Obstacles/{DefinitionKey}.obj
     /// </summary>
     public class ObstacleDefinition
     {

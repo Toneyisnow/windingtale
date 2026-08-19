@@ -1,0 +1,21 @@
+{
+  "_comment": [
+    "Chapter 02 obstacle list -- input to map_clean.py.",
+    "Position is the top-left tile of the footprint, 1-based; values <= 0 or past",
+    "the board mean the object is only partly on screen.",
+    "Size is optional and defaults to the model's VOX SIZE / 24; it is spelled out",
+    "here only where the painted art covers a different rectangle than the model box."
+  ],
+  "Obstacles": [
+    { "Id": 1, "DefinitionKey": "blue_house_1", "Position": { "X": 2, "Y": 1 } },
+    { "Id": 2, "DefinitionKey": "blue_house_2", "Position": { "X": 21, "Y": 0 } },
+    { "Id": 3, "DefinitionKey": "blue_house_3", "Position": { "X": 13, "Y": 6 } },
+    { "Id": 4, "DefinitionKey": "blue_house_4", "Position": { "X": 24, "Y": 8 } },
+    { "Id": 5, "DefinitionKey": "blue_house_2", "Position": { "X": 1, "Y": 12 } },
+    { "Id": 6, "DefinitionKey": "blue_house_5", "Position": { "X": 16, "Y": 17 } },
+    { "Id": 7, "DefinitionKey": "thatched_hut_1", "Position": { "X": 21, "Y": 17 },
+      "Size": { "Cols": 3, "Rows": 5 } },
+    { "Id": 8, "DefinitionKey": "barrel_group_1", "Position": { "X": 7, "Y": 13 } },
+    { "Id": 9, "DefinitionKey": "barrel_group_1", "Position": { "X": 21, "Y": 16 } }
+  ]
+}

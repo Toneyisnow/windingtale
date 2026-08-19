@@ -8,7 +8,9 @@ namespace WindingTale.MapObjects.GameMap
     /// <summary>
     /// Instantiates the obstacle models declared in the chapter (FDField.Obstacles)
     /// under this layer. For each obstacle the model is loaded from
-    ///   Resources/Obstacles/Obstacles_01/{DefinitionKey}
+    ///   Resources/Obstacles/{DefinitionKey}
+    /// Obstacle models are shared across every chapter, so they live in one flat
+    /// folder keyed by DefinitionKey rather than per-chapter subfolders.
     /// and placed at its tile Position. Mirrors ShapesLayer's upright transform
     /// (parent Euler(90) + inner Euler(180) stands the Z-up model up), but keeps
     /// each obstacle's own imported palette material instead of the shared one.
@@ -50,11 +52,11 @@ namespace WindingTale.MapObjects.GameMap
                 // fall back to the raw imported model. This lets obstacles migrate to
                 // editor-authored prefabs one at a time without changing the pipeline.
                 GameObject prefab =
-                    Resources.Load<GameObject>(string.Format("Obstacles/Obstacles_01_Prefabs/{0}", obstacle.DefinitionKey))
-                    ?? Resources.Load<GameObject>(string.Format("Obstacles/Obstacles_01/{0}", obstacle.DefinitionKey));
+                    Resources.Load<GameObject>(string.Format("Obstacles/Prefabs/{0}", obstacle.DefinitionKey))
+                    ?? Resources.Load<GameObject>(string.Format("Obstacles/{0}", obstacle.DefinitionKey));
                 if (prefab == null)
                 {
-                    Debug.LogWarning("Obstacle model not found: Obstacles/Obstacles_01/" + obstacle.DefinitionKey);
+                    Debug.LogWarning("Obstacle model not found: Obstacles/" + obstacle.DefinitionKey);
                     continue;
                 }
 
