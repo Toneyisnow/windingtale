@@ -362,6 +362,9 @@ namespace WindingTale.Scenes.GameFieldScene
             {
                 c.SetActioned(true);
 
+                // Being hit is enough to rouse a creature that was lying in wait.
+                (target as FDAICreature)?.WakeUpByAttack();
+
                 BattleHandler.ApplyDamage(target, result.Damages.Last());
                 if (result.BackDamages.Count > 0)
                 {
@@ -420,7 +423,7 @@ namespace WindingTale.Scenes.GameFieldScene
             DirectRangeFinder directRangeFinder = new DirectRangeFinder(gameMap.Map.Field, position, magic.EffectScope);
             FDRange magicScope = directRangeFinder.CalculateRange();
 
-            List<FDCreature> targetList = gameMap.Map.GetCreaturesInRange(magicScope.ToList(), CreatureFaction.Enemy);
+            List<FDCreature> targetList = getMagicTargets(creature, magic, magicScope);
 
             MagicResult result = BattleHandler.HandleCreatureMagic(creature, targetList, position, magic, gameMap.Map.Field);
             c.SetActioned(true);
@@ -451,7 +454,27 @@ namespace WindingTale.Scenes.GameFieldScene
                     if (soleResult.ResultType == SoloResultType.Damage)
                     {
                         DamageResult damageResult = (DamageResult)soleResult;
+
+                        // Being hit is enough to rouse a creature that was lying in wait.
+                        (target as FDAICreature)?.WakeUpByAttack();
+
                         BattleHandler.ApplyDamage(target, damageResult);
+                    }
+                    else if (soleResult.ResultType == SoloResultType.Recover)
+                    {
+                        RecoverResult recoverResult = (RecoverResult)soleResult;
+                        if (recoverResult.Type == RecoverType.Mp)
+                        {
+                            target.UpdateMp(recoverResult.Amount);
+                        }
+                        else
+                        {
+                            target.UpdateHp(recoverResult.Amount);
+                        }
+                    }
+                    else if (soleResult.ResultType == SoloResultType.Effect)
+                    {
+                        target.ApplyEffect((EffectResult)soleResult);
                     }
                 };
             });
@@ -496,6 +519,53 @@ namespace WindingTale.Scenes.GameFieldScene
             this.PushActivity((gameMain) =>
             {
                 onCreatureEndTurn(creature);
+            });
+        }
+
+        /// <summary>
+        /// Who a spell lands on: everyone standing in its blast, on the side the spell is
+        /// meant for. Healing and buffs go to the caster's own side (NPCs count as the
+        /// player's side), everything else to the other one -- otherwise an enemy healer
+        /// would spend the battle patching up the party.
+        /// </summary>
+        private List<FDCreature> getMagicTargets(FDCreature creature, MagicDefinition magic, FDRange magicScope)
+        {
+            List<FDPosition> positions = magicScope.ToList();
+
+            bool ownSide = magic.Type == MagicType.Recover || magic.Type == MagicType.Defensive;
+            bool casterIsEnemy = creature.Faction == CreatureFaction.Enemy;
+
+            List<FDCreature> targets = new List<FDCreature>();
+            if (ownSide == casterIsEnemy)
+            {
+                // The enemy side.
+                targets.AddRange(gameMap.Map.GetCreaturesInRange(positions, CreatureFaction.Enemy));
+            }
+            else
+            {
+                targets.AddRange(gameMap.Map.GetCreaturesInRange(positions, CreatureFaction.Friend));
+                targets.AddRange(gameMap.Map.GetCreaturesInRange(positions, CreatureFaction.Npc));
+            }
+
+            return targets;
+        }
+
+        /// <summary>
+        /// An AI creature that is not ready to commit to its turn yet: it steps aside, and
+        /// the handler comes back to it once the rest of its faction has acted.
+        /// </summary>
+        public void creaturePendAction(FDCreature creature)
+        {
+            Debug.Log("creaturePendAction: creature=" + creature.Id);
+
+            if (creature is FDAICreature aiCreature)
+            {
+                aiCreature.PendingAction = true;
+            }
+
+            this.PushActivity((gameMain) =>
+            {
+                notifyAIHandler(creature.Faction);
             });
         }
 
@@ -895,6 +965,12 @@ namespace WindingTale.Scenes.GameFieldScene
             // the turn cannot end while anyone is still flagged as not having acted.
             creature.HasActioned = true;
 
+            if (creature is FDAICreature aiCreature)
+            {
+                // Whatever it was waiting for, its turn is over now.
+                aiCreature.PendingAction = false;
+            }
+
             Creature c = gameMap.GetCreature(creature);
             if (recoveredHp > 0)
             {
@@ -926,13 +1002,22 @@ namespace WindingTale.Scenes.GameFieldScene
                 return;
             }
 
-            if (this.gameMap.Map.TurnType == CreatureFaction.Enemy)
+            notifyAIHandler(this.gameMap.Map.TurnType);
+        }
+
+        /// <summary>
+        /// Hands control to the AI handler of that faction, so it can pick the next creature
+        /// to act. Does nothing on the player's turn.
+        /// </summary>
+        private void notifyAIHandler(CreatureFaction faction)
+        {
+            if (faction == CreatureFaction.Enemy)
             {
-                bool aiActioned = enemyAIHandler.Notified();
-                
-            } else if (this.gameMap.Map.TurnType == CreatureFaction.Npc)
+                enemyAIHandler.Notified();
+            }
+            else if (faction == CreatureFaction.Npc)
             {
-                bool aiActioned = npcAIHandler.Notified();
+                npcAIHandler.Notified();
             }
         }
 

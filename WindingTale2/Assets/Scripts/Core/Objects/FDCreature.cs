@@ -38,7 +38,31 @@ namespace WindingTale.Core.Objects
 
     public class FDAICreature: FDCreature
     {
-        public AITypes AIType { get; private set; }
+        /// <summary>
+        /// Settable, because a chapter script may switch a creature's behaviour part way
+        /// through the battle (the sleeping guards that wake up on a trigger), and because
+        /// a StandBy creature that gets hit turns aggressive -- see WakeUpByAttack.
+        /// </summary>
+        public AITypes AIType { get; set; }
+
+        /// <summary>
+        /// Where an Escape (or Treasure) AI is heading for. Null for every other AI type.
+        /// </summary>
+        public FDPosition EscapePosition { get; set; }
+
+        /// <summary>
+        /// The chest a Treasure AI is going after. Once it is opened -- by this creature or
+        /// by anyone else -- the creature heads for EscapePosition instead.
+        /// </summary>
+        public FDPosition TreasurePosition { get; set; }
+
+        /// <summary>
+        /// A magical creature that found no magic worth spelling defers the rest of its turn:
+        /// it is put back in the queue and picked up again once every other creature of its
+        /// faction has acted, this time to move and attack (see AIMagicalDelegate).
+        /// Cleared at the start of each turn.
+        /// </summary>
+        public bool PendingAction { get; set; }
 
         protected FDAICreature(int creatureId, CreatureFaction faction) : base(creatureId, faction)
         {
@@ -49,6 +73,25 @@ namespace WindingTale.Core.Objects
             this.AIType = aiType;
         }
 
+        /// <summary>
+        /// A creature lying in wait stops waiting once it is attacked.
+        /// </summary>
+        public void WakeUpByAttack()
+        {
+            if (this.AIType == AITypes.AIType_StandBy)
+            {
+                this.AIType = AITypes.AIType_Aggressive;
+            }
+        }
+
+        /// <summary>
+        /// AI targets (the ones an event uses as a marker) are invisible to the AI: nobody
+        /// walks up to them and nobody attacks them.
+        /// </summary>
+        public bool IsNoticable()
+        {
+            return this.AIType != AITypes.AIType_UnNoticable;
+        }
     }
 
     /// <summary>
@@ -654,9 +697,15 @@ namespace WindingTale.Core.Objects
                 return false;
             }
 
-            if (this.CalculatedAp <= target.CalculatedDp) 
-            { 
-                return false; 
+            if (this.CalculatedAp <= target.CalculatedDp)
+            {
+                return false;
+            }
+
+            // An event marker is not a creature as far as the AI is concerned.
+            if (target is FDAICreature aiTarget && !aiTarget.IsNoticable())
+            {
+                return false;
             }
 
             return true;

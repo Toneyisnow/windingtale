@@ -6,6 +6,11 @@ using WindingTale.Scenes.GameFieldScene;
 
 namespace WindingTale.AI.Delegates
 {
+    /// <summary>
+    /// Lies in wait: does nothing at all, turn after turn, until a chapter event switches it
+    /// to another AI type -- or until somebody attacks it, which wakes it up on its own
+    /// (FDAICreature.WakeUpByAttack).
+    /// </summary>
     public class AIStandByDelegate : AIDelegate
     {
         public AIStandByDelegate(GameMain gameMain, FDAICreature c) : base(gameMain, c)
@@ -15,7 +20,7 @@ namespace WindingTale.AI.Delegates
 
         public override void TakeAction()
         {
-
+            this.EndTurn();
         }
 
     }

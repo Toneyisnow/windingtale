@@ -286,6 +286,8 @@ namespace WindingTale.Core.Files
             if (creature is FDAICreature aiCreature)
             {
                 record.AIType = aiCreature.AIType;
+                record.AIEscapePosition = aiCreature.EscapePosition;
+                record.AITreasurePosition = aiCreature.TreasurePosition;
             }
 
             return record;
@@ -308,6 +310,12 @@ namespace WindingTale.Core.Files
             FDCreature creature = record.Faction == CreatureFaction.Friend ?
                 new FDCreature(record.Id, definition, record.Faction) :
                 new FDAICreature(record.Id, definition, record.Faction, record.AIType);
+
+            if (creature is FDAICreature restoredAiCreature)
+            {
+                restoredAiCreature.EscapePosition = record.AIEscapePosition;
+                restoredAiCreature.TreasurePosition = record.AITreasurePosition;
+            }
 
             creature.Level = record.Level;
             creature.Hp = record.Hp;

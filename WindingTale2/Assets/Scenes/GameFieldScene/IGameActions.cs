@@ -39,6 +39,8 @@ namespace WindingTale.Scenes.GameFieldScene
 
         void creatureRest(FDCreature creature);
 
+        void creaturePendAction(FDCreature creature);
+
         void endTurnForAll();
 
         #endregion

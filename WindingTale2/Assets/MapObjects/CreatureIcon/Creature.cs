@@ -42,6 +42,12 @@ namespace WindingTale.MapObjects.CreatureIcon
         {
             this.SetActioned(false);
             this.creature.PrePosition = null;
+
+            if (this.creature is FDAICreature aiCreature)
+            {
+                // A deferred turn only ever defers within the turn it was deferred in.
+                aiCreature.PendingAction = false;
+            }
         }
 
         public void SetGreyout(bool greyout)

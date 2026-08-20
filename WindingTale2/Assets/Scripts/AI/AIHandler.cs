@@ -51,11 +51,55 @@ namespace WindingTale.AI
                 creatures = gameMain.gameMap.Map.Npcs;
             }
 
-            // TODO: select the next creature should follow an order
+            // Creatures act in id order. A caster that deferred its turn (PendingAction) is
+            // held back until everyone else has gone -- it wants to see where its team mates
+            // end up before it commits to walking into the fight.
+            FDCreature selectedCreature = SelectNextCreature(creatures, false);
+            if (selectedCreature == null)
+            {
+                selectedCreature = SelectNextCreature(creatures, true);
+            }
+
+            if (selectedCreature == null)
+            {
+                // No creature can take action, end the turn
+                return false;
+            }
+
+            Debug.Log("AIHandler Found creature");
+
+            if (selectedCreature is FDAICreature aiCreature)
+            {
+                RunAIDelegate(aiCreature);
+            }
+            else
+            {
+                // Not an AI creature at all, but it is on an AI team and the turn cannot end
+                // until it has acted: pass its turn rather than stall the game.
+                Debug.LogWarning("AIHandler: creature " + selectedCreature.Id + " is not an FDAICreature.");
+                gameMain.creatureRest(selectedCreature);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// The lowest-id creature still to act, among those that have deferred their turn or
+        /// among those that have not, according to pending.
+        /// </summary>
+        private static FDCreature SelectNextCreature(List<FDCreature> creatures, bool pending)
+        {
             FDCreature selectedCreature = null;
+
             foreach (FDCreature creature in creatures)
             {
                 if (!creature.CanTakeAction())
+                {
+                    continue;
+                }
+
+                bool isPending = (creature as FDAICreature)?.PendingAction ?? false;
+                if (isPending != pending)
                 {
                     continue;
                 }
@@ -66,21 +110,17 @@ namespace WindingTale.AI
                 }
             }
 
-            if (selectedCreature == null)
-            {
-                // No creature can take action, end the turn
-                return false;
-            }
-
-            Debug.Log("AIHandler Found creature");
-            RunAIDelegate(selectedCreature as FDAICreature);
-
-            return true;
+            return selectedCreature;
         }
 
         private void RunAIDelegate(FDAICreature creature)
         {
             AIDelegate aiDelegate = null;
+
+            // A creature that only passes its turn is not worth panning the camera to --
+            // and an UnNoticable one is a marker the player is not meant to be shown at all.
+            bool isIdle = creature.AIType == AITypes.AIType_StandBy
+                || creature.AIType == AITypes.AIType_UnNoticable;
 
             switch (creature.AIType)
             {
@@ -120,20 +160,27 @@ namespace WindingTale.AI
                 case AITypes.AIType_Treasure:
                     aiDelegate = new AITreasureDelegate(gameMain, creature);
                     break;
+                case AITypes.AIType_StandBy:
+                case AITypes.AIType_UnNoticable:
+                default:
+                    // Lying in wait, or not really a creature at all: it passes its turn.
+                    // Note this must still end the turn -- a creature left flagged as not
+                    // having acted would stall the turn for good.
+                    aiDelegate = new AIStandByDelegate(gameMain, creature);
+                    break;
             }
 
-            if (aiDelegate != null)
-            {
-                lastOperatedCreatureId = creature.Id;
+            lastOperatedCreatureId = creature.Id;
 
+            if (!isIdle)
+            {
                 // Before the AI operates on this creature, slide the cursor (and the
                 // follow camera) to the tile under the creature, matching the same
                 // framing used during conversations.
                 gameMain.PushActivity(new SlideCursorActivity(creature.Position));
-
-                aiDelegate.TakeAction();
             }
 
+            aiDelegate.TakeAction();
         }
 
     }

@@ -18,10 +18,12 @@ namespace WindingTale.Chapters
         public Chapter1(GameMain gameMain) : base (gameMain, 1)
         {
             int eventId = 0;
+            // The originals were all "TurnType_Friend Turn:N", which fired once the last
+            // friend had acted -- that is the Npc phase boundary here. See LoadTurnEvent.
             LoadTurnEvent(++eventId, 1, CreatureFaction.Friend, turn1);
-            LoadTurnEvent(++eventId, 3, CreatureFaction.Enemy, turn3);
-            LoadTurnEvent(++eventId, 4, CreatureFaction.Enemy, turn4);
-            LoadTurnEvent(++eventId, 5, CreatureFaction.Enemy, turn5_Boss);
+            LoadTurnEvent(++eventId, 3, CreatureFaction.Npc, turn3);
+            LoadTurnEvent(++eventId, 4, CreatureFaction.Npc, turn4);
+            LoadTurnEvent(++eventId, 5, CreatureFaction.Npc, turn5_Boss);
             LoadTurnEvent(++eventId, 6, CreatureFaction.Npc, turn6_Npc);
 
             LoadDeadEvent(++eventId, 1, (gameMain) => gameMain.OnGameOver());

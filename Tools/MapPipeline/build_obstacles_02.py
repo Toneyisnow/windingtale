@@ -3,10 +3,13 @@
 Run once to produce Resources/Remastered/Obstacles/vox/blue_house_{1..5}.vox.
 Chapter 02 also uses thatched_hut_1 and barrel_group_1, which already exist.
 
-The 2D art draws these buildings as a set of parallel gabled wings seen from
-the front: a tall gable over the entrance flanked by lower ones, beige stone
-walls, a stone plinth, and arched openings. That is what ``wing()`` builds, so
-each house here is just a list of wings plus its openings.
+The 2D art draws these buildings as a set of parallel wings seen from the front:
+a tall peak over the entrance flanked by lower ones, beige stone walls, a stone
+plinth, and arched openings. That is what ``wing()`` builds, so each house here
+is just a list of wings plus its openings.
+
+Each wing is roofed with a square pyramid rather than a ridge, so it comes to a
+point from every direction instead of running back as a long hall.
 
 Model space (see references/formats.md):
     x  0..W-1   map X, left -> right      W = cols * 24
@@ -20,6 +23,7 @@ Heights are written at the scale the 2D art implies and squashed on the way out
 them the cleaned map, are unaffected by retuning them.
 """
 
+import math
 import os
 
 import voxlib
@@ -39,21 +43,21 @@ CROSS = voxlib.palette_index((232, 232, 240))
 SHELL = 4          # wall / roof thickness in voxels
 
 # The churches were first built at the height the 2D art implies, which reads as
-# a tower once they stand up on the board next to 40-voxel tiles. Everything
-# below the eaves is squashed to half, the roof pitch to a third. The numbers in
-# the builders below are still the original, art-derived ones -- squashing
-# happens in one place, so the models stay readable as descriptions of the
-# buildings and the ratios can be retuned by editing these two constants.
+# a tower once they stand up on the board next to 40-voxel tiles. The walls are
+# cut to half; the roof keeps its full pitch, which is now spent on a pyramid
+# rather than a ridge. The numbers in the builders below are still the original,
+# art-derived ones -- scaling happens in one place, so the models stay readable
+# as descriptions of the buildings and the ratio can be retuned here.
 BODY_SCALE = 1.0 / 2      # plinth + walls + everything standing on them
-ROOF_SCALE = 1.0 / 3      # eaves -> ridge
+ROOF_SCALE = 1.0          # eaves -> apex, unchanged
 
 
 def squash(z, wall_top):
-    """Original z -> squashed z, for a feature on a wing with this wall top.
+    """Original z -> built z, for a feature on a wing with this wall top.
 
-    Piecewise: below the eaves it is the body scale, above it the roof scale, so
-    a door keeps sitting on the ground and a rose window keeps sitting in the
-    gable instead of drifting through the roof.
+    Piecewise about the eaves: below them the body scale, above them the roof
+    scale. With ROOF_SCALE at 1 the roof is simply carried down with the wall it
+    stands on, keeping its full height.
     """
     body = int(round(wall_top * BODY_SCALE))
     if z <= wall_top:
@@ -142,19 +146,58 @@ class Model(object):
         return [(x, y, z, c) for (x, y, z), c in sorted(self.v.items())]
 
 
-def wing(m, x0, x1, y0, y1, wall_top, ridge_top, plinth=6):
-    """One gabled wing: stone walls with a pitched roof, ridge running front-back.
+EAVE = 3               # roof overhang past the wall
 
-    The ridge sits over the wing's centre line in x, so the gable triangle
-    faces the viewer at y = y0 -- which is how the 2D art draws them.
+
+class Roof(object):
+    """The pyramid a wing was built under, so things can be set into its surface.
+
+    Anything that has to sit on the roof -- a cross on the apex, a window let
+    into a slope -- needs the same height formula the roof was built from. It
+    lives here rather than being written out a second time at each call site.
+    """
+
+    def __init__(self, x0, x1, y0, y1, top_of_wall, apex):
+        self.x0, self.x1, self.y0, self.y1 = x0, x1, y0, y1
+        self.cx = (x0 + x1) / 2.0
+        self.cy = (y0 + y1) / 2.0
+        self.hx = (x1 - x0) / 2.0 + EAVE
+        self.hy = (y1 - y0) / 2.0 + EAVE
+        self.top_of_wall = top_of_wall
+        self.apex = apex
+
+    @property
+    def rise(self):
+        return self.apex - self.top_of_wall
+
+    def t(self, x, y):
+        """Chebyshev distance to the centre, 0 at the apex and 1 at the eaves."""
+        return max(abs(x - self.cx) / self.hx, abs(y - self.cy) / self.hy)
+
+    def top(self, x, y):
+        return self.top_of_wall + int(round(self.rise * (1.0 - self.t(x, y))))
+
+    def on_front_slope(self, x, y):
+        return y < self.cy and abs(y - self.cy) / self.hy >= abs(x - self.cx) / self.hx
+
+
+def wing(m, x0, x1, y0, y1, wall_top, ridge_top, plinth=6):
+    """One bay: stone walls under a square-pyramid roof.
+
+    All four slopes climb from the eaves to a single apex over the centre of the
+    bay, so there is no ridge and no gable triangle -- the roof reads as a point
+    from every side. ``ridge_top`` is that apex.
 
     ``wall_top`` and ``ridge_top`` are the original art heights; the wing is
-    built at the squashed ones. Only z is scaled -- the footprint, the shell
+    built at the scaled ones. Only z is scaled -- the footprint, the shell
     thickness and the eave overhang are unchanged.
+
+    Returns the :class:`Roof`, for whatever stands on or sits in it.
     """
     base = max(SHELL, squash(plinth, wall_top))
     top_of_wall = squash(wall_top, wall_top)
-    top_of_ridge = squash(ridge_top, wall_top)
+    apex = squash(ridge_top, wall_top)
+    roof = Roof(x0, x1, y0, y1, top_of_wall, apex)
 
     # plinth + walls
     m.box(x0, x1, y0, y1, 0, base - 1, PLINTH)
@@ -166,27 +209,32 @@ def wing(m, x0, x1, y0, y1, wall_top, ridge_top, plinth=6):
                 if (x, y, z) in m.v:
                     m.set(x, y, z, WALL_DARK)
 
-    cx = (x0 + x1) / 2.0
-    half = (x1 - x0) / 2.0
-    rise = top_of_ridge - top_of_wall
-    eave = 3                      # roof overhang past the wall
+    cx, cy = roof.cx, roof.cy
+    hx, hy = roof.hx, roof.hy
+    eave = EAVE
+    rise = roof.rise
 
     for x in range(x0 - eave, x1 + eave + 1):
-        d = abs(x - cx)
-        if d > half + eave:
-            continue
-        top = top_of_wall + int(round(rise * max(0.0, 1.0 - d / (half + eave))))
-        colour = ROOF_LIGHT if x > cx else ROOF_DARK
-        if abs(x - cx) <= 1:
-            colour = ROOF_MID
         for y in range(y0 - eave, y1 + eave + 1):
+            # Distance to the centre in units of the half-footprint, taken as a
+            # max over the two axes: the level sets are rectangles shrinking to a
+            # point, which is the pyramid. Using |x - cx| alone is what made the
+            # old roof a ridge, since then y did not constrain the height.
+            tx = abs(x - cx) / hx
+            ty = abs(y - cy) / hy
+            t = max(tx, ty)
+            if t > 1.0:
+                continue
+            top = top_of_wall + int(round(rise * (1.0 - t)))
+            if tx >= ty:
+                colour = ROOF_LIGHT if x > cx else ROOF_DARK
+            else:
+                colour = ROOF_MID if y < cy else ROOF_DARK
             edge = (y < y0 or y > y1 or x < x0 or x > x1)
             for z in range(top - SHELL + 1, top + 1):
                 m.set(x, y, z, ROOF_EDGE if edge and z == top - SHELL + 1 else colour)
-        # gable infill: the triangle of wall under the front and back slopes
-        for y in (y0, y1):
-            for z in range(top_of_wall + 1, top - SHELL + 1):
-                m.set(x, y, z, WALL if x <= x1 and x >= x0 else ROOF_EDGE)
+
+    return roof
 
 
 def arch(m, cx, y, w, h, wall_top, z0=0, colour=OPENING, depth=8):
@@ -222,19 +270,63 @@ def window(m, cx, y, w, h, z0, wall_top, colour=GLASS, frame=WALL_DARK):
                 m.set(cx + dx, y + dy, z, colour if inside else frame)
 
 
-def cross(m, cx, y, z0, wall_top, size=14):
-    """Roof furniture, so it scales with the roof rather than with the walls."""
-    z0 = squash(z0, wall_top)
-    size = max(4, int(round(size * ROOF_SCALE)))
+def roof_window(m, roof, w, up=0.5, colour=GLASS, frame=WALL_DARK):
+    """A rose window let into the front slope, flush with the roof.
+
+    The pyramid has no gable to hang one on, so the window lies in the slope
+    itself. The roof voxels inside a disc are recoloured rather than a hole cut,
+    which keeps the surface unbroken and costs the exporter nothing.
+
+    ``w`` is the window's width across the slope. Its extent in y is shortened
+    by the pitch, so it reads as a circle to someone looking at the sloping face
+    rather than as a circle seen from directly above -- on the steep porch of
+    blue_house_1 that is the difference between a disc and a thin band. ``up``
+    places the centre along the slope: 0 at the eave, 1 at the apex.
+    """
+    r = w / 2.0
+    # One step in y climbs rise/hy in z, so a length lying on the slope projects
+    # to 1/sqrt(1 + pitch^2) of itself when measured in plan.
+    pitch = roof.rise / roof.hy
+    ry = max(1.5, r / math.sqrt(1.0 + pitch * pitch))
+    yc = roof.cy - (1.0 - up) * (roof.cy - (roof.y0 - EAVE))
+
+    painted = 0
+    for x in range(int(roof.cx - r) - 1, int(roof.cx + r) + 2):
+        for y in range(int(yc - ry) - 1, int(yc + ry) + 2):
+            if not roof.on_front_slope(x, y):
+                continue
+            d = ((x - roof.cx) / r) ** 2 + ((y - yc) / ry) ** 2
+            if d > 1.44:                      # 1.2^2 -- the frame ring
+                continue
+            top = roof.top(x, y)
+            c = colour if d <= 1.0 else frame
+            for z in range(top - SHELL + 1, top + 1):
+                if (x, y, z) in m.v:
+                    m.set(x, y, z, c)
+                    painted += 1
+    if not painted:
+        raise AssertionError(
+            'rose window at x=%.1f y=%.1f found no roof to sit in -- it would '
+            'hang beside the building' % (roof.cx, yc))
+    return painted
+
+
+def cross(m, roof, size=14):
+    """Stood on a roof's apex -- pass the :class:`Roof` ``wing()`` returned.
+
+    A ridge let a cross stand anywhere along it, and these used to be placed on
+    the front gable. A pyramid has exactly one place to put one.
+    """
+    cx, cy, z0 = int(round(roof.cx)), int(round(roof.cy)), roof.apex
     arm = max(1, size // 3)
     for z in range(z0, z0 + size):
-        for dy in range(3):
-            m.set(cx, y + dy, z, CROSS)
-            m.set(cx + 1, y + dy, z, CROSS)
+        for dy in (-1, 0, 1):
+            m.set(cx, cy + dy, z, CROSS)
+            m.set(cx + 1, cy + dy, z, CROSS)
     for dx in range(-arm, arm + 1):
-        for dy in range(3):
-            m.set(cx + dx, y + dy, z0 + size - arm, CROSS)
-            m.set(cx + dx, y + dy, z0 + size - arm + 1, CROSS)
+        for dy in (-1, 0, 1):
+            m.set(cx + dx, cy + dy, z0 + size - arm, CROSS)
+            m.set(cx + dx, cy + dy, z0 + size - arm + 1, CROSS)
 
 
 # --------------------------------------------------------------------------
@@ -244,18 +336,19 @@ def cross(m, cx, y, z0, wall_top, size=14):
 def blue_house_1():
     """Top-left cathedral: 10 cols x 9 rows, the biggest on the map.
 
-    Four flanking wings with two tall gabled halls between them, a central
-    entrance and a stone gatehouse in front.
+    Four flanking wings with two taller ones between them, a central entrance
+    and a stone gatehouse in front. The cross stands on the porch's peak, the
+    highest point of the model.
     """
-    m = Model(10, 9, squash(180, 80))
+    m = Model(10, 9, 140)
     wing(m, 6, 57, 40, 190, 66, 118)
     wing(m, 58, 105, 40, 200, 74, 150)
     wing(m, 106, 153, 40, 200, 74, 150)
     wing(m, 154, 205, 40, 190, 66, 118)
-    wing(m, 90, 149, 12, 60, 80, 158)          # entrance porch, pushed forward
+    porch = wing(m, 90, 149, 12, 60, 80, 158)  # entrance porch, pushed forward
     arch(m, 119, 12, 30, 54, 80)               # main door
-    window(m, 119, 12, 20, 26, 92, 80)         # rose window over the door
-    cross(m, 119, 12, 150, 80, 20)
+    roof_window(m, porch, 20)                  # rose window, set into the slope
+    cross(m, porch, 20)
     # The four wings run x 6..205, so they are centred on 105 rather than on the
     # 240-wide box. Mirror the end-wing openings about that, not about the box,
     # or the right-hand pair lands past the wall.
@@ -268,12 +361,12 @@ def blue_house_1():
 
 def blue_house_2():
     """Repeated twice (top-right and bottom-left): 7 cols x 7 rows."""
-    m = Model(7, 7, squash(150, 70))
-    wing(m, 4, 55, 30, 150, 62, 112)
+    m = Model(7, 7, 107)
+    left = wing(m, 4, 55, 30, 150, 62, 112)
     wing(m, 56, 111, 24, 156, 70, 140)
     wing(m, 112, 163, 30, 150, 62, 112)
     arch(m, 83, 24, 28, 52, 70)
-    cross(m, 40, 30, 116, 62, 16)
+    cross(m, left, 16)
     window(m, 28, 30, 18, 14, 36, 62)
     window(m, 138, 30, 18, 14, 36, 62)
     return m
@@ -281,13 +374,13 @@ def blue_house_2():
 
 def blue_house_3():
     """Centre church: 8 cols x 8 rows, tall nave with a cross."""
-    m = Model(8, 8, squash(168, 78))
+    m = Model(8, 8, 137)
     wing(m, 4, 59, 40, 170, 66, 112)
-    wing(m, 60, 131, 20, 180, 78, 156)
+    nave = wing(m, 60, 131, 20, 180, 78, 156)
     wing(m, 132, 187, 40, 170, 66, 112)
     arch(m, 95, 20, 32, 58, 78)
-    window(m, 95, 20, 22, 28, 96, 78)
-    cross(m, 95, 20, 156, 78, 18)
+    roof_window(m, nave, 22)
+    cross(m, nave, 18)
     for cx in (24, 44, 148, 168):
         window(m, cx, 40, 14, 20, 44, 66)
     return m
@@ -295,7 +388,7 @@ def blue_house_3():
 
 def blue_house_4():
     """Right-hand house: 6 cols x 7 rows, runs off the right edge of the map."""
-    m = Model(6, 7, squash(150, 72))
+    m = Model(6, 7, 108)
     wing(m, 4, 55, 36, 156, 64, 114)
     wing(m, 56, 111, 28, 162, 72, 142)
     wing(m, 112, 143, 36, 156, 64, 110)
@@ -310,14 +403,14 @@ def blue_house_4():
 def blue_house_5():
     """Bottom-centre house: 4 cols x 8 rows, runs off the bottom of the map.
 
-    One hall under one ridge -- the art shows a single peak over the entrance,
-    so this must not be built from flanking wings the way the wider houses are.
+    One hall under one roof -- the art shows a single peak over the entrance, so
+    this must not be built from flanking wings the way the wider houses are.
     """
-    m = Model(4, 8, squash(160, 74))
-    wing(m, 4, 91, 30, 186, 74, 140)
+    m = Model(4, 8, 121)
+    hall = wing(m, 4, 91, 30, 186, 74, 140)
     arch(m, 47, 30, 26, 52, 74)
-    window(m, 47, 30, 18, 24, 92, 74)
-    cross(m, 47, 30, 140, 74, 16)
+    roof_window(m, hall, 18)
+    cross(m, hall, 16)
     return m
 
 

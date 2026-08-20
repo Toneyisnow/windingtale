@@ -22,11 +22,21 @@ namespace WindingTale.Chapters
         /// <summary>The bonus handed to the team when no villager was lost.</summary>
         private const int AllNpcSavedItemId = 113;
 
+        /// <summary>
+        /// Where the villagers run to. They head for the north pass to begin with; once the
+        /// enemy reinforcements come down through it (turn 3) they turn around and make for
+        /// the east road the party came in by.
+        /// </summary>
+        private static readonly FDPosition NorthPassEscape = FDPosition.At(20, 2);
+        private static readonly FDPosition EastRoadEscape = FDPosition.At(26, 20);
+
         public Chapter2(GameMain gameMain) : base(gameMain, 2)
         {
             int eventId = 0;
+            // The original fired both of these on "TurnType_Friend Turn:N", which meant once
+            // the last friend had acted -- the Npc phase boundary here. See LoadTurnEvent.
             LoadTurnEvent(++eventId, 1, CreatureFaction.Friend, turn1);
-            LoadTurnEvent(++eventId, 3, CreatureFaction.Enemy, turn3);
+            LoadTurnEvent(++eventId, 3, CreatureFaction.Npc, turn3);
 
             LoadDeadEvent(++eventId, 1, (gameMain) => gameMain.OnGameOver());
 
@@ -81,15 +91,16 @@ namespace WindingTale.Chapters
 
             gameMain.PushActivity((gameMain) =>
             {
-                // The villagers appear. The original ran them on an escape AI heading for
-                // (20, 2); the escape delegate is not implemented yet, so they use the
-                // default AI for now.
+                // The villagers appear.
                 AddCreatureToMap(gameMain, CreatureFaction.Npc, 91, 50201, FDPosition.At(17, 13));
                 AddCreatureToMap(gameMain, CreatureFaction.Npc, 92, 50202, FDPosition.At(16, 13));
                 AddCreatureToMap(gameMain, CreatureFaction.Npc, 93, 50202, FDPosition.At(8, 8));
                 AddCreatureToMap(gameMain, CreatureFaction.Npc, 94, 50202, FDPosition.At(24, 7));
                 AddCreatureToMap(gameMain, CreatureFaction.Npc, 95, 50201, FDPosition.At(7, 11));
                 AddCreatureToMap(gameMain, CreatureFaction.Npc, 96, 50201, FDPosition.At(10, 13));
+
+                // They are running for the north pass, and fight nobody on the way.
+                SetVillagersEscapeTo(gameMain, NorthPassEscape);
             });
 
             gameMain.PushActivity(new ParallelActivity(
@@ -169,9 +180,12 @@ namespace WindingTale.Chapters
             // Talking
             PushConversationsActivities(gameMain, 2, 2, 1, 9);
 
-            // Note: with the north pass now blocked, the original turned the villagers
-            // around to escape towards (26, 20) instead. Nothing to do here until the
-            // escape AI is implemented.
+            gameMain.PushActivity((gameMain) =>
+            {
+                // The north pass is blocked now: the villagers turn around and run for the
+                // east road behind the party instead.
+                SetVillagersEscapeTo(gameMain, EastRoadEscape);
+            });
         };
 
         private Action<GameMain> enemyClear = (gameMain) =>
@@ -205,6 +219,18 @@ namespace WindingTale.Chapters
             // behind the conversation above, so the closing lines play out first.
             gameMain.OnGameWin();
         };
+
+        /// <summary>
+        /// Points every villager still on the map at an escape tile. Villagers that have
+        /// already fallen are simply not there to redirect.
+        /// </summary>
+        private static void SetVillagersEscapeTo(GameMain gameMain, FDPosition escapePosition)
+        {
+            foreach (int npcId in NpcIds)
+            {
+                SetCreatureAiEscape(gameMain, npcId, escapePosition);
+            }
+        }
 
         /// <summary>
         /// The farewell line a villager says as it falls, one conversation per npc id.

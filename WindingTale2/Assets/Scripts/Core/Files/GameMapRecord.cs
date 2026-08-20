@@ -91,6 +91,12 @@ namespace WindingTale.Core.Files
         // Only for AI Creature
         public AITypes AIType;
 
+        // Where an Escape or Treasure AI is heading. Null for every other creature -- and
+        // null in records written before these were carried, which is the same thing as
+        // "this creature has no such destination".
+        public FDPosition AIEscapePosition;
+        public FDPosition AITreasurePosition;
+
         /// <summary>
         /// A copy that shares nothing mutable with this one. The lists a record is built
         /// from are the live creature's own (see GameMapRecordManager.ConvertCreatureToRecord),

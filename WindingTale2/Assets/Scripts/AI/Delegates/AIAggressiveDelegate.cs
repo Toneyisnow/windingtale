@@ -10,6 +10,10 @@ using WindingTale.Scenes.GameFieldScene;
 
 namespace WindingTale.AI.Delegates
 {
+    /// <summary>
+    /// The plain fighter: heal up when badly hurt, otherwise walk at the nearest opponent
+    /// it can hurt and attack it if the walk brought it within reach.
+    /// </summary>
     public class AIAggressiveDelegate : AIDelegate
     {
         public AIAggressiveDelegate(GameMain gameMain, FDAICreature c) : base(gameMain, c)
@@ -21,58 +25,22 @@ namespace WindingTale.AI.Delegates
         {
             if (this.NeedAndCanRecover())
             {
-                gameMain.creatureRest(this.creature);
+                this.SelfRecover();
                 return;
             }
 
-            foreach(FDCreature en in this.gameMain.gameMap.Map.Enemies)
-            {
-                Debug.Log("TakeAction: enemy position: " + en.Position.ToString());
-            }
-
-
-            // Get target 
             FDCreature target = this.LookForAggressiveTarget();
-
-            // According to the target, find the nearest position within the Move scope, and get the path to that position
-            FDMovePath movePath = this.DecidePositionAndPath(target.Position);
-
-            // Do the walk
-            gameMain.creatureMoveAsync(creature, movePath);
-
-            Debug.Log("AI Aggressive: creature=" + creature.Id + " position=" + creature.Position + " target pos=" + movePath?.Desitination?.ToString());
-
-            FDPosition destination = movePath.Desitination ?? this.creature.Position;
-
-            AttackItemDefinition item = this.creature.GetAttackItem();
-            if (item != null)
+            if (target == null)
             {
-                FDSpan span = item.AttackScope;
-                DirectRangeFinder finder = new DirectRangeFinder(this.gameMain.gameMap.Map.Field, destination, span.Max, span.Min);
-                FDRange range = finder.CalculateRange();
-                if (range.Contains(target.Position))
-                {
-                    // If in attack range, attack the target
-                    gameMain.PushActivity((gameMain) =>
-                    {
-                        gameMain.creatureAttackAsync(this.creature, target);
-                    });
-                    return;
-                } else
-                {
-                    gameMain.PushActivity((gameMain) =>
-                    {
-                        gameMain.creatureRest(this.creature);
-                    });
-                }
+                // Nobody left on the other side.
+                this.EndTurn();
+                return;
             }
-            else
-            {
-                gameMain.PushActivity((gameMain) =>
-                {
-                    gameMain.creatureRest(this.creature);
-                });
-            }
+
+            // Walk towards the target, then attack from wherever the walk ended.
+            FDPosition destination = this.MoveToward(target.Position);
+
+            this.AttackTargetOrEndTurn(target, destination);
         }
 
     }
