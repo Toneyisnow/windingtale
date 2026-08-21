@@ -200,7 +200,10 @@ namespace WindingTale.Chapters
             }
 
             // The two openings are the same line of dialog, thanked for or apologized for.
-            int openingSequence = isAllNpcSaved ? 101 : 1;
+            // The alternative line sits at sequence 99, out of the way of the 1..24 run that
+            // follows it -- the sequence is formatted with StringUtils.Digit2, so it has to
+            // stay under 100 to produce a usable localization key.
+            int openingSequence = isAllNpcSaved ? 99 : 1;
             PushConversationsActivities(gameMain, 2, 3, openingSequence, openingSequence);
 
             gameMain.PushActivity((gameMain) =>

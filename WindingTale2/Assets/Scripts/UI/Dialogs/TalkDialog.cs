@@ -192,15 +192,20 @@ public class TalkDialog : MonoBehaviour
     public void InitConversation(int chapterId, int creatureAnimationId, LocalizedString text, GameCanvas.DialogPosition displayPosition, Action<int> onSelected)
     {
         var textMeshComponent = conversationTextObj.GetComponent<TextMeshProUGUI>();
-        var chapterMaterial = Resources.Load<Material>(string.Format(@"Fonts/FontAssets/zh/FZB_Chapter-{0}", StringUtils.Digit2(chapterId)));
-        if (chapterMaterial != null)
+
+        // The whole font asset has to be swapped, not just its material. Each chapter's
+        // atlas is packed only with the glyphs that chapter's script uses, so the
+        // character -> UV table differs per chapter; keeping the prefab's font asset and
+        // pointing its material at another chapter's atlas looks up the glyph in the wrong
+        // table, and every character the prefab's chapter never used comes out as a box.
+        var chapterFont = Resources.Load<TMP_FontAsset>(string.Format(@"Fonts/FontAssets/zh/FZB_Chapter-{0}", StringUtils.Digit2(chapterId)));
+        if (chapterFont != null)
         {
-            textMeshComponent.fontMaterial = chapterMaterial;
-            textMeshComponent.UpdateFontAsset();
+            textMeshComponent.font = chapterFont;
         }
         else
         {
-            Debug.LogWarning(string.Format("TalkDialog: missing chapter font material FZB_Chapter-{0}", StringUtils.Digit2(chapterId)));
+            Debug.LogWarning(string.Format("TalkDialog: missing chapter font asset FZB_Chapter-{0}", StringUtils.Digit2(chapterId)));
         }
 
         activeTextObj = conversationTextObj;
