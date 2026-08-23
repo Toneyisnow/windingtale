@@ -78,6 +78,7 @@ namespace WindingTale.Chapters
         /// record -- level, HP, items, magic, experience -- and only its position comes from
         /// the chapter. Returns null for a friend who fell in an earlier chapter and has not
         /// been revived: they are still in the party record, but they do not take the field.
+        /// They are put into the map's DeadCreatures instead -- see RememberUnrevived.
         ///
         /// Leave aiType out and the creature behaves the way its trade suggests -- see
         /// GetDefaultAiType.
@@ -94,6 +95,7 @@ namespace WindingTale.Chapters
                     if (carried.Hp <= 0)
                     {
                         // Fallen and not yet revived: the chapter goes on without them.
+                        RememberUnrevived(gameMain, carried);
                         return null;
                     }
 
@@ -101,6 +103,10 @@ namespace WindingTale.Chapters
                     // item and magic lists with the party record, which is meant to stay
                     // the snapshot of what walked in.
                     creature = GameMapRecordManager.CreateCreatureFromRecord(carried.Clone());
+
+                    // Whatever the record says, a creature that takes the field is on it:
+                    // this one was revived in the village since it was last written down.
+                    creature.IsUnrevived = false;
                 }
             }
 
@@ -115,6 +121,37 @@ namespace WindingTale.Chapters
             gameMain.gameMap.AddCreature(creature, position);
 
             return creature;
+        }
+
+        /// <summary>
+        /// Keeps a party member who is still waiting to be revived on the map as one of its
+        /// DeadCreatures. They are not on the field and no icon is drawn for them, but the
+        /// chapter can still have them speak -- and a speaker nothing can look up talks with
+        /// a blank portrait (definition 0), which is what this is here to prevent.
+        ///
+        /// The same list holds the creatures who fall during this battle; IsUnrevived marks
+        /// which of the two an entry is, so a death the chapter is watching for
+        /// (CreatureDeadEvent) is not read out of a death that happened a chapter ago.
+        /// </summary>
+        private static void RememberUnrevived(GameMain gameMain, CreatureMapRecord carried)
+        {
+            List<FDCreature> deadCreatures = gameMain.gameMap.Map.DeadCreatures;
+            if (deadCreatures.Exists(creature => creature.Id == carried.Id))
+            {
+                return;
+            }
+
+            // On a copy, for the same reason the living are restored from one: the party
+            // record is meant to stay the snapshot of what walked into the battle.
+            FDCreature unrevived = GameMapRecordManager.CreateCreatureFromRecord(carried.Clone());
+            unrevived.IsUnrevived = true;
+
+            // Never took this field, so it has no place on it. TalkActivity leaves the
+            // cursor where it is for a creature it finds in this list, but a stale position
+            // from a chapter ago would be a lie either way.
+            unrevived.Position = null;
+
+            deadCreatures.Add(unrevived);
         }
 
         /// <summary>

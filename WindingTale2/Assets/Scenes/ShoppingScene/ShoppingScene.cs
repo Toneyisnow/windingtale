@@ -58,6 +58,21 @@ public class ShoppingScene : MonoBehaviour
     /// <summary>CommonStrings "Confirm-56" asked after buying an equippable item: "要装备上去吗？".</summary>
     private const int EquipConfirmId = 56;
 
+    /// <summary>CommonStrings "Confirm-57" asked before a revive: "复活{名字}，#需要{价格}元，确定要复活吗？".</summary>
+    private const int ReviveConfirmId = 57;
+
+    /// <summary>CommonStrings "Message-60" shown when nobody has fallen: "队员中没有需要复活的！".</summary>
+    private const int NoOneToReviveMessageId = 60;
+
+    /// <summary>
+    /// What the church charges to bring a party member back, per level of that member. The
+    /// original's price table did not survive into the data files, so this is the game's own
+    /// number: it is the one place the revive price is decided, and the only thing to change
+    /// to retune it. Read against the item prices in Data/Item.txt (a herb 10, a potion 80,
+    /// a good weapon 1000) it puts a fallen veteran at a real but payable loss.
+    /// </summary>
+    private const int RevivePricePerLevel = 100;
+
     /// <summary>How long the bought-item flourish holds before the shop carries on, in seconds.</summary>
     private const float BoughtAnimationSeconds = 2f;
 
@@ -155,6 +170,16 @@ public class ShoppingScene : MonoBehaviour
     private CreatureMapRecord pendingGiveFriend = null;
 
     private int pendingGiveItemIndex = -1;
+
+    /// <summary>
+    /// The fallen party member the church is about to revive, and what it quoted for it,
+    /// carried from the creature picker across the "复活...吗？" confirm. The price is kept
+    /// rather than recomputed on the way back so the player is charged exactly what they
+    /// were asked.
+    /// </summary>
+    private CreatureMapRecord pendingReviveFriend = null;
+
+    private int pendingRevivePrice = 0;
 
     void Start()
     {
@@ -393,6 +418,10 @@ public class ShoppingScene : MonoBehaviour
 
             case ShoppingHomeDialog.ShopAction.Equip:
                 OpenEquipCreaturesDialog();
+                break;
+
+            case ShoppingHomeDialog.ShopAction.Revive:
+                OpenReviveFlow();
                 break;
 
             case ShoppingHomeDialog.ShopAction.BuyItem:
@@ -902,6 +931,160 @@ public class ShoppingScene : MonoBehaviour
         FDCreature recipientLive = GameMapRecordManager.CreateCreatureFromRecord(recipient);
         recipientLive.AddItem(itemId);
         WriteBackItems(recipient, recipientLive);
+    }
+
+    /// <summary>
+    /// The church's Revive flow. With nobody fallen there is nothing to open: the
+    /// "队员中没有需要复活的！" notice is shown over the home dialog and any key returns to it.
+    /// Otherwise the creature picker opens on the fallen alone, and a creature confirmed there
+    /// leads to the price question (OnCreatureToRevive).
+    ///
+    /// Re-entered after each revive, so the picker is always rebuilt from the party as it now
+    /// stands -- and the last revive lands on the notice, which is the truthful thing to say
+    /// once the church has nothing left to do.
+    /// </summary>
+    private void OpenReviveFlow()
+    {
+        pendingReviveFriend = null;
+        pendingRevivePrice = 0;
+
+        if (!HasFallenFriend())
+        {
+            // "队员中没有需要复活的！" -- shown over the home dialog, which any key pops back to.
+            OpenMessageDialog(NoOneToReviveMessageId);
+            return;
+        }
+
+        OpenReviveCreaturesDialog();
+    }
+
+    /// <summary>
+    /// Opens the creature picker on the fallen alone (CreatureSelectType.Dead). Like the Buy
+    /// picker it reports the chosen creature back (OnCreatureToRevive) rather than opening the
+    /// info dialog; Esc backs out through OnClosed to the home dialog.
+    /// </summary>
+    private void OpenReviveCreaturesDialog()
+    {
+        if (shoppingCreaturesDialogPrefab == null)
+        {
+            Debug.LogWarning("Shopping scene has no creatures dialog prefab to show.");
+            return;
+        }
+
+        GameObject dialogObject = Instantiate(shoppingCreaturesDialogPrefab);
+        ShoppingCreaturesDialog dialog = dialogObject.GetComponent<ShoppingCreaturesDialog>();
+        if (dialog == null)
+        {
+            Debug.LogWarning("Creatures dialog prefab has no ShoppingCreaturesDialog component.");
+            Destroy(dialogObject);
+            return;
+        }
+
+        dialog.Init(record, ShoppingCreaturesDialog.CreatureSelectType.Dead, CreatureInfoType.View,
+            PopDialog, OnCreatureToRevive);
+        PushDialog(dialogObject);
+    }
+
+    /// <summary>
+    /// The player picked who to bring back. Too little money takes the same answer a purchase
+    /// does -- "钱不够！" over the picker, which any key pops back to -- and otherwise the
+    /// "复活{名字}，#需要{价格}元，确定要复活吗？" question is asked, with the revive itself waiting
+    /// on the answer (OnReviveConfirmed).
+    /// </summary>
+    private void OnCreatureToRevive(FDCreature creature)
+    {
+        if (creature == null)
+        {
+            return;
+        }
+
+        CreatureMapRecord friend = FindFriendById(creature.Id);
+        if (friend == null)
+        {
+            Debug.LogWarning("ShoppingScene: no party record for creature " + creature.Id);
+            return;
+        }
+
+        int price = RevivePrice(friend);
+        int money = record != null ? record.TotalMoney : 0;
+        if (money < price)
+        {
+            // "钱不够！" -- shown over the creature picker, which any key pops back to.
+            OpenMessageDialog(FDMessage.Create(FDMessage.MessageTypes.Information, NotEnoughMoneyMessageId));
+            return;
+        }
+
+        pendingReviveFriend = friend;
+        pendingRevivePrice = price;
+
+        string name = LocalizationManager.GetCreatureString(friend.DefinitionId).GetLocalizedString();
+        FDMessage confirm = FDMessage.Create(
+            FDMessage.MessageTypes.Confirm, ReviveConfirmId, price, 0, name);
+        OpenConfirmDialog(confirm, OnReviveConfirmed);
+    }
+
+    /// <summary>
+    /// The "revive them?" question has closed. The question is popped either way; a No lands
+    /// back on the creature picker with nothing spent. A Yes brings the creature back, then
+    /// pops the picker and re-enters the flow, so the list is rebuilt without them -- and the
+    /// notice takes over once they were the last one.
+    /// </summary>
+    private void OnReviveConfirmed(bool yes)
+    {
+        PopDialog();
+
+        CreatureMapRecord friend = pendingReviveFriend;
+        int price = pendingRevivePrice;
+        pendingReviveFriend = null;
+        pendingRevivePrice = 0;
+
+        if (!yes || friend == null)
+        {
+            return;
+        }
+
+        ExecuteRevive(friend, price);
+
+        PopDialog(); // the creature picker, rebuilt from the party as it now stands
+        OpenReviveFlow();
+    }
+
+    /// <summary>
+    /// Brings a fallen party member back: full HP and MP, and the price out of the purse. The
+    /// record is the party's own entry (FindFriendById hands back the live object, not a copy),
+    /// so the healing travels home to the village and on into the next chapter with it.
+    /// </summary>
+    private void ExecuteRevive(CreatureMapRecord friend, int price)
+    {
+        friend.Hp = friend.HpMax;
+        friend.Mp = friend.MpMax;
+
+        if (record != null)
+        {
+            record.TotalMoney -= price;
+        }
+
+        RefreshMoneyBar();
+    }
+
+    /// <summary>
+    /// What the church charges for this one: RevivePricePerLevel for every level they carry.
+    /// A record with no level yet (an older save) is charged as level 1 rather than nothing.
+    /// </summary>
+    private static int RevivePrice(CreatureMapRecord friend)
+    {
+        return Mathf.Max(1, friend.Level) * RevivePricePerLevel;
+    }
+
+    /// <summary>True when at least one party member is down at 0 HP, waiting to be revived.</summary>
+    private bool HasFallenFriend()
+    {
+        if (record == null || record.Friends == null)
+        {
+            return false;
+        }
+
+        return record.Friends.Exists(friend => friend != null && friend.Hp <= 0);
     }
 
     /// <summary>

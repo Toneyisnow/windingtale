@@ -389,7 +389,7 @@ public class ShoppingCreaturesDialog : MonoBehaviour
                 continue;
             }
 
-            if (creatureType == CreatureSelectType.Dead && friend.Hp != 0)
+            if (creatureType == CreatureSelectType.Dead && friend.Hp > 0)
             {
                 continue;
             }

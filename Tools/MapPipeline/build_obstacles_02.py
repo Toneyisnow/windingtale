@@ -37,8 +37,59 @@ WALL = voxlib.palette_index((152, 124, 88))         # beige stone
 WALL_DARK = voxlib.palette_index((136, 108, 72))    # shaded wall
 PLINTH = voxlib.palette_index((96, 96, 104))        # stone base course
 OPENING = voxlib.palette_index((28, 24, 20))        # doorway / dark window
-GLASS = voxlib.palette_index((196, 84, 28))         # stained glass
+GLASS = voxlib.palette_index((196, 84, 28))         # small side windows
 CROSS = voxlib.palette_index((232, 232, 240))
+
+# The rose window is not one colour, so it does not get a constant. In the art
+# it is an arched opening -- round head, straight sides, flat sill -- filled
+# with a stained-glass sun rising over waves, and all three churches that have
+# one are painted with the identical sprite. It is read straight out of
+# Chapter-02.png rather than approximated, since a disc in a single orange is
+# exactly what it does not look like.
+ROSE_ART = (376, 218, 18, 20)     # x, y, w, h of that sprite in Chapter-02.png
+
+# The beige stone the arch is cut into. Pixels in these tones are the wall
+# around the window rather than the window, and are what makes the sprite an
+# arch rather than a rectangle: where they fall the roof is left alone.
+STONE_TONES = frozenset([
+    (0x98, 0x7c, 0x58), (0x88, 0x6c, 0x48), (0x78, 0x60, 0x3c),
+    (0x68, 0x50, 0x30), (0x5c, 0x44, 0x28), (0xa8, 0x8c, 0x64),
+    (0xb8, 0x9c, 0x78), (0xc8, 0xac, 0x88),
+])
+
+# The arch's stone frame. Its browns are the one part of the sprite the
+# MagicaVoxel palette has nothing near -- the 6-level colour cube turns them
+# olive, which puts a pair of yellow ears on the shoulders of the arch -- so
+# they are pinned to the same near-black the doorways use.
+ROSE_FRAME_TONES = frozenset([(0x3c, 0x24, 0x08), (0x30, 0x1c, 0x04)])
+
+_rose_art = None
+
+
+def rose_window_art():
+    """The rose window sprite, as rows of palette index, or None for the wall.
+
+    Row 0 is the top of the arch, column 0 its left edge. Cached: it is stamped
+    onto three models and the art only has to be read once.
+    """
+    global _rose_art
+    if _rose_art is None:
+        from PIL import Image
+        x0, y0, w, h = ROSE_ART
+        art = Image.open(
+            voxlib.map_png_path(voxlib.workspace_root(), '02')).convert('RGB')
+        _rose_art = [[_rose_pixel(art.getpixel((x, y)))
+                      for x in range(x0, x0 + w)]
+                     for y in range(y0, y0 + h)]
+    return _rose_art
+
+
+def _rose_pixel(rgb):
+    if rgb in STONE_TONES:
+        return None
+    if rgb in ROSE_FRAME_TONES:
+        return OPENING
+    return voxlib.palette_index(rgb)
 
 SHELL = 4          # wall / roof thickness in voxels
 
@@ -270,36 +321,50 @@ def window(m, cx, y, w, h, z0, wall_top, colour=GLASS, frame=WALL_DARK):
                 m.set(cx + dx, y + dy, z, colour if inside else frame)
 
 
-def roof_window(m, roof, w, up=0.5, colour=GLASS, frame=WALL_DARK):
-    """A rose window let into the front slope, flush with the roof.
+def roof_window(m, roof, w, up=0.5):
+    """The rose window, let into the front slope flush with the roof.
 
     The pyramid has no gable to hang one on, so the window lies in the slope
-    itself. The roof voxels inside a disc are recoloured rather than a hole cut,
-    which keeps the surface unbroken and costs the exporter nothing.
+    itself. The roof voxels under the sprite are recoloured rather than a hole
+    cut, which keeps the surface unbroken and costs the exporter nothing; the
+    pixels the sprite marks as wall are skipped, so what is left is the arched
+    outline the art draws -- round head, straight sides, flat sill -- and not a
+    disc.
 
-    ``w`` is the window's width across the slope. Its extent in y is shortened
-    by the pitch, so it reads as a circle to someone looking at the sloping face
-    rather than as a circle seen from directly above -- on the steep porch of
-    blue_house_1 that is the difference between a disc and a thin band. ``up``
-    places the centre along the slope: 0 at the eave, 1 at the apex.
+    ``w`` is the window's width across the slope; its height follows from the
+    sprite's aspect. The extent in y is shortened by the pitch, so the window
+    reads as itself to someone looking at the sloping face rather than as a
+    shape seen from directly above -- on the steep porch of blue_house_1 that
+    is the difference between a window and a thin band. ``up`` places the
+    centre along the slope: 0 at the eave, 1 at the apex.
     """
-    r = w / 2.0
+    art = rose_window_art()
+    ah, aw = len(art), len(art[0])
     # One step in y climbs rise/hy in z, so a length lying on the slope projects
     # to 1/sqrt(1 + pitch^2) of itself when measured in plan.
     pitch = roof.rise / roof.hy
-    ry = max(1.5, r / math.sqrt(1.0 + pitch * pitch))
+    sx = w / float(aw)                                   # art pixel -> voxels
+    sy = max(0.4, sx / math.sqrt(1.0 + pitch * pitch))   # ... measured in plan
+    h = ah * sy
     yc = roof.cy - (1.0 - up) * (roof.cy - (roof.y0 - EAVE))
+    x0 = roof.cx - w / 2.0
+    y0 = yc - h / 2.0
 
     painted = 0
-    for x in range(int(roof.cx - r) - 1, int(roof.cx + r) + 2):
-        for y in range(int(yc - ry) - 1, int(yc + ry) + 2):
-            if not roof.on_front_slope(x, y):
+    for x in range(int(math.floor(x0)), int(math.ceil(x0 + w))):
+        ax = int((x - x0) / sx)
+        if not 0 <= ax < aw:
+            continue
+        for y in range(int(math.floor(y0)), int(math.ceil(y0 + h))):
+            # y grows up the slope but the sprite's rows grow downward, so the
+            # rows are stamped in reverse or the window comes out upside down.
+            ay = ah - 1 - int((y - y0) / sy)
+            if not 0 <= ay < ah:
                 continue
-            d = ((x - roof.cx) / r) ** 2 + ((y - yc) / ry) ** 2
-            if d > 1.44:                      # 1.2^2 -- the frame ring
+            c = art[ay][ax]
+            if c is None or not roof.on_front_slope(x, y):
                 continue
             top = roof.top(x, y)
-            c = colour if d <= 1.0 else frame
             for z in range(top - SHELL + 1, top + 1):
                 if (x, y, z) in m.v:
                     m.set(x, y, z, c)

@@ -78,20 +78,26 @@ namespace WindingTale.Core.Files
                 record.Friends.Add(healed);
             }
 
+            // Both kinds of DeadCreatures entry come home the same way: the ones who fell
+            // in this battle and the ones who walked in already fallen (IsUnrevived) are
+            // alike party members at 0 HP now, waiting on the village church. The flag says
+            // which battle they belong to, so it does not travel out of that battle.
             foreach (CreatureMapRecord fallen in SelectFriends(mapRecord.DeadCreatures))
             {
                 CreatureMapRecord revived = fallen.Clone();
                 revived.Hp = 0;
                 revived.Effects = new List<CreatureEffects>();
+                revived.IsUnrevived = false;
 
                 record.Friends.Add(revived);
             }
 
             // Party members the chapter never put on the field are in neither of the map's
             // lists, so they have to be read back out of the party that walked in or they
-            // would quietly leave it for good. That is above all the fallen still waiting to
-            // be revived -- a chapter does not spawn them (ChapterEvents.AddCreatureToMap) --
-            // and they are carried across untouched, still at 0 HP and still to be revived.
+            // would quietly leave it for good: a friend the chapter simply does not feature,
+            // and a fallen one in a chapter whose script never asks for them at all. (A
+            // chapter that does ask lands them in DeadCreatures instead -- see
+            // ChapterEvents.AddCreatureToMap.) They are carried across untouched.
             if (carriedParty != null && carriedParty.Friends != null)
             {
                 foreach (CreatureMapRecord absent in carriedParty.Friends)

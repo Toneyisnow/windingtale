@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using WindingTale.Core.Common;
 using WindingTale.Core.Algorithms;
@@ -105,6 +105,16 @@ namespace WindingTale.Core.Objects
         public CreatureFaction Faction { get; private set; }
 
         public bool HasActioned { get; set; }
+
+        /// <summary>
+        /// True for a party member who fell in an earlier chapter and has not been revived
+        /// yet. They sit in FDMap.DeadCreatures alongside the ones who died in this battle
+        /// -- both are "in the party but not on the field", and both are needed there so a
+        /// conversation can still find their portrait -- but they never took the field at
+        /// all, so anything that reacts to a death (CreatureDeadEvent) has to tell them
+        /// apart. Carried through the save in CreatureMapRecord.
+        /// </summary>
+        public bool IsUnrevived { get; set; }
 
         /// <summary>
         /// The position before the creature moves, it is used to restore the position 

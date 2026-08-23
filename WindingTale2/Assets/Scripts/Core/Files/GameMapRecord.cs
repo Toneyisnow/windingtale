@@ -80,6 +80,12 @@ namespace WindingTale.Core.Files
         // Poisoned / frozen / stat buffs currently on the creature.
         public List<CreatureEffects> Effects;
 
+        // Only ever true for an entry in DeadCreatures: this one fell in an earlier
+        // chapter and has not been revived, so it never took this field at all. Records
+        // written before this field existed decode it as false, which is what every
+        // entry they hold was -- they only ever listed the battle's own casualties.
+        public bool IsUnrevived;
+
         // Note: HasActioned is deliberately NOT recorded. The game only lets a battle be
         // saved at the start of a turn, before anyone has moved, so every creature in a
         // record is by construction still to act -- and a load lands at the start of that

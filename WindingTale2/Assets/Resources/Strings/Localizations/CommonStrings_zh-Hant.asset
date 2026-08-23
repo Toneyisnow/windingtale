@@ -1384,7 +1384,8 @@ MonoBehaviour:
   - m_Id: 57364541499
     m_Localized: "\u590D\u6D3B{StrParam1}\uFF0C#\u9700\u8981{IntParam1}\u5143\uFF0C\u786E\u5B9A\u8981\u590D\u6D3B\u5417\uFF1F"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 1544965858809348219
   - m_Id: 57364541500
     m_Localized: "{StrParam1}\u8F6C\u804C\u4E3A{StrParam2}\uFF0C#\u9700\u8981{IntParam1}\u5143\uFF0C\u786E\u5B9A\u8981\u8F6C\u804C\u5417\uFF1F"
     m_Metadata:
@@ -1570,6 +1571,7 @@ MonoBehaviour:
         - id: 57364541496
         - id: 57364541497
         - id: 57364541500
+        - id: 57364541499
         - id: 57368735745
         - id: 57368735748
         - id: 57368735753

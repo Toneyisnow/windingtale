@@ -40,6 +40,13 @@ namespace WindingTale.Core.Map
 
         public List<FDCreature> Creatures { get; set; }
 
+        /// <summary>
+        /// Everyone in the party (or the cast) who is not on the field: the creatures who
+        /// fell during this battle, and the party members who walked in still waiting to be
+        /// revived. Nothing is drawn for them -- they are kept so a conversation can still
+        /// find the speaker's portrait and faction. FDCreature.IsUnrevived says which of the
+        /// two kinds an entry is.
+        /// </summary>
         public List<FDCreature> DeadCreatures
         {
             get; set;

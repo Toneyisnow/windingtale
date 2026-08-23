@@ -123,7 +123,9 @@ namespace WindingTale.Core.Files
             }
 
             // Dead creatures are data only -- no icon is drawn for them -- but they are
-            // still needed for the portraits their death conversations use.
+            // still needed for the portraits their conversations use. The list holds both
+            // this battle's casualties and the party members who walked in still unrevived
+            // (ChapterEvents.AddCreatureToMap); IsUnrevived is what tells them apart.
             map.DeadCreatures = record.DeadCreatures == null
                 ? new List<FDCreature>()
                 : record.DeadCreatures.Select(creature => ConvertRecordToCreature(creature)).ToList();
@@ -282,6 +284,7 @@ namespace WindingTale.Core.Files
             record.DefendItemIndex = creature.DefendItemIndex;
             record.Effects = creature.Effects.ToList();
             record.Position = creature.Position;
+            record.IsUnrevived = creature.IsUnrevived;
 
             if (creature is FDAICreature aiCreature)
             {
@@ -330,6 +333,7 @@ namespace WindingTale.Core.Files
             creature.Items = record.ItemIds;
             creature.Magics = record.MagicIds;
             creature.Position = record.Position;
+            creature.IsUnrevived = record.IsUnrevived;
 
             // The constructor equipped whatever the *definition* listed; the saved indices
             // point into the saved item list, which exchanges may have reordered. Re-equip
