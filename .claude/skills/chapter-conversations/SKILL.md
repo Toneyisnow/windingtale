@@ -109,9 +109,19 @@ so 136 of chapter 02's 337 characters were boxes even though its atlas was compl
 
 ## Building a chapter's font atlas
 
-**Window → TextMeshPro → Font Asset Creator**, with chapter 01's settings — the
-same check script prints them, and warns when a chapter drifts below the
-reference:
+**WindingTale → Localization → Build Missing Chapter Font Atlases.** That bakes
+every chapter that has a `CharacterList_Chapter-NN.txt` and no
+`FZB_Chapter-NN.asset` yet, with the settings in the table below already applied
+— `Assets/Editor/ChapterFontAtlasBuilder.cs`. Right-click a single character list
+→ **WindingTale → Build Chapter Font Atlas** to redo just that one after its
+dialog changed. It logs the glyph count and the point size it settled on, and
+warns about any character `FangZhengBlack` has no glyph for.
+
+Then `python check_font_coverage.py NN` (in `Tools/Localization`) to confirm.
+
+Doing it by hand instead is **Window → TextMeshPro → Font Asset Creator**, with
+chapter 01's settings — the same check script prints them, and warns when a
+chapter drifts below the reference:
 
 | field | value |
 |---|---|

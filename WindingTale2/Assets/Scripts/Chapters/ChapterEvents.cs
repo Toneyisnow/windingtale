@@ -124,6 +124,43 @@ namespace WindingTale.Chapters
         }
 
         /// <summary>
+        /// The tile itself first, then the eight around it, clockwise from the east. The
+        /// order is the original's and is worth keeping: it decides where a crowded
+        /// reinforcement group actually lands.
+        /// </summary>
+        private static readonly int[,] AroundOffsets = new int[,]
+        {
+            { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 },
+            { -1, 0 }, { -1, -1 }, { 0, -1 }, { 1, -1 }
+        };
+
+        /// <summary>
+        /// Puts a creature on the first free tile at or next to the one asked for. Chapters
+        /// use this for reinforcements that arrive with nowhere in particular to walk in
+        /// from: the spot they are aimed at may well be occupied by whoever is standing
+        /// there when the turn comes round, and the original searched outward rather than
+        /// stacking two creatures on one tile.
+        ///
+        /// Occupancy is the only test, exactly as the original did it -- the tile is not
+        /// checked for being walkable, so the point passed in still has to be a sensible
+        /// one. Returns null when all nine tiles are taken, in which case the creature
+        /// simply does not join the battle.
+        /// </summary>
+        public static FDCreature AddCreatureAroundToMap(GameMain gameMain, CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItemId = 0, AITypes? aiType = null)
+        {
+            for (int i = 0; i < AroundOffsets.GetLength(0); i++)
+            {
+                FDPosition candidate = FDPosition.At(position.X + AroundOffsets[i, 0], position.Y + AroundOffsets[i, 1]);
+                if (gameMain.gameMap.Map.GetCreatureAt(candidate) == null)
+                {
+                    return AddCreatureToMap(gameMain, faction, creatureId, definitionId, candidate, dropItemId, aiType);
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Keeps a party member who is still waiting to be revived on the map as one of its
         /// DeadCreatures. They are not on the field and no icon is drawn for them, but the
         /// chapter can still have them speak -- and a speaker nothing can look up talks with

@@ -61,6 +61,25 @@ Plain grass tile: **153**. Tree tiles: 81, 82, 135, 138, 140 (conifers) and
 
 ---
 
+## Chapter 03
+
+没有 obstacles。整张图是地形：上下两岸的草地/泥地、中间的大河，以及横跨全图的木吊桥（桥板和红色栏杆柱都是普通 tile）。底部有一片针叶林。
+
+| Object | DefinitionKey | Footprint |
+|---|---|---|
+| — | — | — |
+
+Resolved — the map is 18 × 26 tiles. `chapter_map.py verify` matches the
+artwork exactly (0 / 269568 mismatched pixels), so nothing is painted over the
+tile grid, and a close look at the art confirms there is no house, hut or
+barrel to lift out. `Chapter_03_Cleaned.json` is therefore identical to the
+painted map and `Obstacles` is empty.
+
+Plain grass tile: **31**. Tree tiles: 72, 73, 77 (conifer, ref 42) and 84, 85
+(cut off by the bottom map edge, ref 47).
+
+---
+
 ## Adding a chapter
 
 Append a section in the same shape: the Chinese description as given, then a
