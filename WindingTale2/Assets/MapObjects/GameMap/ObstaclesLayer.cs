@@ -67,12 +67,15 @@ namespace WindingTale.MapObjects.GameMap
                 obj.transform.SetParent(this.transform);
                 obj.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(pos), Quaternion.Euler(90, 0, 0));
 
-                // House/hut buildings are too tall; halve their height. The model is
-                // Z-up in its own local space (the upright rotation comes from the
-                // parent Euler(90)), so the vertical axis is local Z. A Z-only scale
-                // leaves the footprint (and the anchor math below) untouched.
+                // Every obstacle reads slightly oversized against the tiles, so all of
+                // them are shrunk uniformly by ObstacleScale. On top of that, house/hut
+                // buildings are too tall and get their height halved as well. The model
+                // is Z-up in its own local space (the upright rotation comes from the
+                // parent Euler(90)), so the vertical axis is local Z. The anchor math
+                // below reads the scaled world bounds, so it needs no adjustment.
                 float heightScale = GetHeightScale(obstacle.DefinitionKey);
-                obj.transform.localScale = new Vector3(1.0f, 1.0f, heightScale);
+                obj.transform.localScale = new Vector3(
+                    ObstacleScale, ObstacleScale, ObstacleScale * heightScale);
 
                 Transform inner = obj.transform.Find("default");
                 if (inner != null)
@@ -122,14 +125,18 @@ namespace WindingTale.MapObjects.GameMap
                 // it. The footprint is derived from the model's own world bounds: one
                 // tile is 2 world units (MapCoordinate.ConvertPosToVec3), map X runs
                 // along world -X and map Y along world +Z, so the tile extents are just
-                // the bounding-box size over the tile size.
+                // the bounding-box size over the tile size. The bounds are already
+                // shrunk by ObstacleScale, so divide it back out -- the obstacle still
+                // occupies the tiles the chapter authored it on, it just renders a
+                // little smaller inside them.
                 ObstacleInstance instance = obj.GetComponent<ObstacleInstance>() ?? obj.AddComponent<ObstacleInstance>();
                 int tileWidth = 1;
                 int tileHeight = 1;
                 if (TryGetWorldBounds(obj, out Bounds footprint))
                 {
-                    tileWidth = Mathf.Max(1, Mathf.RoundToInt(footprint.size.x / WorldUnitsPerTile));
-                    tileHeight = Mathf.Max(1, Mathf.RoundToInt(footprint.size.z / WorldUnitsPerTile));
+                    float tileSize = WorldUnitsPerTile * ObstacleScale;
+                    tileWidth = Mathf.Max(1, Mathf.RoundToInt(footprint.size.x / tileSize));
+                    tileHeight = Mathf.Max(1, Mathf.RoundToInt(footprint.size.z / tileSize));
                 }
                 instance.SetFootprint(pos.X, pos.Y, tileWidth, tileHeight);
             }
@@ -137,6 +144,15 @@ namespace WindingTale.MapObjects.GameMap
 
         // One map tile spans 2 world units; see MapCoordinate.ConvertPosToVec3.
         private const float WorldUnitsPerTile = 2f;
+
+        /// <summary>
+        /// Uniform shrink applied to every obstacle model as it is placed. The models
+        /// are authored to fill their tile footprint exactly, which leaves them looking
+        /// slightly oversized next to the units and the terrain; a little air around
+        /// each one reads better. This is presentation only -- the tiles an obstacle
+        /// occupies are unchanged (see the footprint math in buildObstacles).
+        /// </summary>
+        private const float ObstacleScale = 0.9f;
 
         /// <summary>
         /// Returns the obstacle whose footprint covers the given tile, or null when the

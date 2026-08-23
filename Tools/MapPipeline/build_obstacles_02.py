@@ -44,20 +44,20 @@ SHELL = 4          # wall / roof thickness in voxels
 
 # The churches were first built at the height the 2D art implies, which reads as
 # a tower once they stand up on the board next to 40-voxel tiles. The walls are
-# cut to half; the roof keeps its full pitch, which is now spent on a pyramid
-# rather than a ridge. The numbers in the builders below are still the original,
-# art-derived ones -- scaling happens in one place, so the models stay readable
-# as descriptions of the buildings and the ratio can be retuned here.
+# cut to half, the roof to two thirds of its art pitch. The numbers in the
+# builders below are still the original, art-derived ones -- scaling happens in
+# one place, so the models stay readable as descriptions of the buildings and
+# the ratio can be retuned here.
 BODY_SCALE = 1.0 / 2      # plinth + walls + everything standing on them
-ROOF_SCALE = 1.0          # eaves -> apex, unchanged
+ROOF_SCALE = 2.0 / 3      # eaves -> apex
 
 
 def squash(z, wall_top):
     """Original z -> built z, for a feature on a wing with this wall top.
 
     Piecewise about the eaves: below them the body scale, above them the roof
-    scale. With ROOF_SCALE at 1 the roof is simply carried down with the wall it
-    stands on, keeping its full height.
+    scale. The roof is carried down with the wall it stands on and then has its
+    own rise flattened by ROOF_SCALE.
     """
     body = int(round(wall_top * BODY_SCALE))
     if z <= wall_top:
