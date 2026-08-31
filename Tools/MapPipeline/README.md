@@ -34,6 +34,10 @@ pip install Pillow
 | 脚本 | 作用 |
 |---|---|
 | `voxlib.py` | 公共库：`.vox` 读写、MagicaVoxel 调色板、颜色→索引、地形分类、路径 |
+| `housekit.py` | 建房子的公共零件：`wing` / `hall` / `arch` / `window` / 玫瑰窗 / 十字架 |
+| `build_obstacles_02.py` | 第 02 关的 5 栋蓝顶教堂 |
+| `build_obstacles_05.py` | 第 05 关的 7 栋房子（红顶大教堂、蓝顶教堂、红顶大宅、两栋小屋） |
+| `build_obstacles_06.py` | 第 06 关新加的两个模型：中央大门的红顶教堂、码头上的木货箱 |
 | `chapter_map.py` | `info` / `render` / `crop` / `verify`：看懂一关的地图数据，并把 ShapeMatrix 重新画回 PNG |
 | `map_clean.py` | 按 obstacle 列表把 footprint 抠掉换成普通地砖，产出 `Chapter_NN_Cleaned.json` |
 | `shapes_to_vox.py` | tile PNG → 40³ 的 `Shape_<NN>_<id>.vox`（源 PNG 前缀是 `NN-1`，差一位） |
@@ -55,6 +59,8 @@ python chapter_map.py verify 02        # '#' 的地方就是画在瓦片上的 o
 # 第二步：抠掉 obstacle（obstacles_02.json 是人/skill 看图写出来的）
 python map_clean.py 02 --obstacles obstacles_02.json --dry-run
 python map_clean.py 02 --obstacles obstacles_02.json
+# 抠掉的地方默认从四周长回来。如果这一关四周全是树（第 05 关），
+# 加 --fill-plain-only，只让 Type 0（Plain）的地砖长进来
 
 # 第三步：生成 shape VOX
 python shapes_to_vox.py 02 --used-tiles .../Chapter_02_UsedTiles.json --tree 71:44
@@ -103,7 +109,20 @@ python install_chapter.py 02
 | 42 | 高的阶梯状针叶树 | 38 |
 
 `--tree 71:44` 表示"tile 71 有树，用 44 号的树冠"，
-`--tree 71:44@12,11` 再把树冠挪到 tile 内的 (12,11)。
+`--tree 71:44@12,11` 再把树冠挪到 tile 内的 (12,11)，
+`--tree 71:44#2c4c6c` 再把树冠的树叶染成这个颜色（明暗保留、树干不动）——
+第 01 关那 6 棵参考树都是绿的，而第 05 关的林子是绿 / 蓝绿 / 秋红三色。
+
+`--tree-stretch F` 把树冠按层复制拉高到 F 倍（第 04 关用 1.4），
+画布的 Z 会自动长高以免被切顶（1.4 倍时是 40×40×45）；
+导出 OBJ 时按 X/Y 居中、按最低体素落地，所以画布变高不影响别的东西。
+
+### 一个模型最宽 10 格
+
+`.vox` 的每个坐标只占 1 个字节，所以任何一个模型都不能超过 255 体素 = 10 格。
+比这更宽的房子要拆成并排的两个 obstacle（第 05 关的大教堂 19 格、教堂 12 格），
+拆的位置要让门廊整个落在其中一块里；背后那条长屋顶用 `housekit`/`build_obstacles_05`
+里的 `hall()`，它的高度只跟 y 有关，两块拼起来接缝处才不会错开。
 
 ### 为什么 obstacle 建模没有工具
 

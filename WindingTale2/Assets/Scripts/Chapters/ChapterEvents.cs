@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngineInternal;
 using WindingTale.Core.Common;
@@ -45,28 +45,48 @@ namespace WindingTale.Chapters
         /// before the first friend turn, so its rounds were 1-based too, and its Turn:0 was
         /// the special "before the battle starts" slot rather than a round of its own.
         /// </summary>
-        protected void LoadTurnEvent(int eventId, int turnId, CreatureFaction turnType, Action<GameMain> action)
+        protected FDEvent LoadTurnEvent(int eventId, int turnId, CreatureFaction turnType, Action<GameMain> action)
         {
             FDTurnEvent ev = new FDTurnEvent(eventId, turnId, turnType, () => action(gameMain));
             this.AllEvents.Add(ev);
+            return ev;
         }
 
-        protected void LoadDeadEvent(int eventId, int creatureId, Action<GameMain> action)
+        protected FDEvent LoadDeadEvent(int eventId, int creatureId, Action<GameMain> action)
         {
             CreatureDeadEvent dead = new CreatureDeadEvent(eventId, creatureId, () => action(gameMain));
             this.AllEvents.Add(dead);
+            return dead;
         }
 
-        protected void LoadDyingEvent(int eventId, int creatureId, Action<GameMain> action)
+        protected FDEvent LoadDyingEvent(int eventId, int creatureId, Action<GameMain> action)
         {
             CreatureDyingEvent dead = new CreatureDyingEvent(eventId, creatureId, () => action(gameMain));
             this.AllEvents.Add(dead);
+            return dead;
         }
 
-        protected void LoadTeamEvent(int eventId, CreatureFaction faction, Action<GameMain> action)
+        protected FDEvent LoadTeamEvent(int eventId, CreatureFaction faction, Action<GameMain> action)
         {
             TeamEliminatedEvent condition = new TeamEliminatedEvent(eventId, faction, () => action(gameMain));
             this.AllEvents.Add(condition);
+            return condition;
+        }
+
+        /// <summary>
+        /// Fires when one particular creature is standing on one particular tile -- the
+        /// original's "loadPositionEvent:AtPosition:". Chapters use it to catch a creature
+        /// that has reached the edge of the map and take it out of the battle.
+        ///
+        /// The event is live from the start of the chapter, so a creature spawned on the
+        /// tile it watches trips it at once. Where that is not wanted, hold it back with
+        /// FDEvent.AddDependentEvent -- see Chapter4.
+        /// </summary>
+        protected FDEvent LoadReachPositionEvent(int eventId, int creatureId, FDPosition position, Action<GameMain> action)
+        {
+            ReachPositionEvent reached = new ReachPositionEvent(eventId, creatureId, position, () => action(gameMain));
+            this.AllEvents.Add(reached);
+            return reached;
         }
 
         /// <summary>

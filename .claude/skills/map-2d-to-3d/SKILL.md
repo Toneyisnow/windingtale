@@ -119,6 +119,22 @@ After step 4, report:
 - anything you were unsure about (a footprint you had to guess, a tree you were
   not certain about) — say so plainly rather than presenting it as settled
 
+## What this does not do
+
+Converting the map does not make the chapter playable. The battle script --
+spawns, turn events, conversations, win/lose conditions -- is a separate job,
+and it is a **port, not a design**: every chapter's staging already exists in
+the 2012 Objective-C original at
+
+```
+D:\SourceCode\Git\toneyisnow\FlameDragon-master\Classes\EventChapterN.m
+```
+
+(no zero padding: `EventChapter6.m`). Never invent one. Invoke `chapter-events`,
+which owns that translation, and `chapter-conversations` for the dialog table.
+When reporting a finished map, point at those rather than saying the chapter
+"has no events yet".
+
 ## How the game picks the tile set
 
 `ShapesLayer.cs` builds the path from `FDField.ChapterId`

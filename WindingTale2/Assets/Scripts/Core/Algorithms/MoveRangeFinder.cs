@@ -16,6 +16,9 @@ namespace WindingTale.Core.Algorithms
 
         private FDCreature creature = null;
 
+        /// <summary>What ShapeType.Plain costs to enter, for every kind of creature.</summary>
+        private const int PlainMoveCost = 1;
+
 
         public MoveRangeFinder(FDMap gameMap, FDCreature creature)
         {
@@ -67,8 +70,17 @@ namespace WindingTale.Core.Algorithms
         private void WalkOnPosition(Queue<DirectedPosition> positionQueue, FDMoveRange range)
         {
             DirectedPosition queuePosition = positionQueue.Dequeue();
-            
-            int moveCost = GetMoveCost(queuePosition, creature);
+
+            // The tile a creature is standing on costs whatever plain ground costs, no
+            // matter what it actually is. The original did this literally --
+            // BattleField.searchMoveScope reset the creature's own square to
+            // ScopeResistance_Plain before resolving the scope, and movePathTo did the same
+            // to the path map -- and without it a creature that starts on a square it could
+            // never walk onto can never move at all. Chapter 5 is the first chapter to need
+            // it: it stands the priestess in the church doorway, which is Blocked.
+            int moveCost = queuePosition.AreSame(creature.Position)
+                ? PlainMoveCost
+                : GetMoveCost(queuePosition, creature);
             if (moveCost == -1 || queuePosition.LeftMovePoint < moveCost)
             {
                 // Nothing to walk

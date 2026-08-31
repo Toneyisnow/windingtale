@@ -81,7 +81,7 @@ def clean_matrix(matrix, width, height, cleared, fill_tile):
 MIN_COMMON = 4      # a tile used fewer times than this is scenery, not ground
 
 
-def clean_matrix_nearest(matrix, width, height, cleared, common):
+def clean_matrix_nearest(matrix, width, height, cleared, common, allowed=None):
     """Replace every cleared tile with its nearest surviving neighbour's tile.
 
     A single fill tile is wrong whenever the map has more than one kind of
@@ -93,6 +93,11 @@ def clean_matrix_nearest(matrix, width, height, cleared, common):
     ``common`` is the whole-map tile histogram, used to keep one-off scenery
     from breeding: a treasure or signpost tile sitting next to a cleared area
     would otherwise get copied across the whole footprint.
+
+    ``allowed``, when given, is the set of tile ids that may be grown at all --
+    see --fill-plain-only. Being common is not enough on a map where scenery is
+    common: chapter 05's village is ringed by forest, and without this the
+    conifers march in and fill the plaza the cathedral was standing on.
     """
     new = [list(col) for col in matrix]
     pending = set(cleared)
@@ -121,7 +126,8 @@ def clean_matrix_nearest(matrix, width, height, cleared, common):
 
         progressed = False
         for cell, c in wave:
-            ground = [t for t in c if common.get(t, 0) >= MIN_COMMON]
+            ground = [t for t in c if common.get(t, 0) >= MIN_COMMON
+                      and (allowed is None or t in allowed)]
             if ground:
                 resolve(cell, c, ground)
                 progressed = True
@@ -184,6 +190,11 @@ def main():
     p.add_argument('--fill', type=int,
                    help='tile id to paint under the obstacles. Default: grow the '
                         'surrounding ground inward (see --fill-mode nearest)')
+    p.add_argument('--fill-plain-only', action='store_true',
+                   help='only tiles whose Shapes entry is Type 0 (Plain) may be '
+                        'grown into a cleared footprint. Use it on maps where the '
+                        'scenery is common enough to win the vote -- otherwise a '
+                        'forest or a fence breeds across the cleared ground')
     p.add_argument('--fill-mode', choices=('nearest', 'tile'), default='nearest',
                    help='"nearest" (default) gives each cleared tile its nearest '
                         'surviving neighbour, so plazas stay paved and lawns stay '
@@ -235,10 +246,20 @@ def main():
     outside = Counter(matrix[x - 1][y - 1]
                       for x in range(1, width + 1) for y in range(1, height + 1)
                       if (x, y) not in cleared)
-    fill = args.fill if args.fill is not None else outside.most_common(1)[0][0]
+
+    allowed = None
+    if args.fill_plain_only:
+        shapes = chapter.get('Shapes', {})
+        allowed = set(t for t in outside
+                      if int(shapes.get(str(t), {}).get('Type', 0)) == 0)
+
+    pool = Counter({t: n for t, n in outside.items()
+                    if allowed is None or t in allowed})
+    fill = args.fill if args.fill is not None else pool.most_common(1)[0][0]
 
     if args.fill_mode == 'nearest' and args.fill is None:
-        new_matrix, stranded = clean_matrix_nearest(matrix, width, height, cleared, outside)
+        new_matrix, stranded = clean_matrix_nearest(matrix, width, height, cleared,
+                                                    outside, allowed)
         for x, y in stranded:
             new_matrix[x - 1][y - 1] = fill
         fill_desc = 'nearest surviving ground (%d tiles fell back to %d)' % (len(stranded), fill)

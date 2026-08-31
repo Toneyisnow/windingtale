@@ -1,0 +1,44 @@
+{
+  "_comment": [
+    "Chapter 06 obstacle list -- input to map_clean.py.",
+    "Position is the top-left tile of the footprint, 1-based; Size is optional and",
+    "defaults to the model's VOX SIZE / 24, and is spelled out here only where the",
+    "painted art covers a different rectangle than the model box.",
+    "",
+    "The map is a harbour: a stone quay along the top stacked with cargo crates,",
+    "and two red-roofed churches on the grass below it.",
+    "",
+    "The church on the right is chapter 05's red_cathedral_2 standing again -- the",
+    "art is the same row of gabled bays, and only seven of its nine columns are on",
+    "the board, so its Size clips the cleaning back to what is on screen. The one",
+    "on the left has its entrance in the middle and a cross over it, which no",
+    "existing model has, so it is built by build_obstacles_06.py.",
+    "",
+    "Each crate is drawn over three tile rows -- one of lid, two of front face --",
+    "but stands on the back two of them, so the model is 2 x 2 and the Size that",
+    "cleans the art is 2 x 3. Four of the eight overlap a neighbour by one tile;",
+    "the art stacks them that way and the models are left stacked too."
+  ],
+  "Obstacles": [
+    { "Id": 1, "DefinitionKey": "red_church_1", "Position": { "X": 1, "Y": 17 } },
+    { "Id": 2, "DefinitionKey": "red_cathedral_2", "Position": { "X": 14, "Y": 15 },
+      "Size": { "Cols": 7, "Rows": 8 } },
+
+    { "Id": 3, "DefinitionKey": "wooden_crate_1", "Position": { "X": 1, "Y": 4 },
+      "Size": { "Cols": 2, "Rows": 3 } },
+    { "Id": 4, "DefinitionKey": "wooden_crate_1", "Position": { "X": 6, "Y": 4 },
+      "Size": { "Cols": 2, "Rows": 3 } },
+    { "Id": 5, "DefinitionKey": "wooden_crate_1", "Position": { "X": 11, "Y": 5 },
+      "Size": { "Cols": 2, "Rows": 3 } },
+    { "Id": 6, "DefinitionKey": "wooden_crate_1", "Position": { "X": 2, "Y": 6 },
+      "Size": { "Cols": 2, "Rows": 3 } },
+    { "Id": 7, "DefinitionKey": "wooden_crate_1", "Position": { "X": 7, "Y": 6 },
+      "Size": { "Cols": 2, "Rows": 3 } },
+    { "Id": 8, "DefinitionKey": "wooden_crate_1", "Position": { "X": 1, "Y": 7 },
+      "Size": { "Cols": 2, "Rows": 3 } },
+    { "Id": 9, "DefinitionKey": "wooden_crate_1", "Position": { "X": 13, "Y": 8 },
+      "Size": { "Cols": 2, "Rows": 3 } },
+    { "Id": 10, "DefinitionKey": "wooden_crate_1", "Position": { "X": 1, "Y": 10 },
+      "Size": { "Cols": 2, "Rows": 3 } }
+  ]
+}

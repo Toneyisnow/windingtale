@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Events;
@@ -21,7 +21,7 @@ namespace WindingTale.Scenes.GameFieldScene
         {
             foreach(FDEvent eve in events)
             {
-                if (!eve.IsActive || eve.EventType != FDEventType.Turn) continue;
+                if (!eve.IsActive || !eve.IsDependencySatisfied || eve.EventType != FDEventType.Turn) continue;
 
                 var turnEvent = (FDTurnEvent)eve;
                 if (turnEvent.TurnNo == gameMain.gameMap.Map.TurnNo
@@ -36,7 +36,7 @@ namespace WindingTale.Scenes.GameFieldScene
         {
             foreach (FDEvent eve in events)
             {
-                if (!eve.IsActive || eve.EventType != FDEventType.Condition) continue;
+                if (!eve.IsActive || !eve.IsDependencySatisfied || eve.EventType != FDEventType.Condition) continue;
 
                 var conditionEvent = (FDConditionEvent)eve;
                 if (conditionEvent.Match(gameMain.gameMap.Map))

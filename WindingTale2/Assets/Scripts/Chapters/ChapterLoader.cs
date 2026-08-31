@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using WindingTale.Core.Common;
 using WindingTale.Core.Events;
@@ -44,6 +44,15 @@ namespace WindingTale.Chapters
                     break;
                 case 3:
                     chapter = new Chapter3(gameMain);
+                    break;
+                case 4:
+                    chapter = new Chapter4(gameMain);
+                    break;
+                case 5:
+                    chapter = new Chapter5(gameMain);
+                    break;
+                case 6:
+                    chapter = new Chapter6(gameMain);
                     break;
                 default:
                     break;

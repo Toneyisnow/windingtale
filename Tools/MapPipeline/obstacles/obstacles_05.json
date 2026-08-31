@@ -1,0 +1,41 @@
+{
+  "_comment": [
+    "Chapter 05 obstacle list -- input to map_clean.py.",
+    "Position is the top-left tile of the footprint, 1-based; values <= 0 or past",
+    "the board mean the object is only partly on screen.",
+    "Size is optional and defaults to the model's VOX SIZE / 24; it is spelled out",
+    "here only where the painted art covers a different rectangle than the model box.",
+    "",
+    "The village is a town map, so nearly everything on it is a building. The two",
+    "widest -- the cathedral along the top-left and the church in the top-right --",
+    "are each too wide for a single .vox (255 voxels = 10 tiles), so each is two",
+    "models standing side by side; see build_obstacles_05.py.",
+    "",
+    "Three buildings run off an edge of the map and show one column of themselves.",
+    "Each reuses a whole model placed off the board, with a Size that clips the",
+    "cleaning back to the tiles the art actually covers."
+  ],
+  "Obstacles": [
+    { "Id": 1, "DefinitionKey": "red_cathedral_1", "Position": { "X": 1, "Y": 1 } },
+    { "Id": 2, "DefinitionKey": "red_cathedral_2", "Position": { "X": 11, "Y": 1 } },
+
+    { "Id": 3, "DefinitionKey": "blue_church_1", "Position": { "X": 26, "Y": -1 } },
+    { "Id": 4, "DefinitionKey": "blue_church_2", "Position": { "X": 33, "Y": -1 } },
+
+    { "Id": 5, "DefinitionKey": "red_mansion_1", "Position": { "X": 18, "Y": 13 } },
+    { "Id": 6, "DefinitionKey": "blue_hall_1", "Position": { "X": 6, "Y": 12 } },
+    { "Id": 7, "DefinitionKey": "blue_hall_2", "Position": { "X": 34, "Y": 15 } },
+
+    { "Id": 8, "DefinitionKey": "thatched_hut_1", "Position": { "X": 9, "Y": 14 },
+      "Size": { "Cols": 3, "Rows": 5 } },
+    { "Id": 9, "DefinitionKey": "thatched_hut_1", "Position": { "X": 27, "Y": 14 },
+      "Size": { "Cols": 3, "Rows": 5 } },
+    { "Id": 10, "DefinitionKey": "thatched_hut_1", "Position": { "X": 38, "Y": 2 },
+      "Size": { "Cols": 3, "Rows": 5 } },
+
+    { "Id": 11, "DefinitionKey": "red_cathedral_2", "Position": { "X": -7, "Y": 13 },
+      "Size": { "Cols": 9, "Rows": 6 } },
+    { "Id": 12, "DefinitionKey": "red_mansion_1", "Position": { "X": 39, "Y": 13 },
+      "Size": { "Cols": 1, "Rows": 7 } }
+  ]
+}

@@ -14,7 +14,9 @@ Shape_1_*.vox) and is checked by ``validate_shapes.py``:
   * a tile whose art contains a tree gets its ground replaced by the plain
     grass tile (Shape_0_52 in panel 01) -- the painted 2D tree disappears --
     and a 3D crown is stamped on top, copied out of one of the six chapter 01
-    tree tiles (46, 40, 43, 44, 47, 42, shortest to tallest)
+    tree tiles (46, 40, 43, 44, 47, 42, shortest to tallest), optionally
+    stretched vertically with --tree-stretch when a chapter wants a taller
+    forest
 
 Which tiles have trees is a judgement call made from the art, so it is passed
 in rather than detected.
@@ -27,6 +29,9 @@ Examples
     # ...with a default-height tree on tile 71 and the tall crown on tile 72
     python shapes_to_vox.py 02 --used-tiles Chapter_02_UsedTiles.json \
         --tree 71 --tree 72:44
+
+    # a taller forest -- every crown stretched to 1.4x (chapter 04)
+    python shapes_to_vox.py 04 --used-tiles Chapter_04_UsedTiles.json         --grass-tile 20 --tree-stretch 1.4 --tree 131:42
 
     # a couple of tiles into a scratch folder, for eyeballing
     python shapes_to_vox.py 01 --tiles 64,65,49,43 -o /tmp/check
@@ -50,6 +55,11 @@ REF_CHAPTER = '01'
 # The plain grass tile a tree tile's ground reverts to. Panel-specific: 52 is
 # chapter 01's, later chapters pass --grass-tile.
 GRASS_TILE_ID = 52
+
+# How far a tinted crown's darkest and lightest foliage sit either side of the
+# colour it was tinted with -- see tint_crown().
+TINT_DARKEST = 0.62
+TINT_LIGHTEST = 1.30
 
 
 # --------------------------------------------------------------------------
@@ -80,8 +90,78 @@ def crown_centre(template):
     return (min(xs) + max(xs)) // 2, (min(ys) + max(ys)) // 2
 
 
-def stamp_tree(voxels, template, at=None):
-    """Drop a crown onto the tile, clipped to the 40^3 canvas.
+def stretch_crown(template, factor):
+    """Make a crown taller by repeating its layers, keeping it rooted on the ground.
+
+    Layer ``k`` of the output (counted from the first layer above the ground)
+    is a copy of source layer ``floor(k / factor)``, so nothing is left hollow
+    and the tree's own silhouette -- the conifer's steps, the round tree's taper
+    -- is simply drawn out vertically. ``factor`` 1.0 returns the crown as
+    authored.
+    """
+    if factor == 1.0:
+        return template
+    if factor <= 0:
+        raise SystemExit('--tree-stretch must be positive')
+    base = voxlib.GROUND_Z + 1
+    layers = {}
+    for x, y, z, colour in template:
+        layers.setdefault(z - base, []).append((x, y, colour))
+    height = max(layers) + 1
+    out = []
+    for k in range(int(round(height * factor))):
+        src = min(int(k / factor), height - 1)
+        for x, y, colour in layers.get(src, ()):
+            out.append((x, y, base + k, colour))
+    return out
+
+
+def tint_crown(template, rgb):
+    """Recolour a crown's foliage to ``rgb``, keeping its shading.
+
+    The six reference crowns are all the green ones chapter 01 happened to have,
+    but chapter 05's forest is deliberately three colours -- green, blue-green
+    and autumn red -- and stamping green over all of it throws that away.
+
+    Each distinct foliage colour is replaced by ``rgb`` scaled by where that
+    colour sits in the crown's own light-to-dark range, so the silhouette's
+    shading survives and only the hue changes. Scaling each channel by its own
+    ratio instead -- the obvious thing -- blows the quiet channels out: a crown
+    green with 24 of blue in its shadows and 40 in its highlights, retinted
+    blue, ends up with the highlights at pure 255.
+
+    Trunk voxels are left alone: anything that is not green-dominant is bark,
+    and an autumn tree still has a brown trunk.
+    """
+    def foliage(colour):
+        r, g, b = voxlib.PALETTE[colour - 1][:3]
+        return g > r and g >= b
+
+    def luma(colour):
+        r, g, b = voxlib.PALETTE[colour - 1][:3]
+        return 0.30 * r + 0.59 * g + 0.11 * b
+
+    greens = set(c for _x, _y, _z, c in template if foliage(c))
+    if not greens:
+        return template
+    lo = min(luma(c) for c in greens)
+    hi = max(luma(c) for c in greens)
+    span = max(1.0, hi - lo)
+
+    remap = {}
+    for c in greens:
+        f = TINT_DARKEST + (TINT_LIGHTEST - TINT_DARKEST) * (luma(c) - lo) / span
+        remap[c] = voxlib.palette_index(
+            tuple(min(255, int(round(ch * f))) for ch in rgb))
+    return [(x, y, z, remap.get(c, c)) for x, y, z, c in template]
+
+
+def crown_top_z(template):
+    return max(v[2] for v in template)
+
+
+def stamp_tree(voxels, template, at=None, canvas_z=voxlib.CANVAS):
+    """Drop a crown onto the tile, clipped to the canvas.
 
     ``at`` re-centres the crown on that (x, y); leave it None to keep the
     reference tree's own position.
@@ -93,7 +173,7 @@ def stamp_tree(voxels, template, at=None):
     n = 0
     for x, y, z, colour in template:
         x, y = x + dx, y + dy
-        if 0 <= x < voxlib.CANVAS and 0 <= y < voxlib.CANVAS and 0 <= z < voxlib.CANVAS:
+        if 0 <= x < voxlib.CANVAS and 0 <= y < voxlib.CANVAS and 0 <= z < canvas_z:
             voxels.append((x, y, z, colour))
             n += 1
     return n
@@ -121,7 +201,8 @@ def tile_to_voxels(image, grass_lift=voxlib.GRASS_LIFT, lift_grass=True):
 
 
 def build_tile(root, nn, tile_id, tree=None, tree_at=None, grass_lift=voxlib.GRASS_LIFT,
-               templates=None, panel_dir=None, grass_tile=GRASS_TILE_ID):
+               templates=None, panel_dir=None, grass_tile=GRASS_TILE_ID,
+               canvas_z=voxlib.CANVAS):
     """Voxels for one tile. ``tree`` is a reference tile id from Shapes_01."""
     panel = panel_dir or voxlib.shape_panel_dir(root, nn)
     source_id = grass_tile if tree else tile_id
@@ -138,7 +219,7 @@ def build_tile(root, nn, tile_id, tree=None, tree_at=None, grass_lift=voxlib.GRA
     voxels = tile_to_voxels(image, grass_lift=grass_lift, lift_grass=not tree)
     stamped = 0
     if tree:
-        stamped = stamp_tree(voxels, templates[tree], tree_at)
+        stamped = stamp_tree(voxels, templates[tree], tree_at, canvas_z=canvas_z)
     return voxels, source_id, stamped
 
 
@@ -147,11 +228,19 @@ def build_tile(root, nn, tile_id, tree=None, tree_at=None, grass_lift=voxlib.GRA
 # --------------------------------------------------------------------------
 
 def parse_tree_arg(value):
-    """'71' | '71:44' | '71:44@12,11' -> (tile_id, reference_tile, (x, y) | None).
+    """'71' | '71:44' | '71:44@12,11' | '71:44#3c5c9c' -> (id, ref, at, tint).
 
     The reference tile is one of the chapter 01 tree tiles whose crown is
-    copied; @X,Y re-centres that crown inside the 24x24 tile.
+    copied; @X,Y re-centres that crown inside the 24x24 tile, and #RRGGBB
+    recolours its foliage to that colour (see :func:`tint_crown`).
     """
+    tint = None
+    if '#' in value:
+        value, hexrgb = value.split('#', 1)
+        hexrgb = hexrgb.strip()
+        if len(hexrgb) != 6:
+            raise SystemExit('tree tint must be #RRGGBB, got %r' % hexrgb)
+        tint = tuple(int(hexrgb[i:i + 2], 16) for i in (0, 2, 4))
     at = None
     if '@' in value:
         value, coords = value.split('@', 1)
@@ -164,7 +253,7 @@ def parse_tree_arg(value):
     if template not in REFERENCE_TREE_TILES:
         raise SystemExit('unknown tree reference tile %r, expected one of %s'
                          % (template, ', '.join(str(t) for t in REFERENCE_TREE_TILES)))
-    return int(value), template, at
+    return int(value), template, at, tint
 
 
 def resolve_tiles(args, root, nn):
@@ -194,11 +283,16 @@ def main():
     p.add_argument('--tiles', help='explicit comma-separated tile ids')
     p.add_argument('--used-tiles', help='Chapter_NN_UsedTiles.json from map_clean.py')
     p.add_argument('--chapter-json', help='read the tile ids from this chapter JSON')
-    p.add_argument('--tree', action='append', default=[], metavar='ID[:REF][@X,Y]',
+    p.add_argument('--tree', action='append', default=[],
+                   metavar='ID[:REF][@X,Y][#RRGGBB]',
                    help='tile id that carries a tree, optionally naming which chapter 01 '
-                        'tree tile to copy the crown from (%s, default %d) and where to '
-                        'centre it; repeatable'
+                        'tree tile to copy the crown from (%s, default %d), where to '
+                        'centre it, and what colour to tint its foliage; repeatable'
                         % ('/'.join(str(t) for t in REFERENCE_TREE_TILES), DEFAULT_TREE_TILE))
+    p.add_argument('--tree-stretch', type=float, default=1.0, metavar='F',
+                   help='make every stamped crown F times taller by repeating its '
+                        'layers (default 1.0 = the chapter 01 references as authored). '
+                        'The VOX canvas grows in Z to fit.')
     p.add_argument('--grass-lift', type=int, default=voxlib.GRASS_LIFT,
                    help='voxels of grass stacked above the ground (default %d)' % voxlib.GRASS_LIFT)
     p.add_argument('--grass-tile', type=int, default=GRASS_TILE_ID,
@@ -215,15 +309,36 @@ def main():
     tiles = resolve_tiles(args, root, nn)
     out_dir = args.out or voxlib.shapes_vox_dir(root, nn)
 
+    # A crown is identified by (reference tile, tint), so one reference stamped in
+    # three colours is three templates and each tile picks the one it asked for.
     trees = {}
+    wanted = {}
     for spec in args.tree:
-        tid, template, at = parse_tree_arg(spec)
-        trees[tid] = (template, at)
-    templates = {ref: load_tree_template(root, ref) for ref in REFERENCE_TREE_TILES} if trees else {}
+        tid, ref, at, tint = parse_tree_arg(spec)
+        trees[tid] = ((ref, tint), at)
+        wanted[(ref, tint)] = (ref, tint)
+    templates = {}
+    if trees:
+        base = {ref: load_tree_template(root, ref) for ref in REFERENCE_TREE_TILES}
+        if args.tree_stretch != 1.0:
+            base = {ref: stretch_crown(tpl, args.tree_stretch) for ref, tpl in base.items()}
+        for key, (ref, tint) in wanted.items():
+            templates[key] = tint_crown(base[ref], tint) if tint else base[ref]
+
+    # Tall trees need headroom: the canvas grows in Z so a stretched crown is not
+    # clipped. Every tile in the chapter gets the same size, and the exported OBJ
+    # is unaffected (it is centred on X/Y and grounded on the lowest voxel).
+    canvas_z = voxlib.CANVAS
+    if trees:
+        needed = max(crown_top_z(templates[v[0]]) for v in trees.values()) + 1
+        canvas_z = max(canvas_z, needed)
 
     print('chapter %s   %d tiles -> %s' % (nn, len(tiles), out_dir))
     if trees:
-        print('trees: %s' % ', '.join('%d<-ref%d' % (t, v[0]) for t, v in sorted(trees.items())))
+        print('trees: %s' % ', '.join(
+            '%d<-ref%d%s' % (t, key[0], '' if key[1] is None else '#%02x%02x%02x' % key[1])
+            for t, (key, _at) in sorted(trees.items())))
+        print('tree stretch: %.2fx   canvas 40x40x%d' % (args.tree_stretch, canvas_z))
 
     if not args.dry_run and not os.path.isdir(out_dir):
         os.makedirs(out_dir)
@@ -233,19 +348,20 @@ def main():
         tree, at = trees.get(tid, (None, None))
         voxels, source_id, stamped = build_tile(
             root, nn, tid, tree=tree, tree_at=at, grass_lift=args.grass_lift,
-            templates=templates, panel_dir=args.panel_dir, grass_tile=args.grass_tile)
+            templates=templates, panel_dir=args.panel_dir, grass_tile=args.grass_tile,
+            canvas_z=canvas_z)
         name = voxlib.shape_vox_name(nn, tid)
         dest = os.path.join(out_dir, name)
         note = ''
         if tree:
             note = '  tree from ref %d (%d crown voxels, ground from %s)' % (
-                tree, stamped, voxlib.tile_png_name(nn, source_id))
+                tree[0], stamped, voxlib.tile_png_name(nn, source_id))
         if os.path.isfile(dest) and not args.force and not args.dry_run:
             print('  skip  %-16s exists (use --force)' % name)
             skipped += 1
             continue
         if not args.dry_run:
-            voxlib.write_vox(dest, (voxlib.CANVAS,) * 3, voxels)
+            voxlib.write_vox(dest, (voxlib.CANVAS, voxlib.CANVAS, canvas_z), voxels)
         written += 1
         print('  %-5s %-16s %5d voxels%s'
               % ('would' if args.dry_run else 'write', name, len(voxels), note))

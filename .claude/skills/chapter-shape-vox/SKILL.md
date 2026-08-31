@@ -86,7 +86,32 @@ python shapes_to_vox.py NN \
 tile. `--tree ID:REF@X,Y` also re-centres the crown inside the 24×24 tile —
 only needed when the 2D tree is visibly off-centre.
 
+### Coloured forests
+
+All six references are green, because chapter 01's forest is. Where a chapter
+paints its trees in more than one colour, `--tree ID:REF#RRGGBB` retints the
+crown's foliage to that colour and leaves the trunk brown; the shading survives,
+only the hue changes. Sample the colour off the tile art rather than guessing,
+and give every tile of one species the same tint so the forest reads as a
+forest — chapter 05 uses three: green (untinted), `#2c4c6c` and `#a04824`.
+
 Add `--dry-run` first to see the voxel counts, and `--force` to overwrite.
+
+### Taller trees
+
+The six references top out at z 38, which reads as roughly 0.6 of a tile. A
+chapter that wants a taller forest passes `--tree-stretch F`: every crown's
+layers are repeated so it ends up F times taller, keeping the conifer's steps
+and the round tree's taper. The VOX canvas grows in Z to fit (40×40×45 at
+1.4×), which the OBJ export does not care about — it centres on X/Y and grounds
+on the lowest voxel, so nothing else shifts.
+
+```bash
+python shapes_to_vox.py 04 --used-tiles .../Chapter_04_UsedTiles.json     --grass-tile 20 --tree-stretch 1.4 --tree 131:42
+```
+
+Chapter 04 uses 1.4×. Past about 1.6× a conifer stops reading as a tree and
+starts reading as a tower, so preview before committing to a bigger number.
 
 ## Verify
 
