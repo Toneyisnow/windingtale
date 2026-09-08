@@ -29,6 +29,12 @@ The source prefix is the panel's **0-based** index and the remastered prefix is
 the chapter's **1-based** index, so they are always one apart. `voxlib`'s
 `tile_png_name()` / `shape_vox_name()` are the single source of truth.
 
+A tile may also ship alternative models, `Shape_<NN>_<id>_v1.vox`, `_v2.vox`, ...
+next to the base one (`shapes_to_vox.py --variant`). `ShapesLayer` counts them
+at load and picks one of base + variants per map position by a hash of the
+position, so a forest painted from one tile id is not one tree repeated. Only
+the base model is required; `install_chapter.py` checks nothing about variants.
+
 ## Chapter_NN.json
 
 ```jsonc

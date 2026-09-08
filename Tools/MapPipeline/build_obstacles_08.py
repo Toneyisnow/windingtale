@@ -4,7 +4,9 @@ Run once to produce, in Resources/Remastered/Obstacles/vox/:
 
     castle_wall_1    29 cols x 8 rows   the royal castle across the top of the map
     stone_statue_1    1 col  x 1 row    the helmed knight bust on a pedestal
-    stone_statue_2    1 col  x 1 row    the hooded figure on the same pedestal
+    stone_statue_2    1 col  x 1 row    a hooded figure on the same pedestal -- a misreading
+                                        of the art, which is the stone-ball pillar; chapter 08
+                                        now uses chapter 09's stone_pillar_1 there instead
 
 The two red-roofed houses at the bottom of the map are chapter 05's
 ``red_mansion_1`` standing again and are not built here.

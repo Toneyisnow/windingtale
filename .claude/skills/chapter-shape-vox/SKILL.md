@@ -113,6 +113,26 @@ python shapes_to_vox.py 04 --used-tiles .../Chapter_04_UsedTiles.json     --gras
 Chapter 04 uses 1.4×. Past about 1.6× a conifer stops reading as a tree and
 starts reading as a tower, so preview before committing to a bigger number.
 
+### Varied forests
+
+A forest painted from one tile id is one crown stamped a hundred times. Where
+that reads badly -- chapter 09's bottom forest is 200 tiles of six ids --
+give those tiles alternative crowns:
+
+```bash
+python shapes_to_vox.py 09 --used-tiles .../Chapter_09_UsedTiles.json --grass-tile 74     --tree-stretch 1.4 --tree "80:42#7a2410" ...     --variant 1.15,0.8 --variant 1.7,0.9 --variant 1.4,1.25 --variant-tiles 80,81,84,85,92,93
+```
+
+Each `--variant STRETCH,WIDTH` writes `Shape_NN_<id>_v<k>.vox` for every
+`--variant-tiles` tile, with the crown stretched to STRETCH times its authored
+height (replacing `--tree-stretch` for that model) and resampled to WIDTH times
+its authored width, clipped to the tile. `ShapesLayer` finds the `_v1`, `_v2`,
+... models beside the base one and picks one of base + variants per map
+position (a hash of the position, so the board is the same every build). Three
+variants on top of the base is enough to break the repetition; keep WIDTH
+within about 0.8..1.3 so a conifer stays a conifer, and preview every variant
+the way the base tiles are previewed below.
+
 ## Verify
 
 Regression-check the rules against chapter 01 — this must stay clean:

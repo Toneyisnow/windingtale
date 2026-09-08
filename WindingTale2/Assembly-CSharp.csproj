@@ -129,6 +129,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter7.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter8.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter9.cs" />
     <Compile Include="Assets\MapObjects\Cursors\Cursor.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\GameCanvas.cs" />
     <Compile Include="Assets\Scripts\Core\Files\UserSettings.cs" />

@@ -254,7 +254,7 @@ bright autumn.
 | 城堡城墙（整段，含城门与塔楼） | `castle_wall_1` | 8 × 29 -- one obstacle, see below |
 | 红顶大宅 ×2 | `red_mansion_1` | reuse from chapter 05 |
 | 骑士石像 ×4 | `stone_statue_1` | 1 × 1 (painted 2 × 1) |
-| 兜帽石像 ×2 | `stone_statue_2` | 1 × 1 (painted 2 × 1) |
+| 石球石柱 ×2 | `stone_pillar_1` | 1 × 1 (painted 2 × 1) -- built for chapter 09, see below |
 
 Resolved -- the map is 29 × 45 tiles. `chapter_map.py verify` matches the
 artwork exactly (0 / 751680 mismatched pixels), so everything was found in the
@@ -283,6 +283,11 @@ so the two spare columns fall on the map edges (X 1..2 and X 28..29, rows
 36..43 -- `Blocked` in `ShapeMatrix`, grass in `RenderMatrix`), and all 12
 painted columns are cleaned via `Clear`.
 
+**The two pillars at (11, 19) and (19, 19) are the stone-ball pillar** (tile 11),
+the same art chapter 09 paints thirty times. They were first read as a hooded
+figure and built as `stone_statue_2`; that model is still in the folder but no
+chapter uses it, and both are now chapter 09's `stone_pillar_1`.
+
 **A statue is painted over two rows and stands on one.** The bust tile above
 the pedestal is `Type 0` in the original for the knight (tile 8), so the model
 is 1 × 1 and stands on the pedestal row; the bust row is cleaned via `Clear`.
@@ -293,9 +298,9 @@ is 1 × 1 and stands on the pedestal row; the bust row is cleaned via `Clear`.
 | 2 | `red_mansion_1` | (3, 35) | Clear X 1..12 × rows 35..43 |
 | 3 | `red_mansion_1` | (18, 35) | Clear X 18..29 × rows 35..43 |
 | 4 | `stone_statue_1` | (11, 18) | Clear (11, 17..18) |
-| 5 | `stone_statue_2` | (11, 20) | Clear (11, 19..20) |
+| 5 | `stone_pillar_1` | (11, 20) | Clear (11, 19..20) |
 | 6 | `stone_statue_1` | (19, 18) | Clear (19, 17..18) |
-| 7 | `stone_statue_2` | (19, 20) | Clear (19, 19..20) |
+| 7 | `stone_pillar_1` | (19, 20) | Clear (19, 19..20) |
 | 8 | `stone_statue_1` | (12, 30) | Clear (12, 29..30) |
 | 9 | `stone_statue_1` | (18, 30) | Clear (18, 29..30) |
 
@@ -311,6 +316,64 @@ autumn split chapter 06 uses.
 
 Cleaning needs `--fill-plain-only`: the moat (364, `Blocked`) borders the wall
 footprint and would otherwise flood the cleared rows.
+
+## Chapter 09
+
+通往王城的大道。路两边每隔两格立着一根小石柱（1 格），分两种：上面有骑士雕塑的，
+和上面只有一个石球的；地图中央是一块公告板。四角和左右两侧是绿色 / 蓝绿 / 黄绿的针
+叶林，底部两侧是一大片深红、深蓝相间的松树林。
+
+| Object | DefinitionKey | Footprint (rows × cols) |
+|---|---|---|
+| 骑士石柱 ×16 | `stone_statue_1` | reuse from chapter 08 -- 1 × 1 (painted 2 × 1) |
+| 石球石柱 ×14 | `stone_pillar_1` | 1 × 1 (painted 2 × 1) |
+| 公告板 | `notice_board_1` | 1 × 5 (painted 4 × 5) |
+
+Resolved -- the map is 25 × 36 tiles. `chapter_map.py verify` matches the artwork
+exactly (0 / 518400 mismatched pixels), so everything is ordinary tiles and was
+found from the tile ids: the knight bust is tile 76, the ball 150, the pedestal
+under both 78 (the only `Blocked` one), and the board tiles 96..114 with its
+`Blocked` plinth row 108..110.
+
+**The knight is chapter 08's statue.** Tiles 76 + 78 are pixel-identical to
+chapter 08's 8 + 10, so it is `stone_statue_1` again. The ball pillar is the same
+pedestal with a sphere on it, built by `build_obstacles_09.py` from chapter 08's
+`pedestal()`. (Chapter 08's map also paints this ball pillar -- its tile 11 --
+and left it as a 2D tile; it could now be lifted with `stone_pillar_1` too.)
+
+**The board stands on one row.** The art draws it in elevation over four rows:
+frame and dark face on 13..14, the plinth on 15, a thin foot on 16. The model is
+5 cols × 1 row standing on row 15 and `Clear` takes all four rows.
+
+`obstacles_09.json` was generated from the matrix rather than placed by hand:
+every 76 / 150 has a 78 directly under it and every 78 has one of them above,
+so the 30 pillars are (X, Y+1) of each bust or ball with `Clear` (X, Y, 1 × 2).
+
+| Id | Key | Position | Note |
+|---|---|---|---|
+| 1 | `notice_board_1` | (11, 15) | Clear X 11..15 × rows 13..16 |
+| 2..7, 12..15, 22..27 | `stone_statue_1` | see the JSON | 16 knights |
+| 8..11, 16..21, 28..31 | `stone_pillar_1` | see the JSON | 14 ball pillars |
+
+The chests (142, 146, 148) stay ordinary painted tiles.
+
+Cleaning uses `--fill 74`: every pillar and the board stand on plain grass, and
+the nearest-neighbour fill would have grown a tree tile into a pedestal's place
+where a pillar stands beside the forest.
+
+Plain grass tile: **74** (the same art as chapter 08's 101). Tree tiles, all at
+`--tree-stretch 1.4`: 82, 95 (green conifer, ref 42) and 86 (green round base,
+ref 43); 94 (ref 42) and 87 (ref 43) tinted `#788430`, the yellow-green ones;
+80, 93 (ref 42) and 84 (ref 43) tinted `#7a2410`, the dark red pines; 81, 92
+(ref 42) and 85 (ref 43) tinted `#2c4c6c`, the dark blue ones. Tiles 92 / 93
+paint two trees, one behind the other; the crown takes the colour of the one in
+front.
+
+**The red and blue pines come in four shapes each.** The bottom forest is 200
+tiles of six ids, so besides the base crown every red/blue tile (80, 81, 84, 85,
+92, 93) has three `--variant` models -- `1.15,0.8` (short and slim), `1.7,0.9`
+(tall), `1.4,1.25` (wide) -- as `Shape_9_<id>_v1..3`, and `ShapesLayer` picks
+one of the four per map position.
 
 ---
 

@@ -1,0 +1,515 @@
+{
+  "_comment": [
+    "Chapter 09 obstacle list -- input to map_clean.py.",
+    "Position is the top-left tile the model stands on, 1-based. Clear lists the",
+    "tile rectangles the painted art covers, where that is not the model's own",
+    "rectangle (see map_clean.py).",
+    "",
+    "The notice board is painted over four rows (frame and face on 13-14, the",
+    "Blocked plinth on 15, a thin foot on 16) and stands on row 15.",
+    "",
+    "Every pillar is painted over two rows -- the knight bust (tile 76) or the",
+    "stone ball (tile 150) above, the pedestal (tile 78, Blocked) below -- and",
+    "stands on the pedestal tile. The knight is chapter 08's stone_statue_1: the",
+    "art is the same. The list below was generated from the tile matrix: every",
+    "76/150 has a 78 under it and every 78 has one of them above it."
+  ],
+  "Obstacles": [
+    {
+      "Id": 1,
+      "DefinitionKey": "notice_board_1",
+      "Position": {
+        "X": 11,
+        "Y": 15
+      },
+      "Clear": [
+        {
+          "X": 11,
+          "Y": 13,
+          "Cols": 5,
+          "Rows": 4
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 9,
+        "Y": 2
+      },
+      "Clear": [
+        {
+          "X": 9,
+          "Y": 1,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 17,
+        "Y": 2
+      },
+      "Clear": [
+        {
+          "X": 17,
+          "Y": 1,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 4,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 9,
+        "Y": 5
+      },
+      "Clear": [
+        {
+          "X": 9,
+          "Y": 4,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 5,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 17,
+        "Y": 5
+      },
+      "Clear": [
+        {
+          "X": 17,
+          "Y": 4,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 6,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 9,
+        "Y": 8
+      },
+      "Clear": [
+        {
+          "X": 9,
+          "Y": 7,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 7,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 17,
+        "Y": 8
+      },
+      "Clear": [
+        {
+          "X": 17,
+          "Y": 7,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 8,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 8,
+        "Y": 9
+      },
+      "Clear": [
+        {
+          "X": 8,
+          "Y": 8,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 9,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 18,
+        "Y": 9
+      },
+      "Clear": [
+        {
+          "X": 18,
+          "Y": 8,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 10,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 4,
+        "Y": 13
+      },
+      "Clear": [
+        {
+          "X": 4,
+          "Y": 12,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 11,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 22,
+        "Y": 13
+      },
+      "Clear": [
+        {
+          "X": 22,
+          "Y": 12,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 12,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 5,
+        "Y": 14
+      },
+      "Clear": [
+        {
+          "X": 5,
+          "Y": 13,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 13,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 21,
+        "Y": 14
+      },
+      "Clear": [
+        {
+          "X": 21,
+          "Y": 13,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 14,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 10,
+        "Y": 17
+      },
+      "Clear": [
+        {
+          "X": 10,
+          "Y": 16,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 15,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 16,
+        "Y": 17
+      },
+      "Clear": [
+        {
+          "X": 16,
+          "Y": 16,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 16,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 11,
+        "Y": 18
+      },
+      "Clear": [
+        {
+          "X": 11,
+          "Y": 17,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 17,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 15,
+        "Y": 18
+      },
+      "Clear": [
+        {
+          "X": 15,
+          "Y": 17,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 18,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 5,
+        "Y": 19
+      },
+      "Clear": [
+        {
+          "X": 5,
+          "Y": 18,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 19,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 21,
+        "Y": 19
+      },
+      "Clear": [
+        {
+          "X": 21,
+          "Y": 18,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 20,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 7,
+        "Y": 24
+      },
+      "Clear": [
+        {
+          "X": 7,
+          "Y": 23,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 21,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 19,
+        "Y": 24
+      },
+      "Clear": [
+        {
+          "X": 19,
+          "Y": 23,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 22,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 9,
+        "Y": 25
+      },
+      "Clear": [
+        {
+          "X": 9,
+          "Y": 24,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 23,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 17,
+        "Y": 25
+      },
+      "Clear": [
+        {
+          "X": 17,
+          "Y": 24,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 24,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 9,
+        "Y": 28
+      },
+      "Clear": [
+        {
+          "X": 9,
+          "Y": 27,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 25,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 17,
+        "Y": 28
+      },
+      "Clear": [
+        {
+          "X": 17,
+          "Y": 27,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 26,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 9,
+        "Y": 31
+      },
+      "Clear": [
+        {
+          "X": 9,
+          "Y": 30,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 27,
+      "DefinitionKey": "stone_statue_1",
+      "Position": {
+        "X": 17,
+        "Y": 31
+      },
+      "Clear": [
+        {
+          "X": 17,
+          "Y": 30,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 28,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 9,
+        "Y": 34
+      },
+      "Clear": [
+        {
+          "X": 9,
+          "Y": 33,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 29,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 17,
+        "Y": 34
+      },
+      "Clear": [
+        {
+          "X": 17,
+          "Y": 33,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 30,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 8,
+        "Y": 36
+      },
+      "Clear": [
+        {
+          "X": 8,
+          "Y": 35,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 31,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 18,
+        "Y": 36
+      },
+      "Clear": [
+        {
+          "X": 18,
+          "Y": 35,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    }
+  ]
+}

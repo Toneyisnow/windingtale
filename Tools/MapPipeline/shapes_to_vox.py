@@ -21,6 +21,12 @@ Shape_1_*.vox) and is checked by ``validate_shapes.py``:
 Which tiles have trees is a judgement call made from the art, so it is passed
 in rather than detected.
 
+A forest drawn from one tile id is one tree repeated, which is exactly what
+the 2D art does and what a 3D board must not. ``--variant STRETCH,WIDTH`` (with
+``--variant-tiles``) writes alternative crowns for a tile as
+``Shape_<NN>_<id>_v<k>.vox`` beside the base model; ShapesLayer picks one per
+map position (chapter 09's red/blue pines).
+
 Examples
 --------
     # everything the cleaned chapter still uses
@@ -113,6 +119,42 @@ def stretch_crown(template, factor):
         src = min(int(k / factor), height - 1)
         for x, y, colour in layers.get(src, ()):
             out.append((x, y, base + k, colour))
+    return out
+
+
+def widen_crown(template, factor):
+    """Make a crown wider or narrower by ``factor`` about its own centre.
+
+    Every layer is resampled: output voxel (x, y) takes the colour of the source
+    voxel nearest to ``centre + (v - centre) / factor``, so a factor above 1
+    spreads the crown out and one below 1 pulls it in, with no holes either
+    way. The trunk scales with it. The result is clipped to the 24x24 tile so a
+    wide crown can never push the exported model off its tile centre (the OBJ
+    exporter centres on the bounding box).
+    """
+    if factor == 1.0:
+        return template
+    if factor <= 0:
+        raise SystemExit('--variant width must be positive')
+    cx, cy = crown_centre(template)
+    layers = {}
+    for x, y, z, colour in template:
+        layers.setdefault(z, {})[(x, y)] = colour
+    out = []
+    for z, layer in layers.items():
+        xs = [x for x, _y in layer]
+        ys = [y for _x, y in layer]
+        x0 = max(0, int(cx + (min(xs) - cx) * factor) - 1)
+        x1 = min(voxlib.TILE - 1, int(cx + (max(xs) - cx) * factor) + 1)
+        y0 = max(0, int(cy + (min(ys) - cy) * factor) - 1)
+        y1 = min(voxlib.TILE - 1, int(cy + (max(ys) - cy) * factor) + 1)
+        for x in range(x0, x1 + 1):
+            sx = int(round(cx + (x - cx) / factor))
+            for y in range(y0, y1 + 1):
+                sy = int(round(cy + (y - cy) / factor))
+                colour = layer.get((sx, sy))
+                if colour is not None:
+                    out.append((x, y, z, colour))
     return out
 
 
@@ -256,6 +298,28 @@ def parse_tree_arg(value):
     return int(value), template, at, tint
 
 
+def parse_variant_arg(value):
+    """'1.6,0.85' -> (stretch, width); '1.6' alone keeps the width at 1."""
+    parts = value.replace(' ', '').split(',')
+    if len(parts) not in (1, 2):
+        raise SystemExit('--variant must be STRETCH[,WIDTH], got %r' % value)
+    stretch = float(parts[0])
+    width = float(parts[1]) if len(parts) == 2 else 1.0
+    if stretch <= 0 or width <= 0:
+        raise SystemExit('--variant factors must be positive, got %r' % value)
+    return stretch, width
+
+
+def variant_vox_name(nn, tile_id, k):
+    """Shape_<NN>_<id>_v<k>.vox -- one alternative crown for a tree tile.
+
+    ShapesLayer looks these up next to the tile's own model and picks one per
+    map position, so a forest of one tile id is not a forest of identical
+    trees. The base model (no suffix) is always one of the choices.
+    """
+    return 'Shape_%d_%d_v%d.vox' % (int(nn), tile_id, k)
+
+
 def resolve_tiles(args, root, nn):
     if args.tiles:
         return [int(t) for t in args.tiles.replace(' ', '').split(',') if t]
@@ -293,6 +357,15 @@ def main():
                    help='make every stamped crown F times taller by repeating its '
                         'layers (default 1.0 = the chapter 01 references as authored). '
                         'The VOX canvas grows in Z to fit.')
+    p.add_argument('--variant', action='append', default=[], metavar='STRETCH[,WIDTH]',
+                   help='also write an alternative model for every --variant-tiles tile, '
+                        'with its crown stretched to STRETCH times its authored height and '
+                        'WIDTH times its authored width (Shape_NN_<id>_v<k>.vox, k counting '
+                        'from 1 in the order given). The game picks one of the base model '
+                        'and its variants per map position. Repeatable.')
+    p.add_argument('--variant-tiles', default='',
+                   help='comma-separated tile ids that get the --variant models; they must '
+                        'also be --tree tiles')
     p.add_argument('--grass-lift', type=int, default=voxlib.GRASS_LIFT,
                    help='voxels of grass stacked above the ground (default %d)' % voxlib.GRASS_LIFT)
     p.add_argument('--grass-tile', type=int, default=GRASS_TILE_ID,
@@ -317,13 +390,39 @@ def main():
         tid, ref, at, tint = parse_tree_arg(spec)
         trees[tid] = ((ref, tint), at)
         wanted[(ref, tint)] = (ref, tint)
+    variants = [parse_variant_arg(v) for v in args.variant]
+    variant_tiles = sorted(int(t) for t in args.variant_tiles.replace(' ', '').split(',') if t)
+    if variant_tiles and not variants:
+        raise SystemExit('--variant-tiles needs at least one --variant')
+    if variants and not variant_tiles:
+        raise SystemExit('--variant needs --variant-tiles')
+    for tid in variant_tiles:
+        if tid not in trees:
+            raise SystemExit('--variant-tiles %d is not a --tree tile' % tid)
+
+    # Templates are keyed by (reference tile, tint) and, for the variants, by
+    # the variant number on top of that. The base template carries the chapter's
+    # --tree-stretch; a variant replaces that stretch with its own.
     templates = {}
+    variant_templates = {}
     if trees:
-        base = {ref: load_tree_template(root, ref) for ref in REFERENCE_TREE_TILES}
-        if args.tree_stretch != 1.0:
-            base = {ref: stretch_crown(tpl, args.tree_stretch) for ref, tpl in base.items()}
+        authored = {ref: load_tree_template(root, ref) for ref in REFERENCE_TREE_TILES}
+
+        def make(ref, tint, stretch, width):
+            tpl = authored[ref]
+            if stretch != 1.0:
+                tpl = stretch_crown(tpl, stretch)
+            if width != 1.0:
+                tpl = widen_crown(tpl, width)
+            return tint_crown(tpl, tint) if tint else tpl
+
         for key, (ref, tint) in wanted.items():
-            templates[key] = tint_crown(base[ref], tint) if tint else base[ref]
+            templates[key] = make(ref, tint, args.tree_stretch, 1.0)
+        for tid in variant_tiles:
+            key = trees[tid][0]
+            for k, (stretch, width) in enumerate(variants, 1):
+                if (key, k) not in variant_templates:
+                    variant_templates[(key, k)] = make(key[0], key[1], stretch, width)
 
     # Tall trees need headroom: the canvas grows in Z so a stretched crown is not
     # clipped. Every tile in the chapter gets the same size, and the exported OBJ
@@ -331,6 +430,8 @@ def main():
     canvas_z = voxlib.CANVAS
     if trees:
         needed = max(crown_top_z(templates[v[0]]) for v in trees.values()) + 1
+        for tpl in variant_templates.values():
+            needed = max(needed, crown_top_z(tpl) + 1)
         canvas_z = max(canvas_z, needed)
 
     print('chapter %s   %d tiles -> %s' % (nn, len(tiles), out_dir))
@@ -339,6 +440,10 @@ def main():
             '%d<-ref%d%s' % (t, key[0], '' if key[1] is None else '#%02x%02x%02x' % key[1])
             for t, (key, _at) in sorted(trees.items())))
         print('tree stretch: %.2fx   canvas 40x40x%d' % (args.tree_stretch, canvas_z))
+    if variants:
+        print('variants: %s   on tiles %s' % (
+            ', '.join('v%d=%.2fx tall %.2fx wide' % (k, s, w) for k, (s, w) in enumerate(variants, 1)),
+            ', '.join(str(t) for t in variant_tiles)))
 
     if not args.dry_run and not os.path.isdir(out_dir):
         os.makedirs(out_dir)
@@ -365,6 +470,22 @@ def main():
         written += 1
         print('  %-5s %-16s %5d voxels%s'
               % ('would' if args.dry_run else 'write', name, len(voxels), note))
+
+        if tid not in variant_tiles:
+            continue
+        for k in range(1, len(variants) + 1):
+            vname = variant_vox_name(nn, tid, k)
+            vdest = os.path.join(out_dir, vname)
+            vtemplates = {tree: variant_templates[(tree, k)]}
+            vvoxels, _src, vstamped = build_tile(
+                root, nn, tid, tree=tree, tree_at=at, grass_lift=args.grass_lift,
+                templates=vtemplates, panel_dir=args.panel_dir, grass_tile=args.grass_tile,
+                canvas_z=canvas_z)
+            if not args.dry_run:
+                voxlib.write_vox(vdest, (voxlib.CANVAS, voxlib.CANVAS, canvas_z), vvoxels)
+            written += 1
+            print('  %-5s %-16s %5d voxels  variant %d (%d crown voxels)'
+                  % ('would' if args.dry_run else 'write', vname, len(vvoxels), k, vstamped))
 
     print('%d written, %d skipped' % (written, skipped))
 

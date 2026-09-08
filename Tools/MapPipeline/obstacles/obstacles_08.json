@@ -17,7 +17,10 @@
     "all 12.",
     "",
     "A statue is painted over two rows -- the bust on one, the pedestal under it --",
-    "and stands on the pedestal tile; the bust tile is walkable in the original."
+    "and stands on the pedestal tile; the bust tile is walkable in the original.",
+    "The two pillars with a stone ball on top (tile 11) are chapter 09's",
+    "stone_pillar_1; they were first modelled as a hooded figure (stone_statue_2),",
+    "which was a misreading of the art."
   ],
   "Obstacles": [
     { "Id": 1, "DefinitionKey": "castle_wall_1", "Position": { "X": 1, "Y": 1 },
@@ -39,11 +42,11 @@
 
     { "Id": 4, "DefinitionKey": "stone_statue_1", "Position": { "X": 11, "Y": 18 },
       "Clear": [ { "X": 11, "Y": 17, "Cols": 1, "Rows": 2 } ] },
-    { "Id": 5, "DefinitionKey": "stone_statue_2", "Position": { "X": 11, "Y": 20 },
+    { "Id": 5, "DefinitionKey": "stone_pillar_1", "Position": { "X": 11, "Y": 20 },
       "Clear": [ { "X": 11, "Y": 19, "Cols": 1, "Rows": 2 } ] },
     { "Id": 6, "DefinitionKey": "stone_statue_1", "Position": { "X": 19, "Y": 18 },
       "Clear": [ { "X": 19, "Y": 17, "Cols": 1, "Rows": 2 } ] },
-    { "Id": 7, "DefinitionKey": "stone_statue_2", "Position": { "X": 19, "Y": 20 },
+    { "Id": 7, "DefinitionKey": "stone_pillar_1", "Position": { "X": 19, "Y": 20 },
       "Clear": [ { "X": 19, "Y": 19, "Cols": 1, "Rows": 2 } ] },
     { "Id": 8, "DefinitionKey": "stone_statue_1", "Position": { "X": 12, "Y": 30 },
       "Clear": [ { "X": 12, "Y": 29, "Cols": 1, "Rows": 2 } ] },

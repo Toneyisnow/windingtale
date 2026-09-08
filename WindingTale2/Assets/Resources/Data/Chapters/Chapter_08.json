@@ -104,7 +104,7 @@
     },
     {
       "Id": 5,
-      "DefinitionKey": "stone_statue_2",
+      "DefinitionKey": "stone_pillar_1",
       "Position": {
         "X": 11,
         "Y": 20
@@ -120,7 +120,7 @@
     },
     {
       "Id": 7,
-      "DefinitionKey": "stone_statue_2",
+      "DefinitionKey": "stone_pillar_1",
       "Position": {
         "X": 19,
         "Y": 20

@@ -40,6 +40,11 @@ namespace WindingTale.MapObjects.GameMap
         // Every instance of one shape shares a mesh, so measure it once per shape id.
         private readonly Dictionary<int, float> surfaceHeightByShapeId = new Dictionary<int, float>();
 
+        // Shape id -> the alternative models a chapter ships for that tile
+        // (Shape_N_<id>_v1, _v2, ...), looked up once per field build. A forest
+        // painted from one tile id would otherwise be one tree repeated.
+        private readonly Dictionary<int, List<GameObject>> variantsByShapeId = new Dictionary<int, List<GameObject>>();
+
         // The surface height most tiles on the board share: the level the cursor and
         // indicator prefabs were authored against. Tiles are lifted relative to it.
         private float groundSurfaceHeight = 0f;
@@ -80,7 +85,7 @@ namespace WindingTale.MapObjects.GameMap
 
                     // The model comes from the cleaned map (no buildings painted into the
                     // ground), the ShapeDefinition handed to Shape from the painted one.
-                    GameObject shapePrefab = LoadShape(field.ChapterId, field.GetRenderShapeIdAt(pos));
+                    GameObject shapePrefab = LoadShape(field.ChapterId, field.GetRenderShapeIdAt(pos), pos);
                     if (shapePrefab != null)
                     {
                         GameObject shapeObj = Instantiate(shapePrefab);
@@ -253,7 +258,7 @@ namespace WindingTale.MapObjects.GameMap
         /// have not been remastered yet borrow chapter 01's tiles, so their maps still
         /// render something instead of an empty board.
         /// </summary>
-        private GameObject LoadShape(int chapterId, int shapeId)
+        private GameObject LoadShape(int chapterId, int shapeId, FDPosition pos)
         {
             if (shapeId < 0)
             {
@@ -265,7 +270,7 @@ namespace WindingTale.MapObjects.GameMap
                 : null;
             if (prefab != null)
             {
-                return prefab;
+                return PickVariant(chapterId, shapeId, prefab, pos);
             }
 
             if (chapterId != FallbackShapeChapter && !warnedMissingShapeSet)
@@ -277,6 +282,64 @@ namespace WindingTale.MapObjects.GameMap
             }
 
             return Resources.Load<GameObject>(ShapeResourcePath(FallbackShapeChapter, shapeId));
+        }
+
+        /// <summary>
+        /// One of the tile's models -- the base one or, where the chapter ships
+        /// Shape_N_&lt;id&gt;_v1, _v2, ... beside it, one of those -- chosen by map
+        /// position so a forest of one tile id is a mix of tree shapes. The choice is
+        /// a hash of the position rather than a random draw, so the same board looks
+        /// the same every time it is built.
+        /// </summary>
+        private GameObject PickVariant(int chapterId, int shapeId, GameObject basePrefab, FDPosition pos)
+        {
+            if (!variantsByShapeId.TryGetValue(shapeId, out List<GameObject> variants))
+            {
+                variants = new List<GameObject>();
+                for (int k = 1; ; k++)
+                {
+                    GameObject variant = Resources.Load<GameObject>(ShapeVariantResourcePath(chapterId, shapeId, k));
+                    if (variant == null)
+                    {
+                        break;
+                    }
+                    variants.Add(variant);
+                }
+                variantsByShapeId[shapeId] = variants;
+            }
+
+            if (variants.Count == 0 || pos == null)
+            {
+                return basePrefab;
+            }
+
+            int choice = PositionHash(pos) % (variants.Count + 1);
+            return choice == 0 ? basePrefab : variants[choice - 1];
+        }
+
+        /// <summary>
+        /// A well-mixed non-negative hash of a tile position, so neighbouring tiles
+        /// do not fall into a visible pattern of variants.
+        /// </summary>
+        private static int PositionHash(FDPosition pos)
+        {
+            unchecked
+            {
+                uint h = (uint)(pos.X * 73856093) ^ (uint)(pos.Y * 19349663);
+                h ^= h >> 13;
+                h *= 0x5bd1e995;
+                h ^= h >> 15;
+                return (int)(h & 0x7fffffff);
+            }
+        }
+
+        /// <summary>
+        /// Resource path of the k-th alternative model of a tile, Shape_N_&lt;id&gt;_vk
+        /// next to the base one; see PickVariant.
+        /// </summary>
+        private static string ShapeVariantResourcePath(int chapterId, int shapeId, int k)
+        {
+            return string.Format("{0}_v{1}", ShapeResourcePath(chapterId, shapeId), k);
         }
 
         /// <summary>

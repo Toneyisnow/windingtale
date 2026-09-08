@@ -38,7 +38,8 @@ pip install Pillow
 | `build_obstacles_02.py` | 第 02 关的 5 栋蓝顶教堂 |
 | `build_obstacles_05.py` | 第 05 关的 7 栋房子（红顶大教堂、蓝顶教堂、红顶大宅、两栋小屋） |
 | `build_obstacles_06.py` | 第 06 关新加的两个模型：中央大门的红顶教堂、码头上的木货箱 |
-| `build_obstacles_08.py` | 第 08 关：29 格宽的整段城堡城墙（一个 obstacle）和两种石雕像 |
+| `build_obstacles_08.py` | 第 08 关：29 格宽的整段城堡城墙（一个 obstacle）和骑士石像（`stone_statue_2` 是误读，已弃用） |
+| `build_obstacles_09.py` | 第 09 关：石球石柱（复用 08 关的底座，第 08 关的两根也换成了它）和路中央的公告板 |
 | `voxmesh.py` | 贪心合并同色共面体素面的 OBJ 导出器，给超过 10 格宽的模型用（也可 `--greedy` 强制） |
 | `chapter_map.py` | `info` / `render` / `crop` / `verify`：看懂一关的地图数据，并把 ShapeMatrix 重新画回 PNG |
 | `map_clean.py` | 按 obstacle 列表把 footprint 抠掉换成普通地砖，产出 `Chapter_NN_Cleaned.json` |
@@ -118,6 +119,12 @@ python install_chapter.py 02
 `--tree-stretch F` 把树冠按层复制拉高到 F 倍（第 04 关用 1.4），
 画布的 Z 会自动长高以免被切顶（1.4 倍时是 40×40×45）；
 导出 OBJ 时按 X/Y 居中、按最低体素落地，所以画布变高不影响别的东西。
+
+`--variant STRETCH,WIDTH`（可重复）加 `--variant-tiles 80,81,...` 会给这些 tile 再各写
+一份 `Shape_<NN>_<id>_v<k>.vox`：树冠拉高到 STRETCH 倍、按中心重采样到 WIDTH 倍宽
+（裁在 24×24 之内）。`ShapesLayer` 会在基础模型旁边找 `_v1`、`_v2`……，按格子坐标的
+哈希在"基础 + 变体"里挑一个，这样第 09 关 200 格的红蓝松林不是同一棵树复制 200 次。
+`install_chapter.py` 只检查基础模型存在。
 
 ### 一个 .vox 部件最宽 10 格
 
