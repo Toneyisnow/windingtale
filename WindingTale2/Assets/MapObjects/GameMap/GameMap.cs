@@ -170,7 +170,7 @@ namespace WindingTale.MapObjects.GameMap
         public void SetCursorTo(FDPosition position)
         {
             cursor.Position = position;
-            cursorObject.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
+            cursorObject.transform.SetLocalPositionAndRotation(indicatorPositionAt(position), Quaternion.identity);
 
             refreshObstacleFade();
         }
@@ -258,10 +258,11 @@ namespace WindingTale.MapObjects.GameMap
             cursor.Position = target;
             refreshObstacleFade();
 
-            // Path in tile space: (x0,y0) -> (x,y0) -> (x,y).
-            Vector3 p0 = MapCoordinate.ConvertPosToVec3(from);
-            Vector3 p1 = MapCoordinate.ConvertPosToVec3(FDPosition.At(target.X, from.Y));
-            Vector3 p2 = MapCoordinate.ConvertPosToVec3(target);
+            // Path in tile space: (x0,y0) -> (x,y0) -> (x,y). Each corner sits on its
+            // own tile's surface, so the cursor climbs onto a bridge as it slides.
+            Vector3 p0 = indicatorPositionAt(from);
+            Vector3 p1 = indicatorPositionAt(FDPosition.At(target.X, from.Y));
+            Vector3 p2 = indicatorPositionAt(target);
 
             float worldSpeed = CursorSlideTilesPerSecond * WorldUnitsPerTile;
 
@@ -274,7 +275,7 @@ namespace WindingTale.MapObjects.GameMap
             {
                 // Top dialog covers the top of the screen: keep the cursor lower.
                 bool keepCursorLow = dialogPosition == GameCanvas.DialogPosition.Top;
-                mainCamera.SlideFocusTo(p2, slideDuration, keepCursorLow);
+                mainCamera.SlideFocusTo(MapCoordinate.ConvertPosToVec3(target), slideDuration, keepCursorLow);
             }
 
             yield return MoveCursorAlong(p0, p1, worldSpeed);
@@ -488,7 +489,7 @@ namespace WindingTale.MapObjects.GameMap
             {
                 GameObject indicator = Instantiate(indicatorPrefab, indicatorsLayer.transform);
                 indicator.name = "move_indicator";
-                indicator.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
+                indicator.transform.SetLocalPositionAndRotation(indicatorPositionAt(position), Quaternion.identity);
                 indicator.transform.localScale = new Vector3(0.82f, 2f, 0.82f);
                 indicator.AddComponent<BlockBlinkEffect>();
                 indicatorTiles.Add(position);
@@ -509,7 +510,7 @@ namespace WindingTale.MapObjects.GameMap
                 GameObject indicator = Instantiate(indicatorPrefab, indicatorsLayer.transform);
                 indicator.name = "move_indicator";
                 indicator.transform.localScale = new Vector3(0.82f, 2f, 0.82f);
-                indicator.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(position), Quaternion.identity);
+                indicator.transform.SetLocalPositionAndRotation(indicatorPositionAt(position), Quaternion.identity);
 
                 // Attack/magic range indicators blink slowly and nearly fade out, so
                 // they read differently from the steadier move range (which uses the
@@ -601,6 +602,26 @@ namespace WindingTale.MapObjects.GameMap
         private ShapesLayer getShapesLayer()
         {
             return fieldLayer != null ? fieldLayer.GetComponent<ShapesLayer>() : null;
+        }
+
+        /// <summary>
+        /// Where something that lies flat on a tile (the cursor, a range indicator)
+        /// goes: the tile centre, raised onto the tile's surface when the tile as a
+        /// whole stands above the usual ground -- a bridge deck, for instance -- so
+        /// the tile does not hide it. Ordinary tiles get no lift (see
+        /// ShapesLayer.GetIndicatorLift).
+        /// </summary>
+        private Vector3 indicatorPositionAt(FDPosition position)
+        {
+            Vector3 tile = MapCoordinate.ConvertPosToVec3(position);
+
+            ShapesLayer shapes = getShapesLayer();
+            if (shapes != null)
+            {
+                tile.y += shapes.GetIndicatorLift(position);
+            }
+
+            return tile;
         }
 
         private void AddCreatureUI(FDCreature creature, FDPosition pos)
