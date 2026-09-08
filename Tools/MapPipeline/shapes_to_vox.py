@@ -225,15 +225,23 @@ def stamp_tree(voxels, template, at=None, canvas_z=voxlib.CANVAS):
 # tile -> voxels
 # --------------------------------------------------------------------------
 
-def tile_to_voxels(image, grass_lift=voxlib.GRASS_LIFT, lift_grass=True):
-    """Ground layer (plus grass blades) for one 24x24 tile PNG."""
+def tile_to_voxels(image, grass_lift=voxlib.GRASS_LIFT, lift_grass=True, flat=False):
+    """Ground layer (plus grass blades) for one 24x24 tile PNG.
+
+    ``flat`` puts every pixel at ground level regardless of colour. The terrain
+    classes are colour tables read off chapter 01's shoreline, and a chapter
+    with no shore can paint those colours for something else entirely --
+    chapter 10's cave has no sand at all, but the orange of its fire pools is
+    the sand family's (255,153,0) once resolved to the palette, and would
+    otherwise sink one voxel into the floor.
+    """
     px = image.load()
     voxels = []
     for py in range(voxlib.TILE):
         for pxi in range(voxlib.TILE):
             colour = voxlib.palette_index(px[pxi, py])
             rgb = voxlib.PALETTE[colour - 1][:3]
-            z = voxlib.TERRAIN_Z[voxlib.classify_terrain(rgb, resolve=False)]
+            z = voxlib.GROUND_Z if flat else voxlib.TERRAIN_Z[voxlib.classify_terrain(rgb, resolve=False)]
             x, y = pxi, voxlib.TILE - 1 - py
             voxels.append((x, y, z, colour))
             if lift_grass and rgb == voxlib.GRASS_RGB:
@@ -244,7 +252,7 @@ def tile_to_voxels(image, grass_lift=voxlib.GRASS_LIFT, lift_grass=True):
 
 def build_tile(root, nn, tile_id, tree=None, tree_at=None, grass_lift=voxlib.GRASS_LIFT,
                templates=None, panel_dir=None, grass_tile=GRASS_TILE_ID,
-               canvas_z=voxlib.CANVAS):
+               canvas_z=voxlib.CANVAS, flat=False):
     """Voxels for one tile. ``tree`` is a reference tile id from Shapes_01."""
     panel = panel_dir or voxlib.shape_panel_dir(root, nn)
     source_id = grass_tile if tree else tile_id
@@ -258,7 +266,7 @@ def build_tile(root, nn, tile_id, tree=None, tree_at=None, grass_lift=voxlib.GRA
 
     # A tree tile's ground is the flat grass tile, so no blades are raised on it
     # (that is what the reference tiles 43 / 44 do).
-    voxels = tile_to_voxels(image, grass_lift=grass_lift, lift_grass=not tree)
+    voxels = tile_to_voxels(image, grass_lift=grass_lift, lift_grass=not tree, flat=flat)
     stamped = 0
     if tree:
         stamped = stamp_tree(voxels, templates[tree], tree_at, canvas_z=canvas_z)
@@ -366,6 +374,10 @@ def main():
     p.add_argument('--variant-tiles', default='',
                    help='comma-separated tile ids that get the --variant models; they must '
                         'also be --tree tiles')
+    p.add_argument('--flat', action='store_true',
+                   help='every pixel at ground level: no sand/water steps. For a chapter '
+                        'with no shoreline whose art reuses the shore colours (chapter 10 '
+                        'paints fire in the sand oranges)')
     p.add_argument('--grass-lift', type=int, default=voxlib.GRASS_LIFT,
                    help='voxels of grass stacked above the ground (default %d)' % voxlib.GRASS_LIFT)
     p.add_argument('--grass-tile', type=int, default=GRASS_TILE_ID,
@@ -454,7 +466,7 @@ def main():
         voxels, source_id, stamped = build_tile(
             root, nn, tid, tree=tree, tree_at=at, grass_lift=args.grass_lift,
             templates=templates, panel_dir=args.panel_dir, grass_tile=args.grass_tile,
-            canvas_z=canvas_z)
+            canvas_z=canvas_z, flat=args.flat)
         name = voxlib.shape_vox_name(nn, tid)
         dest = os.path.join(out_dir, name)
         note = ''

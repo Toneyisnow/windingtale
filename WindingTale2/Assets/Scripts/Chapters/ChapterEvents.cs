@@ -286,6 +286,55 @@ namespace WindingTale.Chapters
             return party?.Find(friend => friend.Id == creatureId);
         }
 
+        /// <summary>
+        /// Whether the party that walked in from the village carries this creature. A
+        /// battle started with no party at all (a New Game jump straight to the chapter)
+        /// carries nobody, and then only the mandatory friends take the field.
+        /// </summary>
+        protected static bool PartyCarries(GameMain gameMain, int creatureId)
+        {
+            return FindInParty(gameMain, creatureId) != null;
+        }
+
+        /// <summary>
+        /// Lines the party up at the start of a battle: <paramref name="entries"/> is
+        /// (creature id, x, y) per friend, in the order the original settled them. The
+        /// original's settleFriend did nothing for a slot the party did not fill, so every
+        /// friend from <paramref name="firstOptionalId"/> on -- the ones a player may not
+        /// have recruited -- is settled only when the record carries them; the ones below
+        /// it are mandatory and take the field even in a battle nobody walked into.
+        /// </summary>
+        protected static void SettleParty(GameMain gameMain, int[,] entries, int firstOptionalId)
+        {
+            for (int i = 0; i < entries.GetLength(0); i++)
+            {
+                int creatureId = entries[i, 0];
+                if (creatureId >= firstOptionalId && !PartyCarries(gameMain, creatureId))
+                {
+                    continue;
+                }
+
+                AddCreatureToMap(gameMain, CreatureFaction.Friend, creatureId, creatureId,
+                    FDPosition.At(entries[i, 1], entries[i, 2]));
+            }
+        }
+
+        /// <summary>
+        /// Turns an NPC standing on the map into a party member where it stands -- the guest
+        /// who joins at the end of a battle. Only Friend-faction creatures are carried to the
+        /// next chapter, and an NPC cannot change faction in place, so it is swapped for a
+        /// friend of the same id. <paramref name="fallback"/> is where the friend appears
+        /// when the NPC is no longer on the map.
+        /// </summary>
+        protected static FDCreature RecruitNpc(GameMain gameMain, int creatureId, int definitionId, FDPosition fallback)
+        {
+            FDCreature npc = gameMain.gameMap.Map.GetCreatureById(creatureId);
+            FDPosition position = npc != null ? npc.Position : fallback;
+
+            gameMain.gameMap.RemoveCreature(creatureId);
+            return AddCreatureToMap(gameMain, CreatureFaction.Friend, creatureId, definitionId, position);
+        }
+
 
         public static void PushConversationsActivities(GameMain gameMain, int chapterId, int sequenceId, int start, int end)
         {

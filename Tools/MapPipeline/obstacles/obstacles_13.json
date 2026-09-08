@@ -1,0 +1,120 @@
+{
+  "_comment": [
+    "Chapter 13 obstacle list -- input to map_clean.py.",
+    "Nine tents, 3 x 3 tiles each, found from the tile ids: a gray tent is the block",
+    "240 242 244 / 246 248 250 / 252 253 254 and a blue one 224 226 228 /",
+    "230 232 234 (or 259 233 260 where log ends are painted beside it) / 236 237 238.",
+    "The log well (272..280), the log piles (269..271, 281..283), the stumps (239, 287)",
+    "and the chests stay ordinary painted tiles."
+  ],
+  "Obstacles": [
+    {
+      "Id": 1,
+      "DefinitionKey": "tent_gray_1",
+      "Position": {
+        "X": 18,
+        "Y": 4
+      },
+      "Size": {
+        "Cols": 3,
+        "Rows": 3
+      }
+    },
+    {
+      "Id": 2,
+      "DefinitionKey": "tent_gray_1",
+      "Position": {
+        "X": 27,
+        "Y": 5
+      },
+      "Size": {
+        "Cols": 3,
+        "Rows": 3
+      }
+    },
+    {
+      "Id": 3,
+      "DefinitionKey": "tent_gray_1",
+      "Position": {
+        "X": 17,
+        "Y": 8
+      },
+      "Size": {
+        "Cols": 3,
+        "Rows": 3
+      }
+    },
+    {
+      "Id": 4,
+      "DefinitionKey": "tent_gray_1",
+      "Position": {
+        "X": 17,
+        "Y": 14
+      },
+      "Size": {
+        "Cols": 3,
+        "Rows": 3
+      }
+    },
+    {
+      "Id": 5,
+      "DefinitionKey": "tent_gray_1",
+      "Position": {
+        "X": 25,
+        "Y": 16
+      },
+      "Size": {
+        "Cols": 3,
+        "Rows": 3
+      }
+    },
+    {
+      "Id": 6,
+      "DefinitionKey": "tent_blue_1",
+      "Position": {
+        "X": 24,
+        "Y": 3
+      },
+      "Size": {
+        "Cols": 3,
+        "Rows": 3
+      }
+    },
+    {
+      "Id": 7,
+      "DefinitionKey": "tent_blue_1",
+      "Position": {
+        "X": 27,
+        "Y": 10
+      },
+      "Size": {
+        "Cols": 3,
+        "Rows": 3
+      }
+    },
+    {
+      "Id": 8,
+      "DefinitionKey": "tent_blue_1",
+      "Position": {
+        "X": 15,
+        "Y": 11
+      },
+      "Size": {
+        "Cols": 3,
+        "Rows": 3
+      }
+    },
+    {
+      "Id": 9,
+      "DefinitionKey": "tent_blue_1",
+      "Position": {
+        "X": 21,
+        "Y": 18
+      },
+      "Size": {
+        "Cols": 3,
+        "Rows": 3
+      }
+    }
+  ]
+}

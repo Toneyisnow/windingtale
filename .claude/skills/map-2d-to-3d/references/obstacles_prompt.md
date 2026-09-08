@@ -12,19 +12,72 @@ Keys are lower-case letters, digits and underscores only, e.g.
 Footprints are given as **rows × columns** of tiles and include the object's
 drop shadow.
 
+## Trees (every chapter)
+
+Every tree is a 1 × 1 obstacle, one fixed model per crown colour and shape,
+derived from the tile matrix by `tree_obstacles.py` (see `chapter-obstacles`,
+step 2b). The art paints a tree over a crown-top tile and a trunk/base tile
+under it; the tree stands on the base row. Keys, by the colour names used in
+the per-chapter list below:
+
+| 颜色 | key | chapters |
+|---|---|---|
+| 深绿 | `tree_dark_green` | 1, 2, 3, 4, 5, 7, 8, 11, 12, 14, 15, 18 |
+| 浅绿 | `tree_light_green` | 1, 2, 3, 4, 14, 15 |
+| 亮绿 | `tree_bright_green` | 4 |
+| 蓝 | `tree_blue` | 5, 7, 8, 9, 11, 12, 18, 19, 20 |
+| 深红 | `tree_dark_red` | 5, 6, 7, 8, 9, 11, 12, 19 |
+| 浅红 | `tree_light_red` | 5, 6, 7, 8, 11, 12 |
+| 深灰 / 浅灰 | `tree_dark_gray` / `tree_light_gray` | 13, 14, 15, 21 (the brown / tan dead trees) |
+| 雪蓝 / 雪红 | `tree_snow_blue` / `tree_snow_red` | 16 (snow-white cone, colour under it) |
+| 雪松 / 蓝松 | `pine_snow` / `pine_blue` | 17 / 20 (the slim trunkless pine shape) |
+
+All twelve models are built. Chapters 10 and 22-30 have no trees.
+
+### Tree tiles of the chapters not yet converted (11-21)
+
+Read off the tile art (cone core colour at pixel (11, 16)), so that when each
+map is converted the tree step is just this command. Tiles not listed here
+that are `Type 2` are log piles and stumps (11: 142; 12: none).
+
+| ch | `tree_obstacles.py` arguments |
+|---|---|
+| 11 | `--top 124,131=tree_dark_green --top 127,128=tree_blue --top 132,139=tree_dark_red --top 135,136=tree_light_red --base 125=tree_dark_green --base 129=tree_blue --base 133=tree_dark_red --base 137=tree_light_red` |
+| 12 | `--top 128,135=tree_dark_green --top 85,131,132=tree_blue --top 136,143=tree_dark_red --top 139,140=tree_light_red --base 129=tree_dark_green --base 89,133=tree_blue --base 137=tree_dark_red --base 141=tree_light_red` (85 is a blue crown on a cliff top, `Type 1`) |
+| 13 | `--top 88,95=tree_light_gray --top 91,94=tree_dark_gray --base 89=tree_light_gray --base 92=tree_dark_gray` |
+| 14 | `--top 74,87=tree_light_gray --top 75,86=tree_dark_gray --top 88,101,104,117=tree_dark_green --top 89,100,105,116=tree_light_green --base 78=tree_light_gray --base 79=tree_dark_gray --base 92,108=tree_dark_green --base 93,109=tree_light_green --fill 74,75,88,89,92,93=41` |
+| 15 | `--top 72,80,85,88=tree_dark_green --top 73,81,84,89=tree_light_green --top 90,98,103=tree_light_gray --top 91,99,102=tree_dark_gray --base 76,92=tree_dark_green --base 77,93=tree_light_green --base 94=tree_light_gray --base 95=tree_dark_gray` |
+| 16 | `--colour-from-stand --top 147=tree_snow_red --top 144,148,151=tree_snow_blue --base 145=tree_snow_red --base 149=tree_snow_blue` -- every crown is the same white cone; the colour shows in the tile *below* it (147 / 145 red, 151 / 149 blue), hence the flag |
+| 17 | `--top 164,168=pine_snow --base 152,166,170=pine_snow` (152 is a single small pine) |
+| 18 | `--top 128,135=tree_dark_green --top 131,132=tree_blue --base 129=tree_dark_green --base 89,133=tree_blue` |
+| 19 | `--top 72,79=tree_blue --top 75,76=tree_dark_red --base 73=tree_blue --base 77=tree_dark_red` (none of these are `Type 2`) |
+| 20 | `--top 144,146,148,150=tree_blue --base 149=tree_blue --top 128,132,136=pine_blue --base 130,134,138=pine_blue` |
+| 21 | `--top 216,218,223=tree_light_gray --top 219,220,222=tree_dark_gray --base 217=tree_light_gray --base 221=tree_dark_gray` |
+
 ---
 
 ## Chapter 01
 
 一个房子 (house)、两个茅草屋、三组木桶（每组 5 个，其中一组只有一半在屏幕内）。
+树：深绿、浅绿。
 
 | Object | DefinitionKey | Footprint (rows × cols) |
 |---|---|---|
 | 房子 house | `dwelling_house_1` | 4 × 6 |
-| 茅草屋 thatched hut ×2 | `thatched_hut_1` | 4 × 3 |
+| 茅草屋 thatched hut ×2 | `thatched_hut_1` | 4 × 3, cleaned as 5 × 3 (the shadow row) |
 | 木桶组 barrel group ×3 | `barrel_group_1` | 2 × 3 |
+| 树 ×50 | `tree_dark_green` ×28, `tree_light_green` ×22 | 1 × 1 each |
 
-Already finished — this is the reference chapter.
+The reference chapter for the tile rules; since the trees became obstacles
+its `Chapter_01.json` is produced by the pipeline like any other, from its
+own painted `ShapeMatrix` (identical to `ChapterLegacy_01.txt`):
+`obstacles/obstacles_01.json` (buildings) + `tree_obstacles.py` +
+`map_clean.py` + `install_chapter.py`.
+
+Tree tiles: 40, 43 (light-green tops), 44, 47 (dark-green tops), 42 (light
+base), 46 (dark base). Plain grass tile: **52**, which is what every tree tile
+fills with. The tree whose top is at (11, 3) has its trunk row inside the hut
+at (11, 4), so it stands on (11, 3).
 
 ## Chapter 02
 
@@ -56,8 +109,10 @@ Resolved — the map is 27 × 21 tiles. Footprints are rows × cols:
 | 8 | `barrel_group_1` | (7, 13) | 2 × 3 | left column hidden behind house #5 in the 2D art |
 | 9 | `barrel_group_1` | (21, 16) | 2 × 3 | |
 
-Plain grass tile: **153**. Tree tiles: 81, 82, 135, 138, 140 (conifers) and
-136, 139 (round).
+Plain grass tile: **153**. Trees (obstacles, 47): tops 81, 135 light green and
+82, 138, 140 dark green; bases 136 light, 139 dark. The crowns painted along
+row 1 over `blue_house_1` and row 12 over `blue_house_2` are behind those
+houses and are dropped (no free row behind them).
 
 ---
 
@@ -75,8 +130,8 @@ tile grid, and a close look at the art confirms there is no house, hut or
 barrel to lift out. `Chapter_03_Cleaned.json` is therefore identical to the
 painted map and `Obstacles` is empty.
 
-Plain grass tile: **31**. Tree tiles: 72, 73, 77 (conifer, ref 42) and 84, 85
-(cut off by the bottom map edge, ref 47).
+Plain grass tile: **31**. Trees (obstacles, 11): tops 73, 84 light green and
+72, 85 dark green; base 77 light green.
 
 ---
 
@@ -96,10 +151,16 @@ map and `Obstacles` is empty. The fences (tiles 24–31) and the two treasure
 chests (144, 148) stay ordinary painted tiles — they were deliberately **not**
 lifted into obstacles.
 
-Plain grass tile: **20**. Tree tiles: 128, 130, 131, 132, 133, 136, 137, 138,
-141, 142 (conifer crowns, ref 42) and 129, 134, 139 (the trunk/base half of a
-two-tile-tall tree, ref 47). Every crown is stretched with
-`--tree-stretch 1.4`, so chapter 04's forest stands taller than chapters 01–03.
+树：深绿、浅绿、亮绿 -- 68 tree obstacles, `tree_dark_green` ×33,
+`tree_light_green` ×22, `tree_bright_green` ×13, derived by `tree_obstacles.py`
+into `obstacles/obstacles_04_with_trees.json`.
+
+Plain grass tile: **20**, which every tree tile fills with. Tree tiles, by the
+cone's core colour: 128, 130, 137, 142 dark-green tops and 129 the dark base;
+131, 133, 141 light-green tops and 134 the light base; 132, 136, 138
+bright-green tops and 139 the bright base. (Before the trees became obstacles
+these were crowns stamped on the tiles at `--tree-stretch 1.4`; the
+`Shapes_04` tree models are no longer referenced.)
 
 ---
 
@@ -154,12 +215,11 @@ The picket fence along the bottom (tiles 240–243), the log piles (156, 157), t
 tree stump (218) and the chests (250) stay ordinary painted tiles, as chapter 04
 left its fences.
 
-Plain grass tile: **101**. Cobbled plaza: 100. Tree tiles: 160, 163, 164, 167,
-168, 171, 172, 175 (conifer crowns, ref 42) and 161, 165, 169, 173 (the round
-base half of a two-tile tree, ref 43), all at `--tree-stretch 1.4`. This forest
-is three colours, so the crowns are tinted with the new `--tree ID:REF#RRGGBB`:
-green untinted, `#2c4c6c` for the blue-green conifers, `#7a2410` and `#a04824`
-for the dark and bright autumn ones.
+Plain grass tile: **101**. Cobbled plaza: 100. Trees (obstacles, 70): tops
+160, 167 dark green, 163, 164 blue, 168, 175 dark red, 171, 172 light red;
+bases 161, 165, 169, 173 in the same order. Tiles 156, 157 are log piles, not
+trees. The crowns painted over the mansion's back row (row 13) and the
+cathedral's are behind those buildings and are dropped.
 
 Cleaning needs `--fill-plain-only`: the village is ringed by forest, and without
 it the conifers win the fill vote and march across the plaza the cathedral was
@@ -216,11 +276,9 @@ are left stacked too.
 The log pile (tiles 261, 262, 264, 266–274), the fence along the quay (245, 255–259)
 and the chest (286) stay ordinary painted tiles, as chapters 04 and 05 left theirs.
 
-Plain grass tile: **206**. Cobbled quay: 100. Tree tiles: 168, 171, 172, 175
-(conifer crowns, ref 42) and 169, 173 (the round base half of a two-tile tree,
-ref 43), all at `--tree-stretch 1.4`. This forest is autumn, in two shades:
-`#7a2410` for the dark trees (168, 169, 175) and `#a04824` for the bright ones
-(171, 172, 173).
+Plain grass tile: **206**. Cobbled quay: 100. Trees (obstacles, 13): tops 168,
+175 dark red and 171, 172 light red; bases 169 dark red, 173 light red. The
+crowns painted over the churches' back rows are dropped.
 
 Cleaning needs `--fill-plain-only`, for the same reason chapter 05 does: the
 churches stand in the trees, and without it the conifers grow across the plaza.
@@ -236,10 +294,10 @@ churches stand in the trees, and without it the conifers grow across the plaza.
 | — | — | — |
 
 Resolved -- `Chapter_07_Cleaned.json` is identical to the painted map and
-`Obstacles` is empty. (This entry was written after the chapter was finished,
-from the generated models.) Tree tiles, all at `--tree-stretch 1.4`: 124, 125,
-131 green; 127, 128, 129 blue-green; 132, 133, 139 dark autumn; 135, 136, 137
-bright autumn.
+`Obstacles` holds only the trees (243): tops 124, 131 dark green, 127, 128
+blue, 132, 139 dark red, 135, 136 light red; bases 125, 129, 133, 137 in the
+same order. Tiles 140, 142 are a log pile and a stump. Three crown tiles on
+row 1 at the right edge show no ground and are filled by their neighbours.
 
 ---
 
@@ -308,11 +366,9 @@ The bridge (tiles 212..216), the two low stone walls with their gate posts
 (244..261), the moat bank (270..287) and the chests (18, 22) stay ordinary
 painted tiles.
 
-Plain grass tile: **101**. Tree tiles, all at `--tree-stretch 1.4`: 160, 167
-(green conifer, ref 42) and 161 (green round base, ref 43); 163, 164 (ref 42)
-and 165 (ref 43) tinted `#2c4c6c`; 168, 175 (ref 42) and 169 (ref 43) tinted
-`#7a2410`; 171, 172 (ref 42) and 173 (ref 43) tinted `#a04824` -- the same
-autumn split chapter 06 uses.
+Plain grass tile: **101**. Trees (obstacles, 172): the same tile ids and
+colours as chapter 05 -- tops 160, 167 dark green, 163, 164 blue, 168, 175
+dark red, 171, 172 light red; bases 161, 165, 169, 173.
 
 Cleaning needs `--fill-plain-only`: the moat (364, `Blocked`) borders the wall
 footprint and would otherwise flood the cleared rows.
@@ -361,21 +417,213 @@ Cleaning uses `--fill 74`: every pillar and the board stand on plain grass, and
 the nearest-neighbour fill would have grown a tree tile into a pedestal's place
 where a pillar stands beside the forest.
 
-Plain grass tile: **74** (the same art as chapter 08's 101). Tree tiles, all at
-`--tree-stretch 1.4`: 82, 95 (green conifer, ref 42) and 86 (green round base,
-ref 43); 94 (ref 42) and 87 (ref 43) tinted `#788430`, the yellow-green ones;
-80, 93 (ref 42) and 84 (ref 43) tinted `#7a2410`, the dark red pines; 81, 92
-(ref 42) and 85 (ref 43) tinted `#2c4c6c`, the dark blue ones. Tiles 92 / 93
-paint two trees, one behind the other; the crown takes the colour of the one in
-front.
-
-**The red and blue pines come in four shapes each.** The bottom forest is 200
-tiles of six ids, so besides the base crown every red/blue tile (80, 81, 84, 85,
-92, 93) has three `--variant` models -- `1.15,0.8` (short and slim), `1.7,0.9`
-(tall), `1.4,1.25` (wide) -- as `Shape_9_<id>_v1..3`, and `ShapesLayer` picks
-one of the four per map position.
+Plain grass tile: **74** (the same art as chapter 08's 101). Trees (obstacles,
+130): tops 82, 95 dark green, 94 light green, 80, 93 dark red, 81, 92 blue;
+bases 86 dark green, 87 light green, 84 dark red, 85 blue. Tiles 92 / 93 paint
+two trees one behind the other; the tile is the one in front. (The
+`Shape_9_<id>_v1..3` variant crowns from before the trees became obstacles are
+no longer referenced.)
 
 ---
+
+## Chapter 10
+
+瀑布后的洞窟。四周是岩壁，中间两个大黑洞；沿着洞壁和路口立着三种火柱：矮的（地上一盆
+火）、亮的（白热的高火柱）、略暗的（橙色的高火柱），每根火柱都有两帧动画（顶上的火苗
+高低不同）；地上还散着发光的火圈，以及八个宝箱。
+
+| Object | DefinitionKey | Footprint (rows × cols) |
+|---|---|---|
+| 矮火柱 ×32 | `fire_pillar_1` | 1 × 1 |
+| 亮火柱 ×26 | `fire_pillar_2` | 1 × 1 (painted 2 × 1) |
+| 略暗火柱 ×13 | `fire_pillar_3` | 1 × 1 (painted 2 × 1) |
+
+Resolved -- the map is 31 × 45 tiles. `chapter_map.py verify` matches the artwork
+exactly (0 / 803520 mismatched pixels), so every pillar is ordinary tiles and was
+found from the tile ids: the bowl is tile 31; the bright column is 69 with its
+flame 56 on the row above; the dim column is 68 with its flame 52 above. Every
+56 / 52 has its 69 / 68 directly under it.
+
+**Every pillar is animated: two models per key.** `fire_pillar_N.vox` is the
+first frame and `fire_pillar_N_f2.vox` the second; both are built by
+`build_obstacles_10.py` with the same dish and column and different flame
+tongues, and ObstaclesLayer plays whatever `_f2`, `_f3`, ... it finds beside a
+model at `ObstacleAnimation.FramesPerSecond`. See formats.md.
+
+**A tall pillar is painted over two rows and stands on one** -- the flame tile is
+the top of a column drawn in elevation, like chapter 08's statue busts -- so the
+model is 1 × 1 on the column tile and `Clear` takes both rows.
+
+`obstacles_10.json` was generated from the matrix: ids run row by row, 71 in
+all.
+
+| Id | Key | Position | Note |
+|---|---|---|---|
+| bowls | `fire_pillar_1` | every 31 | see the JSON |
+| bright | `fire_pillar_2` | every 69 | Clear (X, Y-1, 1 × 2) |
+| dim | `fire_pillar_3` | every 68 | Clear (X, Y-1, 1 × 2) |
+
+The glowing floor rings (tile 72) and the chests (112) stay ordinary painted
+tiles.
+
+Cleaning uses `--fill-plain-only --fill-exclude 112`: the walls are `Blocked` and
+must not grow into a cleared cell, but the chests are Plain and common enough to
+pass the vote, and two bowls stand right under a chest.
+
+No trees, no shore. Plain floor: 74..95 (a random cobble texture, so the cleared
+cells take their nearest neighbour rather than one id). The shape VOXs are
+generated with `--flat`: the fire oranges resolve to the palette's sand colours
+and would otherwise sink the floor rings one voxel.
+
+---
+
+## Chapter 11
+
+没有 obstacles。河网间的林地：蓝 / 深绿的针叶林散在草地上，中央一片深红 / 浅红的
+松林，几条泥土小路，一个湖，图上散着宝箱、一段原木和一个树桩。
+
+| Object | DefinitionKey | Footprint |
+|---|---|---|
+| — | — | — |
+
+Resolved -- the map is 35 × 45 tiles. `chapter_map.py verify` matches the artwork
+exactly, and there is no building on it. `Obstacles` holds only the trees (350):
+`tree_blue` ×154, `tree_dark_green` ×126, `tree_dark_red` ×37, `tree_light_red`
+×33, from the recorded `tree_obstacles.py` line. Plain grass tile: **161**; the
+red pines' ground matches 163 (the same plain green), and the four crown tiles
+deep in the red wood (133, 135, 137, 139) show no ground and take their forest's
+fill. The chests (164, 166, 168, 170) and the log / stump (142) stay painted
+tiles.
+
+## Chapter 12
+
+没有 obstacles。峡谷里的林间小道：两侧是带黑色阴影的岩壁，壁上三个洞口，草地上是
+蓝 / 深绿 / 深红 / 浅红的针叶林和几块泥地。
+
+| Object | DefinitionKey | Footprint |
+|---|---|---|
+| — | — | — |
+
+Resolved -- the map is 28 × 50 tiles, all ordinary tiles. `Obstacles` holds only
+the trees (397): `tree_dark_green` ×121, `tree_blue` ×119, `tree_dark_red` ×79,
+`tree_light_red` ×78. Tile 85 -- a blue crown painted over a cliff top, `Type 1`
+and so not in the first classification -- is a tree too, standing on the 89
+under it. Plain grass tile: **168**. The cave mouths (109-111, 181-188) stay
+painted tiles.
+
+## Chapter 13
+
+沙漠里的营地：九顶帐篷（五顶灰绿、四顶蓝白，同一形状只是颜色不同），中间一口原木
+围起来的井，几堆原木、树桩和宝箱，四周是枯树林，左右上角各一片湖。
+
+| Object | DefinitionKey | Footprint (rows × cols) |
+|---|---|---|
+| 灰绿帐篷 ×5 | `tent_gray_1` | 3 × 3 |
+| 蓝白帐篷 ×4 | `tent_blue_1` | 3 × 3 |
+
+Resolved -- the map is 40 × 25 tiles, all ordinary tiles, so the tents were found
+from the tile ids: a gray tent is the block 240 242 244 / 246 248 250 /
+252 253 254 and a blue one 224 226 228 / 230 232 234 / 236 237 238 (the middle
+row is 259 233 260 where log ends are painted beside it). Both are one model in
+two colourways, `build_obstacles_13.py`: a striped dome over a pleated skirt with
+a door in the front, 46 voxels tall, carrying the art's colours as its own
+palette.
+
+| Id | Key | Position |
+|---|---|---|
+| 1..5 | `tent_gray_1` | (18, 4), (27, 5), (17, 8), (17, 14), (25, 16) |
+| 6..9 | `tent_blue_1` | (24, 3), (27, 10), (15, 11), (21, 18) |
+
+The log well (272..280), the log piles (269..271, 281..283), the stumps (239,
+287) and the chests (104..118) stay painted tiles. Trees (obstacles, 277):
+tops 88, 95 light gray and 91, 94 dark gray; bases 89 light, 92 dark; they fill
+with 97 / 31 / 21, the tan ground they stand on.
+
+Cleaning uses `--fill-plain-only --fill-exclude 104,106,108,110,112,118`: the
+chests are Plain and several stand right beside a tent. The shape VOXs are
+generated with `--flat`: the pale patches of ground and the log ends carry a
+highlight that resolves to the palette's sand colour and would sink one voxel,
+and the only water is the two lakes in the top corners.
+
+## Chapter 14
+
+没有 obstacles。林间的土路：深绿 / 浅绿的针叶林和一片片枯树（浅灰 / 深灰）散在深浅
+不一的草地上，一条宽土路斜穿全图。
+
+| Object | DefinitionKey | Footprint |
+|---|---|---|
+| — | — | — |
+
+Resolved -- the map is 40 × 40 tiles, all ordinary tiles. `Obstacles` holds only
+the trees (403): `tree_light_green` ×111, `tree_dark_green` ×108,
+`tree_light_gray` ×94, `tree_dark_gray` ×90.
+
+**The lawn is a mix of shades and the forests alternate two colours cell by
+cell**, so the per-tile-id colour match gave the dark and light trees two
+different grass tiles and the cleaned map showed a checkerboard where every
+forest stood. The dead trees' bases match tile 41 exactly, so `--fill
+74,75,88,89,92,93=41` puts every tree on the light lawn on it; the trees in the
+dark-green corners (104, 105, 108, 109) match 176 on their own. There is no one
+plain grass tile: 174 / 175 / 176 are the untextured light / medium / dark
+greens and 177 the dirt road.
+
+## Chapter 15
+
+没有 obstacles。大湖和它的三座木桥：湖心岛、东岸的草地和泥路、右上角的枯树林，
+东侧的深绿 / 浅绿针叶林，几个宝箱。
+
+| Object | DefinitionKey | Footprint |
+|---|---|---|
+| — | — | — |
+
+Resolved -- the map is 50 × 50 tiles, all ordinary tiles. `Obstacles` holds only
+the trees (323): `tree_light_green` ×118, `tree_dark_green` ×108,
+`tree_light_gray` ×53, `tree_dark_gray` ×44. The green trees' ground matches
+174 and the dead trees' 175 (the plain light and medium greens); the four crown
+tiles with no visible ground (98, 99, 102, 103) take their forest's fill. The
+bridges (192..261) stay painted tiles, as chapter 03's did.
+
+## Chapter 16
+
+没有 obstacles。雪原：中央三片结冰的湖，四周是雪松林（树冠全是白的，颜色只在树冠
+下面那格露出来：雪红 / 雪蓝），几条泥路和宝箱。
+
+| Object | DefinitionKey | Footprint |
+|---|---|---|
+| — | — | — |
+
+Resolved -- the map is 40 × 40 tiles, all ordinary tiles. `Obstacles` holds only
+the trees (196): `tree_snow_blue` ×103, `tree_snow_red` ×93, derived with
+`--colour-from-stand` as recorded. Plain snow tile: **104**, which every tree
+tile fills with.
+
+## Chapter 17
+
+没有 obstacles。海中的雪岛：十字形的堤道，中央一圈圈的石台，台阶中间两块灰色石板
+（普通地砖，可以走），零星几棵雪松，宝箱。
+
+| Object | DefinitionKey | Footprint |
+|---|---|---|
+| — | — | — |
+
+Resolved -- the map is 46 × 45 tiles, all ordinary tiles. The two grey slabs in
+the middle (192..200) are `Type 0` stairs and stay painted. `Obstacles` holds
+only the pines (24): `pine_snow`. Plain snow tiles: **102** / 103 (the two
+shades the pines stand on).
+
+## Chapter 18
+
+没有 obstacles。深渊上的长桥：左右两侧是悬崖上的草地和石阶，中间一座跨过黑色深渊的
+木桥，右边崖壁上一个洞口，蓝 / 深绿的针叶树散在两岸，宝箱。
+
+| Object | DefinitionKey | Footprint |
+|---|---|---|
+| — | — | — |
+
+Resolved -- the map is 50 × 25 tiles, all ordinary tiles. `Obstacles` holds only
+the trees (41): `tree_dark_green` ×21, `tree_blue` ×20. Plain grass tile:
+**168**. The chasm (black `Blocked` tiles), the bridge (307..325) and the cave
+mouth stay painted.
 
 ## Adding a chapter
 

@@ -118,6 +118,21 @@ A model wider than 10 tiles is fine — `write_vox` splits it into parts and
 seals cavities, so for one of those store only the shell (`build_obstacles_08.py`
 is the example: 29 tiles of castle wall in a 1.9 MB `.vox`).
 
+### Animated objects
+
+An object that should move -- chapter 10's fire pillars flicker -- gets one
+model per frame: `<key>.vox` is frame 1, `<key>_f2.vox`, `_f3.vox`, ... the
+frames after it. They export and install like any other model, and
+`ObstaclesLayer` finds the `_fN` files beside the model and plays them at
+`ObstacleAnimation.FramesPerSecond` (one global rate, no per-model setting).
+
+Build every frame from one function with a frame index, keep the model's
+widest part identical in all frames and change only what sits inside it: the
+exporter centres each frame on its own voxel bounding box, so a frame that
+is wider or offset would jump on screen. `build_obstacles_10.py` is the
+example -- same dish and column, tongues of flame that swap tall and short.
+Print each frame's X/Y voxel extent and check they match.
+
 Then look at what you made:
 
 ```bash
@@ -127,6 +142,48 @@ python vox_preview.py ../../Resources/Remastered/Obstacles/vox/<key>.vox --scale
 and open the preview PNG with the Read tool. A model that is the right size and
 the wrong shape passes every automated check — the preview is the only thing
 that catches it.
+
+## 2b. Trees
+
+Every tree on the map is an obstacle too, and they are derived, not placed by
+hand. The art paints a tree over two tiles -- a **top** tile with the cone of
+the crown, and a **base** tile under it with the foliage band, trunk and roots
+-- and a forest is a column of tops with one base at the bottom: each top is
+one tree, the one in front hiding the lower half of the one behind. So a tree
+stands on the row **below** its top (the trunk row, the same "painted over two
+rows, stands on one" rule as the statues and fire pillars), the base is
+cleaned with the tree above it, and a top on the last row or with a building
+under it stands on its own tile. `tree_obstacles.py` applies all of that.
+
+There is one fixed model per crown colour and shape -- `tree_dark_green`,
+`tree_light_green`, `tree_bright_green`, ..., and `pine_<colour>` for the
+slim trunkless pines of chapters 17 and 20 -- built once by `build_trees.py`
+(its `COLOURS` table; a new colour is sampled off the tile art, lightest to
+darkest, seven shades). No random variants: the same tree everywhere is what
+the 2D art does.
+
+Your judgement is the tile classification. Build the contact sheet of the
+chapter's tree tiles and sample the cone's core pixel (around `(11, 16)`) of
+each: tiles with the same core colour are the same tree, and the background
+behind the cone (grass, or another crown) does not matter. Then:
+
+```bash
+python tree_obstacles.py NN \
+    --top 128,130,137,142=tree_dark_green --top 131,133,141=tree_light_green \
+    --base 129=tree_dark_green --base 134=tree_light_green \
+    --with obstacles/obstacles_NN.json -o obstacles/obstacles_NN_with_trees.json
+```
+
+`obstacles_NN.json` stays the hand-written building list; the `_with_trees`
+file is what `map_clean.py` takes. Every tree tile gets a `Fill` -- the
+ordinary ground tile whose art best covers the tile's non-tree pixels -- so a
+tree on the edge of a road comes back as grass. Read the fill table the tool
+prints: every tree tile of one chapter should land on the plain grass tile.
+The ASCII map under it shows where the trees stand; compare it with the art.
+When two tree colours alternate cell by cell over one lawn and match two
+different grass tiles (chapter 14), the cleaned map shows a checkerboard;
+`--fill IDS=TILE` forces those tiles onto one -- pick the tile a base tile
+matches at 100%, that is the ground the artist painted the forest on.
 
 ## 3. Clean the matrix
 
@@ -160,6 +217,12 @@ By default each cleared tile takes its nearest surviving neighbour, so a church
 standing on a cobbled plaza leaves cobbles and a hut standing on grass leaves
 grass. Pass `--fill <id>` to paint one tile everywhere instead — right for a
 chapter with a single kind of ground, wrong for chapter 02.
+
+Check what actually grew in: diff the cleaned matrix against the painted one
+and list the ids. A chest or signpost is `Plain` and, on a map with enough of
+them, common enough to win the vote -- chapter 10's bowls under its chests
+came back as chests until `--fill-exclude 112` took the chest out of the
+candidates.
 
 Overlap warnings are not always errors. The 2D art draws objects over each
 other, so chapter 02's left barrel group genuinely starts one tile inside the

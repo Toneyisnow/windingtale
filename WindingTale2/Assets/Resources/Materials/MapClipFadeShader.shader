@@ -11,6 +11,11 @@ Shader "Custom/MapClipFade"
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
+        // Self-illumination: the albedo, tinted by _EmissionColor, is added back at
+        // _Emission strength. 0 (the default) leaves the surface lit only by the
+        // scene; ObstacleGlow raises it on models that are meant to shine.
+        _EmissionColor ("Emission Color", Color) = (1,1,1,1)
+        _Emission ("Emission", Range(0,1)) = 0.0
     }
     SubShader
     {
@@ -27,6 +32,8 @@ Shader "Custom/MapClipFade"
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
+        fixed4 _EmissionColor;
+        half _Emission;
 
         // xy = (minX, minZ), zw = (maxX, maxZ) of the map rectangle in world space.
         float4 _MapClipMinMaxXZ;
@@ -48,6 +55,7 @@ Shader "Custom/MapClipFade"
 
             fixed4 col = tex2D (_MainTex, IN.uv_MainTex) * _Color;
             o.Albedo = col.rgb;
+            o.Emission = col.rgb * _EmissionColor.rgb * _Emission;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             o.Alpha = col.a;

@@ -1,0 +1,233 @@
+{
+  "Obstacles": [
+    {
+      "Id": 1,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 3,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 3,
+          "Y": 25,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 3
+        },
+        {
+          "X": 3,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 9
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 4,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 4,
+          "Y": 25,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 3
+        },
+        {
+          "X": 4,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 9
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 5,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 5,
+          "Y": 25,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 3
+        },
+        {
+          "X": 5,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 9
+        }
+      ]
+    },
+    {
+      "Id": 4,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 6,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 6,
+          "Y": 25,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 3
+        },
+        {
+          "X": 6,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 9
+        }
+      ]
+    },
+    {
+      "Id": 5,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 15,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 15,
+          "Y": 25,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 3
+        },
+        {
+          "X": 15,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 9
+        }
+      ]
+    },
+    {
+      "Id": 6,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 16,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 16,
+          "Y": 25,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 3
+        },
+        {
+          "X": 16,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 9
+        }
+      ]
+    },
+    {
+      "Id": 7,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 1,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 1,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 3
+        }
+      ]
+    },
+    {
+      "Id": 8,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 2,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 2,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 3
+        }
+      ]
+    },
+    {
+      "Id": 9,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 7,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 7,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 3
+        }
+      ]
+    },
+    {
+      "Id": 10,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 17,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 17,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 3
+        }
+      ]
+    },
+    {
+      "Id": 11,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 18,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 18,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 3
+        }
+      ]
+    }
+  ]
+}

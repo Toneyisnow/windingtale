@@ -45,10 +45,6 @@ namespace WindingTale.MapObjects.GameMap
         // out, so 0.7 barely reads as faded.
         private const float MenuActionedCreatureAlpha = 0.4f;
 
-        // How opaque an obstacle stays while the cursor or a menu item covers one of
-        // its tiles. Same treatment as a creature standing under a menu item.
-        private const float ObstacleAlpha = 0.7f;
-
         private GameObject cursorObject = null;
         private Cursor cursor = null;
 
@@ -106,7 +102,7 @@ namespace WindingTale.MapObjects.GameMap
                 {
                     obstaclesComponent = obstaclesLayer.AddComponent<ObstaclesLayer>();
                 }
-                obstaclesComponent.Initialize(this.Map.Field);
+                obstaclesComponent.Initialize(this.Map, this);
             }
 
             // Fall back to the child by name when the Inspector reference is unset, so
@@ -171,8 +167,6 @@ namespace WindingTale.MapObjects.GameMap
         {
             cursor.Position = position;
             cursorObject.transform.SetLocalPositionAndRotation(indicatorPositionAt(position), Quaternion.identity);
-
-            refreshObstacleFade();
         }
 
         /// <summary>
@@ -183,38 +177,6 @@ namespace WindingTale.MapObjects.GameMap
             if (cursorObject != null)
             {
                 cursorObject.SetActive(visible);
-                refreshObstacleFade();
-            }
-        }
-
-        /// <summary>
-        /// Fades every obstacle whose footprint is currently under the cursor or under
-        /// one of the open menu's item tiles, and restores all the others. Recomputed
-        /// from scratch on each cursor move / menu change, so no state can leak.
-        /// </summary>
-        private void refreshObstacleFade()
-        {
-            ObstaclesLayer obstacles = obstaclesLayer != null ? obstaclesLayer.GetComponent<ObstaclesLayer>() : null;
-            if (obstacles == null)
-            {
-                return;
-            }
-
-            obstacles.ResetAllTransparency();
-
-            // The cursor only counts while it is actually on screen (it is hidden
-            // while a menu is open).
-            if (cursor != null && cursorObject != null && cursorObject.activeSelf)
-            {
-                obstacles.GetObstacleAt(cursor.Position)?.SetTransparency(ObstacleAlpha);
-            }
-
-            if (currentMenu != null)
-            {
-                foreach (FDPosition tile in FDMenu.GetItemPositions(currentMenu.Position))
-                {
-                    obstacles.GetObstacleAt(tile)?.SetTransparency(ObstacleAlpha);
-                }
             }
         }
 
@@ -256,7 +218,6 @@ namespace WindingTale.MapObjects.GameMap
 
             // Update the logical position immediately; only the visual glides.
             cursor.Position = target;
-            refreshObstacleFade();
 
             // Path in tile space: (x0,y0) -> (x,y0) -> (x,y). Each corner sits on its
             // own tile's surface, so the cursor climbs onto a bridge as it slides.
@@ -428,10 +389,9 @@ namespace WindingTale.MapObjects.GameMap
                 return;
             }
 
-            // Obstacles under the menu items fade too; recomputed centrally so the
-            // cursor and the menu can't clobber each other's fades.
+            // Obstacles and chests under the menu items fade too: their layers poll
+            // GetFadeTiles, which reads this.
             currentMenu = faded ? menu : null;
-            refreshObstacleFade();
 
             ShapesLayer shapes = getShapesLayer();
             FDPosition[] itemTiles = FDMenu.GetItemPositions(menu.Position);

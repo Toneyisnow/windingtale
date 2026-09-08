@@ -127,6 +127,30 @@ Note the reading order: in the obstacle prompts, "4 x 6 tiles" means
 Height is chosen from how tall the object looks in the art, in tile units —
 a barrel stack that reads as 1.5 tiles high is 36 voxels.
 
+### Animated obstacles
+
+An obstacle may ship more than one model: `<key>.vox` is frame 1 and
+`<key>_f2.vox`, `<key>_f3.vox`, ... the frames after it, all exported and
+copied like any other model. `ObstaclesLayer` loads every `_fN` it finds
+beside the model, parents them under the one obstacle root and adds an
+`ObstacleAnimation`, which shows one frame at a time at its global
+`FramesPerSecond`. Chapter 10's fire pillars are the example: two frames each,
+the flame tongues tall in one and short in the other.
+
+Every frame must be the same `SIZE` and have the same X/Y voxel extent as the
+first, because the exporter centres on the voxel bounding box and
+`ObstaclesLayer` anchors and measures the footprint off the bounds of all the
+frames together. Keep the widest part of the model identical across frames and
+vary only what is inside it. `install_chapter.py` checks only the first frame.
+
+### Glowing obstacles
+
+Glow is not in the model: `ObstaclesLayer.GetGlow` is a per-key table (the
+fire pillars) that gives an emission strength and a point light, applied by
+`ObstacleGlow`. The clip shaders carry an `_Emission` term for it, 0 on every
+other obstacle. All glow switches together via `ObstacleGlow.Enabled` -- the
+`Glow Enabled` checkbox on the obstacles layer, or F9 in the editor.
+
 A `.vox` coordinate is one byte, so one *part* is at most 256 voxels wide.
 `voxlib.write_vox` takes any `SIZE` regardless: past 256 it writes the model
 as tile-aligned parts (240 voxels each) under a MagicaVoxel scene graph, and

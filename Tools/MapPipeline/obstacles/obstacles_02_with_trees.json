@@ -1,0 +1,1026 @@
+{
+  "Obstacles": [
+    {
+      "Id": 1,
+      "DefinitionKey": "blue_house_1",
+      "Position": {
+        "X": 2,
+        "Y": 1
+      }
+    },
+    {
+      "Id": 2,
+      "DefinitionKey": "blue_house_2",
+      "Position": {
+        "X": 21,
+        "Y": 0
+      }
+    },
+    {
+      "Id": 3,
+      "DefinitionKey": "blue_house_3",
+      "Position": {
+        "X": 13,
+        "Y": 6
+      }
+    },
+    {
+      "Id": 4,
+      "DefinitionKey": "blue_house_4",
+      "Position": {
+        "X": 24,
+        "Y": 8
+      }
+    },
+    {
+      "Id": 5,
+      "DefinitionKey": "blue_house_2",
+      "Position": {
+        "X": 1,
+        "Y": 12
+      }
+    },
+    {
+      "Id": 6,
+      "DefinitionKey": "blue_house_5",
+      "Position": {
+        "X": 16,
+        "Y": 17
+      }
+    },
+    {
+      "Id": 7,
+      "DefinitionKey": "thatched_hut_1",
+      "Position": {
+        "X": 21,
+        "Y": 17
+      },
+      "Size": {
+        "Cols": 3,
+        "Rows": 5
+      }
+    },
+    {
+      "Id": 8,
+      "DefinitionKey": "barrel_group_1",
+      "Position": {
+        "X": 7,
+        "Y": 13
+      }
+    },
+    {
+      "Id": 9,
+      "DefinitionKey": "barrel_group_1",
+      "Position": {
+        "X": 21,
+        "Y": 16
+      }
+    },
+    {
+      "Id": 10,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 1,
+        "Y": 2
+      },
+      "Clear": [
+        {
+          "X": 1,
+          "Y": 1,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 11,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 12,
+        "Y": 2
+      },
+      "Clear": [
+        {
+          "X": 12,
+          "Y": 1,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 12,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 13,
+        "Y": 2
+      },
+      "Clear": [
+        {
+          "X": 13,
+          "Y": 1,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 13,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 14,
+        "Y": 2
+      },
+      "Clear": [
+        {
+          "X": 14,
+          "Y": 1,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 14,
+          "Y": 2,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 14,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 18,
+        "Y": 2
+      },
+      "Clear": [
+        {
+          "X": 18,
+          "Y": 1,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 18,
+          "Y": 2,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 15,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 19,
+        "Y": 2
+      },
+      "Clear": [
+        {
+          "X": 19,
+          "Y": 1,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 16,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 20,
+        "Y": 2
+      },
+      "Clear": [
+        {
+          "X": 20,
+          "Y": 1,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 17,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 1,
+        "Y": 3
+      },
+      "Clear": [
+        {
+          "X": 1,
+          "Y": 2,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 18,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 12,
+        "Y": 3
+      },
+      "Clear": [
+        {
+          "X": 12,
+          "Y": 2,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 12,
+          "Y": 3,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 19,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 13,
+        "Y": 3
+      },
+      "Clear": [
+        {
+          "X": 13,
+          "Y": 2,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 13,
+          "Y": 3,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 20,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 19,
+        "Y": 3
+      },
+      "Clear": [
+        {
+          "X": 19,
+          "Y": 2,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 19,
+          "Y": 3,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 21,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 20,
+        "Y": 3
+      },
+      "Clear": [
+        {
+          "X": 20,
+          "Y": 2,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 22,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 1,
+        "Y": 4
+      },
+      "Clear": [
+        {
+          "X": 1,
+          "Y": 3,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 1,
+          "Y": 4,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 23,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 20,
+        "Y": 4
+      },
+      "Clear": [
+        {
+          "X": 20,
+          "Y": 3,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 20,
+          "Y": 4,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 24,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 23,
+        "Y": 10
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 9,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        }
+      ]
+    },
+    {
+      "Id": 25,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 23,
+        "Y": 11
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 10,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 26,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 22,
+        "Y": 12
+      },
+      "Clear": [
+        {
+          "X": 22,
+          "Y": 11,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        }
+      ]
+    },
+    {
+      "Id": 27,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 23,
+        "Y": 12
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 11,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 23,
+          "Y": 12,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 28,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 1,
+        "Y": 11
+      },
+      "Clear": [
+        {
+          "X": 1,
+          "Y": 11,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 108
+        }
+      ]
+    },
+    {
+      "Id": 29,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 2,
+        "Y": 11
+      },
+      "Clear": [
+        {
+          "X": 2,
+          "Y": 11,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 109
+        }
+      ]
+    },
+    {
+      "Id": 30,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 5,
+        "Y": 11
+      },
+      "Clear": [
+        {
+          "X": 5,
+          "Y": 11,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 109
+        }
+      ]
+    },
+    {
+      "Id": 31,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 6,
+        "Y": 11
+      },
+      "Clear": [
+        {
+          "X": 6,
+          "Y": 11,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 32,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 7,
+        "Y": 11
+      },
+      "Clear": [
+        {
+          "X": 7,
+          "Y": 11,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 109
+        }
+      ]
+    },
+    {
+      "Id": 33,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 22,
+        "Y": 13
+      },
+      "Clear": [
+        {
+          "X": 22,
+          "Y": 12,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 22,
+          "Y": 13,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 34,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 10,
+        "Y": 15
+      },
+      "Clear": [
+        {
+          "X": 10,
+          "Y": 14,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        },
+        {
+          "X": 10,
+          "Y": 15,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 35,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 8,
+        "Y": 16
+      },
+      "Clear": [
+        {
+          "X": 8,
+          "Y": 15,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        },
+        {
+          "X": 8,
+          "Y": 16,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 36,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 9,
+        "Y": 16
+      },
+      "Clear": [
+        {
+          "X": 9,
+          "Y": 15,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        },
+        {
+          "X": 9,
+          "Y": 16,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 37,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 13,
+        "Y": 16
+      },
+      "Clear": [
+        {
+          "X": 13,
+          "Y": 15,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        }
+      ]
+    },
+    {
+      "Id": 38,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 13,
+        "Y": 17
+      },
+      "Clear": [
+        {
+          "X": 13,
+          "Y": 16,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 13,
+          "Y": 17,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 39,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 27,
+        "Y": 18
+      },
+      "Clear": [
+        {
+          "X": 27,
+          "Y": 17,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        }
+      ]
+    },
+    {
+      "Id": 40,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 24,
+        "Y": 19
+      },
+      "Clear": [
+        {
+          "X": 24,
+          "Y": 18,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        },
+        {
+          "X": 24,
+          "Y": 19,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 41,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 26,
+        "Y": 19
+      },
+      "Clear": [
+        {
+          "X": 26,
+          "Y": 18,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        }
+      ]
+    },
+    {
+      "Id": 42,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 27,
+        "Y": 19
+      },
+      "Clear": [
+        {
+          "X": 27,
+          "Y": 18,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 43,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 10,
+        "Y": 20
+      },
+      "Clear": [
+        {
+          "X": 10,
+          "Y": 19,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        }
+      ]
+    },
+    {
+      "Id": 44,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 26,
+        "Y": 20
+      },
+      "Clear": [
+        {
+          "X": 26,
+          "Y": 19,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 26,
+          "Y": 20,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 45,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 27,
+        "Y": 20
+      },
+      "Clear": [
+        {
+          "X": 27,
+          "Y": 19,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 46,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 9,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 9,
+          "Y": 20,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        },
+        {
+          "X": 9,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 47,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 10,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 10,
+          "Y": 20,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 10,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 48,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 11,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 11,
+          "Y": 20,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        },
+        {
+          "X": 11,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 49,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 15,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 15,
+          "Y": 20,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        },
+        {
+          "X": 15,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 50,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 20,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 20,
+          "Y": 20,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        },
+        {
+          "X": 20,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 51,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 27,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 27,
+          "Y": 20,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        },
+        {
+          "X": 27,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 110
+        }
+      ]
+    },
+    {
+      "Id": 52,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 1,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 1,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        }
+      ]
+    },
+    {
+      "Id": 53,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 8,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 8,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        }
+      ]
+    },
+    {
+      "Id": 54,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 12,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 12,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        }
+      ]
+    },
+    {
+      "Id": 55,
+      "DefinitionKey": "tree_light_green",
+      "Position": {
+        "X": 25,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 25,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        }
+      ]
+    },
+    {
+      "Id": 56,
+      "DefinitionKey": "tree_dark_green",
+      "Position": {
+        "X": 26,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 26,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 153
+        }
+      ]
+    }
+  ]
+}

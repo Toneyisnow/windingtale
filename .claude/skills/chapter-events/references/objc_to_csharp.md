@@ -57,6 +57,23 @@ pulls the creature out of the unsettled list — the C# `AddCreatureToMap` does
 the equivalent by restoring it from `PartyRecord` when the party carries it, and
 returns null for a party member who is still waiting to be revived.
 
+**A friend the party may not have is a different case.** `settleFriend` did
+nothing for an empty slot, but `AddCreatureToMap` builds a Friend the record
+does not carry fresh from its definition — so Kaili (10), Rona (11) and everyone
+recruited later would appear in a party that never recruited them. Chapters 10
+onwards go through `ChapterEvents.SettleParty(gameMain, entries, firstOptionalId)`
+with an `(id, x, y)` table: ids below `firstOptionalId` (10) are mandatory and
+always take the field, the rest only when `PartyCarries` says so.
+
+And the mirror: a party member the original *never* settled (chapter 18 settles
+1..16 while the party may hold 17..19) is dropped from the party by the C# save,
+which keeps only Friends on the map. Give such a friend a free tile in the
+formation and say so in the class comment.
+
+A guest who joins at the end — `[[field getFriendList] addObject:...]` for an
+NPC already on the map — is `RecruitNpc(gameMain, id, definitionId, fallback)`:
+it removes the NPC and adds a Friend of the same id where it stood.
+
 ### `Around:` vs `Position:` — they are different calls, keep them different
 
 `Position:` places exactly, stacking if the tile is taken; that is normal for a

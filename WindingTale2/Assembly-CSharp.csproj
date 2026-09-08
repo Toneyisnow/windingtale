@@ -53,6 +53,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\TransferDefinition.cs" />
     <Compile Include="Assets\MapObjects\GameMap\TreasureInstance.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
+    <Compile Include="Assets\MapObjects\GameMap\ObstacleAnimation.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\IActionState.cs" />
     <Compile Include="Assets\Scripts\Core\Events\FDConditionEvent.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Assets\Scenes\ShoppingScene\ShoppingItemsDialog.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\SkySphere.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\MovePathFinder.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter8.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDEnemy.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\DistanceResolver.cs" />
     <Compile Include="Assets\Scripts\Core\Map\FDField.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="Assets\Scripts\Core\Objects\FDCreature.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AITreasureDelegate.cs" />
+    <Compile Include="Assets\MapObjects\GameMap\ObstacleGlow.cs" />
     <Compile Include="Assets\Scripts\Core\Events\TeamEliminatedEvent.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\GameRenderer.cs" />
     <Compile Include="Assets\MapObjects\Menus\MenuSlidingEffect.cs" />
@@ -128,8 +131,6 @@
     <Compile Include="Assets\Scenes\ShoppingScene\MoneyBar.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter7.cs" />
-    <Compile Include="Assets\Scripts\Chapters\Chapter8.cs" />
-    <Compile Include="Assets\Scripts\Chapters\Chapter9.cs" />
     <Compile Include="Assets\MapObjects\Cursors\Cursor.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\GameCanvas.cs" />
     <Compile Include="Assets\Scripts\Core\Files\UserSettings.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Assets\Scripts\Core\Algorithms\FDMovePath.cs" />
     <Compile Include="Assets\Scripts\UI\Utils\GlobalVariables.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDPosition.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter9.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\MainCamera.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\MoneyItemDefinition.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
@@ -219,6 +221,7 @@
     <Compile Include="Assets\Scenes\Shared\BackgroundMusic.cs" />
     <Compile Include="Assets\Scripts\Core\Files\UserSettingsManager.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\DefinitionStore.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter10.cs" />
     <Compile Include="Assets\Scripts\Chapters\ChapterEvents.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\SelectMagicTargetState.cs" />

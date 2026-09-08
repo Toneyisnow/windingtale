@@ -1,0 +1,566 @@
+{
+  "Obstacles": [
+    {
+      "Id": 1,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 23,
+        "Y": 11
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 10,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 23,
+          "Y": 11,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 25,
+        "Y": 11
+      },
+      "Clear": [
+        {
+          "X": 25,
+          "Y": 10,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 25,
+          "Y": 11,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 22,
+        "Y": 20
+      },
+      "Clear": [
+        {
+          "X": 22,
+          "Y": 19,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 22,
+          "Y": 20,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 4,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 26,
+        "Y": 20
+      },
+      "Clear": [
+        {
+          "X": 26,
+          "Y": 19,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 26,
+          "Y": 20,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 5,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 40,
+        "Y": 20
+      },
+      "Clear": [
+        {
+          "X": 40,
+          "Y": 19,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 40,
+          "Y": 20,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 6,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 21,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 21,
+          "Y": 20,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 21,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 7,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 27,
+        "Y": 21
+      },
+      "Clear": [
+        {
+          "X": 27,
+          "Y": 20,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 27,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 8,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 7,
+        "Y": 22
+      },
+      "Clear": [
+        {
+          "X": 7,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 7,
+          "Y": 22,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 9,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 17,
+        "Y": 24
+      },
+      "Clear": [
+        {
+          "X": 17,
+          "Y": 23,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 103
+        },
+        {
+          "X": 17,
+          "Y": 24,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 103
+        }
+      ]
+    },
+    {
+      "Id": 10,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 30,
+        "Y": 24
+      },
+      "Clear": [
+        {
+          "X": 30,
+          "Y": 23,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 103
+        },
+        {
+          "X": 30,
+          "Y": 24,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 103
+        }
+      ]
+    },
+    {
+      "Id": 11,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 21,
+        "Y": 25
+      },
+      "Clear": [
+        {
+          "X": 21,
+          "Y": 24,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 103
+        },
+        {
+          "X": 21,
+          "Y": 25,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 103
+        }
+      ]
+    },
+    {
+      "Id": 12,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 27,
+        "Y": 25
+      },
+      "Clear": [
+        {
+          "X": 27,
+          "Y": 24,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 103
+        },
+        {
+          "X": 27,
+          "Y": 25,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 103
+        }
+      ]
+    },
+    {
+      "Id": 13,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 7,
+        "Y": 27
+      },
+      "Clear": [
+        {
+          "X": 7,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 7,
+          "Y": 27,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 14,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 40,
+        "Y": 27
+      },
+      "Clear": [
+        {
+          "X": 40,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 40,
+          "Y": 27,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 15,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 20,
+        "Y": 29
+      },
+      "Clear": [
+        {
+          "X": 20,
+          "Y": 28,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 103
+        },
+        {
+          "X": 20,
+          "Y": 29,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 103
+        }
+      ]
+    },
+    {
+      "Id": 16,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 28,
+        "Y": 29
+      },
+      "Clear": [
+        {
+          "X": 28,
+          "Y": 28,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 103
+        },
+        {
+          "X": 28,
+          "Y": 29,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 103
+        }
+      ]
+    },
+    {
+      "Id": 17,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 23,
+        "Y": 33
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 32,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 23,
+          "Y": 33,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 18,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 26,
+        "Y": 33
+      },
+      "Clear": [
+        {
+          "X": 26,
+          "Y": 32,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 26,
+          "Y": 33,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 19,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 23,
+        "Y": 35
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 34,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 23,
+          "Y": 35,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 20,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 26,
+        "Y": 35
+      },
+      "Clear": [
+        {
+          "X": 26,
+          "Y": 34,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 26,
+          "Y": 35,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 21,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 23,
+        "Y": 37
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 36,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 23,
+          "Y": 37,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 22,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 26,
+        "Y": 37
+      },
+      "Clear": [
+        {
+          "X": 26,
+          "Y": 36,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        },
+        {
+          "X": 26,
+          "Y": 37,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 23,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 22,
+        "Y": 38
+      },
+      "Clear": [
+        {
+          "X": 22,
+          "Y": 38,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    },
+    {
+      "Id": 24,
+      "DefinitionKey": "pine_snow",
+      "Position": {
+        "X": 27,
+        "Y": 38
+      },
+      "Clear": [
+        {
+          "X": 27,
+          "Y": 38,
+          "Cols": 1,
+          "Rows": 1,
+          "Fill": 102
+        }
+      ]
+    }
+  ]
+}

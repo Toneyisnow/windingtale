@@ -35,6 +35,15 @@ a model reused at a different width than the art (the art is cleaned, the model
 stands where it fits). ``Position`` still says where the model goes and is
 what the chapter JSON carries; ``Clear`` never leaves this tool.
 
+A ``Clear`` rectangle may also name the tile to paint under it:
+
+    { "X": 6, "Y": 9, "Cols": 1, "Rows": 1, "Fill": 52 }
+
+Those tiles take that id outright instead of whatever the neighbours vote for,
+and then count as surviving ground when the rest of the footprints are grown
+in. tree_obstacles.py writes one for every tree, matched to the tree tile's
+own ground colour, so a tree on the edge of a road comes back as grass.
+
 Output is Chapter_NN_Cleaned.json: the same chapter with the footprint tiles
 replaced by the fill tile and an "Obstacles" block inserted immediately before
 "ShapeMatrix". A Chapter_NN_UsedTiles.json listing the tile ids that survive
@@ -71,18 +80,22 @@ def obstacle_tile_size(root, key, size=None):
 
 
 def covered_tiles(width, height, footprints):
-    """The on-board tiles under the footprints, plus a per-obstacle count."""
+    """The on-board tiles under the footprints, the ones with an explicit fill
+    (tile -> id), plus a per-obstacle count."""
     cleared = set()
+    forced = {}
     per = []
-    for key, x, y, cols, rows in footprints:
+    for key, x, y, cols, rows, fill in footprints:
         n = 0
         for tx in range(x, x + cols):
             for ty in range(y, y + rows):
                 if 1 <= tx <= width and 1 <= ty <= height:
                     cleared.add((tx, ty))
+                    if fill is not None:
+                        forced[(tx, ty)] = fill
                     n += 1
         per.append((key, x, y, cols, rows, n))
-    return cleared, per
+    return cleared, forced, per
 
 
 def clean_matrix(matrix, width, height, cleared, fill_tile):
@@ -210,6 +223,12 @@ def main():
                         'grown into a cleared footprint. Use it on maps where the '
                         'scenery is common enough to win the vote -- otherwise a '
                         'forest or a fence breeds across the cleared ground')
+    p.add_argument('--fill-exclude', default='',
+                   help='comma-separated tile ids that may never be grown into a '
+                        'cleared footprint, on top of --fill-plain-only. For scenery '
+                        'that is Plain and common enough to pass the vote -- chapter '
+                        '10 has eight treasure chests, and a pillar cleared next to '
+                        'one would otherwise become a ninth')
     p.add_argument('--fill-mode', choices=('nearest', 'tile'), default='nearest',
                    help='"nearest" (default) gives each cleared tile its nearest '
                         'surviving neighbour, so plazas stay paved and lawns stay '
@@ -249,43 +268,56 @@ def main():
         x, y = int(o['Position']['X']), int(o['Position']['Y'])
         if o.get('Clear'):
             for r in o['Clear']:
+                fill = int(r['Fill']) if r.get('Fill') is not None else None
                 footprints.append((key, int(r['X']), int(r['Y']),
-                                   int(r['Cols']), int(r['Rows'])))
+                                   int(r['Cols']), int(r['Rows']), fill))
         else:
-            footprints.append((key, x, y, cols, rows))
+            footprints.append((key, x, y, cols, rows, None))
         clean_list.append(OrderedDict([('Id', int(o.get('Id', i))),
                                        ('DefinitionKey', key),
                                        ('Position', OrderedDict([('X', x), ('Y', y)]))]))
 
-    cleared, per = covered_tiles(width, height, footprints)
+    cleared, forced, per = covered_tiles(width, height, footprints)
     total = len(cleared)
+
+    # Tiles with an explicit Fill are painted first and then count as ground
+    # the remaining footprints can grow from; only the rest are still pending.
+    matrix = [list(col) for col in matrix]
+    for (tx, ty), fill in forced.items():
+        matrix[tx - 1][ty - 1] = fill
+    pending = cleared - set(forced)
 
     # The default fill tile is the commonest tile that is NOT under an obstacle:
     # on a map that is mostly buildings, the overall histogram is dominated by
     # roof and wall tiles, which would be a nonsense choice of "ground".
     outside = Counter(matrix[x - 1][y - 1]
                       for x in range(1, width + 1) for y in range(1, height + 1)
-                      if (x, y) not in cleared)
+                      if (x, y) not in pending)
 
     allowed = None
     if args.fill_plain_only:
         shapes = chapter.get('Shapes', {})
         allowed = set(t for t in outside
                       if int(shapes.get(str(t), {}).get('Type', 0)) == 0)
+    excluded = set(int(t) for t in args.fill_exclude.replace(' ', '').split(',') if t)
+    if excluded:
+        allowed = set(allowed if allowed is not None else outside) - excluded
 
     pool = Counter({t: n for t, n in outside.items()
                     if allowed is None or t in allowed})
     fill = args.fill if args.fill is not None else pool.most_common(1)[0][0]
 
     if args.fill_mode == 'nearest' and args.fill is None:
-        new_matrix, stranded = clean_matrix_nearest(matrix, width, height, cleared,
+        new_matrix, stranded = clean_matrix_nearest(matrix, width, height, pending,
                                                     outside, allowed)
         for x, y in stranded:
             new_matrix[x - 1][y - 1] = fill
         fill_desc = 'nearest surviving ground (%d tiles fell back to %d)' % (len(stranded), fill)
     else:
-        new_matrix = clean_matrix(matrix, width, height, cleared, fill)
+        new_matrix = clean_matrix(matrix, width, height, pending, fill)
         fill_desc = 'tile %d everywhere' % fill
+    if forced:
+        fill_desc += ', %d tiles painted by their own Fill' % len(forced)
 
     after = Counter()
     for col in new_matrix:
@@ -306,7 +338,7 @@ def main():
 
     # Footprint overlap is almost always a mistake in the obstacle list.
     seen = {}
-    for key, x, y, cols, rows in footprints:
+    for key, x, y, cols, rows, _fill in footprints:
         for tx in range(x, x + cols):
             for ty in range(y, y + rows):
                 if (tx, ty) in seen:

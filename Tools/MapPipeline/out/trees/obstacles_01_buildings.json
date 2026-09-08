@@ -1,0 +1,52 @@
+{
+  "Obstacles": [
+    {
+      "Id": 1,
+      "DefinitionKey": "dwelling_house_1",
+      "Position": {
+        "X": 10,
+        "Y": 9
+      }
+    },
+    {
+      "Id": 2,
+      "DefinitionKey": "thatched_hut_1",
+      "Position": {
+        "X": 11,
+        "Y": 4
+      }
+    },
+    {
+      "Id": 3,
+      "DefinitionKey": "thatched_hut_1",
+      "Position": {
+        "X": 16,
+        "Y": 7
+      }
+    },
+    {
+      "Id": 4,
+      "DefinitionKey": "barrel_group_1",
+      "Position": {
+        "X": 8,
+        "Y": 7
+      }
+    },
+    {
+      "Id": 5,
+      "DefinitionKey": "barrel_group_1",
+      "Position": {
+        "X": 13,
+        "Y": 13
+      }
+    },
+    {
+      "Id": 6,
+      "DefinitionKey": "barrel_group_1",
+      "Position": {
+        "X": -1,
+        "Y": 15
+      }
+    }
+  ]
+}

@@ -40,6 +40,10 @@ pip install Pillow
 | `build_obstacles_06.py` | 第 06 关新加的两个模型：中央大门的红顶教堂、码头上的木货箱 |
 | `build_obstacles_08.py` | 第 08 关：29 格宽的整段城堡城墙（一个 obstacle）和骑士石像（`stone_statue_2` 是误读，已弃用） |
 | `build_obstacles_09.py` | 第 09 关：石球石柱（复用 08 关的底座，第 08 关的两根也换成了它）和路中央的公告板 |
+| `build_obstacles_10.py` | 第 10 关：三种火柱（矮 / 亮 / 略暗），每种两帧动画（`<key>.vox` + `<key>_f2.vox`） |
+| `build_obstacles_13.py` | 第 13 关：两顶帐篷（灰绿 / 蓝白，同一形状两套颜色，自带调色板） |
+| `build_trees.py` | 所有关卡共用的树：每种"颜色 + 树型"一个固定模型（`tree_<colour>.vox` / `pine_<colour>.vox`，1 格） |
+| `tree_obstacles.py` | 从 ShapeMatrix 里把树读出来变成 obstacle 列表（每个树冠一棵，站在树干那一格），带按地面颜色选好的 `Fill` |
 | `voxmesh.py` | 贪心合并同色共面体素面的 OBJ 导出器，给超过 10 格宽的模型用（也可 `--greedy` 强制） |
 | `chapter_map.py` | `info` / `render` / `crop` / `verify`：看懂一关的地图数据，并把 ShapeMatrix 重新画回 PNG |
 | `map_clean.py` | 按 obstacle 列表把 footprint 抠掉换成普通地砖，产出 `Chapter_NN_Cleaned.json` |
@@ -141,6 +145,75 @@ MagicaVoxel 打开也是一整面墙。这类模型 `vox_batch_to_obj.py` 会自
 城墙只有 1.5 万个面、1.6 MB，按老导出器会是 70 MB。`build_obstacles_08.py` 只把
 外壳写进 `.vox`（实心会有 1400 万体素），`voxmesh.mesh()` 网格化前先用 scipy
 把封闭的空腔填实，所以导出的 OBJ 没有内表面。
+
+### 有动画的 obstacle：`<key>_f2.vox`
+
+一个 obstacle 可以带多个模型：`<key>.vox` 是第 1 帧，`<key>_f2.vox`、`<key>_f3.vox`……
+是后面的帧，和普通模型一样导出、一样拷进 Unity。`ObstaclesLayer` 会在模型旁边找
+`_f2`、`_f3`……，全部挂在同一个 obstacle 下面，由 `ObstacleAnimation` 按全局常数
+`FramesPerSecond` 轮流显示。第 10 关的火柱就是这样：每种两帧，顶上的火苗一帧高一帧矮。
+
+每一帧的 `SIZE` 和 X/Y 方向的体素范围必须和第 1 帧一致——导出时按体素包围盒居中，
+`ObstaclesLayer` 也是拿所有帧合起来的包围盒去定位、算 footprint 的。
+做法是让模型最宽的那部分（火柱是底下的火盆）每帧完全一样，只改里面的东西。
+`install_chapter.py` 只检查第 1 帧存在。
+
+### 树也是 obstacle：`build_trees.py` + `tree_obstacles.py`
+
+原画里每棵树画在上下两格：上面一格是树冠的圆锥（top），正下方一格是树冠下沿、树干和
+树根（base）。树林就是一列 top 叠在一起、最底下一个 base——每个 top 就是一棵树，前面
+那棵挡住后面那棵的下半截。所以：
+
+* 每个 top 格 (X, Y) 是一棵树，站在 **(X, Y+1)**——树干画的那一行，和雕像 / 火柱
+  "画两行站一行"是同一条规则；
+* base 格由上面那棵树一起清理；上面没有 top 的 base（树冠在地图上边缘外）自己站一棵；
+* 最后一行的 top，或者树干那一行不是树格的（房子后面露出来的树冠，第 01 关茅草屋
+  角上有一棵），就站在自己这一格。
+
+每种"颜色 + 树型"只有**一个**固定模型，不再随机：`tree_dark_green`、`tree_light_green`、
+`tree_bright_green`……（`build_trees.py` 的 `TREES` 表，颜色 ramp 是从 tile 上采的，
+模型自带调色板，因为 MagicaVoxel 默认调色板会把 7 级树冠颜色压成 3 级）。松树型
+（第 17、20 关）是 `pine_<colour>`。哪些 tile 是 top / base、各是什么颜色，看图
+定，然后：
+
+```bash
+python build_trees.py                                   # 只需一次，模型是所有关共用的
+python tree_obstacles.py 04 \
+    --top 128,130,137,142=tree_dark_green --top 131,133,141=tree_light_green \
+    --top 132,136,138=tree_bright_green \
+    --base 129=tree_dark_green --base 134=tree_light_green --base 139=tree_bright_green \
+    --with obstacles/obstacles_04.json -o obstacles/obstacles_04_with_trees.json
+python map_clean.py 04 --obstacles obstacles/obstacles_04_with_trees.json
+```
+
+`obstacles_NN.json` 仍然是手写的房子列表；`_with_trees.json` 是它加上推导出来的树，
+`map_clean.py` 吃后者。每个树格的 `Clear` 都带 `Fill`：拿这个 tile 去掉树冠 / 树干 /
+树根 / 阴影颜色之后剩下的像素，和每个普通地砖比颜色直方图，覆盖最多的那个
+（平手取全图用得最多的），所以路边的树清掉后回来的是草而不是路。
+`map_clean.py` 先把这些 `Fill` 涂上，再让其它 footprint 从它们往里长。
+`--fill 74,75,88,89,92,93=41` 可以强行指定某些树格的 `Fill`：第 14 关的草地深浅不一、
+林子里深绿 / 浅绿两种树逐格交替，按 tile id 各自匹配会得到两种草砖，清完后是一片棋盘格。
+
+树的 tile 清掉之后就不再出现在 `UsedTiles` 里，`shapes_to_vox.py` 的 `--tree` 就不需要
+了（第 01–09 关都已经这样改过；`--tree` / `--variant` 只留给还想在 tile 上盖树冠的场合）。
+12 种树全部建好：深绿 / 浅绿 / 亮绿 / 蓝 / 深红 / 浅红 / 深灰 / 浅灰 / 雪蓝 / 雪红 +
+雪松 / 蓝松。第 11–21 关还没做 3D 地图，它们的树 tile 已经按颜色分好类记在
+`obstacles_prompt.md` 里，转地图时直接照抄那条命令。第 16 关每棵树的树冠都是同样的
+白雪，颜色只在它下面那格露出来，所以用 `--colour-from-stand`。
+
+画在房子后排上面的树冠（第 02 关大房子顶上那一排）：树在房子后面，站到再往后一行的
+空地上；后面没地方就丢掉，不会长在屋顶里。
+
+### 没有海岸线的关：`--flat`
+
+`shapes_to_vox.py` 按颜色分地形（沙滩 / 水 沉下去）。第 10 关的洞窟没有沙滩，但地上
+火圈的橙色落到调色板上正好是沙滩色，会把火圈沉下去一格——加 `--flat`，所有像素都按
+陆地高度。
+
+### 填充时排除某些 tile：`--fill-exclude`
+
+`map_clean.py --fill-plain-only` 只让 Type 0 的地砖长进抠掉的格子，但宝箱也是 Type 0，
+数量够多就能赢得投票（第 10 关有 8 个）。`--fill-exclude 112` 把它从候选里去掉。
 
 ### 清理矩形不等于模型矩形时：`Clear`
 

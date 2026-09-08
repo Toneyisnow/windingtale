@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Map;
+using WindingTale.Core.Objects;
 
 namespace WindingTale.MapObjects.GameMap
 {
@@ -14,22 +16,139 @@ namespace WindingTale.MapObjects.GameMap
     /// and placed at its tile Position. Mirrors ShapesLayer's upright transform
     /// (parent Euler(90) + inner Euler(180) stands the Z-up model up), but keeps
     /// each obstacle's own imported palette material instead of the shared one.
+    ///
+    /// An obstacle may be animated: where Resources/Obstacles/{DefinitionKey}_f2,
+    /// _f3, ... exist beside the model they are its later frames, instantiated
+    /// under the same root and played by ObstacleAnimation at its global rate.
+    /// Frame models are authored to the same footprint as the first frame, so
+    /// the anchoring and footprint below read the same bounds whichever frame is
+    /// showing.
+    ///
+    /// An obstacle may also glow (GetGlow): its materials are given emission and a
+    /// point light is hung at it, see ObstacleGlow. The glow of every obstacle is
+    /// switched together by ObstacleGlow.Enabled -- the Inspector checkbox below
+    /// and, in the editor or a development build, the F9 key, so the two looks
+    /// can be compared in Play mode.
+    ///
+    /// An obstacle fades to almost nothing while something has to be read through
+    /// it: a creature standing on one of its tiles, or the cursor, a menu item or a
+    /// move/target indicator covering one. Like the chests (ObjectsLayer) this is
+    /// polled in Update rather than pushed, because those things change from
+    /// unrelated places; SetTransparency is a no-op when nothing changed.
     /// </summary>
     public class ObstaclesLayer : MonoBehaviour
     {
+        // How opaque an obstacle stays while a creature or a UI element sits on one
+        // of its tiles. Near-invisible: a unit under a tree must read at a glance.
+        private const float FadedAlpha = 0.1f;
+
         private bool initialized = false;
 
-        public void Initialize(FDField field)
+        private FDMap map = null;
+        private GameMap gameMap = null;
+
+        // Every obstacle built, so the per-frame fade does not walk the hierarchy.
+        private readonly List<ObstacleInstance> instances = new List<ObstacleInstance>();
+
+        // The glow switch as seen in the Inspector. Tick or untick it in Play mode
+        // and Update pushes the change to ObstacleGlow.Enabled; the hotkey flips it
+        // the other way round so the two stay in step.
+        [SerializeField]
+        [Tooltip("Whether glowing obstacles (chapter 10's fire pillars) shine and light their surroundings.")]
+        private bool glowEnabled = true;
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        private const KeyCode GlowToggleKey = KeyCode.F9;
+#endif
+
+        void Update()
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (Input.GetKeyDown(GlowToggleKey))
+            {
+                glowEnabled = !glowEnabled;
+            }
+#endif
+            if (glowEnabled != ObstacleGlow.Enabled)
+            {
+                ObstacleGlow.Enabled = glowEnabled;
+            }
+
+            if (initialized)
+            {
+                refreshFade();
+            }
+        }
+
+        public void Initialize(FDMap map, GameMap gameMap)
         {
             if (this.gameObject != null && !initialized)
             {
-                buildObstacles(field);
+                this.map = map;
+                this.gameMap = gameMap;
+                buildObstacles(map != null ? map.Field : null);
                 initialized = true;
             }
         }
 
+        /// <summary>
+        /// Fades every obstacle that a creature or a UI element (cursor, menu item,
+        /// range indicator -- see GameMap.GetFadeTiles) currently sits on, and
+        /// restores the rest.
+        /// </summary>
+        private void refreshFade()
+        {
+            FDPosition[] uiTiles = gameMap != null ? gameMap.GetFadeTiles() : null;
+            List<FDCreature> creatures = map != null ? map.Creatures : null;
+
+            foreach (ObstacleInstance instance in instances)
+            {
+                if (instance == null)
+                {
+                    continue;
+                }
+
+                if (ShouldFade(instance, creatures, uiTiles))
+                {
+                    instance.SetTransparency(FadedAlpha);
+                }
+                else
+                {
+                    instance.ResetTransparency();
+                }
+            }
+        }
+
+        private static bool ShouldFade(ObstacleInstance instance, List<FDCreature> creatures, FDPosition[] uiTiles)
+        {
+            if (creatures != null)
+            {
+                foreach (FDCreature creature in creatures)
+                {
+                    if (creature != null && instance.Covers(creature.Position))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            if (uiTiles != null)
+            {
+                foreach (FDPosition tile in uiTiles)
+                {
+                    if (instance.Covers(tile))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         private void buildObstacles(FDField field)
         {
+            instances.Clear();
             if (field == null || field.Obstacles == null)
             {
                 return;
@@ -51,9 +170,7 @@ namespace WindingTale.MapObjects.GameMap
                 // Prefer a hand-tuned prefab (which may carry an ObstacleAnchor) and
                 // fall back to the raw imported model. This lets obstacles migrate to
                 // editor-authored prefabs one at a time without changing the pipeline.
-                GameObject prefab =
-                    Resources.Load<GameObject>(string.Format("Obstacles/Prefabs/{0}", obstacle.DefinitionKey))
-                    ?? Resources.Load<GameObject>(string.Format("Obstacles/{0}", obstacle.DefinitionKey));
+                GameObject prefab = LoadObstaclePrefab(obstacle.DefinitionKey);
                 if (prefab == null)
                 {
                     Debug.LogWarning("Obstacle model not found: Obstacles/" + obstacle.DefinitionKey);
@@ -83,28 +200,49 @@ namespace WindingTale.MapObjects.GameMap
                     inner.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.Euler(180, 0, 0));
                 }
 
+                // The later frames of an animated obstacle, if it has any, go under the
+                // same root so everything below -- scale, shader, anchoring, footprint --
+                // treats them as part of this one object.
+                ObstacleAnimation animation = AttachAnimationFrames(obj, obstacle);
+
                 // Swap to the clip shader so parts of this obstacle that stick out past
                 // the map edge are truncated. Keeps each obstacle's own texture/colour
                 // (the clip shader exposes the same _MainTex/_Color as the Standard one).
                 ApplyClipShader(obj, clipShader);
 
-                // The model is exported centre-pivoted, but Position is the
-                // top-left tile of the footprint. Anchor it via its world bounds:
-                //  - horizontally, shift so the top-left corner (max world X, min
-                //    world Z = smallest tile X/Y) sits on the tile, so it extends
-                //    INTO the map instead of toward the top-left;
-                //  - vertically, seat the BOTTOM edge (bounds.min.y) on the ground
-                //    plane (y = 0). This puts the effective anchor at the model's
-                //    base, so changing the height scale above grows/shrinks the model
-                //    upward from a fixed base and needs no further adjustment.
+                // Which tiles this obstacle covers, from the model's own world bounds:
+                // one tile is 2 world units (MapCoordinate.ConvertPosToVec3), map X runs
+                // along world -X and map Y along world +Z, so the tile extents are just
+                // the bounding-box size over the tile size. The bounds are already
+                // shrunk by ObstacleScale, so divide it back out -- the obstacle still
+                // occupies the tiles the chapter authored it on, it just renders a
+                // little smaller inside them. Needed both to place the model (below)
+                // and so the fade can tell what stands on it.
                 ObstacleAnchor anchor = obj.GetComponent<ObstacleAnchor>();
+                int tileWidth = 1;
+                int tileHeight = 1;
 
                 if (TryGetWorldBounds(obj, out Bounds bounds))
                 {
-                    // Horizontal anchor (shared by every obstacle): shift so the top-left
-                    // tile corner sits on the tile and the model extends into the map.
-                    float horizX = -bounds.extents.x;
-                    float horizZ = bounds.extents.z;
+                    float tileSize = WorldUnitsPerTile * ObstacleScale;
+                    tileWidth = Mathf.Max(1, Mathf.RoundToInt(bounds.size.x / tileSize));
+                    tileHeight = Mathf.Max(1, Mathf.RoundToInt(bounds.size.z / tileSize));
+
+                    // The model is exported centre-pivoted, but Position is the
+                    // top-left tile of the footprint. Anchor it via its world bounds:
+                    //  - horizontally, put the model's centre on the centre of its
+                    //    footprint: the top-left tile's centre, moved half the footprint
+                    //    (less one tile) into the map. A 1 x 1 tree lands dead centre on
+                    //    its tile; a 6-wide house is centred over its six tiles;
+                    //  - vertically, seat the BOTTOM edge (bounds.min.y) on the ground
+                    //    plane (y = 0). This puts the effective anchor at the model's
+                    //    base, so changing the height scale above grows/shrinks the model
+                    //    upward from a fixed base and needs no further adjustment.
+                    Vector3 tileCentre = this.transform.TransformPoint(MapCoordinate.ConvertPosToVec3(pos));
+                    float footprintX = tileCentre.x - (tileWidth - 1) * WorldUnitsPerTile / 2f;
+                    float footprintZ = tileCentre.z + (tileHeight - 1) * WorldUnitsPerTile / 2f;
+                    float horizX = footprintX - bounds.center.x;
+                    float horizZ = footprintZ - bounds.center.z;
 
                     // Vertical seating: prefer the prefab's authored anchor point (drop it
                     // onto the ground plane y = 0); otherwise drop the bounding-box bottom.
@@ -121,25 +259,144 @@ namespace WindingTale.MapObjects.GameMap
                     obj.transform.position += new Vector3(horizX, seatY, horizZ) + extra;
                 }
 
-                // Record which tiles this obstacle covers so the cursor/menu can fade
-                // it. The footprint is derived from the model's own world bounds: one
-                // tile is 2 world units (MapCoordinate.ConvertPosToVec3), map X runs
-                // along world -X and map Y along world +Z, so the tile extents are just
-                // the bounding-box size over the tile size. The bounds are already
-                // shrunk by ObstacleScale, so divide it back out -- the obstacle still
-                // occupies the tiles the chapter authored it on, it just renders a
-                // little smaller inside them.
                 ObstacleInstance instance = obj.GetComponent<ObstacleInstance>() ?? obj.AddComponent<ObstacleInstance>();
-                int tileWidth = 1;
-                int tileHeight = 1;
-                if (TryGetWorldBounds(obj, out Bounds footprint))
-                {
-                    float tileSize = WorldUnitsPerTile * ObstacleScale;
-                    tileWidth = Mathf.Max(1, Mathf.RoundToInt(footprint.size.x / tileSize));
-                    tileHeight = Mathf.Max(1, Mathf.RoundToInt(footprint.size.z / tileSize));
-                }
                 instance.SetFootprint(pos.X, pos.Y, tileWidth, tileHeight);
+                instances.Add(instance);
+
+                // Only now, with the bounds read off every frame, settle on the first one.
+                if (animation != null)
+                {
+                    animation.Show(0);
+                }
+
+                // Glow, for the obstacles that have one: needs the final bounds to place
+                // the light and the clip-shader material instances to set emission on.
+                ObstacleGlow.Spec glow = GetGlow(obstacle.DefinitionKey);
+                if (glow != null && TryGetWorldBounds(obj, out Bounds glowBounds))
+                {
+                    obj.AddComponent<ObstacleGlow>().Init(glow, glowBounds);
+                }
             }
+        }
+
+        /// <summary>
+        /// How an obstacle glows, or null for the ordinary ones. Chapter 10's fire
+        /// pillars: the whole model is fire, so it is self-lit almost fully, and each
+        /// carries a warm point light at its flame. One tile is 2 world units, so a
+        /// range of 7 reaches about three tiles out; the bright pillar throws the most
+        /// light, the bowl the least.
+        /// </summary>
+        private static ObstacleGlow.Spec GetGlow(string definitionKey)
+        {
+            switch (definitionKey)
+            {
+                case "fire_pillar_1":       // the low bowl
+                    return new ObstacleGlow.Spec
+                    {
+                        Emission = 0.85f,
+                        LightColor = new Color(1.0f, 0.72f, 0.35f),
+                        LightRange = 6f,
+                        LightIntensity = 1.2f,
+                        LightHeight = 0.7f,
+                    };
+                case "fire_pillar_2":       // the bright, white-hot pillar
+                    return new ObstacleGlow.Spec
+                    {
+                        Emission = 0.9f,
+                        LightColor = new Color(1.0f, 0.85f, 0.55f),
+                        LightRange = 8f,
+                        LightIntensity = 1.8f,
+                        LightHeight = 0.8f,
+                    };
+                case "fire_pillar_3":       // the dim, orange pillar
+                    return new ObstacleGlow.Spec
+                    {
+                        Emission = 0.8f,
+                        LightColor = new Color(1.0f, 0.6f, 0.2f),
+                        LightRange = 7f,
+                        LightIntensity = 1.3f,
+                        LightHeight = 0.8f,
+                    };
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// The model for one obstacle name: a hand-tuned prefab (which may carry an
+        /// ObstacleAnchor) when there is one, otherwise the raw imported model. Lets
+        /// obstacles migrate to editor-authored prefabs one at a time without changing
+        /// the pipeline. Null when neither exists.
+        /// </summary>
+        private static GameObject LoadObstaclePrefab(string name)
+        {
+            return Resources.Load<GameObject>(string.Format("Obstacles/Prefabs/{0}", name))
+                ?? Resources.Load<GameObject>(string.Format("Obstacles/{0}", name));
+        }
+
+        /// <summary>
+        /// Resource name of the k-th frame of an obstacle's animation: the model
+        /// itself is frame 1, then {DefinitionKey}_f2, _f3, ... beside it.
+        /// </summary>
+        private static string FrameName(string definitionKey, int frame)
+        {
+            return string.Format("{0}_f{1}", definitionKey, frame);
+        }
+
+        /// <summary>
+        /// Looks for the obstacle's later animation frames and, when there are any,
+        /// instantiates each under the obstacle root with the same upright inner
+        /// transform as the first frame, and returns the ObstacleAnimation that plays
+        /// them. Returns null -- and adds nothing -- for an obstacle with one model.
+        /// </summary>
+        private static ObstacleAnimation AttachAnimationFrames(GameObject obj, ObstacleDefinition obstacle)
+        {
+            List<GameObject> framePrefabs = new List<GameObject>();
+            for (int k = 2; ; k++)
+            {
+                GameObject framePrefab = LoadObstaclePrefab(FrameName(obstacle.DefinitionKey, k));
+                if (framePrefab == null)
+                {
+                    break;
+                }
+                framePrefabs.Add(framePrefab);
+            }
+
+            if (framePrefabs.Count == 0)
+            {
+                return null;
+            }
+
+            ObstacleAnimation animation = obj.AddComponent<ObstacleAnimation>();
+
+            // Frame 1 is the root's own renderers -- collected before the other frames
+            // are parented under it.
+            animation.AddFrame(obj);
+
+            for (int i = 0; i < framePrefabs.Count; i++)
+            {
+                GameObject frame = Instantiate(framePrefabs[i]);
+                frame.name = FrameName(obstacle.DefinitionKey, i + 2);
+                frame.transform.SetParent(obj.transform, false);
+                frame.transform.localPosition = Vector3.zero;
+                frame.transform.localRotation = Quaternion.identity;
+                frame.transform.localScale = Vector3.one;
+
+                Transform frameInner = frame.transform.Find("default");
+                if (frameInner != null)
+                {
+                    frameInner.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.Euler(180, 0, 0));
+                }
+
+                animation.AddFrame(frame);
+            }
+
+            // Stagger the clocks so a row of pillars does not flicker in step. The
+            // golden-ratio step spreads consecutive ids evenly around the cycle.
+            float cycle = animation.FrameCount / ObstacleAnimation.FramesPerSecond;
+            animation.SetPhase((obstacle.Id * 0.618034f) % 1f * cycle);
+
+            return animation;
         }
 
         // One map tile spans 2 world units; see MapCoordinate.ConvertPosToVec3.
@@ -153,39 +410,6 @@ namespace WindingTale.MapObjects.GameMap
         /// occupies are unchanged (see the footprint math in buildObstacles).
         /// </summary>
         private const float ObstacleScale = 0.9f;
-
-        /// <summary>
-        /// Returns the obstacle whose footprint covers the given tile, or null when the
-        /// tile is clear. Obstacle footprints do not overlap, so the first hit wins.
-        /// </summary>
-        public ObstacleInstance GetObstacleAt(FDPosition position)
-        {
-            if (position == null)
-            {
-                return null;
-            }
-
-            foreach (ObstacleInstance instance in GetComponentsInChildren<ObstacleInstance>())
-            {
-                if (instance.Covers(position))
-                {
-                    return instance;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Restores every obstacle faded by GetObstacleAt(...).SetTransparency().
-        /// </summary>
-        public void ResetAllTransparency()
-        {
-            foreach (ObstacleInstance instance in GetComponentsInChildren<ObstacleInstance>())
-            {
-                instance.ResetTransparency();
-            }
-        }
 
         /// <summary>
         /// Publishes the map's world-space rectangle to the "Custom/MapClip" shader as

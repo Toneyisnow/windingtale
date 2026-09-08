@@ -37,11 +37,25 @@ VOX's is the chapter's 1-based one (`ShapePanel02/Shape_1_153.png` →
    plain grass tile — so the painted 2D tree disappears — and a 3D crown is
    stamped on top. Tree tiles grow no grass blades.
 
+Rules 3 and 4 are colour tables read off chapter 01, and a chapter with no
+shore can paint those colours for something else: chapter 10's cave has no
+sand, but the orange of its fire rings resolves to the sand family and would
+sink one voxel. Pass `--flat` on such a chapter and every pixel stays at
+ground level.
+
 Rule 5 needs `--grass-tile <id>`: the plain grass tile differs per panel (52 in
 chapter 01, 153 in chapter 02). Pick it off the used-tile contact sheet before
 you generate — an untextured, featureless green tile.
 
 ## Deciding the trees
+
+**Trees are obstacles now** (`chapter-obstacles`, step 2b): `tree_obstacles.py`
+lifts every tree tile out of the matrix before this step, so a chapter done
+that way has no tree tiles left in its `UsedTiles` and needs no `--tree` at
+all -- every converted chapter (01-09) is like this now, and the tree tiles of
+11-21 are already classified in `obstacles_prompt.md`. Everything below is
+kept for the case of a crown that should stay part of a tile; it is not the
+normal path any more.
 
 This is the only judgement in the step. Build a labelled contact sheet of the
 tiles the cleaned chapter still uses — every tile id, drawn at 5x, with its id
