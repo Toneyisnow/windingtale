@@ -38,6 +38,8 @@ pip install Pillow
 | `build_obstacles_02.py` | 第 02 关的 5 栋蓝顶教堂 |
 | `build_obstacles_05.py` | 第 05 关的 7 栋房子（红顶大教堂、蓝顶教堂、红顶大宅、两栋小屋） |
 | `build_obstacles_06.py` | 第 06 关新加的两个模型：中央大门的红顶教堂、码头上的木货箱 |
+| `build_obstacles_08.py` | 第 08 关：29 格宽的整段城堡城墙（一个 obstacle）和两种石雕像 |
+| `voxmesh.py` | 贪心合并同色共面体素面的 OBJ 导出器，给超过 10 格宽的模型用（也可 `--greedy` 强制） |
 | `chapter_map.py` | `info` / `render` / `crop` / `verify`：看懂一关的地图数据，并把 ShapeMatrix 重新画回 PNG |
 | `map_clean.py` | 按 obstacle 列表把 footprint 抠掉换成普通地砖，产出 `Chapter_NN_Cleaned.json` |
 | `shapes_to_vox.py` | tile PNG → 40³ 的 `Shape_<NN>_<id>.vox`（源 PNG 前缀是 `NN-1`，差一位） |
@@ -117,12 +119,28 @@ python install_chapter.py 02
 画布的 Z 会自动长高以免被切顶（1.4 倍时是 40×40×45）；
 导出 OBJ 时按 X/Y 居中、按最低体素落地，所以画布变高不影响别的东西。
 
-### 一个模型最宽 10 格
+### 一个 .vox 部件最宽 10 格
 
-`.vox` 的每个坐标只占 1 个字节，所以任何一个模型都不能超过 255 体素 = 10 格。
-比这更宽的房子要拆成并排的两个 obstacle（第 05 关的大教堂 19 格、教堂 12 格），
+`.vox` 的每个坐标只占 1 个字节，所以文件里的一个模型不能超过 256 体素。
+第 05 关的大教堂（19 格）和教堂（12 格）是拆成并排的两个 obstacle 做的，
 拆的位置要让门廊整个落在其中一块里；背后那条长屋顶用 `housekit`/`build_obstacles_05`
 里的 `hall()`，它的高度只跟 y 有关，两块拼起来接缝处才不会错开。
+
+第 08 关的城墙 29 格宽、必须是**一个** obstacle，所以 `voxlib.write_vox` 现在接受任意
+`SIZE`：超过 256 时按 240（10 格）切成多个部件，用 MagicaVoxel 的场景图
+（nTRN > nGRP > nTRN > nSHP）记录每块的位移，`read_vox` 再拼回一个完整模型，
+MagicaVoxel 打开也是一整面墙。这类模型 `vox_batch_to_obj.py` 会自动交给 `voxmesh.py`
+导出（老导出器只读第一个部件）；`voxmesh` 还会把同色共面的体素面合并成大矩形，
+城墙只有 1.5 万个面、1.6 MB，按老导出器会是 70 MB。`build_obstacles_08.py` 只把
+外壳写进 `.vox`（实心会有 1400 万体素），`voxmesh.mesh()` 网格化前先用 scipy
+把封闭的空腔填实，所以导出的 OBJ 没有内表面。
+
+### 清理矩形不等于模型矩形时：`Clear`
+
+`map_clean.py` 默认清理 `Position` + `Size` 那个矩形。当画在图上的东西不是这个矩形——
+雕像画了两行却只站一格、城墙的轮廓不是矩形、10 格宽的模型放进 12 格宽的画——
+给这个 obstacle 写 `"Clear": [ {X, Y, Cols, Rows}, ... ]`（绝对格坐标），
+就只清理这些矩形。`Position` 仍然决定模型放哪，也只有它会进 `Chapter_NN.json`。
 
 ### 为什么 obstacle 建模没有工具
 

@@ -27,6 +27,12 @@ python vox_batch_to_obj.py --in <dir>/vox --out <dir>/obj
 Models that already have an `.obj` are skipped; pass `--force` to re-export,
 `--dry-run` to just list.
 
+A multi-part model (a `SIZE` over 256 on any axis — chapter 08's castle wall)
+goes through `voxmesh.py` automatically: same three files, same conventions,
+but coplanar same-colour faces merged into rectangles and enclosed cavities
+sealed first. `--greedy` sends every model that way; the existing models were
+exported one quad per voxel face and are left as they are.
+
 ## Export settings — do not change these
 
 `scale 0.1`, centred, grounded, and **Z-up (no `--y-up`)**.

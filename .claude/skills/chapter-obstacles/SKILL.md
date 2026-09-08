@@ -113,6 +113,11 @@ the OBJ exporter emits a face wherever a voxel meets empty space, so a hollow
 shell pays for its inside surface too and comes out several times larger than
 it should (see `Model.solidify`).
 
+A model wider than 10 tiles is fine — `write_vox` splits it into parts and
+`vox_batch_to_obj` exports it through `voxmesh.py`, which merges faces and
+seals cavities, so for one of those store only the shell (`build_obstacles_08.py`
+is the example: 29 tiles of castle wall in a 1.9 MB `.vox`).
+
 Then look at what you made:
 
 ```bash
@@ -138,6 +143,13 @@ Write the obstacle list:
 `Size` is optional — it is read from the VOX when omitted, which is the better
 path because it cross-checks the model against the footprint you measured.
 Supply `"Size": {"Cols": C, "Rows": R}` only when modelling the object later.
+
+When the painted art is not the rectangle the model stands on, give the
+obstacle explicit `"Clear": [{"X", "Y", "Cols", "Rows"}, ...]` rectangles
+(absolute tiles) and those are cleaned instead. Chapter 08 needs it three
+ways: a statue painted over two rows that stands on one, a castle wall whose
+outline steps around the gate, and a 10-tile house reused in a 12-tile slot.
+`Position` still places the model and is all the chapter JSON carries.
 
 ```bash
 python map_clean.py NN --obstacles out/obstacles_NN.json --dry-run   # check first

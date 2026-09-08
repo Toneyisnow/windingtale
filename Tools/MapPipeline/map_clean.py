@@ -20,6 +20,21 @@ run past the board when the object is only partly on screen. ``Size`` is
 optional: when omitted it is read from Resources/Remastered/Obstacles/vox/
 <DefinitionKey>.vox, whose SIZE chunk is (Cols*24, Rows*24, height).
 
+``Clear`` replaces the rectangle that is cleaned, when the painted art does not
+sit in the rectangle the model stands on:
+
+    { "Id": 3, "DefinitionKey": "stone_statue_1",
+      "Position": { "X": 11, "Y": 18 },
+      "Clear": [ { "X": 11, "Y": 17, "Cols": 1, "Rows": 2 } ] }
+
+Each entry is an absolute tile rectangle; together they are what gets cleaned
+for this obstacle, instead of Position + Size. Use it for a prop drawn taller
+than the tile it stands on (the statue above stands on row 18 and is painted
+over rows 17-18), for a wall whose painted outline is not a rectangle, and for
+a model reused at a different width than the art (the art is cleaned, the model
+stands where it fits). ``Position`` still says where the model goes and is
+what the chapter JSON carries; ``Clear`` never leaves this tool.
+
 Output is Chapter_NN_Cleaned.json: the same chapter with the footprint tiles
 replaced by the fill tile and an "Obstacles" block inserted immediately before
 "ShapeMatrix". A Chapter_NN_UsedTiles.json listing the tile ids that survive
@@ -232,7 +247,12 @@ def main():
         key = o['DefinitionKey']
         cols, rows = obstacle_tile_size(root, key, o.get('Size'))
         x, y = int(o['Position']['X']), int(o['Position']['Y'])
-        footprints.append((key, x, y, cols, rows))
+        if o.get('Clear'):
+            for r in o['Clear']:
+                footprints.append((key, int(r['X']), int(r['Y']),
+                                   int(r['Cols']), int(r['Rows'])))
+        else:
+            footprints.append((key, x, y, cols, rows))
         clean_list.append(OrderedDict([('Id', int(o.get('Id', i))),
                                        ('DefinitionKey', key),
                                        ('Position', OrderedDict([('X', x), ('Y', y)]))]))

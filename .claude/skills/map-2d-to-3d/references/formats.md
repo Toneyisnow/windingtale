@@ -121,6 +121,14 @@ Note the reading order: in the obstacle prompts, "4 x 6 tiles" means
 Height is chosen from how tall the object looks in the art, in tile units —
 a barrel stack that reads as 1.5 tiles high is 36 voxels.
 
+A `.vox` coordinate is one byte, so one *part* is at most 256 voxels wide.
+`voxlib.write_vox` takes any `SIZE` regardless: past 256 it writes the model
+as tile-aligned parts (240 voxels each) under a MagicaVoxel scene graph, and
+`voxlib.read_vox` folds them back into one model with the full `SIZE`. Chapter
+08's `castle_wall_1` is `SIZE (696, 192, 144)` this way. Such a model is
+exported by `voxmesh.py` (greedy-merged faces) rather than the per-voxel
+exporter, which only reads the first part.
+
 ## Colours
 
 Both shape and obstacle VOXs use the MagicaVoxel default 256-colour palette.

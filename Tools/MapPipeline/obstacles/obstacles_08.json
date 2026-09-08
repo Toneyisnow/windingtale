@@ -1,0 +1,53 @@
+{
+  "_comment": [
+    "Chapter 08 obstacle list -- input to map_clean.py.",
+    "Position is the top-left tile the model stands on, 1-based. Clear lists the",
+    "tile rectangles the painted art covers, where that is not the model's own",
+    "rectangle (see map_clean.py).",
+    "",
+    "The castle wall is one obstacle across the whole top of the map. Its painted",
+    "outline is not a rectangle: rows 1-6 everywhere, row 7 only under the",
+    "gatehouse and at the two map corners, row 8 only the two gate pillars, and a",
+    "corner tile of each pillar on row 9. The grass slope and the moat bank on",
+    "rows 7-8 stay painted.",
+    "",
+    "The two red houses are chapter 05's red_mansion_1, which is 10 tiles wide",
+    "against the 12 the art draws here. The model is placed flush with the road",
+    "so the two spare columns fall on the map edges, and the art is cleaned over",
+    "all 12.",
+    "",
+    "A statue is painted over two rows -- the bust on one, the pedestal under it --",
+    "and stands on the pedestal tile; the bust tile is walkable in the original."
+  ],
+  "Obstacles": [
+    { "Id": 1, "DefinitionKey": "castle_wall_1", "Position": { "X": 1, "Y": 1 },
+      "Clear": [
+        { "X": 1,  "Y": 1, "Cols": 29, "Rows": 6 },
+        { "X": 1,  "Y": 7, "Cols": 1,  "Rows": 1 },
+        { "X": 8,  "Y": 7, "Cols": 15, "Rows": 1 },
+        { "X": 29, "Y": 7, "Cols": 1,  "Rows": 1 },
+        { "X": 9,  "Y": 8, "Cols": 3,  "Rows": 1 },
+        { "X": 19, "Y": 8, "Cols": 3,  "Rows": 1 },
+        { "X": 10, "Y": 9, "Cols": 1,  "Rows": 1 },
+        { "X": 20, "Y": 9, "Cols": 1,  "Rows": 1 }
+      ] },
+
+    { "Id": 2, "DefinitionKey": "red_mansion_1", "Position": { "X": 3, "Y": 35 },
+      "Clear": [ { "X": 1, "Y": 35, "Cols": 12, "Rows": 9 } ] },
+    { "Id": 3, "DefinitionKey": "red_mansion_1", "Position": { "X": 18, "Y": 35 },
+      "Clear": [ { "X": 18, "Y": 35, "Cols": 12, "Rows": 9 } ] },
+
+    { "Id": 4, "DefinitionKey": "stone_statue_1", "Position": { "X": 11, "Y": 18 },
+      "Clear": [ { "X": 11, "Y": 17, "Cols": 1, "Rows": 2 } ] },
+    { "Id": 5, "DefinitionKey": "stone_statue_2", "Position": { "X": 11, "Y": 20 },
+      "Clear": [ { "X": 11, "Y": 19, "Cols": 1, "Rows": 2 } ] },
+    { "Id": 6, "DefinitionKey": "stone_statue_1", "Position": { "X": 19, "Y": 18 },
+      "Clear": [ { "X": 19, "Y": 17, "Cols": 1, "Rows": 2 } ] },
+    { "Id": 7, "DefinitionKey": "stone_statue_2", "Position": { "X": 19, "Y": 20 },
+      "Clear": [ { "X": 19, "Y": 19, "Cols": 1, "Rows": 2 } ] },
+    { "Id": 8, "DefinitionKey": "stone_statue_1", "Position": { "X": 12, "Y": 30 },
+      "Clear": [ { "X": 12, "Y": 29, "Cols": 1, "Rows": 2 } ] },
+    { "Id": 9, "DefinitionKey": "stone_statue_1", "Position": { "X": 18, "Y": 30 },
+      "Clear": [ { "X": 18, "Y": 29, "Cols": 1, "Rows": 2 } ] }
+  ]
+}

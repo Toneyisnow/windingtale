@@ -227,6 +227,93 @@ churches stand in the trees, and without it the conifers grow across the plaza.
 
 ---
 
+## Chapter 07
+
+没有 obstacles。通往王都的林间大道：一整片针叶林里一条南北向的土路，只有树和草地。
+
+| Object | DefinitionKey | Footprint |
+|---|---|---|
+| — | — | — |
+
+Resolved -- `Chapter_07_Cleaned.json` is identical to the painted map and
+`Obstacles` is empty. (This entry was written after the chapter was finished,
+from the generated models.) Tree tiles, all at `--tree-stretch 1.4`: 124, 125,
+131 green; 127, 128, 129 blue-green; 132, 133, 139 dark autumn; 135, 136, 137
+bright autumn.
+
+---
+
+## Chapter 08
+
+王城前的战场。顶部一整排城堡城墙，中间是城门，门前一座跨过护城河的木桥；桥两侧各一片
+秋色圆树林，路边立着石雕像；中段两道矮石墙隔出三段路，两侧是蓝绿/秋色的针叶林；底部
+路两边各一栋红顶大宅。
+
+| Object | DefinitionKey | Footprint (rows × cols) |
+|---|---|---|
+| 城堡城墙（整段，含城门与塔楼） | `castle_wall_1` | 8 × 29 -- one obstacle, see below |
+| 红顶大宅 ×2 | `red_mansion_1` | reuse from chapter 05 |
+| 骑士石像 ×4 | `stone_statue_1` | 1 × 1 (painted 2 × 1) |
+| 兜帽石像 ×2 | `stone_statue_2` | 1 × 1 (painted 2 × 1) |
+
+Resolved -- the map is 29 × 45 tiles. `chapter_map.py verify` matches the
+artwork exactly (0 / 751680 mismatched pixels), so everything was found in the
+art; the `Blocked` tiles gave the exact outlines.
+
+**The castle wall is one obstacle, 29 tiles wide.** That is wider than a
+`.vox` part can be, so `voxlib.write_vox` now writes it as three parts under a
+MagicaVoxel scene graph and `vox_batch_to_obj` exports it through `voxmesh.py`,
+which merges the flat faces (14,900 quads, 1.6 MB -- the one-quad-per-voxel
+exporter would have written ~70 MB). `build_obstacles_08.py` builds it: a
+curtain wall over rows 1..6 with a walkway and merlons, a taller inner wall
+along the back two rows, a gatehouse over X 8..22 standing forward on row 7
+with two dark towers whose front bays are the gate pillars on row 8, an arched
+passage over X 12..18, and the dark tower the art paints at the right edge.
+Only the shell is stored in the `.vox`; `voxmesh` seals it before meshing.
+
+Its painted outline is not a rectangle -- rows 1..6 everywhere, row 7 only
+under the gatehouse and at the two corners, row 8 only the pillars -- so the
+obstacle carries explicit `Clear` rectangles (`map_clean.py`) and the grass
+slope and moat bank on rows 7..8 stay painted.
+
+**The red houses are `red_mansion_1` at 10 tiles in a 12-tile slot.** The art
+draws the same building with a four-tile centre gable instead of two. Rather
+than build a third red model the existing one is placed flush with the road,
+so the two spare columns fall on the map edges (X 1..2 and X 28..29, rows
+36..43 -- `Blocked` in `ShapeMatrix`, grass in `RenderMatrix`), and all 12
+painted columns are cleaned via `Clear`.
+
+**A statue is painted over two rows and stands on one.** The bust tile above
+the pedestal is `Type 0` in the original for the knight (tile 8), so the model
+is 1 × 1 and stands on the pedestal row; the bust row is cleaned via `Clear`.
+
+| Id | Key | Position | Note |
+|---|---|---|---|
+| 1 | `castle_wall_1` | (1, 1) | Clear: rows 1..6 all; row 7 X 1, 8..22, 29; row 8 X 9..11, 19..21; row 9 X 10, 20 |
+| 2 | `red_mansion_1` | (3, 35) | Clear X 1..12 × rows 35..43 |
+| 3 | `red_mansion_1` | (18, 35) | Clear X 18..29 × rows 35..43 |
+| 4 | `stone_statue_1` | (11, 18) | Clear (11, 17..18) |
+| 5 | `stone_statue_2` | (11, 20) | Clear (11, 19..20) |
+| 6 | `stone_statue_1` | (19, 18) | Clear (19, 17..18) |
+| 7 | `stone_statue_2` | (19, 20) | Clear (19, 19..20) |
+| 8 | `stone_statue_1` | (12, 30) | Clear (12, 29..30) |
+| 9 | `stone_statue_1` | (18, 30) | Clear (18, 29..30) |
+
+The bridge (tiles 212..216), the two low stone walls with their gate posts
+(244..261), the moat bank (270..287) and the chests (18, 22) stay ordinary
+painted tiles.
+
+Plain grass tile: **101**. Tree tiles, all at `--tree-stretch 1.4`: 160, 167
+(green conifer, ref 42) and 161 (green round base, ref 43); 163, 164 (ref 42)
+and 165 (ref 43) tinted `#2c4c6c`; 168, 175 (ref 42) and 169 (ref 43) tinted
+`#7a2410`; 171, 172 (ref 42) and 173 (ref 43) tinted `#a04824` -- the same
+autumn split chapter 06 uses.
+
+Cleaning needs `--fill-plain-only`: the moat (364, `Blocked`) borders the wall
+footprint and would otherwise flood the cleared rows.
+
+---
+
 ## Adding a chapter
 
 Append a section in the same shape: the Chinese description as given, then a

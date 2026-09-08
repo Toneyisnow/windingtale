@@ -13,6 +13,12 @@ with a parent Euler(90) plus an inner Euler(180).
     python vox_batch_to_obj.py --obstacles
     python vox_batch_to_obj.py --shapes 02
     python vox_batch_to_obj.py --in <dir>/vox --out <dir>/obj
+
+A model wider than one .vox part (SIZE over 256 on any axis -- see
+voxlib.write_vox) cannot go through the exporter, which only reads the first
+part; it is exported by voxmesh.py instead, which also merges coplanar faces so
+a 29-tile castle wall does not come out at 70 MB. ``--greedy`` sends every
+model that way.
 """
 
 import argparse
@@ -21,6 +27,7 @@ import shutil
 import sys
 
 import voxlib
+import voxmesh
 
 EXPORTER_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                             '..', 'Vox_to_Obj')
@@ -36,7 +43,7 @@ def load_exporter():
     return vox_to_obj_exporter
 
 
-def convert(in_dir, out_dir, scale, center, ground, y_up, force, dry_run):
+def convert(in_dir, out_dir, scale, center, ground, y_up, force, dry_run, greedy=False):
     exporter = load_exporter()
     if not os.path.isdir(in_dir):
         raise SystemExit('no such folder: %s' % in_dir)
@@ -61,12 +68,19 @@ def convert(in_dir, out_dir, scale, center, ground, y_up, force, dry_run):
             print('  would %s' % stem)
             done += 1
             continue
-        obj, mtl, png, nv, nq = exporter.exportVoxFile(
-            os.path.join(in_dir, name), scale=scale, center=center,
-            ground=ground, y_up=y_up)
-        for produced in (obj, mtl, png):
-            shutil.move(produced, os.path.join(out_dir, os.path.basename(produced)))
-        print('  ok    %-28s %7d verts %6d quads' % (stem, nv, nq))
+        src_path = os.path.join(in_dir, name)
+        if greedy or voxlib.read_vox(src_path).parts > 1:
+            if y_up:
+                raise SystemExit('%s: voxmesh export is Z-up only' % name)
+            obj, mtl, png, nv, nq = voxmesh.export(
+                src_path, out_dir, scale=scale, center=center, ground=ground)
+            print('  ok    %-28s %7d verts %6d quads  (greedy)' % (stem, nv, nq))
+        else:
+            obj, mtl, png, nv, nq = exporter.exportVoxFile(
+                src_path, scale=scale, center=center, ground=ground, y_up=y_up)
+            for produced in (obj, mtl, png):
+                shutil.move(produced, os.path.join(out_dir, os.path.basename(produced)))
+            print('  ok    %-28s %7d verts %6d quads' % (stem, nv, nq))
         done += 1
 
     print('%d converted, %d skipped' % (done, skipped))
@@ -88,6 +102,9 @@ def main():
     p.add_argument('--no-ground', action='store_true')
     p.add_argument('--y-up', action='store_true', dest='y_up',
                    help='NOT used by this project -- the layers rotate models themselves')
+    p.add_argument('--greedy', action='store_true',
+                   help='export through voxmesh.py (merged faces) even for models that '
+                        'fit in one .vox part')
     p.add_argument('--force', action='store_true', help='re-export models that already have an .obj')
     p.add_argument('--dry-run', action='store_true')
     args = p.parse_args()
@@ -102,7 +119,7 @@ def main():
     out_dir = args.out or os.path.join(os.path.dirname(os.path.normpath(in_dir)), 'obj')
 
     convert(in_dir, out_dir, args.scale, not args.no_center, not args.no_ground,
-            args.y_up, args.force, args.dry_run)
+            args.y_up, args.force, args.dry_run, greedy=args.greedy)
 
 
 if __name__ == '__main__':

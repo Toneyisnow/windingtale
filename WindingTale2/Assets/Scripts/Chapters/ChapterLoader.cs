@@ -57,6 +57,9 @@ namespace WindingTale.Chapters
                 case 7:
                     chapter = new Chapter7(gameMain);
                     break;
+                case 8:
+                    chapter = new Chapter8(gameMain);
+                    break;
                 default:
                     break;
             }
