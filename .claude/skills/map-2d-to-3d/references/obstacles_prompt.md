@@ -625,6 +625,71 @@ the trees (41): `tree_dark_green` ×21, `tree_blue` ×20. Plain grass tile:
 **168**. The chasm (black `Blocked` tiles), the bridge (307..325) and the cave
 mouth stay painted.
 
+## Chapter 19
+
+没有 obstacles。红蓝相间的松树林：草地、几条泥路、几块灰色乱石地，宝箱。
+
+| Object | DefinitionKey | Footprint |
+|---|---|---|
+| — | — | — |
+
+Resolved -- the map is 25 × 40 tiles, all ordinary tiles. `Obstacles` holds only
+the trees (308): `tree_blue` ×159, `tree_dark_red` ×149. The tree tiles are
+`Type 3` here rather than `Type 2`. Plain grass tile: **62**; the two crown
+tiles with no visible ground (75, 79) take their forest's fill.
+
+## Chapter 20
+
+没有 obstacles。夜里的沼泽：黑色的泥沼绕着一圈圈蓝灰色的石堤，中央小岛上三段石阶，
+零星的蓝松和蓝色针叶树，宝箱。
+
+| Object | DefinitionKey | Footprint |
+|---|---|---|
+| — | — | — |
+
+Resolved -- the map is 40 × 40 tiles, all ordinary tiles. `Obstacles` holds only
+the trees (51): `tree_blue` ×33, `pine_blue` ×18. Plain ground tile: **21**
+(the blue-grey stone). The stairs (80..103) stay painted, as chapter 17's did.
+
+**The swamp is sunk.** Its tiles (`Type 4`) are painted in black and five dark
+browns that the shore colour tables know nothing about, so the shape VOXs are
+generated with `--lower 000000=2 --lower 18140c,242018,302c24,403c30,505040=1`:
+the black mire two voxels below the ground, its brown edges one. The black
+outlines of the chests and the shadow lines between the stair treads share
+those colours and sink with them.
+
+## Chapter 21
+
+高原上的石头神殿：一圈圆形的石台，四角各一座和中央两座黑色的石头神龛，石台四周和
+路边立着三十多根石柱（高的三格、矮的两格），中央的魔法阵和两段石阶；四周是枯树林。
+
+| Object | DefinitionKey | Footprint (rows × cols) |
+|---|---|---|
+| 石头神龛 ×6 | `stone_shrine_1` | 1 × 3 (painted 4 × 3) |
+| 高石柱 ×12 | `stone_column_1` | 1 × 1 (painted 3 × 1) |
+| 矮石柱 ×20 | `stone_column_2` | 1 × 1 (painted 2 × 1) |
+
+Resolved -- the map is 41 × 40 tiles, all ordinary tiles, so everything was found
+from the tile ids and `obstacles_21.json` was generated from the matrix.
+
+**A shrine is painted over four rows and stands on one.** Roof (146/148/150 on
+grass, 172/130/174 on stone), body (152/154/156), base (158/159/160 -- the only
+`Blocked` row) and foot (161/162/163): the model is 3 cols × 1 row on the base
+row and `Clear` takes all four. **The columns likewise**: a tall one is ball 85
+over shaft 87 over base 89 and stands on 89 with `Clear` of three rows; a short
+one is ball 85 or 90 over base 89 or 94 with `Clear` of two. Two 89s on row 1 are
+tall columns whose upper rows are off the top of the map. All three models are
+built by `build_obstacles_21.py` in the art's blue-grey stone ramp as their own
+palette.
+
+The magic circle (276..281), the stairs (256..267), the platform's black edges
+and the chests (248, 252, 272) stay painted tiles.
+
+Plain grass tile: **34**. Trees (obstacles, 585): tops 216, 218, 223 light gray
+and 219, 220, 222 dark gray; bases 217 light, 221 dark. Cleaning needs
+`--fill-plain-only --fill-exclude 248,252,272`: the column bases are `Blocked`
+and the chests Plain, and both stand next to cleared tiles.
+
 ## Adding a chapter
 
 Append a section in the same shape: the Chinese description as given, then a

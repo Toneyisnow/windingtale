@@ -90,6 +90,15 @@ namespace WindingTale.Chapters
                 case 18:
                     chapter = new Chapter18(gameMain);
                     break;
+                case 19:
+                    chapter = new Chapter19(gameMain);
+                    break;
+                case 20:
+                    chapter = new Chapter20(gameMain);
+                    break;
+                case 21:
+                    chapter = new Chapter21(gameMain);
+                    break;
                 default:
                     break;
             }

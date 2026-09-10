@@ -42,6 +42,7 @@ pip install Pillow
 | `build_obstacles_09.py` | 第 09 关：石球石柱（复用 08 关的底座，第 08 关的两根也换成了它）和路中央的公告板 |
 | `build_obstacles_10.py` | 第 10 关：三种火柱（矮 / 亮 / 略暗），每种两帧动画（`<key>.vox` + `<key>_f2.vox`） |
 | `build_obstacles_13.py` | 第 13 关：两顶帐篷（灰绿 / 蓝白，同一形状两套颜色，自带调色板） |
+| `build_obstacles_21.py` | 第 21 关：石头神龛、高石柱、矮石柱（都是"画几行站一行"，蓝灰石头色自带调色板） |
 | `build_trees.py` | 所有关卡共用的树：每种"颜色 + 树型"一个固定模型（`tree_<colour>.vox` / `pine_<colour>.vox`，1 格） |
 | `tree_obstacles.py` | 从 ShapeMatrix 里把树读出来变成 obstacle 列表（每个树冠一棵，站在树干那一格），带按地面颜色选好的 `Fill` |
 | `voxmesh.py` | 贪心合并同色共面体素面的 OBJ 导出器，给超过 10 格宽的模型用（也可 `--greedy` 强制） |
@@ -209,6 +210,12 @@ python map_clean.py 04 --obstacles obstacles/obstacles_04_with_trees.json
 `shapes_to_vox.py` 按颜色分地形（沙滩 / 水 沉下去）。第 10 关的洞窟没有沙滩，但地上
 火圈的橙色落到调色板上正好是沙滩色，会把火圈沉下去一格——加 `--flat`，所有像素都按
 陆地高度。
+
+### 按颜色下沉的地形：`--lower`
+
+`shapes_to_vox.py --lower RRGGBB[,RRGGBB...]=N`（可重复）把这些**原图颜色**的像素压到地面以下 N 格。
+第 20 关的沼泽画的是黑色和五种深褐色，海岸线的颜色表不认识它们：
+`--lower 000000=2 --lower 18140c,242018,302c24,403c30,505040=1`，黑泥沼低两格、褐色边缘低一格。
 
 ### 填充时排除某些 tile：`--fill-exclude`
 

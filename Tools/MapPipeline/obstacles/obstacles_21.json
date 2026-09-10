@@ -1,0 +1,620 @@
+{
+  "_comment": [
+    "Chapter 21 obstacle list -- input to map_clean.py.",
+    "Generated from the tile matrix. A shrine is painted over four rows (roof 146/148/150 or",
+    "172/130/174, body 152/154/156, base 158/159/160 -- the Blocked row -- and foot 161/162/163)",
+    "and stands on its base row. A tall column is painted over three rows (ball 85, shaft 87,",
+    "base 89) and stands on 89; a short one over two (85 or 90 over 89 or 94). Two 89s on row 1",
+    "are tall columns whose upper rows are off the top of the map."
+  ],
+  "Obstacles": [
+    {
+      "Id": 1,
+      "DefinitionKey": "stone_shrine_1",
+      "Position": {
+        "X": 12,
+        "Y": 5
+      },
+      "Clear": [
+        {
+          "X": 12,
+          "Y": 3,
+          "Cols": 3,
+          "Rows": 4
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "DefinitionKey": "stone_shrine_1",
+      "Position": {
+        "X": 28,
+        "Y": 5
+      },
+      "Clear": [
+        {
+          "X": 28,
+          "Y": 3,
+          "Cols": 3,
+          "Rows": 4
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "DefinitionKey": "stone_shrine_1",
+      "Position": {
+        "X": 17,
+        "Y": 18
+      },
+      "Clear": [
+        {
+          "X": 17,
+          "Y": 16,
+          "Cols": 3,
+          "Rows": 4
+        }
+      ]
+    },
+    {
+      "Id": 4,
+      "DefinitionKey": "stone_shrine_1",
+      "Position": {
+        "X": 23,
+        "Y": 18
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 16,
+          "Cols": 3,
+          "Rows": 4
+        }
+      ]
+    },
+    {
+      "Id": 5,
+      "DefinitionKey": "stone_shrine_1",
+      "Position": {
+        "X": 12,
+        "Y": 35
+      },
+      "Clear": [
+        {
+          "X": 12,
+          "Y": 33,
+          "Cols": 3,
+          "Rows": 4
+        }
+      ]
+    },
+    {
+      "Id": 6,
+      "DefinitionKey": "stone_shrine_1",
+      "Position": {
+        "X": 28,
+        "Y": 35
+      },
+      "Clear": [
+        {
+          "X": 28,
+          "Y": 33,
+          "Cols": 3,
+          "Rows": 4
+        }
+      ]
+    },
+    {
+      "Id": 7,
+      "DefinitionKey": "stone_column_1",
+      "Position": {
+        "X": 19,
+        "Y": 1
+      },
+      "Clear": [
+        {
+          "X": 19,
+          "Y": 1,
+          "Cols": 1,
+          "Rows": 1
+        }
+      ]
+    },
+    {
+      "Id": 8,
+      "DefinitionKey": "stone_column_1",
+      "Position": {
+        "X": 23,
+        "Y": 1
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 1,
+          "Cols": 1,
+          "Rows": 1
+        }
+      ]
+    },
+    {
+      "Id": 9,
+      "DefinitionKey": "stone_column_1",
+      "Position": {
+        "X": 19,
+        "Y": 4
+      },
+      "Clear": [
+        {
+          "X": 19,
+          "Y": 2,
+          "Cols": 1,
+          "Rows": 3
+        }
+      ]
+    },
+    {
+      "Id": 10,
+      "DefinitionKey": "stone_column_1",
+      "Position": {
+        "X": 23,
+        "Y": 4
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 2,
+          "Cols": 1,
+          "Rows": 3
+        }
+      ]
+    },
+    {
+      "Id": 11,
+      "DefinitionKey": "stone_column_1",
+      "Position": {
+        "X": 19,
+        "Y": 7
+      },
+      "Clear": [
+        {
+          "X": 19,
+          "Y": 5,
+          "Cols": 1,
+          "Rows": 3
+        }
+      ]
+    },
+    {
+      "Id": 12,
+      "DefinitionKey": "stone_column_1",
+      "Position": {
+        "X": 23,
+        "Y": 7
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 5,
+          "Cols": 1,
+          "Rows": 3
+        }
+      ]
+    },
+    {
+      "Id": 13,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 9,
+        "Y": 17
+      },
+      "Clear": [
+        {
+          "X": 9,
+          "Y": 16,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 14,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 33,
+        "Y": 17
+      },
+      "Clear": [
+        {
+          "X": 33,
+          "Y": 16,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 15,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 13,
+        "Y": 18
+      },
+      "Clear": [
+        {
+          "X": 13,
+          "Y": 17,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 16,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 29,
+        "Y": 18
+      },
+      "Clear": [
+        {
+          "X": 29,
+          "Y": 17,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 17,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 8,
+        "Y": 19
+      },
+      "Clear": [
+        {
+          "X": 8,
+          "Y": 18,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 18,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 34,
+        "Y": 19
+      },
+      "Clear": [
+        {
+          "X": 34,
+          "Y": 18,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 19,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 9,
+        "Y": 22
+      },
+      "Clear": [
+        {
+          "X": 9,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 20,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 11,
+        "Y": 22
+      },
+      "Clear": [
+        {
+          "X": 11,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 21,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 18,
+        "Y": 22
+      },
+      "Clear": [
+        {
+          "X": 18,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 22,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 24,
+        "Y": 22
+      },
+      "Clear": [
+        {
+          "X": 24,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 23,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 31,
+        "Y": 22
+      },
+      "Clear": [
+        {
+          "X": 31,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 24,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 33,
+        "Y": 22
+      },
+      "Clear": [
+        {
+          "X": 33,
+          "Y": 21,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 25,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 13,
+        "Y": 23
+      },
+      "Clear": [
+        {
+          "X": 13,
+          "Y": 22,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 26,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 29,
+        "Y": 23
+      },
+      "Clear": [
+        {
+          "X": 29,
+          "Y": 22,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 27,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 10,
+        "Y": 25
+      },
+      "Clear": [
+        {
+          "X": 10,
+          "Y": 24,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 28,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 32,
+        "Y": 25
+      },
+      "Clear": [
+        {
+          "X": 32,
+          "Y": 24,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 29,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 12,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 12,
+          "Y": 25,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 30,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 30,
+        "Y": 26
+      },
+      "Clear": [
+        {
+          "X": 30,
+          "Y": 25,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 31,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 15,
+        "Y": 27
+      },
+      "Clear": [
+        {
+          "X": 15,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 32,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 27,
+        "Y": 27
+      },
+      "Clear": [
+        {
+          "X": 27,
+          "Y": 26,
+          "Cols": 1,
+          "Rows": 2
+        }
+      ]
+    },
+    {
+      "Id": 33,
+      "DefinitionKey": "stone_column_1",
+      "Position": {
+        "X": 19,
+        "Y": 34
+      },
+      "Clear": [
+        {
+          "X": 19,
+          "Y": 32,
+          "Cols": 1,
+          "Rows": 3
+        }
+      ]
+    },
+    {
+      "Id": 34,
+      "DefinitionKey": "stone_column_1",
+      "Position": {
+        "X": 23,
+        "Y": 34
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 32,
+          "Cols": 1,
+          "Rows": 3
+        }
+      ]
+    },
+    {
+      "Id": 35,
+      "DefinitionKey": "stone_column_1",
+      "Position": {
+        "X": 19,
+        "Y": 37
+      },
+      "Clear": [
+        {
+          "X": 19,
+          "Y": 35,
+          "Cols": 1,
+          "Rows": 3
+        }
+      ]
+    },
+    {
+      "Id": 36,
+      "DefinitionKey": "stone_column_1",
+      "Position": {
+        "X": 23,
+        "Y": 37
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 35,
+          "Cols": 1,
+          "Rows": 3
+        }
+      ]
+    },
+    {
+      "Id": 37,
+      "DefinitionKey": "stone_column_1",
+      "Position": {
+        "X": 19,
+        "Y": 40
+      },
+      "Clear": [
+        {
+          "X": 19,
+          "Y": 38,
+          "Cols": 1,
+          "Rows": 3
+        }
+      ]
+    },
+    {
+      "Id": 38,
+      "DefinitionKey": "stone_column_1",
+      "Position": {
+        "X": 23,
+        "Y": 40
+      },
+      "Clear": [
+        {
+          "X": 23,
+          "Y": 38,
+          "Cols": 1,
+          "Rows": 3
+        }
+      ]
+    }
+  ]
+}
