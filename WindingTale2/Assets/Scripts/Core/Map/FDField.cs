@@ -24,6 +24,9 @@ namespace WindingTale.Core.Map
         // because the house is now an obstacle model standing on top of it.
         private int[,] renderShapeIds = null;
 
+        // The definitions behind renderShapeIds, for ShapesLayer -- see GetRenderShapeAt.
+        private ShapeDefinition[,] renderShapes = null;
+
         public List<ObstacleDefinition> Obstacles { get; private set; }
 
         public FDField(ChapterDefinition chapterDefinition)
@@ -40,6 +43,7 @@ namespace WindingTale.Core.Map
 
             shapes = new ShapeDefinition[Width, Height];
             renderShapeIds = new int[Width, Height];
+            renderShapes = new ShapeDefinition[Width, Height];
             for (int i = 0; i < Width; i++)
             {
                 for (int j = 0; j < Height; j++)
@@ -49,8 +53,26 @@ namespace WindingTale.Core.Map
                     shape.Id = shapeId;
                     shapes[i, j] = shape;
                     renderShapeIds[i, j] = renderMap[i, j];
+                    chapterDefinition.ShapeDict.TryGetValue(renderMap[i, j], out renderShapes[i, j]);
                 }
             }
+        }
+
+        /// <summary>
+        /// The definition of the tile that is drawn at the position (see
+        /// <see cref="GetRenderShapeIdAt"/>), for its presentation-only fields such as
+        /// <see cref="ShapeDefinition.Glow"/>; null off the map or for a render id the
+        /// chapter's Shapes table does not list.
+        /// </summary>
+        public ShapeDefinition GetRenderShapeAt(FDPosition position)
+        {
+            if (renderShapes == null || position == null
+                || position.X < 1 || position.X > Width || position.Y < 1 || position.Y > Height)
+            {
+                return null;
+            }
+
+            return renderShapes[position.X - 1, position.Y - 1];
         }
 
         public ShapeDefinition GetShapeAt(FDPosition position)

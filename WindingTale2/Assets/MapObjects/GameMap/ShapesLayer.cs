@@ -23,6 +23,16 @@ namespace WindingTale.MapObjects.GameMap
 
         private Material defaultMaterial = null;
 
+        // Glow strength -> the self-lit material for tiles whose ShapeDefinition.Glow
+        // says so (chapter 25's lava). One instance per strength, shared by every tile
+        // that uses it, like defaultMaterial is by the rest.
+        private readonly Dictionary<float, Material> glowMaterialByStrength = new Dictionary<float, Material>();
+
+        // Only the bright texels of a glowing tile shine (the white lava and its fire
+        // fringe); the brown rock painted on the same tile stays scene-lit. Rock tops
+        // out around 0.58 on its brightest channel, fire starts at 0.99.
+        private const float GlowMinBrightness = 0.8f;
+
         // Tile -> the shape's renderer, so indicators can fade the shape underneath
         // them (and back) without searching the hierarchy each time.
         private readonly Dictionary<int, MeshRenderer> shapeRendererByPos = new Dictionary<int, MeshRenderer>();
@@ -58,6 +68,16 @@ namespace WindingTale.MapObjects.GameMap
 
         public FDField Field { get; private set; }
 
+        /// <summary>
+        /// How far above a tile's origin the board's usual ground surface sits, in
+        /// world units -- the top of an ordinary one-voxel-thick tile. Anything meant
+        /// to lie flat ON the ground (ObstaclesLayer's ground covers) is seated here.
+        /// </summary>
+        public float GroundSurfaceHeight
+        {
+            get { return groundSurfaceHeight; }
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -76,6 +96,10 @@ namespace WindingTale.MapObjects.GameMap
 
         private void buildField(FDField field)
         {
+            // Glowing tiles use the clip shader, which discards everything outside the
+            // map rectangle -- publish it before the first of them is instantiated.
+            ObstaclesLayer.SetMapClipBounds(field);
+
             for (int i = 1; i <= field.Width; i++)
             {
                 for (int j = 1; j <= field.Height; j++)
@@ -101,7 +125,9 @@ namespace WindingTale.MapObjects.GameMap
                         inner.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.Euler(180, 0, 0));
 
                         MeshRenderer renderer = inner.GetComponent<MeshRenderer>();
-                        renderer.materials = new Material[1] { defaultMaterial };
+                        ShapeDefinition renderDef = field.GetRenderShapeAt(pos);
+                        float glow = renderDef != null ? renderDef.Glow : 0f;
+                        renderer.materials = new Material[1] { glow > 0f ? GlowMaterial(glow) : defaultMaterial };
                         shapeRendererByPos[TileKey(pos)] = renderer;
 
                         surfaceHeightByPos[TileKey(pos)] = MeasureSurfaceHeight(
@@ -114,6 +140,48 @@ namespace WindingTale.MapObjects.GameMap
             }
 
             groundSurfaceHeight = DominantHeight(surfaceHeightByPos.Values);
+        }
+
+        /// <summary>
+        /// The shared material for tiles that glow at the given strength: the tile
+        /// palette on the clip shader (the one shader here with an emission term), the
+        /// bright texels self-lit at <paramref name="glow"/> and the dark ones left to
+        /// the scene light. Built on first use; a chapter with no glowing tile never
+        /// makes one. Tiles on this material do not fade under indicators
+        /// (SetTileFaded drives the Standard shader's transparency), which only
+        /// matters for a lava tile under the cursor.
+        /// </summary>
+        private Material GlowMaterial(float glow)
+        {
+            if (glowMaterialByStrength.TryGetValue(glow, out Material cached) && cached != null)
+            {
+                return cached;
+            }
+
+            Shader shader = Shader.Find("Custom/MapClip");
+            if (shader == null || defaultMaterial == null)
+            {
+                return defaultMaterial;
+            }
+
+            Material material = new Material(shader);
+            material.name = string.Format("{0}-glow-{1:0.00}", defaultMaterial.name, glow);
+            material.mainTexture = defaultMaterial.mainTexture;
+            material.color = defaultMaterial.color;
+            if (defaultMaterial.HasProperty("_Glossiness"))
+            {
+                material.SetFloat("_Glossiness", defaultMaterial.GetFloat("_Glossiness"));
+            }
+            if (defaultMaterial.HasProperty("_Metallic"))
+            {
+                material.SetFloat("_Metallic", defaultMaterial.GetFloat("_Metallic"));
+            }
+            material.SetColor("_EmissionColor", Color.white);
+            material.SetFloat("_Emission", Mathf.Clamp01(glow));
+            material.SetFloat("_EmissionMinBright", GlowMinBrightness);
+
+            glowMaterialByStrength[glow] = material;
+            return material;
         }
 
         /// <summary>

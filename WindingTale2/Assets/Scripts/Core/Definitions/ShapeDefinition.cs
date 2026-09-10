@@ -38,6 +38,18 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        /// <summary>
+        /// How strongly the tile's model is self-lit, 0..1; 0 (the default, and what
+        /// every tile without the key gets) is an ordinary scene-lit tile. Chapter 25's
+        /// lava tiles carry it. Presentation only -- ShapesLayer reads it to pick the
+        /// tile's material; the battle never does.
+        /// </summary>
+        [JsonProperty(PropertyName = "glow")]
+        public float Glow
+        {
+            get; set;
+        }
+
         public int MoveCost
         {
             get

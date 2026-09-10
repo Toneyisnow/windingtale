@@ -17,6 +17,11 @@ Shader "Custom/MapClip"
         // scene; ObstacleGlow raises it on models that are meant to shine.
         _EmissionColor ("Emission Color", Color) = (1,1,1,1)
         _Emission ("Emission", Range(0,1)) = 0.0
+        // Only texels whose brightest channel reaches this glow; the rest stay
+        // scene-lit. 0 (the default) lets the whole surface glow. Chapter 25's lava
+        // tiles use it so the white lava and its fire fringe shine while the brown
+        // rock painted on the same tile does not.
+        _EmissionMinBright ("Emission Min Brightness", Range(0,1)) = 0.0
     }
     SubShader
     {
@@ -35,9 +40,18 @@ Shader "Custom/MapClip"
         fixed4 _Color;
         fixed4 _EmissionColor;
         half _Emission;
+        half _EmissionMinBright;
 
         // xy = (minX, minZ), zw = (maxX, maxZ) of the map rectangle in world space.
         float4 _MapClipMinMaxXZ;
+
+        // 1 for texels bright enough to glow, fading to 0 over the tenth below the
+        // threshold; 1 everywhere when the threshold is 0.
+        half glowMask(fixed3 rgb)
+        {
+            half brightest = max(rgb.r, max(rgb.g, rgb.b));
+            return saturate((brightest - _EmissionMinBright + 0.1) * 10.0);
+        }
 
         struct Input
         {
@@ -56,7 +70,7 @@ Shader "Custom/MapClip"
 
             fixed4 col = tex2D (_MainTex, IN.uv_MainTex) * _Color;
             o.Albedo = col.rgb;
-            o.Emission = col.rgb * _EmissionColor.rgb * _Emission;
+            o.Emission = col.rgb * _EmissionColor.rgb * _Emission * glowMask(col.rgb);
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             o.Alpha = col.a;

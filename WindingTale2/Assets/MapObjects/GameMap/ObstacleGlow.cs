@@ -80,7 +80,16 @@ namespace WindingTale.MapObjects.GameMap
                 }
             }
 
-            if (pointLight == null)
+            // A spec with no light is emission only -- chapter 25's lava sheets, of
+            // which there are a couple of hundred, far too many for a light each.
+            bool wantsLight = spec.LightIntensity > 0f && spec.LightRange > 0f;
+            if (!wantsLight && pointLight != null)
+            {
+                Destroy(pointLight.gameObject);
+                pointLight = null;
+            }
+
+            if (wantsLight && pointLight == null)
             {
                 GameObject holder = new GameObject("glow");
                 holder.transform.SetParent(transform, false);
@@ -92,13 +101,16 @@ namespace WindingTale.MapObjects.GameMap
                 pointLight.renderMode = LightRenderMode.ForcePixel;
             }
 
-            pointLight.color = spec.LightColor;
-            pointLight.range = spec.LightRange;
-            pointLight.intensity = spec.LightIntensity;
-            pointLight.transform.position = new Vector3(
-                bounds.center.x,
-                bounds.min.y + bounds.size.y * spec.LightHeight,
-                bounds.center.z);
+            if (pointLight != null)
+            {
+                pointLight.color = spec.LightColor;
+                pointLight.range = spec.LightRange;
+                pointLight.intensity = spec.LightIntensity;
+                pointLight.transform.position = new Vector3(
+                    bounds.center.x,
+                    bounds.min.y + bounds.size.y * spec.LightHeight,
+                    bounds.center.z);
+            }
 
             Apply();
         }

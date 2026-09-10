@@ -21,6 +21,13 @@ namespace WindingTale.MapObjects.GameMap
         public int Width { get; private set; }
         public int Height { get; private set; }
 
+        /// <summary>
+        /// A flat sheet lying on its tiles -- chapter 25's lava -- rather than something
+        /// standing on them. Never faded: nothing has to be read through it, and a hole
+        /// in the lava under the cursor would look like a bug. Set by ObstaclesLayer.
+        /// </summary>
+        public bool IsGroundCover { get; set; }
+
         public void SetFootprint(int tileX, int tileY, int width, int height)
         {
             this.TileX = tileX;

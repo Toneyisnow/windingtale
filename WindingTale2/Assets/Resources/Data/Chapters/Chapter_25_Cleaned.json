@@ -1,0 +1,2557 @@
+{
+  "Treasures": [
+    {
+      "Id": 1,
+      "Type": 1,
+      "Position": {
+        "X": 3,
+        "Y": 7
+      },
+      "ItemId": 355
+    },
+    {
+      "Id": 2,
+      "Type": 2,
+      "Position": {
+        "X": 19,
+        "Y": 17
+      },
+      "ItemId": 104
+    },
+    {
+      "Id": 3,
+      "Type": 2,
+      "Position": {
+        "X": 6,
+        "Y": 26
+      },
+      "ItemId": 115
+    },
+    {
+      "Id": 4,
+      "Type": 1,
+      "Position": {
+        "X": 18,
+        "Y": 31
+      },
+      "ItemId": 904
+    },
+    {
+      "Id": 5,
+      "Type": 1,
+      "Position": {
+        "X": 3,
+        "Y": 35
+      },
+      "ItemId": 112
+    },
+    {
+      "Id": 6,
+      "Type": 2,
+      "Position": {
+        "X": 19,
+        "Y": 36
+      },
+      "ItemId": 281
+    }
+  ],
+  "BackgroundMusic": {
+    "Field": "Battle_3_HD_Final",
+    "Enemy": "Battle_Enemy_Turn_1",
+    "Village": "Village_3_HD_Final"
+  },
+  "DefaultTais": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "Index": 24,
+  "Width": 25,
+  "Height": 53,
+  "Obstacles": [
+    {
+      "Id": 1,
+      "DefinitionKey": "fire_pillar_3",
+      "Position": {
+        "X": 10,
+        "Y": 1
+      }
+    },
+    {
+      "Id": 2,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 12,
+        "Y": 1
+      }
+    },
+    {
+      "Id": 3,
+      "DefinitionKey": "fire_pillar_3",
+      "Position": {
+        "X": 13,
+        "Y": 1
+      }
+    },
+    {
+      "Id": 4,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 22,
+        "Y": 2
+      }
+    },
+    {
+      "Id": 5,
+      "DefinitionKey": "fire_pillar_3",
+      "Position": {
+        "X": 6,
+        "Y": 4
+      }
+    },
+    {
+      "Id": 6,
+      "DefinitionKey": "fire_pillar_2",
+      "Position": {
+        "X": 20,
+        "Y": 4
+      }
+    },
+    {
+      "Id": 7,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 16,
+        "Y": 5
+      }
+    },
+    {
+      "Id": 8,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 20,
+        "Y": 5
+      }
+    },
+    {
+      "Id": 9,
+      "DefinitionKey": "fire_pillar_2",
+      "Position": {
+        "X": 3,
+        "Y": 6
+      }
+    },
+    {
+      "Id": 10,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 7,
+        "Y": 6
+      }
+    },
+    {
+      "Id": 11,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 14,
+        "Y": 6
+      }
+    },
+    {
+      "Id": 12,
+      "DefinitionKey": "fire_pillar_4",
+      "Position": {
+        "X": 8,
+        "Y": 7
+      }
+    },
+    {
+      "Id": 13,
+      "DefinitionKey": "fire_pillar_3",
+      "Position": {
+        "X": 14,
+        "Y": 9
+      }
+    },
+    {
+      "Id": 14,
+      "DefinitionKey": "fire_pillar_4",
+      "Position": {
+        "X": 19,
+        "Y": 12
+      }
+    },
+    {
+      "Id": 15,
+      "DefinitionKey": "fire_pillar_4",
+      "Position": {
+        "X": 2,
+        "Y": 13
+      }
+    },
+    {
+      "Id": 16,
+      "DefinitionKey": "fire_pillar_3",
+      "Position": {
+        "X": 23,
+        "Y": 13
+      }
+    },
+    {
+      "Id": 17,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 9,
+        "Y": 15
+      }
+    },
+    {
+      "Id": 18,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 12,
+        "Y": 17
+      }
+    },
+    {
+      "Id": 19,
+      "DefinitionKey": "fire_pillar_4",
+      "Position": {
+        "X": 20,
+        "Y": 18
+      }
+    },
+    {
+      "Id": 20,
+      "DefinitionKey": "fire_pillar_3",
+      "Position": {
+        "X": 19,
+        "Y": 19
+      }
+    },
+    {
+      "Id": 21,
+      "DefinitionKey": "fire_pillar_2",
+      "Position": {
+        "X": 2,
+        "Y": 22
+      }
+    },
+    {
+      "Id": 22,
+      "DefinitionKey": "fire_pillar_2",
+      "Position": {
+        "X": 15,
+        "Y": 22
+      }
+    },
+    {
+      "Id": 23,
+      "DefinitionKey": "fire_pillar_3",
+      "Position": {
+        "X": 3,
+        "Y": 24
+      }
+    },
+    {
+      "Id": 24,
+      "DefinitionKey": "fire_pillar_2",
+      "Position": {
+        "X": 6,
+        "Y": 24
+      }
+    },
+    {
+      "Id": 25,
+      "DefinitionKey": "fire_pillar_3",
+      "Position": {
+        "X": 11,
+        "Y": 24
+      }
+    },
+    {
+      "Id": 26,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 6,
+        "Y": 25
+      }
+    },
+    {
+      "Id": 27,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 25,
+        "Y": 29
+      }
+    },
+    {
+      "Id": 28,
+      "DefinitionKey": "fire_pillar_2",
+      "Position": {
+        "X": 13,
+        "Y": 30
+      }
+    },
+    {
+      "Id": 29,
+      "DefinitionKey": "fire_pillar_4",
+      "Position": {
+        "X": 20,
+        "Y": 30
+      }
+    },
+    {
+      "Id": 30,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 23,
+        "Y": 31
+      }
+    },
+    {
+      "Id": 31,
+      "DefinitionKey": "fire_pillar_3",
+      "Position": {
+        "X": 3,
+        "Y": 34
+      }
+    },
+    {
+      "Id": 32,
+      "DefinitionKey": "fire_pillar_2",
+      "Position": {
+        "X": 2,
+        "Y": 35
+      }
+    },
+    {
+      "Id": 33,
+      "DefinitionKey": "fire_pillar_2",
+      "Position": {
+        "X": 8,
+        "Y": 35
+      }
+    },
+    {
+      "Id": 34,
+      "DefinitionKey": "fire_pillar_3",
+      "Position": {
+        "X": 19,
+        "Y": 35
+      }
+    },
+    {
+      "Id": 35,
+      "DefinitionKey": "fire_pillar_4",
+      "Position": {
+        "X": 12,
+        "Y": 36
+      }
+    },
+    {
+      "Id": 36,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 16,
+        "Y": 36
+      }
+    },
+    {
+      "Id": 37,
+      "DefinitionKey": "fire_pillar_4",
+      "Position": {
+        "X": 20,
+        "Y": 36
+      }
+    },
+    {
+      "Id": 38,
+      "DefinitionKey": "fire_pillar_3",
+      "Position": {
+        "X": 11,
+        "Y": 37
+      }
+    },
+    {
+      "Id": 39,
+      "DefinitionKey": "fire_pillar_1",
+      "Position": {
+        "X": 23,
+        "Y": 37
+      }
+    },
+    {
+      "Id": 40,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 10,
+        "Y": 52
+      }
+    },
+    {
+      "Id": 41,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 13,
+        "Y": 52
+      }
+    },
+    {
+      "Id": 42,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 16,
+        "Y": 52
+      }
+    },
+    {
+      "Id": 43,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 8,
+        "Y": 53
+      }
+    },
+    {
+      "Id": 44,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 12,
+        "Y": 53
+      }
+    },
+    {
+      "Id": 45,
+      "DefinitionKey": "stone_pillar_1",
+      "Position": {
+        "X": 14,
+        "Y": 53
+      }
+    },
+    {
+      "Id": 46,
+      "DefinitionKey": "stone_column_2",
+      "Position": {
+        "X": 18,
+        "Y": 53
+      }
+    },
+    {
+      "Id": 47,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 1,
+        "Y": 1
+      }
+    },
+    {
+      "Id": 48,
+      "DefinitionKey": "lava_25_9",
+      "Position": {
+        "X": 2,
+        "Y": 1
+      }
+    },
+    {
+      "Id": 49,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 24,
+        "Y": 1
+      }
+    },
+    {
+      "Id": 50,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 25,
+        "Y": 1
+      }
+    },
+    {
+      "Id": 51,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 1,
+        "Y": 2
+      }
+    },
+    {
+      "Id": 52,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 2,
+        "Y": 2
+      }
+    },
+    {
+      "Id": 53,
+      "DefinitionKey": "lava_25_9",
+      "Position": {
+        "X": 3,
+        "Y": 2
+      }
+    },
+    {
+      "Id": 54,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 23,
+        "Y": 2
+      }
+    },
+    {
+      "Id": 55,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 24,
+        "Y": 2
+      }
+    },
+    {
+      "Id": 56,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 25,
+        "Y": 2
+      }
+    },
+    {
+      "Id": 57,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 2,
+        "Y": 3
+      }
+    },
+    {
+      "Id": 58,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 3,
+        "Y": 3
+      }
+    },
+    {
+      "Id": 59,
+      "DefinitionKey": "lava_25_9",
+      "Position": {
+        "X": 4,
+        "Y": 3
+      }
+    },
+    {
+      "Id": 60,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 23,
+        "Y": 3
+      }
+    },
+    {
+      "Id": 61,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 24,
+        "Y": 3
+      }
+    },
+    {
+      "Id": 62,
+      "DefinitionKey": "lava_25_14",
+      "Position": {
+        "X": 25,
+        "Y": 3
+      }
+    },
+    {
+      "Id": 63,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 3,
+        "Y": 4
+      }
+    },
+    {
+      "Id": 64,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 4,
+        "Y": 4
+      }
+    },
+    {
+      "Id": 65,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 5,
+        "Y": 4
+      }
+    },
+    {
+      "Id": 66,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 22,
+        "Y": 4
+      }
+    },
+    {
+      "Id": 67,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 23,
+        "Y": 4
+      }
+    },
+    {
+      "Id": 68,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 24,
+        "Y": 4
+      }
+    },
+    {
+      "Id": 69,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 4,
+        "Y": 5
+      }
+    },
+    {
+      "Id": 70,
+      "DefinitionKey": "lava_25_9",
+      "Position": {
+        "X": 5,
+        "Y": 5
+      }
+    },
+    {
+      "Id": 71,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 22,
+        "Y": 5
+      }
+    },
+    {
+      "Id": 72,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 23,
+        "Y": 5
+      }
+    },
+    {
+      "Id": 73,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 4,
+        "Y": 6
+      }
+    },
+    {
+      "Id": 74,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 5,
+        "Y": 6
+      }
+    },
+    {
+      "Id": 75,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 6,
+        "Y": 6
+      }
+    },
+    {
+      "Id": 76,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 21,
+        "Y": 6
+      }
+    },
+    {
+      "Id": 77,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 22,
+        "Y": 6
+      }
+    },
+    {
+      "Id": 78,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 23,
+        "Y": 6
+      }
+    },
+    {
+      "Id": 79,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 4,
+        "Y": 7
+      }
+    },
+    {
+      "Id": 80,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 5,
+        "Y": 7
+      }
+    },
+    {
+      "Id": 81,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 6,
+        "Y": 7
+      }
+    },
+    {
+      "Id": 82,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 20,
+        "Y": 7
+      }
+    },
+    {
+      "Id": 83,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 21,
+        "Y": 7
+      }
+    },
+    {
+      "Id": 84,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 22,
+        "Y": 7
+      }
+    },
+    {
+      "Id": 85,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 5,
+        "Y": 8
+      }
+    },
+    {
+      "Id": 86,
+      "DefinitionKey": "lava_25_9",
+      "Position": {
+        "X": 6,
+        "Y": 8
+      }
+    },
+    {
+      "Id": 87,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 19,
+        "Y": 8
+      }
+    },
+    {
+      "Id": 88,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 20,
+        "Y": 8
+      }
+    },
+    {
+      "Id": 89,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 21,
+        "Y": 8
+      }
+    },
+    {
+      "Id": 90,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 22,
+        "Y": 8
+      }
+    },
+    {
+      "Id": 91,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 5,
+        "Y": 9
+      }
+    },
+    {
+      "Id": 92,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 6,
+        "Y": 9
+      }
+    },
+    {
+      "Id": 93,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 7,
+        "Y": 9
+      }
+    },
+    {
+      "Id": 94,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 17,
+        "Y": 9
+      }
+    },
+    {
+      "Id": 95,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 18,
+        "Y": 9
+      }
+    },
+    {
+      "Id": 96,
+      "DefinitionKey": "lava_25_14",
+      "Position": {
+        "X": 19,
+        "Y": 9
+      }
+    },
+    {
+      "Id": 97,
+      "DefinitionKey": "lava_25_14",
+      "Position": {
+        "X": 20,
+        "Y": 9
+      }
+    },
+    {
+      "Id": 98,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 21,
+        "Y": 9
+      }
+    },
+    {
+      "Id": 99,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 22,
+        "Y": 9
+      }
+    },
+    {
+      "Id": 100,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 6,
+        "Y": 10
+      }
+    },
+    {
+      "Id": 101,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 7,
+        "Y": 10
+      }
+    },
+    {
+      "Id": 102,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 15,
+        "Y": 10
+      }
+    },
+    {
+      "Id": 103,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 16,
+        "Y": 10
+      }
+    },
+    {
+      "Id": 104,
+      "DefinitionKey": "lava_25_14",
+      "Position": {
+        "X": 17,
+        "Y": 10
+      }
+    },
+    {
+      "Id": 105,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 18,
+        "Y": 10
+      }
+    },
+    {
+      "Id": 106,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 21,
+        "Y": 10
+      }
+    },
+    {
+      "Id": 107,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 22,
+        "Y": 10
+      }
+    },
+    {
+      "Id": 108,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 13,
+        "Y": 11
+      }
+    },
+    {
+      "Id": 109,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 14,
+        "Y": 11
+      }
+    },
+    {
+      "Id": 110,
+      "DefinitionKey": "lava_25_14",
+      "Position": {
+        "X": 15,
+        "Y": 11
+      }
+    },
+    {
+      "Id": 111,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 16,
+        "Y": 11
+      }
+    },
+    {
+      "Id": 112,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 21,
+        "Y": 11
+      }
+    },
+    {
+      "Id": 113,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 22,
+        "Y": 11
+      }
+    },
+    {
+      "Id": 114,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 12,
+        "Y": 12
+      }
+    },
+    {
+      "Id": 115,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 13,
+        "Y": 12
+      }
+    },
+    {
+      "Id": 116,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 14,
+        "Y": 12
+      }
+    },
+    {
+      "Id": 117,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 21,
+        "Y": 12
+      }
+    },
+    {
+      "Id": 118,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 22,
+        "Y": 12
+      }
+    },
+    {
+      "Id": 119,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 11,
+        "Y": 13
+      }
+    },
+    {
+      "Id": 120,
+      "DefinitionKey": "lava_25_14",
+      "Position": {
+        "X": 12,
+        "Y": 13
+      }
+    },
+    {
+      "Id": 121,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 13,
+        "Y": 13
+      }
+    },
+    {
+      "Id": 122,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 20,
+        "Y": 13
+      }
+    },
+    {
+      "Id": 123,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 21,
+        "Y": 13
+      }
+    },
+    {
+      "Id": 124,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 22,
+        "Y": 13
+      }
+    },
+    {
+      "Id": 125,
+      "DefinitionKey": "lava_25_9",
+      "Position": {
+        "X": 1,
+        "Y": 14
+      }
+    },
+    {
+      "Id": 126,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 19,
+        "Y": 14
+      }
+    },
+    {
+      "Id": 127,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 20,
+        "Y": 14
+      }
+    },
+    {
+      "Id": 128,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 21,
+        "Y": 14
+      }
+    },
+    {
+      "Id": 129,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 22,
+        "Y": 14
+      }
+    },
+    {
+      "Id": 130,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 1,
+        "Y": 15
+      }
+    },
+    {
+      "Id": 131,
+      "DefinitionKey": "lava_25_9",
+      "Position": {
+        "X": 2,
+        "Y": 15
+      }
+    },
+    {
+      "Id": 132,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 18,
+        "Y": 15
+      }
+    },
+    {
+      "Id": 133,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 19,
+        "Y": 15
+      }
+    },
+    {
+      "Id": 134,
+      "DefinitionKey": "lava_25_14",
+      "Position": {
+        "X": 20,
+        "Y": 15
+      }
+    },
+    {
+      "Id": 135,
+      "DefinitionKey": "lava_25_14",
+      "Position": {
+        "X": 21,
+        "Y": 15
+      }
+    },
+    {
+      "Id": 136,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 22,
+        "Y": 15
+      }
+    },
+    {
+      "Id": 137,
+      "DefinitionKey": "lava_25_14",
+      "Position": {
+        "X": 1,
+        "Y": 16
+      }
+    },
+    {
+      "Id": 138,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 2,
+        "Y": 16
+      }
+    },
+    {
+      "Id": 139,
+      "DefinitionKey": "lava_25_9",
+      "Position": {
+        "X": 3,
+        "Y": 16
+      }
+    },
+    {
+      "Id": 140,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 17,
+        "Y": 16
+      }
+    },
+    {
+      "Id": 141,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 18,
+        "Y": 16
+      }
+    },
+    {
+      "Id": 142,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 19,
+        "Y": 16
+      }
+    },
+    {
+      "Id": 143,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 25,
+        "Y": 16
+      }
+    },
+    {
+      "Id": 144,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 2,
+        "Y": 17
+      }
+    },
+    {
+      "Id": 145,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 3,
+        "Y": 17
+      }
+    },
+    {
+      "Id": 146,
+      "DefinitionKey": "lava_25_9",
+      "Position": {
+        "X": 4,
+        "Y": 17
+      }
+    },
+    {
+      "Id": 147,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 16,
+        "Y": 17
+      }
+    },
+    {
+      "Id": 148,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 17,
+        "Y": 17
+      }
+    },
+    {
+      "Id": 149,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 18,
+        "Y": 17
+      }
+    },
+    {
+      "Id": 150,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 24,
+        "Y": 17
+      }
+    },
+    {
+      "Id": 151,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 25,
+        "Y": 17
+      }
+    },
+    {
+      "Id": 152,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 3,
+        "Y": 18
+      }
+    },
+    {
+      "Id": 153,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 4,
+        "Y": 18
+      }
+    },
+    {
+      "Id": 154,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 5,
+        "Y": 18
+      }
+    },
+    {
+      "Id": 155,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 16,
+        "Y": 18
+      }
+    },
+    {
+      "Id": 156,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 17,
+        "Y": 18
+      }
+    },
+    {
+      "Id": 157,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 24,
+        "Y": 18
+      }
+    },
+    {
+      "Id": 158,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 25,
+        "Y": 18
+      }
+    },
+    {
+      "Id": 159,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 3,
+        "Y": 19
+      }
+    },
+    {
+      "Id": 160,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 4,
+        "Y": 19
+      }
+    },
+    {
+      "Id": 161,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 5,
+        "Y": 19
+      }
+    },
+    {
+      "Id": 162,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 16,
+        "Y": 19
+      }
+    },
+    {
+      "Id": 163,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 17,
+        "Y": 19
+      }
+    },
+    {
+      "Id": 164,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 25,
+        "Y": 19
+      }
+    },
+    {
+      "Id": 165,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 3,
+        "Y": 20
+      }
+    },
+    {
+      "Id": 166,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 4,
+        "Y": 20
+      }
+    },
+    {
+      "Id": 167,
+      "DefinitionKey": "lava_25_9",
+      "Position": {
+        "X": 5,
+        "Y": 20
+      }
+    },
+    {
+      "Id": 168,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 25,
+        "Y": 20
+      }
+    },
+    {
+      "Id": 169,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 4,
+        "Y": 21
+      }
+    },
+    {
+      "Id": 170,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 5,
+        "Y": 21
+      }
+    },
+    {
+      "Id": 171,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 6,
+        "Y": 21
+      }
+    },
+    {
+      "Id": 172,
+      "DefinitionKey": "lava_25_9",
+      "Position": {
+        "X": 7,
+        "Y": 21
+      }
+    },
+    {
+      "Id": 173,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 25,
+        "Y": 21
+      }
+    },
+    {
+      "Id": 174,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 4,
+        "Y": 22
+      }
+    },
+    {
+      "Id": 175,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 5,
+        "Y": 22
+      }
+    },
+    {
+      "Id": 176,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 6,
+        "Y": 22
+      }
+    },
+    {
+      "Id": 177,
+      "DefinitionKey": "lava_25_6",
+      "Position": {
+        "X": 7,
+        "Y": 22
+      }
+    },
+    {
+      "Id": 178,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 8,
+        "Y": 22
+      }
+    },
+    {
+      "Id": 179,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 25,
+        "Y": 22
+      }
+    },
+    {
+      "Id": 180,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 4,
+        "Y": 23
+      }
+    },
+    {
+      "Id": 181,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 5,
+        "Y": 23
+      }
+    },
+    {
+      "Id": 182,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 7,
+        "Y": 23
+      }
+    },
+    {
+      "Id": 183,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 8,
+        "Y": 23
+      }
+    },
+    {
+      "Id": 184,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 25,
+        "Y": 23
+      }
+    },
+    {
+      "Id": 185,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 4,
+        "Y": 24
+      }
+    },
+    {
+      "Id": 186,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 5,
+        "Y": 24
+      }
+    },
+    {
+      "Id": 187,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 7,
+        "Y": 24
+      }
+    },
+    {
+      "Id": 188,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 8,
+        "Y": 24
+      }
+    },
+    {
+      "Id": 189,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 25,
+        "Y": 24
+      }
+    },
+    {
+      "Id": 190,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 4,
+        "Y": 25
+      }
+    },
+    {
+      "Id": 191,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 5,
+        "Y": 25
+      }
+    },
+    {
+      "Id": 192,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 7,
+        "Y": 25
+      }
+    },
+    {
+      "Id": 193,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 8,
+        "Y": 25
+      }
+    },
+    {
+      "Id": 194,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 25,
+        "Y": 25
+      }
+    },
+    {
+      "Id": 195,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 4,
+        "Y": 26
+      }
+    },
+    {
+      "Id": 196,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 5,
+        "Y": 26
+      }
+    },
+    {
+      "Id": 197,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 7,
+        "Y": 26
+      }
+    },
+    {
+      "Id": 198,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 8,
+        "Y": 26
+      }
+    },
+    {
+      "Id": 199,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 25,
+        "Y": 26
+      }
+    },
+    {
+      "Id": 200,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 4,
+        "Y": 27
+      }
+    },
+    {
+      "Id": 201,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 5,
+        "Y": 27
+      }
+    },
+    {
+      "Id": 202,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 7,
+        "Y": 27
+      }
+    },
+    {
+      "Id": 203,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 8,
+        "Y": 27
+      }
+    },
+    {
+      "Id": 204,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 23,
+        "Y": 27
+      }
+    },
+    {
+      "Id": 205,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 24,
+        "Y": 27
+      }
+    },
+    {
+      "Id": 206,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 25,
+        "Y": 27
+      }
+    },
+    {
+      "Id": 207,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 4,
+        "Y": 28
+      }
+    },
+    {
+      "Id": 208,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 5,
+        "Y": 28
+      }
+    },
+    {
+      "Id": 209,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 7,
+        "Y": 28
+      }
+    },
+    {
+      "Id": 210,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 8,
+        "Y": 28
+      }
+    },
+    {
+      "Id": 211,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 22,
+        "Y": 28
+      }
+    },
+    {
+      "Id": 212,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 23,
+        "Y": 28
+      }
+    },
+    {
+      "Id": 213,
+      "DefinitionKey": "lava_25_13",
+      "Position": {
+        "X": 24,
+        "Y": 28
+      }
+    },
+    {
+      "Id": 214,
+      "DefinitionKey": "lava_25_14",
+      "Position": {
+        "X": 25,
+        "Y": 28
+      }
+    },
+    {
+      "Id": 215,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 4,
+        "Y": 29
+      }
+    },
+    {
+      "Id": 216,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 5,
+        "Y": 29
+      }
+    },
+    {
+      "Id": 217,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 7,
+        "Y": 29
+      }
+    },
+    {
+      "Id": 218,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 8,
+        "Y": 29
+      }
+    },
+    {
+      "Id": 219,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 21,
+        "Y": 29
+      }
+    },
+    {
+      "Id": 220,
+      "DefinitionKey": "lava_25_50",
+      "Position": {
+        "X": 22,
+        "Y": 29
+      }
+    },
+    {
+      "Id": 221,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 23,
+        "Y": 29
+      }
+    },
+    {
+      "Id": 222,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 4,
+        "Y": 30
+      }
+    },
+    {
+      "Id": 223,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 5,
+        "Y": 30
+      }
+    },
+    {
+      "Id": 224,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 21,
+        "Y": 30
+      }
+    },
+    {
+      "Id": 225,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 22,
+        "Y": 30
+      }
+    },
+    {
+      "Id": 226,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 23,
+        "Y": 30
+      }
+    },
+    {
+      "Id": 227,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 4,
+        "Y": 31
+      }
+    },
+    {
+      "Id": 228,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 5,
+        "Y": 31
+      }
+    },
+    {
+      "Id": 229,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 21,
+        "Y": 31
+      }
+    },
+    {
+      "Id": 230,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 22,
+        "Y": 31
+      }
+    },
+    {
+      "Id": 231,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 4,
+        "Y": 32
+      }
+    },
+    {
+      "Id": 232,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 5,
+        "Y": 32
+      }
+    },
+    {
+      "Id": 233,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 19,
+        "Y": 32
+      }
+    },
+    {
+      "Id": 234,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 20,
+        "Y": 32
+      }
+    },
+    {
+      "Id": 235,
+      "DefinitionKey": "lava_25_14",
+      "Position": {
+        "X": 21,
+        "Y": 32
+      }
+    },
+    {
+      "Id": 236,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 22,
+        "Y": 32
+      }
+    },
+    {
+      "Id": 237,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 4,
+        "Y": 33
+      }
+    },
+    {
+      "Id": 238,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 5,
+        "Y": 33
+      }
+    },
+    {
+      "Id": 239,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 16,
+        "Y": 33
+      }
+    },
+    {
+      "Id": 240,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 17,
+        "Y": 33
+      }
+    },
+    {
+      "Id": 241,
+      "DefinitionKey": "lava_25_13",
+      "Position": {
+        "X": 18,
+        "Y": 33
+      }
+    },
+    {
+      "Id": 242,
+      "DefinitionKey": "lava_25_14",
+      "Position": {
+        "X": 19,
+        "Y": 33
+      }
+    },
+    {
+      "Id": 243,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 20,
+        "Y": 33
+      }
+    },
+    {
+      "Id": 244,
+      "DefinitionKey": "lava_25_10",
+      "Position": {
+        "X": 15,
+        "Y": 34
+      }
+    },
+    {
+      "Id": 245,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 16,
+        "Y": 34
+      }
+    },
+    {
+      "Id": 246,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 17,
+        "Y": 34
+      }
+    },
+    {
+      "Id": 247,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 14,
+        "Y": 35
+      }
+    },
+    {
+      "Id": 248,
+      "DefinitionKey": "lava_25_5",
+      "Position": {
+        "X": 15,
+        "Y": 35
+      }
+    },
+    {
+      "Id": 249,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 16,
+        "Y": 35
+      }
+    },
+    {
+      "Id": 250,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 14,
+        "Y": 36
+      }
+    },
+    {
+      "Id": 251,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 15,
+        "Y": 36
+      }
+    },
+    {
+      "Id": 252,
+      "DefinitionKey": "lava_25_8",
+      "Position": {
+        "X": 14,
+        "Y": 37
+      }
+    },
+    {
+      "Id": 253,
+      "DefinitionKey": "lava_25_7",
+      "Position": {
+        "X": 15,
+        "Y": 37
+      }
+    },
+    {
+      "Id": 254,
+      "DefinitionKey": "lava_25_4",
+      "Position": {
+        "X": 14,
+        "Y": 38
+      }
+    },
+    {
+      "Id": 255,
+      "DefinitionKey": "lava_25_11",
+      "Position": {
+        "X": 15,
+        "Y": 38
+      }
+    },
+    {
+      "Id": 256,
+      "DefinitionKey": "lava_25_12",
+      "Position": {
+        "X": 14,
+        "Y": 39
+      }
+    },
+    {
+      "Id": 257,
+      "DefinitionKey": "lava_25_15",
+      "Position": {
+        "X": 15,
+        "Y": 39
+      }
+    }
+  ],
+  "ShapeMatrix": [
+    [6, 12, 35, 43, 41, 51, 37, 47, 66, 77, 66, 62, 3, 9, 50, 14, 35, 41, 51, 37, 47, 66, 66, 34, 51, 51, 51, 51, 51, 51, 51, 37, 43, 47, 77, 83, 89, 29, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66],
+    [9, 6, 12, 62, 35, 39, 47, 80, 92, 76, 66, 66, 66, 3, 9, 6, 12, 35, 39, 47, 47, 66, 66, 35, 41, 51, 51, 51, 51, 51, 51, 45, 66, 66, 77, 76, 81, 22, 24, 28, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66],
+    [3, 9, 6, 12, 12, 12, 70, 82, 94, 32, 40, 36, 40, 44, 3, 9, 6, 4, 8, 12, 66, 66, 66, 66, 35, 39, 43, 39, 43, 39, 43, 47, 66, 66, 70, 66, 83, 89, 67, 22, 28, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 16, 24],
+    [44, 3, 9, 6, 8, 4, 12, 83, 95, 35, 43, 41, 51, 38, 44, 3, 9, 50, 50, 6, 4, 8, 4, 8, 4, 8, 4, 8, 4, 8, 4, 8, 12, 66, 66, 66, 66, 83, 91, 89, 29, 66, 66, 66, 66, 66, 66, 16, 24, 20, 24, 26, 67],
+    [38, 44, 3, 7, 9, 50, 6, 4, 12, 66, 76, 34, 51, 51, 38, 44, 3, 11, 7, 9, 5, 7, 11, 7, 11, 7, 11, 7, 11, 7, 11, 7, 15, 80, 88, 84, 88, 84, 88, 90, 22, 20, 20, 20, 20, 24, 20, 26, 67, 67, 67, 67, 67],
+    [51, 45, 44, 44, 3, 7, 11, 9, 6, 12, 77, 35, 43, 41, 51, 46, 77, 62, 66, 2, 6, 12, 12, 12, 12, 68, 66, 66, 66, 80, 88, 84, 88, 90, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 21, 23],
+    [51, 38, 44, 62, 66, 66, 66, 3, 11, 15, 80, 84, 92, 35, 43, 47, 80, 88, 92, 3, 9, 6, 8, 4, 8, 4, 8, 4, 12, 83, 91, 87, 91, 87, 91, 91, 91, 87, 91, 87, 89, 67, 67, 67, 67, 67, 67, 67, 67, 67, 21, 31, 66],
+    [41, 51, 38, 44, 66, 44, 66, 80, 88, 84, 90, 67, 86, 92, 66, 80, 90, 67, 93, 77, 3, 7, 11, 7, 11, 7, 11, 7, 15, 32, 36, 40, 44, 44, 66, 66, 66, 66, 66, 77, 81, 67, 67, 67, 67, 67, 67, 67, 67, 21, 31, 66, 66],
+    [35, 41, 51, 38, 40, 44, 66, 82, 67, 67, 67, 67, 67, 93, 66, 81, 67, 85, 95, 32, 40, 44, 66, 66, 66, 32, 36, 40, 36, 42, 51, 51, 38, 40, 36, 44, 66, 62, 77, 76, 83, 87, 87, 87, 89, 67, 67, 67, 67, 30, 66, 66, 96],
+    [35, 35, 41, 51, 51, 45, 62, 81, 67, 67, 85, 87, 91, 95, 76, 82, 85, 95, 32, 42, 51, 46, 62, 66, 66, 35, 43, 39, 43, 41, 51, 51, 51, 51, 37, 47, 66, 80, 88, 92, 66, 66, 66, 76, 83, 89, 67, 67, 21, 31, 66, 99, 97],
+    [48, 66, 33, 51, 51, 46, 66, 82, 67, 85, 95, 0, 12, 77, 66, 83, 95, 32, 42, 51, 37, 47, 66, 66, 66, 66, 66, 66, 66, 35, 39, 43, 39, 43, 47, 47, 66, 81, 67, 86, 88, 92, 77, 66, 66, 81, 67, 67, 29, 66, 96, 100, 106],
+    [62, 62, 33, 51, 51, 45, 62, 81, 85, 95, 0, 10, 14, 62, 66, 77, 66, 33, 51, 51, 46, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 80, 90, 67, 67, 67, 94, 66, 66, 66, 82, 67, 67, 30, 96, 106, 120, 120],
+    [32, 32, 42, 51, 37, 47, 76, 83, 95, 0, 10, 5, 15, 66, 66, 76, 66, 34, 51, 37, 47, 66, 66, 32, 40, 36, 40, 44, 66, 66, 66, 66, 66, 66, 66, 66, 83, 87, 91, 89, 67, 93, 66, 66, 66, 83, 87, 89, 29, 98, 120, 120, 120],
+    [32, 42, 51, 51, 46, 47, 77, 83, 95, 2, 5, 15, 32, 40, 44, 66, 66, 35, 39, 47, 66, 66, 66, 33, 51, 51, 51, 38, 36, 44, 66, 66, 66, 0, 8, 4, 8, 4, 12, 81, 67, 94, 66, 66, 66, 66, 66, 81, 30, 99, 105, 120, 120],
+    [42, 51, 51, 37, 47, 80, 88, 92, 0, 10, 14, 32, 42, 37, 47, 66, 66, 66, 66, 66, 66, 66, 32, 42, 51, 51, 51, 51, 51, 45, 66, 66, 0, 10, 5, 11, 7, 11, 15, 82, 67, 93, 66, 66, 66, 66, 76, 82, 29, 66, 99, 103, 105],
+    [51, 51, 51, 45, 66, 82, 85, 95, 2, 5, 15, 33, 51, 45, 66, 0, 4, 8, 12, 66, 66, 32, 42, 51, 51, 51, 51, 51, 51, 46, 66, 0, 10, 5, 15, 66, 66, 66, 66, 83, 91, 95, 77, 76, 66, 76, 66, 81, 22, 28, 99, 99, 98],
+    [51, 51, 51, 46, 66, 81, 93, 0, 10, 14, 32, 42, 37, 47, 0, 10, 5, 11, 15, 66, 66, 33, 51, 51, 51, 51, 51, 51, 37, 47, 66, 1, 5, 15, 66, 66, 66, 66, 80, 88, 84, 88, 88, 88, 88, 92, 66, 83, 89, 29, 66, 66, 99],
+    [51, 51, 51, 45, 62, 83, 95, 2, 5, 15, 35, 43, 47, 0, 10, 5, 15, 66, 66, 32, 40, 42, 51, 51, 51, 51, 51, 51, 46, 66, 70, 2, 13, 66, 66, 66, 66, 66, 82, 67, 67, 67, 67, 67, 67, 86, 88, 92, 81, 22, 28, 66, 66],
+    [51, 37, 43, 47, 66, 66, 0, 10, 14, 15, 66, 66, 0, 10, 5, 15, 68, 66, 66, 33, 51, 51, 51, 51, 51, 51, 37, 39, 47, 62, 0, 10, 14, 66, 66, 68, 80, 88, 90, 21, 23, 27, 27, 27, 27, 25, 67, 93, 83, 89, 22, 28, 66],
+    [51, 46, 46, 66, 66, 0, 10, 50, 14, 62, 66, 0, 10, 50, 14, 66, 66, 66, 66, 34, 51, 51, 51, 51, 51, 51, 45, 45, 47, 47, 1, 5, 15, 15, 66, 44, 81, 67, 67, 30, 66, 66, 66, 66, 66, 17, 67, 86, 92, 83, 89, 22, 20],
+    [37, 47, 62, 66, 0, 10, 50, 50, 6, 4, 8, 10, 50, 50, 14, 66, 62, 66, 32, 42, 51, 51, 51, 51, 37, 43, 47, 0, 8, 4, 10, 14, 66, 32, 36, 44, 82, 67, 67, 22, 28, 66, 66, 66, 66, 18, 67, 67, 86, 92, 83, 91, 89],
+    [47, 47, 0, 8, 10, 5, 7, 11, 7, 11, 7, 11, 7, 7, 15, 66, 66, 66, 33, 51, 51, 51, 51, 51, 45, 62, 0, 10, 50, 5, 7, 15, 32, 42, 51, 45, 83, 91, 89, 67, 29, 66, 66, 66, 66, 19, 27, 25, 67, 93, 77, 76, 83],
+    [0, 8, 10, 5, 7, 15, 32, 40, 36, 40, 44, 44, 66, 66, 66, 66, 66, 66, 35, 39, 43, 41, 51, 51, 46, 0, 10, 5, 7, 15, 15, 32, 42, 51, 51, 46, 83, 62, 82, 67, 30, 66, 66, 66, 66, 66, 66, 17, 67, 86, 88, 84, 88],
+    [10, 50, 5, 15, 32, 40, 42, 51, 51, 51, 38, 40, 44, 66, 66, 0, 4, 12, 66, 66, 66, 35, 43, 39, 47, 1, 50, 13, 66, 32, 40, 42, 51, 51, 51, 38, 44, 66, 81, 67, 29, 66, 66, 66, 66, 66, 66, 18, 67, 67, 67, 67, 67],
+    [50, 50, 14, 66, 33, 51, 51, 51, 51, 51, 51, 51, 45, 66, 0, 10, 50, 6, 8, 4, 8, 4, 8, 4, 8, 10, 50, 14, 66, 33, 51, 51, 51, 51, 51, 51, 46, 66, 82, 67, 30, 66, 66, 66, 66, 66, 66, 19, 23, 27, 25, 67, 67]
+  ],
+  "Shapes": {
+    "6": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "12": {
+      "Type": 0,
+      "bg": 28,
+      "glow": 0.9
+    },
+    "35": {
+      "Type": 1,
+      "bg": 48
+    },
+    "43": {
+      "Type": 1,
+      "bg": 48
+    },
+    "41": {
+      "Type": 1,
+      "bg": 48
+    },
+    "51": {
+      "Type": 1,
+      "bg": 48
+    },
+    "37": {
+      "Type": 1,
+      "bg": 48
+    },
+    "47": {
+      "Type": 0,
+      "bg": 28
+    },
+    "66": {
+      "Type": 0,
+      "bg": 28
+    },
+    "77": {
+      "Type": 0,
+      "bg": 28
+    },
+    "62": {
+      "Type": 5,
+      "bg": 28
+    },
+    "3": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "9": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "50": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "14": {
+      "Type": 0,
+      "bg": 28,
+      "glow": 0.9
+    },
+    "34": {
+      "Type": 1,
+      "bg": 48
+    },
+    "83": {
+      "Type": 0,
+      "bg": 28
+    },
+    "89": {
+      "Type": 0,
+      "bg": 28
+    },
+    "29": {
+      "Type": 1,
+      "bg": 48
+    },
+    "39": {
+      "Type": 1,
+      "bg": 48
+    },
+    "80": {
+      "Type": 0,
+      "bg": 28
+    },
+    "92": {
+      "Type": 0,
+      "bg": 28
+    },
+    "76": {
+      "Type": 0,
+      "bg": 28
+    },
+    "56": {
+      "Type": 0,
+      "bg": 28
+    },
+    "64": {
+      "Type": 0,
+      "bg": 28
+    },
+    "61": {
+      "Type": 5,
+      "bg": 0
+    },
+    "45": {
+      "Type": 0,
+      "bg": 28
+    },
+    "81": {
+      "Type": 0,
+      "bg": 28
+    },
+    "22": {
+      "Type": 1,
+      "bg": 48
+    },
+    "24": {
+      "Type": 1,
+      "bg": 48
+    },
+    "28": {
+      "Type": 1,
+      "bg": 48
+    },
+    "70": {
+      "Type": 0,
+      "bg": 28
+    },
+    "82": {
+      "Type": 0,
+      "bg": 28
+    },
+    "94": {
+      "Type": 0,
+      "bg": 28
+    },
+    "32": {
+      "Type": 1,
+      "bg": 48
+    },
+    "40": {
+      "Type": 1,
+      "bg": 48
+    },
+    "36": {
+      "Type": 1,
+      "bg": 48
+    },
+    "44": {
+      "Type": 0,
+      "bg": 28
+    },
+    "4": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "8": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "52": {
+      "Type": 0,
+      "bg": 28
+    },
+    "60": {
+      "Type": 5,
+      "bg": 0
+    },
+    "67": {
+      "Type": 0,
+      "bg": 28
+    },
+    "16": {
+      "Type": 1,
+      "bg": 48
+    },
+    "95": {
+      "Type": 0,
+      "bg": 28
+    },
+    "38": {
+      "Type": 1,
+      "bg": 48
+    },
+    "91": {
+      "Type": 0,
+      "bg": 28
+    },
+    "20": {
+      "Type": 1,
+      "bg": 48
+    },
+    "26": {
+      "Type": 1,
+      "bg": 48
+    },
+    "7": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "11": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "5": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "15": {
+      "Type": 0,
+      "bg": 28,
+      "glow": 0.9
+    },
+    "88": {
+      "Type": 0,
+      "bg": 28
+    },
+    "84": {
+      "Type": 0,
+      "bg": 28
+    },
+    "90": {
+      "Type": 0,
+      "bg": 28
+    },
+    "46": {
+      "Type": 0,
+      "bg": 28
+    },
+    "2": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "63": {
+      "Type": 5,
+      "bg": 0
+    },
+    "68": {
+      "Type": 0,
+      "bg": 28
+    },
+    "21": {
+      "Type": 1,
+      "bg": 48
+    },
+    "23": {
+      "Type": 1,
+      "bg": 48
+    },
+    "87": {
+      "Type": 0,
+      "bg": 28
+    },
+    "31": {
+      "Type": 1,
+      "bg": 48
+    },
+    "86": {
+      "Type": 0,
+      "bg": 28
+    },
+    "93": {
+      "Type": 0,
+      "bg": 28
+    },
+    "112": {
+      "Type": 0,
+      "bg": 28
+    },
+    "85": {
+      "Type": 0,
+      "bg": 28
+    },
+    "42": {
+      "Type": 1,
+      "bg": 48
+    },
+    "30": {
+      "Type": 1,
+      "bg": 48
+    },
+    "96": {
+      "Type": 0,
+      "bg": 28
+    },
+    "116": {
+      "Type": 1,
+      "bg": 48
+    },
+    "97": {
+      "Type": 0,
+      "bg": 28
+    },
+    "48": {
+      "Type": 5,
+      "bg": 28
+    },
+    "33": {
+      "Type": 1,
+      "bg": 48
+    },
+    "0": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "100": {
+      "Type": 0,
+      "bg": 28
+    },
+    "106": {
+      "Type": 0,
+      "bg": 28
+    },
+    "10": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "117": {
+      "Type": 0,
+      "bg": 28
+    },
+    "119": {
+      "Type": 1,
+      "bg": 48
+    },
+    "98": {
+      "Type": 0,
+      "bg": 28
+    },
+    "120": {
+      "Type": 0,
+      "bg": 28
+    },
+    "99": {
+      "Type": 0,
+      "bg": 28
+    },
+    "105": {
+      "Type": 0,
+      "bg": 28
+    },
+    "103": {
+      "Type": 0,
+      "bg": 28
+    },
+    "1": {
+      "Type": 5,
+      "bg": 0,
+      "glow": 0.9
+    },
+    "13": {
+      "Type": 0,
+      "bg": 28,
+      "glow": 0.9
+    },
+    "27": {
+      "Type": 1,
+      "bg": 48
+    },
+    "25": {
+      "Type": 1,
+      "bg": 48
+    },
+    "17": {
+      "Type": 1,
+      "bg": 48
+    },
+    "18": {
+      "Type": 1,
+      "bg": 48
+    },
+    "19": {
+      "Type": 1,
+      "bg": 48
+    }
+  }
+}

@@ -30,6 +30,12 @@ namespace WindingTale.MapObjects.GameMap
     /// and, in the editor or a development build, the F9 key, so the two looks
     /// can be compared in Play mode.
     ///
+    /// An obstacle may also be a ground cover -- chapter 25's lava sheets, keyed
+    /// "lava_..." (IsGroundCover): a flat one-voxel sheet lying on its tile, kept at
+    /// full tile size, seated on the tile's top surface, glowing without a light and
+    /// never faded. Animated like any other obstacle, so the lava shimmers at the
+    /// fire pillars' rate.
+    ///
     /// An obstacle fades to almost nothing while something has to be read through
     /// it: a creature standing on one of its tiles, or the cursor, a menu item or a
     /// move/target indicator covering one. Like the chests (ObjectsLayer) this is
@@ -54,7 +60,7 @@ namespace WindingTale.MapObjects.GameMap
         // and Update pushes the change to ObstacleGlow.Enabled; the hotkey flips it
         // the other way round so the two stay in step.
         [SerializeField]
-        [Tooltip("Whether glowing obstacles (chapter 10's fire pillars) shine and light their surroundings.")]
+        [Tooltip("Whether glowing obstacles (the fire pillars of chapters 10 and 25, chapter 22's orbs) shine and light their surroundings.")]
         private bool glowEnabled = true;
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -103,7 +109,7 @@ namespace WindingTale.MapObjects.GameMap
 
             foreach (ObstacleInstance instance in instances)
             {
-                if (instance == null)
+                if (instance == null || instance.IsGroundCover)
                 {
                     continue;
                 }
@@ -191,8 +197,8 @@ namespace WindingTale.MapObjects.GameMap
                 // parent Euler(90)), so the vertical axis is local Z. The anchor math
                 // below reads the scaled world bounds, so it needs no adjustment.
                 float heightScale = GetHeightScale(obstacle.DefinitionKey);
-                obj.transform.localScale = new Vector3(
-                    ObstacleScale, ObstacleScale, ObstacleScale * heightScale);
+                float scale = GetObstacleScale(obstacle.DefinitionKey);
+                obj.transform.localScale = new Vector3(scale, scale, scale * heightScale);
 
                 Transform inner = obj.transform.Find("default");
                 if (inner != null)
@@ -224,7 +230,7 @@ namespace WindingTale.MapObjects.GameMap
 
                 if (TryGetWorldBounds(obj, out Bounds bounds))
                 {
-                    float tileSize = WorldUnitsPerTile * ObstacleScale;
+                    float tileSize = WorldUnitsPerTile * scale;
                     tileWidth = Mathf.Max(1, Mathf.RoundToInt(bounds.size.x / tileSize));
                     tileHeight = Mathf.Max(1, Mathf.RoundToInt(bounds.size.z / tileSize));
 
@@ -252,15 +258,19 @@ namespace WindingTale.MapObjects.GameMap
 
                     // Per-prefab fine offset. When the prefab has no ObstacleAnchor we fall
                     // back to the per-key code table so existing models keep their tweaks.
+                    // A ground cover is lifted onto the tile's top surface instead: seated
+                    // at y = 0 like everything else it would sit inside the tile's own
+                    // voxel layer and never show.
                     Vector3 extra = (anchor != null)
                         ? anchor.anchorOffset
-                        : new Vector3(0f, GetGroundYOffset(obstacle.DefinitionKey), 0f);
+                        : new Vector3(0f, GroundYOffset(obstacle.DefinitionKey), 0f);
 
                     obj.transform.position += new Vector3(horizX, seatY, horizZ) + extra;
                 }
 
                 ObstacleInstance instance = obj.GetComponent<ObstacleInstance>() ?? obj.AddComponent<ObstacleInstance>();
                 instance.SetFootprint(pos.X, pos.Y, tileWidth, tileHeight);
+                instance.IsGroundCover = IsGroundCover(obstacle.DefinitionKey);
                 instances.Add(instance);
 
                 // Only now, with the bounds read off every frame, settle on the first one.
@@ -280,14 +290,29 @@ namespace WindingTale.MapObjects.GameMap
         }
 
         /// <summary>
-        /// How an obstacle glows, or null for the ordinary ones. Chapter 10's fire
-        /// pillars: the whole model is fire, so it is self-lit almost fully, and each
-        /// carries a warm point light at its flame. One tile is 2 world units, so a
-        /// range of 7 reaches about three tiles out; the bright pillar throws the most
-        /// light, the bowl the least.
+        /// How an obstacle glows, or null for the ordinary ones. The fire pillars of
+        /// chapters 10 and 25: the whole model is fire, so it is self-lit almost fully,
+        /// and each carries a warm point light at its flame. One tile is 2 world units,
+        /// so a range of 7 reaches about three tiles out; the bright pillars throw the
+        /// most light, the bowl the least.
         /// </summary>
         private static ObstacleGlow.Spec GetGlow(string definitionKey)
         {
+            if (definitionKey.StartsWith(LavaKeyPrefix))
+            {
+                // The lava sheets: the whole sheet is molten, so it is self-lit almost
+                // fully -- but there are a couple of hundred of them on the board, so no
+                // light each; the fire pillars light the cave.
+                return new ObstacleGlow.Spec
+                {
+                    Emission = 0.9f,
+                    LightColor = Color.white,
+                    LightRange = 0f,
+                    LightIntensity = 0f,
+                    LightHeight = 0f,
+                };
+            }
+
             switch (definitionKey)
             {
                 case "fire_pillar_1":       // the low bowl
@@ -316,6 +341,15 @@ namespace WindingTale.MapObjects.GameMap
                         LightRange = 7f,
                         LightIntensity = 1.3f,
                         LightHeight = 0.8f,
+                    };
+                case "fire_pillar_4":       // chapter 25's taller bright pillar: the same fire, one tile higher
+                    return new ObstacleGlow.Spec
+                    {
+                        Emission = 0.9f,
+                        LightColor = new Color(1.0f, 0.85f, 0.55f),
+                        LightRange = 9f,
+                        LightIntensity = 1.8f,
+                        LightHeight = 0.85f,
                     };
                 case "orb_pillar_yellow":   // chapter 22's crystal orbs: a soft light in the orb's colour
                     return OrbGlow(new Color(1.0f, 0.85f, 0.3f));
@@ -446,7 +480,7 @@ namespace WindingTale.MapObjects.GameMap
         /// centred at MapCoordinate.ConvertPosToVec3 (-x*2, 0, y*2) for x in [1,Width]
         /// and y in [1,Height], so the board spans these world bounds (+/-1 = half tile).
         /// </summary>
-        private static void SetMapClipBounds(FDField field)
+        internal static void SetMapClipBounds(FDField field)
         {
             float minX = -2f * field.Width - 1f;
             float maxX = -1f;
@@ -509,6 +543,42 @@ namespace WindingTale.MapObjects.GameMap
                 default:
                     return 0f;
             }
+        }
+
+        // Keys of the ground covers: "lava_" + chapter + "_" + tile id, one flat
+        // one-voxel sheet per lava tile shape (Tools/MapPipeline/build_obstacles_25.py).
+        private const string LavaKeyPrefix = "lava_";
+
+        /// <summary>
+        /// Whether the obstacle is a ground cover: a flat sheet that lies on its tiles
+        /// rather than standing on them -- chapter 25's lava. A cover keeps the full
+        /// tile size instead of the ObstacleScale shrink (its edges must meet the
+        /// neighbouring covers), is seated on the tile's top surface instead of at
+        /// y = 0, is never faded, and glows without a light (GetGlow).
+        /// </summary>
+        private static bool IsGroundCover(string definitionKey)
+        {
+            return definitionKey != null && definitionKey.StartsWith(LavaKeyPrefix);
+        }
+
+        private static float GetObstacleScale(string definitionKey)
+        {
+            return IsGroundCover(definitionKey) ? 1f : ObstacleScale;
+        }
+
+        /// <summary>
+        /// The vertical fine offset for a model with no ObstacleAnchor: the per-key
+        /// table, except that a ground cover is lifted by the tiles' own thickness so
+        /// it lies on the ground rather than inside it (ShapesLayer measured that
+        /// height when it built the tiles, which happens before the obstacles).
+        /// </summary>
+        private float GroundYOffset(string definitionKey)
+        {
+            if (IsGroundCover(definitionKey))
+            {
+                return gameMap != null ? gameMap.GetGroundSurfaceHeight() : 0f;
+            }
+            return GetGroundYOffset(definitionKey);
         }
 
         private static bool TryGetWorldBounds(GameObject obj, out Bounds bounds)

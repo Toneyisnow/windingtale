@@ -16,6 +16,8 @@ Shader "Custom/MapClipFade"
         // scene; ObstacleGlow raises it on models that are meant to shine.
         _EmissionColor ("Emission Color", Color) = (1,1,1,1)
         _Emission ("Emission", Range(0,1)) = 0.0
+        // See "Custom/MapClip": only texels at least this bright glow; 0 = all.
+        _EmissionMinBright ("Emission Min Brightness", Range(0,1)) = 0.0
     }
     SubShader
     {
@@ -34,6 +36,13 @@ Shader "Custom/MapClipFade"
         fixed4 _Color;
         fixed4 _EmissionColor;
         half _Emission;
+        half _EmissionMinBright;
+
+        half glowMask(fixed3 rgb)
+        {
+            half brightest = max(rgb.r, max(rgb.g, rgb.b));
+            return saturate((brightest - _EmissionMinBright + 0.1) * 10.0);
+        }
 
         // xy = (minX, minZ), zw = (maxX, maxZ) of the map rectangle in world space.
         float4 _MapClipMinMaxXZ;
@@ -55,7 +64,7 @@ Shader "Custom/MapClipFade"
 
             fixed4 col = tex2D (_MainTex, IN.uv_MainTex) * _Color;
             o.Albedo = col.rgb;
-            o.Emission = col.rgb * _EmissionColor.rgb * _Emission;
+            o.Emission = col.rgb * _EmissionColor.rgb * _Emission * glowMask(col.rgb);
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             o.Alpha = col.a;

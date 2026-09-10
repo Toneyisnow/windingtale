@@ -44,8 +44,10 @@ pip install Pillow
 | `build_obstacles_13.py` | 第 13 关：两顶帐篷（灰绿 / 蓝白，同一形状两套颜色，自带调色板） |
 | `build_obstacles_21.py` | 第 21 关：石头神龛、高石柱、矮石柱（都是"画几行站一行"，蓝灰石头色自带调色板） |
 | `build_obstacles_22.py` | 第 22 关：5 格宽的石碑（`stone_shrine_2`，站两行）和六根彩色水晶球柱（`orb_pillar_<colour>`，08 关的底座 + 从原画采色的玻璃球） |
+| `build_obstacles_25.py` | 第 25 关：画三行的高亮火柱（`fire_pillar_4`，第 10 关亮柱的柱身加高一格，两帧）和 13 种岩浆片（`lava_25_<tile>`，按瓦片原画的白色像素铺 1 格厚的一层，两帧纹路漂移） |
 | `build_trees.py` | 所有关卡共用的树：每种"颜色 + 树型"一个固定模型（`tree_<colour>.vox` / `pine_<colour>.vox`，1 格） |
 | `prop_obstacles.py` | 从 ShapeMatrix 里把"画在一列 tile 里、站在最下面那格"的道具（雕像 / 石球柱 / 石柱）读出来变成 obstacle 列表，每格带按像素比对选出的 `Fill`（第 22–24 关） |
+| `cover_obstacles.py` | 把"铺在瓦片上"的地面覆盖层（第 25 关的岩浆片）按瓦片 id 铺到每一格，每格 `Clear` 回填自己的 tile id，所以 RenderMatrix 不变 |
 | `tree_obstacles.py` | 从 ShapeMatrix 里把树读出来变成 obstacle 列表（每个树冠一棵，站在树干那一格），带按地面颜色选好的 `Fill` |
 | `voxmesh.py` | 贪心合并同色共面体素面的 OBJ 导出器，给超过 10 格宽的模型用（也可 `--greedy` 强制） |
 | `chapter_map.py` | `info` / `render` / `crop` / `verify`：看懂一关的地图数据，并把 ShapeMatrix 重新画回 PNG |
@@ -206,6 +208,19 @@ python map_clean.py 04 --obstacles obstacles/obstacles_04_with_trees.json
 
 画在房子后排上面的树冠（第 02 关大房子顶上那一排）：树在房子后面，站到再往后一行的
 空地上；后面没地方就丢掉，不会长在屋顶里。
+
+### 铺在瓦片上的覆盖层：`lava_*`
+
+第 25 关的岩浆不是抠掉的 footprint，而是"地面覆盖层"：瓦片照画（`Shapes` 里加 `"glow": 0.9`，
+ShapesLayer 只让亮像素自发光，同一块瓦片上的岩石不亮），上面再铺一片 1 格厚、只覆盖该瓦片
+岩浆像素的 obstacle（`lava_25_<tile>`，两帧，跟火柱同一个帧率闪动，自发光、不挂灯）。
+`ObstaclesLayer.IsGroundCover` 认 `lava_` 前缀：不按 0.9 缩小、坐在瓦片顶面而不是 y=0、永不淡出。
+
+```bash
+python build_obstacles_25.py                 # fire_pillar_4 + lava_25_4..15,50（各两帧）
+python cover_obstacles.py 25 --cover lava_25=4,5,6,7,8,9,10,11,12,13,14,15,50     --with obstacles/obstacles_25.json -o obstacles/obstacles_25_with_lava.json
+python map_clean.py 25 --obstacles obstacles/obstacles_25_with_lava.json --fill-plain-only --fill-exclude 62,68,70
+```
 
 ### 没有海岸线的关：`--flat`
 

@@ -565,6 +565,16 @@ namespace WindingTale.MapObjects.GameMap
         }
 
         /// <summary>
+        /// How far above a tile's origin the board's usual ground surface sits, in
+        /// world units (ShapesLayer.GroundSurfaceHeight); 0 before the tiles are built.
+        /// </summary>
+        public float GetGroundSurfaceHeight()
+        {
+            ShapesLayer shapes = getShapesLayer();
+            return shapes != null ? shapes.GroundSurfaceHeight : 0f;
+        }
+
+        /// <summary>
         /// Where something that lies flat on a tile (the cursor, a range indicator)
         /// goes: the tile centre, raised onto the tile's surface when the tile as a
         /// whole stands above the usual ground -- a bridge deck, for instance -- so
