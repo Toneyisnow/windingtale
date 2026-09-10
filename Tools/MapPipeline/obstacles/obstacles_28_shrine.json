@@ -1,0 +1,19 @@
+{
+  "_comment": [
+    "Chapter 28's altar by the eastern pool, merged into obstacles_28.json by prop_obstacles.py --with.",
+    "Chapter 21's stone_shrine_1 again (tablet 74 is chapter 21's 154), painted over three rows -- roof",
+    "64 66 70, tablet 72 74 76 on the floor 121, base 240 241 242 (Blocked) on the pool's top edge 157,",
+    "with no foot row because the water starts under it. Stands on row 19; Clear takes 17..19."
+  ],
+  "Obstacles": [
+    {
+      "Id": 1,
+      "DefinitionKey": "stone_shrine_1",
+      "Position": { "X": 35, "Y": 19 },
+      "Clear": [
+        { "X": 35, "Y": 17, "Cols": 3, "Rows": 2, "Fill": 121 },
+        { "X": 35, "Y": 19, "Cols": 3, "Rows": 1, "Fill": 157 }
+      ]
+    }
+  ]
+}

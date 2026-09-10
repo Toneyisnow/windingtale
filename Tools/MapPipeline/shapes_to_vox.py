@@ -225,7 +225,41 @@ def stamp_tree(voxels, template, at=None, canvas_z=voxlib.CANVAS):
 # tile -> voxels
 # --------------------------------------------------------------------------
 
-def tile_to_voxels(image, grass_lift=voxlib.GRASS_LIFT, lift_grass=True, flat=False, lower=None):
+def lowered_pixels(px, lower, min_area=0):
+    """The (px, py) of the pixels ``lower`` sinks: every pixel of a lowered
+    colour, or -- with ``min_area`` -- only those in a 4-connected blob of
+    lowered pixels at least that big (blobs are measured within the tile)."""
+    if not lower:
+        return set()
+    hit = set()
+    for py in range(voxlib.TILE):
+        for pxi in range(voxlib.TILE):
+            if tuple(px[pxi, py][:3]) in lower:
+                hit.add((pxi, py))
+    if min_area <= 1:
+        return hit
+    keep = set()
+    seen = set()
+    for start in sorted(hit):
+        if start in seen:
+            continue
+        blob = [start]
+        seen.add(start)
+        stack = [start]
+        while stack:
+            x, y = stack.pop()
+            for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                if (nx, ny) in hit and (nx, ny) not in seen:
+                    seen.add((nx, ny))
+                    blob.append((nx, ny))
+                    stack.append((nx, ny))
+        if len(blob) >= min_area:
+            keep.update(blob)
+    return keep
+
+
+def tile_to_voxels(image, grass_lift=voxlib.GRASS_LIFT, lift_grass=True, flat=False, lower=None,
+                   lower_min_area=0):
     """Ground layer (plus grass blades) for one 24x24 tile PNG.
 
     ``flat`` puts every pixel at ground level regardless of colour. The terrain
@@ -239,16 +273,23 @@ def tile_to_voxels(image, grass_lift=voxlib.GRASS_LIFT, lift_grass=True, flat=Fa
     to a number of voxels it sinks below ground level, for terrain the shore
     tables know nothing about: chapter 20's swamp is painted in blacks and dark
     browns, and the user wants it 1-2 voxels down.
+
+    ``lower_min_area`` keeps a lowered colour up unless it forms a blob of at
+    least that many 4-connected pixels within the tile. Chapter 26's wire-mesh
+    floor is drawn over black pits in the same black as the pits: the pits are
+    hundreds of pixels, the gaps between the wires two or three, and only the
+    pits should sink.
     """
     px = image.load()
     voxels = []
     lower = lower or {}
+    sunk = lowered_pixels(px, lower, lower_min_area)
     for py in range(voxlib.TILE):
         for pxi in range(voxlib.TILE):
             source = tuple(px[pxi, py][:3])
             colour = voxlib.palette_index(source)
             rgb = voxlib.PALETTE[colour - 1][:3]
-            if source in lower:
+            if (pxi, py) in sunk:
                 z = voxlib.GROUND_Z - lower[source]
             else:
                 z = voxlib.GROUND_Z if flat else voxlib.TERRAIN_Z[voxlib.classify_terrain(rgb, resolve=False)]
@@ -262,7 +303,7 @@ def tile_to_voxels(image, grass_lift=voxlib.GRASS_LIFT, lift_grass=True, flat=Fa
 
 def build_tile(root, nn, tile_id, tree=None, tree_at=None, grass_lift=voxlib.GRASS_LIFT,
                templates=None, panel_dir=None, grass_tile=GRASS_TILE_ID,
-               canvas_z=voxlib.CANVAS, flat=False, lower=None):
+               canvas_z=voxlib.CANVAS, flat=False, lower=None, lower_min_area=0):
     """Voxels for one tile. ``tree`` is a reference tile id from Shapes_01."""
     panel = panel_dir or voxlib.shape_panel_dir(root, nn)
     source_id = grass_tile if tree else tile_id
@@ -276,7 +317,8 @@ def build_tile(root, nn, tile_id, tree=None, tree_at=None, grass_lift=voxlib.GRA
 
     # A tree tile's ground is the flat grass tile, so no blades are raised on it
     # (that is what the reference tiles 43 / 44 do).
-    voxels = tile_to_voxels(image, grass_lift=grass_lift, lift_grass=not tree, flat=flat, lower=lower)
+    voxels = tile_to_voxels(image, grass_lift=grass_lift, lift_grass=not tree, flat=flat, lower=lower,
+                            lower_min_area=lower_min_area)
     stamped = 0
     if tree:
         stamped = stamp_tree(voxels, templates[tree], tree_at, canvas_z=canvas_z)
@@ -393,6 +435,11 @@ def main():
                         'ground level; repeatable. For terrain the shore colour tables do '
                         'not know: chapter 20 paints its swamp in black and dark browns '
                         '(--lower 000000=2 --lower 18140c,242018,302c24,403c30,505040=1)')
+    p.add_argument('--lower-min-area', type=int, default=0, metavar='N',
+                   help='a --lower colour sinks only where it forms a blob of at least N '
+                        '4-connected pixels within the tile. Chapter 26 paints its wire-mesh '
+                        'floor over black pits in the same black: with N=45 the pits '
+                        'sink and the two-pixel gaps between the wires stay up')
     p.add_argument('--grass-lift', type=int, default=voxlib.GRASS_LIFT,
                    help='voxels of grass stacked above the ground (default %d)' % voxlib.GRASS_LIFT)
     p.add_argument('--grass-tile', type=int, default=GRASS_TILE_ID,
@@ -485,8 +532,9 @@ def main():
                 raise SystemExit('--lower colour %r is not RRGGBB' % hex6)
             lower[tuple(int(hex6[i:i + 2], 16) for i in (0, 2, 4))] = int(depth)
     if lower:
-        print('lowered colours: %s' % ', '.join(
-            '#%02x%02x%02x by %d' % (c + (d,)) for c, d in sorted(lower.items(), key=lambda kv: -kv[1])))
+        print('lowered colours: %s%s' % (', '.join(
+            '#%02x%02x%02x by %d' % (c + (d,)) for c, d in sorted(lower.items(), key=lambda kv: -kv[1])),
+            '   (blobs of %d+ pixels only)' % args.lower_min_area if args.lower_min_area > 1 else ''))
 
     written = skipped = 0
     for tid in tiles:
@@ -494,7 +542,7 @@ def main():
         voxels, source_id, stamped = build_tile(
             root, nn, tid, tree=tree, tree_at=at, grass_lift=args.grass_lift,
             templates=templates, panel_dir=args.panel_dir, grass_tile=args.grass_tile,
-            canvas_z=canvas_z, flat=args.flat, lower=lower)
+            canvas_z=canvas_z, flat=args.flat, lower=lower, lower_min_area=args.lower_min_area)
         name = voxlib.shape_vox_name(nn, tid)
         dest = os.path.join(out_dir, name)
         note = ''

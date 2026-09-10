@@ -44,6 +44,13 @@ and then count as surviving ground when the rest of the footprints are grown
 in. tree_obstacles.py writes one for every tree, matched to the tree tile's
 own ground colour, so a tree on the edge of a road comes back as grass.
 
+An entry whose ``DefinitionKey`` starts with ``_`` (``_erase``) is cleaned like
+any other but is not an obstacle: nothing is written to the chapter's
+``Obstacles`` and no model is needed (``Size`` defaults to 1 x 1). It removes
+something painted on the tiles that the 3D map should not carry at all -- the
+event robot of chapter 26, which the chapter script places later, or the light
+reflections painted on the floor under chapter 27's pillars.
+
 Output is Chapter_NN_Cleaned.json: the same chapter with the footprint tiles
 replaced by the fill tile and an "Obstacles" block inserted immediately before
 "ShapeMatrix". A Chapter_NN_UsedTiles.json listing the tile ids that survive
@@ -264,7 +271,11 @@ def main():
     clean_list = []
     for i, o in enumerate(obstacles, start=1):
         key = o['DefinitionKey']
-        cols, rows = obstacle_tile_size(root, key, o.get('Size'))
+        erase_only = key.startswith('_')
+        if erase_only:
+            cols, rows = obstacle_tile_size(root, key, o.get('Size') or {'Cols': 1, 'Rows': 1})
+        else:
+            cols, rows = obstacle_tile_size(root, key, o.get('Size'))
         x, y = int(o['Position']['X']), int(o['Position']['Y'])
         if o.get('Clear'):
             for r in o['Clear']:
@@ -273,6 +284,8 @@ def main():
                                    int(r['Cols']), int(r['Rows']), fill))
         else:
             footprints.append((key, x, y, cols, rows, None))
+        if erase_only:
+            continue
         clean_list.append(OrderedDict([('Id', int(o.get('Id', i))),
                                        ('DefinitionKey', key),
                                        ('Position', OrderedDict([('X', x), ('Y', y)]))]))

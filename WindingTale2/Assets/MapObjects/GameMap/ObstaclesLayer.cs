@@ -292,7 +292,8 @@ namespace WindingTale.MapObjects.GameMap
         /// <summary>
         /// How an obstacle glows, or null for the ordinary ones. The fire pillars of
         /// chapters 10 and 25: the whole model is fire, so it is self-lit almost fully,
-        /// and each carries a warm point light at its flame. One tile is 2 world units,
+        /// and each carries a warm point light at its flame. The light pillars of
+        /// chapters 27-30 are the same idea in blue-white. One tile is 2 world units,
         /// so a range of 7 reaches about three tiles out; the bright pillars throw the
         /// most light, the bowl the least.
         /// </summary>
@@ -350,6 +351,24 @@ namespace WindingTale.MapObjects.GameMap
                         LightRange = 9f,
                         LightIntensity = 1.8f,
                         LightHeight = 0.85f,
+                    };
+                case "light_pillar_1":      // chapters 27-30's pillars of blue light: the whole column is light
+                    return new ObstacleGlow.Spec
+                    {
+                        Emission = 0.9f,
+                        LightColor = new Color(0.7f, 0.85f, 1.0f),
+                        LightRange = 7f,
+                        LightIntensity = 1.4f,
+                        LightHeight = 0.7f,
+                    };
+                case "light_pillar_2":      // the short one: the same light, a little less of it
+                    return new ObstacleGlow.Spec
+                    {
+                        Emission = 0.9f,
+                        LightColor = new Color(0.7f, 0.85f, 1.0f),
+                        LightRange = 5.5f,
+                        LightIntensity = 1.1f,
+                        LightHeight = 0.7f,
                     };
                 case "orb_pillar_yellow":   // chapter 22's crystal orbs: a soft light in the orb's colour
                     return OrbGlow(new Color(1.0f, 0.85f, 0.3f));

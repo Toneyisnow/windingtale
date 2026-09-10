@@ -1,0 +1,16 @@
+{
+  "_comment": [
+    "Chapter 27's altar on the lower terrace, merged into obstacles_27.json by prop_obstacles.py --with.",
+    "It is chapter 21's stone_shrine_1 (its tablet tile 170 and base tile 175 are chapter 21's 154 and 159),",
+    "painted over four rows (roof 160 164 166, tablet 168 170 172, base 174 175 176 -- the Blocked row --",
+    "and foot 177 178 179) on the grey floor 111, so the 3 x 1 model stands on row 32 and Clear takes 30..33."
+  ],
+  "Obstacles": [
+    {
+      "Id": 1,
+      "DefinitionKey": "stone_shrine_1",
+      "Position": { "X": 15, "Y": 32 },
+      "Clear": [ { "X": 15, "Y": 30, "Cols": 3, "Rows": 4, "Fill": 111 } ]
+    }
+  ]
+}

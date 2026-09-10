@@ -45,6 +45,7 @@ pip install Pillow
 | `build_obstacles_21.py` | 第 21 关：石头神龛、高石柱、矮石柱（都是"画几行站一行"，蓝灰石头色自带调色板） |
 | `build_obstacles_22.py` | 第 22 关：5 格宽的石碑（`stone_shrine_2`，站两行）和六根彩色水晶球柱（`orb_pillar_<colour>`，08 关的底座 + 从原画采色的玻璃球） |
 | `build_obstacles_25.py` | 第 25 关：画三行的高亮火柱（`fire_pillar_4`，第 10 关亮柱的柱身加高一格，两帧）和 13 种岩浆片（`lava_25_<tile>`，按瓦片原画的白色像素铺 1 格厚的一层，两帧纹路漂移） |
+| `build_obstacles_27.py` | 第 27–30 关：蓝色光柱（`light_pillar_1` 画两行 / `light_pillar_2` 画一行，第 10 关火柱的做法换成蓝色，各两帧）、石碑（`stone_stele_1`）、两格高的石柱（`stone_column_3`，第 21 关高石柱矮一格） |
 | `build_trees.py` | 所有关卡共用的树：每种"颜色 + 树型"一个固定模型（`tree_<colour>.vox` / `pine_<colour>.vox`，1 格） |
 | `prop_obstacles.py` | 从 ShapeMatrix 里把"画在一列 tile 里、站在最下面那格"的道具（雕像 / 石球柱 / 石柱）读出来变成 obstacle 列表，每格带按像素比对选出的 `Fill`（第 22–24 关） |
 | `cover_obstacles.py` | 把"铺在瓦片上"的地面覆盖层（第 25 关的岩浆片）按瓦片 id 铺到每一格，每格 `Clear` 回填自己的 tile id，所以 RenderMatrix 不变 |
@@ -222,6 +223,14 @@ python cover_obstacles.py 25 --cover lava_25=4,5,6,7,8,9,10,11,12,13,14,15,50   
 python map_clean.py 25 --obstacles obstacles/obstacles_25_with_lava.json --fill-plain-only --fill-exclude 62,68,70
 ```
 
+### 只清理、不建模：`_erase`
+
+obstacle 列表里 `DefinitionKey` 以 `_` 开头的条目（`_erase`）只做清理：按它的 `Clear` /
+`Fill` 抠掉、回填，但不进 `Chapter_NN.json` 的 `Obstacles`，也不需要模型（没有 `Size` 就当
+1×1）。用在"画在瓦片上、但 3D 地图不该带"的东西：第 26 关左下角的机器人（事件里由脚本放，
+`prop_obstacles.py 26 --stack _erase=88/90`），第 27–30 关每个道具下面画在地上的倒影
+（`--stack _erase=185,187,227,46`：柱子和石像下的反光条、光柱下的光斑、石碑在水里的影子）。
+
 ### 没有海岸线的关：`--flat`
 
 `shapes_to_vox.py` 按颜色分地形（沙滩 / 水 沉下去）。第 10 关的洞窟没有沙滩，但地上
@@ -233,6 +242,11 @@ python map_clean.py 25 --obstacles obstacles/obstacles_25_with_lava.json --fill-
 `shapes_to_vox.py --lower RRGGBB[,RRGGBB...]=N`（可重复）把这些**原图颜色**的像素压到地面以下 N 格。
 第 20 关的沼泽画的是黑色和五种深褐色，海岸线的颜色表不认识它们：
 `--lower 000000=2 --lower 18140c,242018,302c24,403c30,505040=1`，黑泥沼低两格、褐色边缘低一格。
+
+`--lower-min-area N` 让 `--lower` 的颜色只在"本 tile 内 4 连通、面积 ≥ N 像素"的色块里下沉。
+第 26 关（以及 28–30 关）的铁丝网地板和黑色深坑画的是同一个纯黑：坑是几百像素，网眼只有两三个
+像素，`--lower 000000=3 --lower-min-area 45` 就只让坑沉下去，铁丝网整块留在地面高度——比坑高
+三格，和第 03 关的桥高出水面一样。
 
 ### 填充时排除某些 tile：`--fill-exclude`
 
