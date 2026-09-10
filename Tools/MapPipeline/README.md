@@ -43,7 +43,9 @@ pip install Pillow
 | `build_obstacles_10.py` | 第 10 关：三种火柱（矮 / 亮 / 略暗），每种两帧动画（`<key>.vox` + `<key>_f2.vox`） |
 | `build_obstacles_13.py` | 第 13 关：两顶帐篷（灰绿 / 蓝白，同一形状两套颜色，自带调色板） |
 | `build_obstacles_21.py` | 第 21 关：石头神龛、高石柱、矮石柱（都是"画几行站一行"，蓝灰石头色自带调色板） |
+| `build_obstacles_22.py` | 第 22 关：5 格宽的石碑（`stone_shrine_2`，站两行）和六根彩色水晶球柱（`orb_pillar_<colour>`，08 关的底座 + 从原画采色的玻璃球） |
 | `build_trees.py` | 所有关卡共用的树：每种"颜色 + 树型"一个固定模型（`tree_<colour>.vox` / `pine_<colour>.vox`，1 格） |
+| `prop_obstacles.py` | 从 ShapeMatrix 里把"画在一列 tile 里、站在最下面那格"的道具（雕像 / 石球柱 / 石柱）读出来变成 obstacle 列表，每格带按像素比对选出的 `Fill`（第 22–24 关） |
 | `tree_obstacles.py` | 从 ShapeMatrix 里把树读出来变成 obstacle 列表（每个树冠一棵，站在树干那一格），带按地面颜色选好的 `Fill` |
 | `voxmesh.py` | 贪心合并同色共面体素面的 OBJ 导出器，给超过 10 格宽的模型用（也可 `--greedy` 强制） |
 | `chapter_map.py` | `info` / `render` / `crop` / `verify`：看懂一关的地图数据，并把 ShapeMatrix 重新画回 PNG |

@@ -317,9 +317,38 @@ namespace WindingTale.MapObjects.GameMap
                         LightIntensity = 1.3f,
                         LightHeight = 0.8f,
                     };
+                case "orb_pillar_yellow":   // chapter 22's crystal orbs: a soft light in the orb's colour
+                    return OrbGlow(new Color(1.0f, 0.85f, 0.3f));
+                case "orb_pillar_orange":
+                    return OrbGlow(new Color(1.0f, 0.6f, 0.35f));
+                case "orb_pillar_green":
+                    return OrbGlow(new Color(0.6f, 0.9f, 0.3f));
+                case "orb_pillar_purple":
+                    return OrbGlow(new Color(0.85f, 0.55f, 0.95f));
+                case "orb_pillar_red":
+                    return OrbGlow(new Color(1.0f, 0.3f, 0.25f));
+                case "orb_pillar_blue":
+                    return OrbGlow(new Color(0.4f, 0.55f, 1.0f));
                 default:
                     return null;
             }
+        }
+
+        /// <summary>
+        /// The orb pillars are a stone pedestal with a glass ball on top, so only a
+        /// little of the model is self-lit and the light hangs at the ball, about
+        /// three quarters of the way up; two tiles of reach, well under the fire.
+        /// </summary>
+        private static ObstacleGlow.Spec OrbGlow(Color color)
+        {
+            return new ObstacleGlow.Spec
+            {
+                Emission = 0.35f,
+                LightColor = color,
+                LightRange = 4.5f,
+                LightIntensity = 0.9f,
+                LightHeight = 0.75f,
+            };
         }
 
         /// <summary>

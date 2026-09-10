@@ -1,0 +1,20 @@
+{
+  "_comment": [
+    "The monument at the head of chapter 22's plateau, merged into obstacles_22.json by prop_obstacles.py --with.",
+    "Painted over four rows (roof 146 148 172 172 150 on grass, tablet 234 154 154 154 236, base 140 159 159 159 142,",
+    "foot 143 144 144 144 145 on the cobbles) and Blocked on the tablet and base rows, so the 5 x 2 model stands on",
+    "rows 15..16. Row 15 is the platform's top edge (29) under the tablet, row 14 grass, rows 16..17 cobbles."
+  ],
+  "Obstacles": [
+    {
+      "Id": 1,
+      "DefinitionKey": "stone_shrine_2",
+      "Position": { "X": 21, "Y": 15 },
+      "Clear": [
+        { "X": 21, "Y": 14, "Cols": 5, "Rows": 1, "Fill": 74 },
+        { "X": 21, "Y": 15, "Cols": 5, "Rows": 1, "Fill": 29 },
+        { "X": 21, "Y": 16, "Cols": 5, "Rows": 2, "Fill": 76 }
+      ]
+    }
+  ]
+}
