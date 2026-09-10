@@ -35,6 +35,13 @@ namespace WindingTale.Core.Map
         /// </summary>
         public int RestoredTurnNo { get; set; }
 
+        /// <summary>
+        /// Raised by GameMain for the one event check it runs when the last enemy of a
+        /// turn has acted, before the next turn's number comes up -- the original's
+        /// endOfTurn flag. TurnEndEvent is the only reader. Runtime only, never saved.
+        /// </summary>
+        public bool IsEndOfTurn { get; set; }
+
         public FDField Field { get; private set; }
 
 

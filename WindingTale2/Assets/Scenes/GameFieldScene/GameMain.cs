@@ -251,6 +251,43 @@ namespace WindingTale.Scenes.GameFieldScene
         }
 
         /// <summary>
+        /// The battle is over and the story goes straight on to one of the ending
+        /// chapters -- the original's gameEnding: chapter 30 into the good ending (31),
+        /// chapter 27 into the bad one (32) when the party has no Sky Key. The party is
+        /// carried over exactly as for a win, but the village is skipped: the field scene
+        /// reloads on the ending chapter, whose script is a cutscene and nothing else.
+        /// Queued behind the closing conversation like OnGameWin.
+        /// </summary>
+        public void OnGameEnding(int endingChapterId)
+        {
+            this.PushActivity(game => game.EnterEnding(endingChapterId));
+        }
+
+        private void EnterEnding(int endingChapterId)
+        {
+            ChapterLoader.AdjustFriendsAfterWon(this, ChapterId);
+            GameMapRecord mapRecord = new GameMapRecordManager().BuildRecord(this);
+            GameRecord record = GameRecordManager.CreateFromMapRecord(mapRecord, PartyRecord);
+            record.ChapterId = endingChapterId;
+
+            GameFiledSceneParams.isContinue = false;
+            GlobalVariables.Set(VillageScene.RecordVariableName, record);
+
+            QuitToScene("GameFieldScene");
+        }
+
+        /// <summary>
+        /// The end of the game: an ending chapter has played its last line. The original
+        /// went on to its GameWinScene -- the good or bad ending picture and the credits
+        /// -- which has no counterpart here yet, so for now the game returns to the title.
+        /// Queued behind the closing conversation like OnGameWin.
+        /// </summary>
+        public void OnGameFinished()
+        {
+            this.PushActivity(game => game.QuitToScene("TitleScene"));
+        }
+
+        /// <summary>
         /// Leaves the won battlefield for the village. What survives the battle is the
         /// party -- everyone healed up, the fallen back on their feet at 0 HP -- and the
         /// purse; GameRecordManager.CreateFromMapRecord is where that is decided. The
@@ -743,6 +780,13 @@ namespace WindingTale.Scenes.GameFieldScene
                     this.gameMap.Map.TurnType = CreatureFaction.Enemy;
                     break;
                 case CreatureFaction.Enemy:
+                    //// The end of the turn: the original's endEnemyTurn checked its
+                    //// events once more here, with endOfTurn raised, before it moved
+                    //// the turn number on. TurnEndEvent is what listens.
+                    this.gameMap.Map.IsEndOfTurn = true;
+                    eventHandler.notifyTriggeredEvents();
+                    this.gameMap.Map.IsEndOfTurn = false;
+
                     this.gameMap.Map.TurnNo++;
                     this.gameMap.Map.TurnType = CreatureFaction.Friend;
                     break;

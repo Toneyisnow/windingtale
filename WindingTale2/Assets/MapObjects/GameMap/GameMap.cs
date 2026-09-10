@@ -543,6 +543,29 @@ namespace WindingTale.MapObjects.GameMap
             this.Map.Creatures.Remove(creature);
         }
 
+        /// <summary>
+        /// Puts a creature that is already on the map onto another tile at once, with no
+        /// walk -- the original's setLocation, which chapter 30 uses to bring each boss
+        /// down from the wall to the altar the turn his guard has fallen.
+        /// </summary>
+        public void RelocateCreature(int creatureId, FDPosition position)
+        {
+            FDCreature creature = this.Map.Creatures.Find(c => c.Id == creatureId);
+            if (creature == null)
+            {
+                return;
+            }
+
+            creature.Position = position;
+
+            string creatureName = string.Format("creature_{0}", StringUtils.Digit3(creatureId));
+            Transform creatureIcon = this.creaturesLayer.transform.Find(creatureName);
+            if (creatureIcon != null)
+            {
+                creatureIcon.SetPositionAndRotation(MapCoordinate.ConvertCreaturePosToVec3(position), Quaternion.identity);
+            }
+        }
+
         public void MoveCreature(FDCreature creature, FDMovePath movePath)
         {
             string creatureName = string.Format("creature_{0}", StringUtils.Digit3(creature.Id));

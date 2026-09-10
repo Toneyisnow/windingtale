@@ -2,6 +2,26 @@
   "Index": 30,
   "Width": 35,
   "Height": 45,
+  "BackgroundMusic": {
+    "Field": "",
+    "Enemy": "",
+    "Village": "Village_3_HD_Final"
+  },
+  "DefaultTais": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
   "ShapeMatrix": [
     [
       72,

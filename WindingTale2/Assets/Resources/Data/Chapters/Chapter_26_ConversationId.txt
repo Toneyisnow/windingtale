@@ -10,8 +10,8 @@ Chapter_26-26-01-009-Id 21
 Chapter_26-26-01-010-Id 2
 Chapter_26-26-01-011-Id 32
 Chapter_26-26-01-012-Id 2
-Chapter_26-26-01-013-Id 
-Chapter_26-26-01-014-Id 
+Chapter_26-26-01-013-Id 0
+Chapter_26-26-01-014-Id 0
 Chapter_26-26-01-015-Id 32
 Chapter_26-26-01-016-Id 2
 Chapter_26-26-01-017-Id 32

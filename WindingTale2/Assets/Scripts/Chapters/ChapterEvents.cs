@@ -90,6 +90,31 @@ namespace WindingTale.Chapters
         }
 
         /// <summary>
+        /// Fires once at the end of a turn -- after the last enemy has acted, before the
+        /// next turn's number comes up -- the original's EndTurnEventCondition. Chapter 30
+        /// chains two of these behind a group's death events so a boss comes out the turn
+        /// after his guard has fallen. See TurnEndEvent.
+        /// </summary>
+        protected FDEvent LoadTurnEndEvent(int eventId, Action<GameMain> action)
+        {
+            TurnEndEvent ended = new TurnEndEvent(eventId, () => action(gameMain));
+            this.AllEvents.Add(ended);
+            return ended;
+        }
+
+        /// <summary>
+        /// Fires at the end of a turn at which one particular creature is standing on one
+        /// particular tile -- the original's ArrivePositionTurnCondition. Chapter 29 chains
+        /// five of these so that every turn Youni holds the console the fortress answers.
+        /// </summary>
+        protected FDEvent LoadTurnEndEvent(int eventId, int creatureId, FDPosition position, Action<GameMain> action)
+        {
+            TurnEndEvent ended = new TurnEndEvent(eventId, creatureId, position, () => action(gameMain));
+            this.AllEvents.Add(ended);
+            return ended;
+        }
+
+        /// <summary>
         /// Puts a creature on the map where the chapter script asks for it. Enemies and
         /// NPCs belong to the chapter, so they are always built fresh from their definition.
         ///

@@ -32,8 +32,19 @@ namespace WindingTale.Scenes.GameFieldScene
             }
         }
 
+        /// <summary>
+        /// Fires every condition event that is due. Which ones are due is decided for the
+        /// whole list first and only then are they executed, so an event that another
+        /// event in the same pass waits on (FDEvent.AddDependentEvent) cannot go off in
+        /// that same pass: a chain of dependent events advances one link per check.
+        ///
+        /// That is what the original did -- it walked its list backwards, and a chapter
+        /// registers a dependency before what depends on it -- and chapters 29 and 30
+        /// rely on it: their chains of TurnEndEvents are meant to fire one per turn.
+        /// </summary>
         public void notifyTriggeredEvents()
         {
+            List<FDEvent> due = new List<FDEvent>();
             foreach (FDEvent eve in events)
             {
                 if (!eve.IsActive || !eve.IsDependencySatisfied || eve.EventType != FDEventType.Condition) continue;
@@ -41,8 +52,13 @@ namespace WindingTale.Scenes.GameFieldScene
                 var conditionEvent = (FDConditionEvent)eve;
                 if (conditionEvent.Match(gameMain.gameMap.Map))
                 {
-                    eve.Execute();
+                    due.Add(eve);
                 }
+            }
+
+            foreach (FDEvent eve in due)
+            {
+                eve.Execute();
             }
         }
 
