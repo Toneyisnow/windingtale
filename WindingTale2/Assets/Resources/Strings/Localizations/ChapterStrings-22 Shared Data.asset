@@ -1,0 +1,176 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: ChapterStrings-22 Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: ChapterStrings-22
+  m_TableCollectionNameGuidString: 46fff250600d75640a76d012f7399352
+  m_Entries:
+  - m_Id: 263286784
+    m_Key: Conversation-22-01-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646912
+    m_Key: Conversation-22-01-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646913
+    m_Key: Conversation-22-01-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646914
+    m_Key: Conversation-22-01-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646915
+    m_Key: Conversation-22-01-05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646916
+    m_Key: Conversation-22-01-06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646917
+    m_Key: Conversation-22-01-07
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646918
+    m_Key: Conversation-22-01-08
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646919
+    m_Key: Conversation-22-01-09
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646920
+    m_Key: Conversation-22-01-10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646921
+    m_Key: Conversation-22-01-11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646922
+    m_Key: Conversation-22-02-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646923
+    m_Key: Conversation-22-02-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646924
+    m_Key: Conversation-22-02-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646925
+    m_Key: Conversation-22-03-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646926
+    m_Key: Conversation-22-03-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646927
+    m_Key: Conversation-22-03-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646928
+    m_Key: Conversation-22-03-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646929
+    m_Key: Conversation-22-03-05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646930
+    m_Key: Conversation-22-03-06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646931
+    m_Key: Conversation-22-03-07
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646932
+    m_Key: Conversation-22-03-08
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646933
+    m_Key: Conversation-22-03-09
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646934
+    m_Key: Conversation-22-04-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646935
+    m_Key: Conversation-22-04-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646936
+    m_Key: Conversation-22-04-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646937
+    m_Key: Conversation-22-04-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646938
+    m_Key: Conversation-22-04-05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646939
+    m_Key: Conversation-22-04-06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646940
+    m_Key: Conversation-22-04-07
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646941
+    m_Key: Conversation-22-04-08
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646942
+    m_Key: Conversation-22-04-09
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646943
+    m_Key: Conversation-22-04-10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646944
+    m_Key: Conversation-22-04-11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646945
+    m_Key: Conversation-22-04-12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646946
+    m_Key: Conversation-22-04-13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646947
+    m_Key: Conversation-22-04-14
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 3194654302076403802
+  references:
+    version: 2
+    RefIds:
+    - rid: 3194654302076403802
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1789079045210

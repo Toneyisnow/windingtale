@@ -1,0 +1,300 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: ChapterStrings-27 Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: ChapterStrings-27
+  m_TableCollectionNameGuidString: 2b8d2a5ba85cdab4686f88d165297451
+  m_Entries:
+  - m_Id: 250703872
+    m_Key: Conversation-27-01-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 275869696
+    m_Key: Conversation-27-01-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064000
+    m_Key: Conversation-27-01-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064001
+    m_Key: Conversation-27-01-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064002
+    m_Key: Conversation-27-01-05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064003
+    m_Key: Conversation-27-01-06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064004
+    m_Key: Conversation-27-01-07
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064005
+    m_Key: Conversation-27-01-08
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064006
+    m_Key: Conversation-27-01-09
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064007
+    m_Key: Conversation-27-01-10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064008
+    m_Key: Conversation-27-01-11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064009
+    m_Key: Conversation-27-01-12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064010
+    m_Key: Conversation-27-01-13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064011
+    m_Key: Conversation-27-01-14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064012
+    m_Key: Conversation-27-01-15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064013
+    m_Key: Conversation-27-01-16
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064014
+    m_Key: Conversation-27-01-17
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064015
+    m_Key: Conversation-27-01-18
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064016
+    m_Key: Conversation-27-01-19
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064017
+    m_Key: Conversation-27-02-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064018
+    m_Key: Conversation-27-02-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064019
+    m_Key: Conversation-27-03-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064020
+    m_Key: Conversation-27-04-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064021
+    m_Key: Conversation-27-04-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064022
+    m_Key: Conversation-27-04-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064023
+    m_Key: Conversation-27-04-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064024
+    m_Key: Conversation-27-04-05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064025
+    m_Key: Conversation-27-04-06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064026
+    m_Key: Conversation-27-04-07
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064027
+    m_Key: Conversation-27-04-08
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064028
+    m_Key: Conversation-27-04-09
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064029
+    m_Key: Conversation-27-04-10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064030
+    m_Key: Conversation-27-04-11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064031
+    m_Key: Conversation-27-04-12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064032
+    m_Key: Conversation-27-04-13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064033
+    m_Key: Conversation-27-04-14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064034
+    m_Key: Conversation-27-04-15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064035
+    m_Key: Conversation-27-04-16
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064036
+    m_Key: Conversation-27-04-17
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064037
+    m_Key: Conversation-27-04-18
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064038
+    m_Key: Conversation-27-04-19
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064039
+    m_Key: Conversation-27-04-20
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064040
+    m_Key: Conversation-27-04-21
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064041
+    m_Key: Conversation-27-04-22
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064042
+    m_Key: Conversation-27-04-23
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064043
+    m_Key: Conversation-27-05-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064044
+    m_Key: Conversation-27-05-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064045
+    m_Key: Conversation-27-05-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064046
+    m_Key: Conversation-27-05-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064047
+    m_Key: Conversation-27-05-05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064048
+    m_Key: Conversation-27-05-06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064049
+    m_Key: Conversation-27-05-07
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064050
+    m_Key: Conversation-27-05-08
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064051
+    m_Key: Conversation-27-05-09
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064052
+    m_Key: Conversation-27-05-10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064053
+    m_Key: Conversation-27-05-11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064054
+    m_Key: Conversation-27-05-12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064055
+    m_Key: Conversation-27-05-13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064056
+    m_Key: Conversation-27-05-14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064057
+    m_Key: Conversation-27-05-15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064058
+    m_Key: Conversation-27-06-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064059
+    m_Key: Conversation-27-06-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064060
+    m_Key: Conversation-27-06-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064061
+    m_Key: Conversation-27-06-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064062
+    m_Key: Conversation-27-06-05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064063
+    m_Key: Conversation-27-06-06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064064
+    m_Key: Conversation-27-06-07
+    m_Metadata:
+      m_Items: []
+  - m_Id: 280064065
+    m_Key: Conversation-27-07-01
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 3194654302076403807
+  references:
+    version: 2
+    RefIds:
+    - rid: 3194654302076403807
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1789079046080

@@ -1,0 +1,228 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: ChapterStrings-18 Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: ChapterStrings-18
+  m_TableCollectionNameGuidString: a22638d28b732254388dcda48c674a24
+  m_Entries:
+  - m_Id: 263286784
+    m_Key: Conversation-18-01-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452608
+    m_Key: Conversation-18-01-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452609
+    m_Key: Conversation-18-01-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452610
+    m_Key: Conversation-18-01-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452611
+    m_Key: Conversation-18-01-05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452612
+    m_Key: Conversation-18-01-06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452613
+    m_Key: Conversation-18-01-07
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452614
+    m_Key: Conversation-18-01-08
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452615
+    m_Key: Conversation-18-01-09
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452616
+    m_Key: Conversation-18-01-10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452617
+    m_Key: Conversation-18-01-11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452618
+    m_Key: Conversation-18-01-12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452619
+    m_Key: Conversation-18-01-13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452620
+    m_Key: Conversation-18-01-14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452621
+    m_Key: Conversation-18-01-15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452622
+    m_Key: Conversation-18-01-16
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452623
+    m_Key: Conversation-18-01-17
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452624
+    m_Key: Conversation-18-01-18
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452625
+    m_Key: Conversation-18-01-19
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452626
+    m_Key: Conversation-18-01-20
+    m_Metadata:
+      m_Items: []
+  - m_Id: 288452627
+    m_Key: Conversation-18-01-21
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646912
+    m_Key: Conversation-18-01-22
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646913
+    m_Key: Conversation-18-01-23
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646914
+    m_Key: Conversation-18-01-24
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646915
+    m_Key: Conversation-18-02-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646916
+    m_Key: Conversation-18-02-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646917
+    m_Key: Conversation-18-02-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646918
+    m_Key: Conversation-18-02-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646919
+    m_Key: Conversation-18-03-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646920
+    m_Key: Conversation-18-03-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646921
+    m_Key: Conversation-18-03-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646922
+    m_Key: Conversation-18-03-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646923
+    m_Key: Conversation-18-03-05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646924
+    m_Key: Conversation-18-03-06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646925
+    m_Key: Conversation-18-03-07
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646926
+    m_Key: Conversation-18-03-08
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646927
+    m_Key: Conversation-18-03-09
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646928
+    m_Key: Conversation-18-03-10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646929
+    m_Key: Conversation-18-03-11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646930
+    m_Key: Conversation-18-03-12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646931
+    m_Key: Conversation-18-03-13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646932
+    m_Key: Conversation-18-03-14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646933
+    m_Key: Conversation-18-03-15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646934
+    m_Key: Conversation-18-03-16
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646935
+    m_Key: Conversation-18-03-17
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646936
+    m_Key: Conversation-18-03-18
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646937
+    m_Key: Conversation-18-03-19
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646938
+    m_Key: Conversation-18-03-20
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646939
+    m_Key: Conversation-18-03-21
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292646940
+    m_Key: Conversation-18-03-22
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 3194654302076403798
+  references:
+    version: 2
+    RefIds:
+    - rid: 3194654302076403798
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1789079044513

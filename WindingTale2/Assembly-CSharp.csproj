@@ -62,10 +62,12 @@
     <Compile Include="Assets\Scenes\GameFieldScene\SkySphere.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\MovePathFinder.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter8.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter24.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDEnemy.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\DistanceResolver.cs" />
     <Compile Include="Assets\Scripts\Core\Map\FDField.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\BackgroundMusicDefinition.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter29.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\GameMain.cs" />
     <Compile Include="Assets\Scripts\Chapters\ChapterLoader.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Assets\Scenes\ShoppingScene\BoughtItemAnimationDialog.cs" />
     <Compile Include="Assets\Scenes\GameBattleScene\BattleCameraIntro.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuSystemState.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter26.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ActivityBase.cs" />
     <Compile Include="Assets\MapObjects\Cursors\MoveIndicator.cs" />
@@ -88,11 +91,14 @@
     <Compile Include="Assets\Scripts\Core\Files\ResourceJsonFile.cs" />
     <Compile Include="Assets\Scripts\Core\Common\Callbacks.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter23.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\PlayerInterface.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter31.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\SelectItemUseTargetState.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
     <Compile Include="Assets\MapObjects\GameMap\ShapesLayer.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ItemDefinition.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter21.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIAggressiveDelegate.cs" />
     <Compile Include="Assets\Scripts\UI\Common\TaggedButton.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\DefendItemDefinition.cs" />
@@ -112,6 +118,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIDelegate.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuItemState.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter22.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\Creature.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDObject.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDCreature.cs" />
@@ -130,6 +137,8 @@
     <Compile Include="Assets\Scenes\ShoppingScene\ShoppingHomeDialog.cs" />
     <Compile Include="Assets\Scenes\ShoppingScene\MoneyBar.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ChapterDefinition.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter20.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter13.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter7.cs" />
     <Compile Include="Assets\MapObjects\Cursors\Cursor.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\GameCanvas.cs" />
@@ -160,6 +169,7 @@
     <Compile Include="Assets\Scripts\Core\Events\CreatureDeadEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Files\GameRecordManager.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDNpc.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter25.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\GameFieldSceneParams.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuActionState.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureSynced.cs" />
@@ -168,14 +178,18 @@
     <Compile Include="Assets\Scripts\Core\Definitions\SecretSequenceDefinition.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDefensiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\FDMovePath.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter15.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter17.cs" />
     <Compile Include="Assets\Scripts\UI\Utils\GlobalVariables.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDPosition.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter9.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\MainCamera.cs" />
+    <Compile Include="Assets\Scripts\Core\Events\TurnEndEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\MoneyItemDefinition.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuRecordState.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter11.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
@@ -185,6 +199,7 @@
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureClip.cs" />
     <Compile Include="Assets\Scripts\Core\Common\StringUtils.cs" />
     <Compile Include="Assets\MapObjects\GameMap\ObstaclesLayer.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter27.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuSettingsState.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDRandom.cs" />
     <Compile Include="Assets\MapObjects\GameMap\ObstacleAnchor.cs" />
@@ -199,16 +214,19 @@
     <Compile Include="Assets\Scripts\Core\Events\FDTurnEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDMenu.cs" />
     <Compile Include="Assets\Scripts\Plugins\CreateFightAnimations.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter16.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalGuardDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\SpecialItemDefinition.cs" />
     <Compile Include="Assets\Scenes\TitleScene\TitleButton.cs" />
     <Compile Include="Assets\Scripts\Core\Files\GameMapRecord.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter19.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
     <Compile Include="Assets\Scripts\Core\Objects\FDFriend.cs" />
     <Compile Include="Assets\Scripts\Core\Events\FDEvent.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter32.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter3.cs" />
     <Compile Include="Assets\Scenes\ShoppingScene\ShoppingCreaturesDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ObstacleDefinition.cs" />
@@ -225,6 +243,7 @@
     <Compile Include="Assets\Scripts\Chapters\ChapterEvents.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\SelectMagicTargetState.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter18.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIStandByDelegate.cs" />
     <Compile Include="Assets\MapObjects\Blocks\Shape.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\IdleState.cs" />
@@ -234,6 +253,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter12.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\AttackItemDefinition.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureInput.cs" />
     <Compile Include="Assets\Scripts\Core\Files\GameMapRecordManager.cs" />
@@ -243,6 +263,7 @@
     <Compile Include="Assets\Scripts\AI\Delegates\AIDefensiveDelegate.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ParallelActivity.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter5.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter14.cs" />
     <Compile Include="Assets\Scenes\GameOverScene\GameOverSceneLoader.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\FightAnimation.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ConsumableItemDefinition.cs" />
@@ -253,6 +274,7 @@
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalAggressiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Files\ResourceDataFile.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\SequencedActivity.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter28.cs" />
     <Compile Include="Assets\MapObjects\GameMap\ObstacleInstance.cs" />
     <Compile Include="Assets\Scenes\GameBattleScene\AttackRunner.cs" />
     <Compile Include="Assets\Scenes\Shared\SceneTransition.cs" />
@@ -263,6 +285,7 @@
     <Compile Include="Assets\Scenes\GameFieldScene\IGameActions.cs" />
     <Compile Include="Assets\Scenes\Shared\ScreenFader.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\DurationActivity.cs" />
+    <Compile Include="Assets\Scripts\Chapters\Chapter30.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
     <Compile Include="Assets\MapObjects\Menus\Menu.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\BattleHandler.cs" />
