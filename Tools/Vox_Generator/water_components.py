@@ -1,7 +1,7 @@
-"""Find connected water components (by x,y footprint) in BG_07.vox."""
+"""Find connected water components (by x,y footprint) in BG_01.vox."""
 import struct, collections
 
-PATH = r'D:\SourceCode\Git\toneyisnow\windingtale\Resources\Remastered\BG\BG_07.vox'
+PATH = r'D:\SourceCode\Git\toneyisnow\windingtale\Resources\Remastered\BG\BG_01.vox'
 WATER = {5, 6}
 
 def read_chunks(data, off, end, out):

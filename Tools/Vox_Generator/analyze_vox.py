@@ -51,4 +51,4 @@ def main(path):
 
 if __name__ == '__main__':
     main(sys.argv[1] if len(sys.argv) > 1 else
-         r'D:\SourceCode\Git\toneyisnow\windingtale\Resources\Remastered\BG\BG_07.vox')
+         r'D:\SourceCode\Git\toneyisnow\windingtale\Resources\Remastered\BG\BG_01.vox')

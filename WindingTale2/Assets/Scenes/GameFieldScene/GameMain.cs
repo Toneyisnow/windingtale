@@ -15,6 +15,7 @@ using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.MapObjects.GameMap;
+using WindingTale.Scenes.GameBattleScene;
 using WindingTale.Scenes.GameFieldScene.Activities;
 using WindingTale.UI.Dialogs;
 using WindingTale.UI.Utils;
@@ -703,6 +704,12 @@ namespace WindingTale.Scenes.GameFieldScene
         private void LoadChapter(int chapterId)
         {
             this.chapterId = chapterId;
+
+            // Tell the battle scene which chapter it is fighting in, so it can put up that
+            // chapter's backdrop. Unlike LocalTaiId or AttackResult this is not a one-shot
+            // handoff: it holds for every battle of the chapter, so it is set once here
+            // and overwritten by the next chapter that loads.
+            GlobalVariables.Set(BattleLoader.ChapterIdVariableName, chapterId);
 
             gameMap.Initialize(chapterId);
 

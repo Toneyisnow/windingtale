@@ -155,6 +155,7 @@ MonoBehaviour:
   localMpBar: {fileID: 1817213580}
   foreignHpBar: {fileID: 1159267642}
   foreignMpBar: {fileID: 1118112924}
+  backdrop: {fileID: 1577900218}
 --- !u!4 &116327968
 Transform:
   m_ObjectHideFlags: 0
@@ -1848,7 +1849,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 40121caa80287e846a63a7b52d5c461a, type: 3}
       propertyPath: m_Name
-      value: BG_07
+      value: BG_01
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 40121caa80287e846a63a7b52d5c461a, type: 3}
       propertyPath: m_IsActive
@@ -1859,6 +1860,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40121caa80287e846a63a7b52d5c461a, type: 3}
+--- !u!1 &1577900218 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 40121caa80287e846a63a7b52d5c461a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1577900216}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1670896497
 PrefabInstance:
   m_ObjectHideFlags: 0

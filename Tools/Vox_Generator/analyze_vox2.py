@@ -1,7 +1,7 @@
-"""Surface + water analysis for BG_07.vox."""
+"""Surface + water analysis for BG_01.vox."""
 import struct, collections
 
-PATH = r'D:\SourceCode\Git\toneyisnow\windingtale\Resources\Remastered\BG\BG_07.vox'
+PATH = r'D:\SourceCode\Git\toneyisnow\windingtale\Resources\Remastered\BG\BG_01.vox'
 WATER = {5, 6}
 
 def read_chunks(data, off, end, out):

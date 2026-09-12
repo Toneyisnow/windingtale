@@ -1,14 +1,14 @@
 """
-Edit BG_07.vox:
+Edit BG_01.vox:
   1. Make the ground deeper green (palette recolor of the grass + ground tans).
   2. Remove the small water pool in the middle (the largest interior water
      component) and flatten it to ground at the surrounding level (z=11).
 
-Backs up the original to BG_07.vox.bak before overwriting.
+Backs up the original to BG_01.vox.bak before overwriting.
 """
 import struct, shutil, collections, os
 
-PATH = r'D:\SourceCode\Git\toneyisnow\windingtale\Resources\Remastered\BG\BG_07.vox'
+PATH = r'D:\SourceCode\Git\toneyisnow\windingtale\Resources\Remastered\BG\BG_01.vox'
 BAK = PATH + '.bak'
 WATER = {5, 6}
 GROUND_Z = 11          # surrounding flat-ground top level
