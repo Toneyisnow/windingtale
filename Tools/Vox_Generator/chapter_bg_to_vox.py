@@ -175,13 +175,20 @@ def downsample(model, scale=SCALE):
     return out
 
 
-def obstacle(key):
-    """One of the chapter map's obstacle models, at backdrop scale."""
-    hit = _model_cache.get(key)
+def obstacle(key, scale=SCALE):
+    """One of the chapter map's obstacle models, at backdrop scale.
+
+    Pass a smaller ``scale`` to bring a model up in the world: 2 instead of the
+    usual 3 makes it half again as big, and does it by throwing away less of the
+    original rather than by stretching what is left, so the model keeps its
+    detail at the larger size.
+    """
+    hit = _model_cache.get((key, scale))
     if hit is None:
         path = os.path.join(voxlib.obstacles_vox_dir(ROOT), key + '.vox')
         model = voxlib.read_vox(path)
-        hit = _model_cache[key] = BOOK.lut(model.palette)[downsample(model)]
+        hit = BOOK.lut(model.palette)[downsample(model, scale)]
+        _model_cache[(key, scale)] = hit
     return hit
 
 
@@ -370,7 +377,11 @@ ROAD_02 = 73                   # full cobblestone
 EDGE_N_02 = 109                # grass with the cobble band on its far side
 EDGE_S_02 = 110                # grass with the cobble band on its near side
 
-HOUSE_02 = (140, 112)          # near-left corner of the blue-roofed house
+# The house is built at SCALE 2 rather than 3, which makes it half again as big
+# as everything else -- at the backdrop's own scale it read as a shed at the far
+# end of a field rather than the village behind the fight.
+HOUSE_02 = (128, 112)          # near-left corner of the blue-roofed house
+HOUSE_SCALE_02 = 2
 # The road runs across the scene rather than towards it, and sits where the
 # camera's sight line past the fighters meets the ground -- put it any nearer and
 # it lands under the frame, with the creatures left standing on grass.
@@ -397,14 +408,14 @@ def recipe_02(bd):
     # X/Y is the near-left corner of the footprint in backdrop voxels, and every
     # model's facade is on its own low-Y side, which is the side the battle camera
     # is on. Remember large X is screen left.
-    bd.stamp(obstacle('blue_house_4'), *HOUSE_02)
-    bd.stamp(obstacle('barrel_group_1'), 192, 116)  # beside it, clear of the fighters
+    bd.stamp(obstacle('blue_house_4', HOUSE_SCALE_02), *HOUSE_02)
+    bd.stamp(obstacle('barrel_group_1'), 206, 118)  # beside it, clear of the fighters
 
     scatter_trees(
         bd, ('tree_dark_green', 'tree_light_green'),
         boxes=[
-            (148, 216, 152, 172, 0.6),   # behind the house
-            (8, 48, 128, 168, 0.45),     # a few across the far side
+            (218, 252, 136, 176, 0.5),   # past the house, on its far side
+            (24, 120, 148, 176, 0.5),    # a few across the far side
             (208, 248, 40, 88, 0.5),     # one or two near the frame edges, for depth
             (4, 44, 40, 88, 0.5),
         ],
