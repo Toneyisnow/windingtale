@@ -790,9 +790,21 @@ namespace WindingTale.Scenes.GameFieldScene
                     //// The end of the turn: the original's endEnemyTurn checked its
                     //// events once more here, with endOfTurn raised, before it moved
                     //// the turn number on. TurnEndEvent is what listens.
-                    this.gameMap.Map.IsEndOfTurn = true;
-                    eventHandler.notifyTriggeredEvents();
-                    this.gameMap.Map.IsEndOfTurn = false;
+                    ////
+                    //// Only from turn 1 on, though. A chapter is loaded sitting at turn 0
+                    //// of the Enemy phase (FDMap.LoadFromChapter), so the kick-off walks
+                    //// straight into this branch -- and that is not the end of anything:
+                    //// the map is still empty, because everyone is spawned by the turn 1
+                    //// event a few lines below. Checking conditions there means every
+                    //// "team eliminated" event matches an empty team at once: chapter 2
+                    //// loses the battle for its villagers being wiped out before a single
+                    //// villager exists, and every chapter wins it for having no enemies.
+                    if (this.gameMap.Map.TurnNo > 0)
+                    {
+                        this.gameMap.Map.IsEndOfTurn = true;
+                        eventHandler.notifyTriggeredEvents();
+                        this.gameMap.Map.IsEndOfTurn = false;
+                    }
 
                     this.gameMap.Map.TurnNo++;
                     this.gameMap.Map.TurnType = CreatureFaction.Friend;
