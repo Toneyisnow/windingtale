@@ -170,6 +170,11 @@ namespace WindingTale.Core.Algorithms
         /// </summary>
         public Dictionary<int, SoloResult> Results;
 
+        /// <summary>
+        /// The magic that was cast, so the battle scene can play its animation.
+        /// </summary>
+        public int MagicId { get; private set; }
+
         public int MpCost { get; private set; }
 
         /// <summary>
@@ -180,10 +185,11 @@ namespace WindingTale.Core.Algorithms
         /// </summary>
         public int MpBefore { get; private set; }
 
-        public MagicResult(FDCreature subject, List<FDCreature> targets, int mpCost) : base(subject)
+        public MagicResult(FDCreature subject, List<FDCreature> targets, int magicId, int mpCost) : base(subject)
         {
             this.Results = new Dictionary<int, SoloResult>();
             this.Targets = targets;
+            this.MagicId = magicId;
             this.MpCost = mpCost;
             this.MpBefore = (subject != null) ? subject.Mp : 0;
         }

@@ -52,6 +52,7 @@
     <Compile Include="Assets\Editor\ChapterFontAtlasBuilder.cs" />
     <Compile Include="Assets\codeandweb.com\Editor\UIImageSetSizeAndPivot.cs" />
     <Compile Include="Assets\codeandweb.com\Editor\SpritesheetImporter.cs" />
+    <Compile Include="Assets\Editor\MagicEffectCapture.cs" />
     <Compile Include="Assets\Editor\WindowsBuilder.cs" />
     <Compile Include="Assets\Editor\ChapterStringsImporter.cs" />
     <Compile Include="Assets\Editor\ShapeModelImporter.cs" />

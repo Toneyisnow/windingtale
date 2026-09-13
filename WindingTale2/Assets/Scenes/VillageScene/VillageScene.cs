@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Files;
+using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.UI.Utils;
 
 /// <summary>
@@ -508,6 +509,7 @@ public class VillageScene : MonoBehaviour
         }
 
         GameObject icon = Instantiate(prefab);
+        CreatureMaterial.Apply(icon);
         icon.transform.SetParent(parent, false);
         icon.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
     }

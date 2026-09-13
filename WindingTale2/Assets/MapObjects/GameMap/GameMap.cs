@@ -645,6 +645,7 @@ namespace WindingTale.MapObjects.GameMap
 
             GameObject prefab = Resources.Load<GameObject>(iconFilePath);
             GameObject icon = Instantiate(prefab);
+            CreatureMaterial.Apply(icon);
             icon.transform.SetParent(parent);
             icon.transform.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
         }

@@ -4,8 +4,9 @@ REM generate_icon.bat
 REM
 REM End-to-end build for one (or all) character icon(s):
 REM   1) PNG sprite sheet  -> 3 VOX files                  (png4_to_vox.py)
-REM   2) each VOX          -> .obj + .mtl + palette .png    (vox_to_obj_exporter.py, --y-up)
-REM   3) deploy obj/mtl/png triples for all 3 frames into the Unity Assets folder
+REM   2) each VOX          -> .obj + .mtl + palette .png    (vox_to_obj_exporter.py)
+REM                          plus a rounded, smooth-shaded copy in smoothed\
+REM   3) deploy the smoothed obj/mtl/png triples into the Unity Assets folder
 REM
 REM Usage:
 REM     generate_icon <icon_id>      -- build a single icon, e.g. 007
@@ -89,7 +90,13 @@ if errorlevel 1 (
 )
 
 echo.
-echo === [2/3] VOX -^> OBJ + MTL + palette PNG   (--y-up)
+REM Two exports per frame. The plain one lands next to the .vox and is the
+REM original hard-edged, flat-shaded model, kept as it always was. The
+REM --round one goes into a smoothed\ subfolder: rounded outer edges
+REM and smooth vertex normals (see Tools\Vox_to_Obj\rounded_mesh.py).
+REM GameMap loads smoothed\ when it is there and falls back to the
+REM original when it is not, so both stay valid.
+echo === [2/3] VOX -^> OBJ + MTL + palette PNG   (original, then smoothed)
 for %%F in (01 02 03) do (
     echo --- frame %%F ---
     python "%CONV%" "%REM_OUT%\Icon_%ICON%_%%F.vox" --y-up
@@ -97,14 +104,22 @@ for %%F in (01 02 03) do (
         echo ERROR: vox_to_obj_exporter.py failed on frame %%F
         exit /b !errorlevel!
     )
+    python "%CONV%" "%REM_OUT%\Icon_%ICON%_%%F.vox" --y-up --round --out-dir smoothed
+    if errorlevel 1 (
+        echo ERROR: vox_to_obj_exporter.py --round failed on frame %%F
+        exit /b !errorlevel!
+    )
 )
 
 echo.
 echo === [3/3] copy to Unity Assets   ( %UNITY% )
+REM Only the version the game actually loads goes into the Unity project:
+REM the smoothed one. The hard-edged original stays in %REM_OUT% next to
+REM the .vox, so it is still there to compare against or to fall back to.
 if not exist "%UNITY%" mkdir "%UNITY%"
 for %%F in (01 02 03) do (
     for %%E in (obj mtl png) do (
-        copy /Y "%REM_OUT%\Icon_%ICON%_%%F.%%E" "%UNITY%\" >nul
+        copy /Y "%REM_OUT%\smoothed\Icon_%ICON%_%%F.%%E" "%UNITY%\" >nul
         if errorlevel 1 (
             echo ERROR: failed to copy Icon_%ICON%_%%F.%%E
             exit /b !errorlevel!
@@ -114,5 +129,5 @@ for %%F in (01 02 03) do (
 )
 
 echo.
-echo Done. icon-%ICON%: 3 VOX in %REM_OUT%, 9 files deployed to %UNITY%
+echo Done. icon-%ICON%: 3 VOX + 2 OBJ sets in %REM_OUT%, 9 files deployed to %UNITY%
 endlocal

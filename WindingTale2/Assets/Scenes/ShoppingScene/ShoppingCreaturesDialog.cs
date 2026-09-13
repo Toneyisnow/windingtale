@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using WindingTale.Core.Files;
+using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.UI.Dialogs;
@@ -624,6 +625,7 @@ public class ShoppingCreaturesDialog : MonoBehaviour
             if (prefab != null)
             {
                 GameObject model = Instantiate(prefab);
+                CreatureMaterial.Apply(model);
                 model.transform.SetParent(holder.transform, false);
                 model.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             }

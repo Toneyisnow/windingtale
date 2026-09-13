@@ -78,7 +78,7 @@ namespace WindingTale.Core.Algorithms
             {
                 return null;
             }
-            MagicResult result = new MagicResult(subject, targetList, magic.MpCost);
+            MagicResult result = new MagicResult(subject, targetList, magic.MagicId, magic.MpCost);
             if (subject == null || targetList == null || targetList.Count == 0)
             {
                 // From previous steps, there should be at least one target

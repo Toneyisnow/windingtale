@@ -175,7 +175,9 @@
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureSynced.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDMessage.cs" />
     <Compile Include="Assets\MapObjects\GameMap\MapObjectFade.cs" />
+    <Compile Include="Assets\Scenes\GameBattleScene\MagicEffect.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\SecretSequenceDefinition.cs" />
+    <Compile Include="Assets\MapObjects\CreatureIcon\CreatureMaterial.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDefensiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\FDMovePath.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter15.cs" />
@@ -183,6 +185,7 @@
     <Compile Include="Assets\Scripts\UI\Utils\GlobalVariables.cs" />
     <Compile Include="Assets\Scripts\Core\Common\FDPosition.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter9.cs" />
+    <Compile Include="Assets\Scenes\GameBattleScene\MagicEffectDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\MainCamera.cs" />
     <Compile Include="Assets\Scripts\Core\Events\TurnEndEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\MoneyItemDefinition.cs" />
@@ -449,12 +452,14 @@
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-17.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-23.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_24_ConversationId.txt" />
+    <None Include="Assets\Resources\Materials\MagicAdditiveShader.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_00_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_12_ConversationId.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-17.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_06_ConversationId.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-99.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-13.txt" />
+    <None Include="Assets\Resources\Materials\VoxelCreatureShader.shader" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Magic.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_07_ConversationId.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-08.txt" />

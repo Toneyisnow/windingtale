@@ -79,6 +79,30 @@ public class EnemyHitEffect : MonoBehaviour
     }
 
     /// <summary>
+    /// A magic hit: the same reaction as a landed OnHit -- the hit particle, the red flash
+    /// on the body and the screen flash -- but the body stands its ground. A missed magic
+    /// calls nothing.
+    /// </summary>
+    public void OnMagicHit()
+    {
+        if (hitParticle != null)
+        {
+            hitParticle.transform.position = transform.position;
+            hitParticle.Play();
+        }
+
+        if (!isFlashing)
+        {
+            StartCoroutine(FlashEffect());
+        }
+
+        if (hitEffectImage != null)
+        {
+            StartCoroutine(ScreenFlashEffect());
+        }
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     private IEnumerator FlashEffect()

@@ -853,7 +853,9 @@ def writePalettePng(png_path, palette):
 
 
 def exportVoxFile(vox_path, material_name='palette',
-                  scale=0.1, center=True, ground=True, y_up=False):
+                  scale=0.1, center=True, ground=True, y_up=False,
+                  round_edges=False, round_lambda=0.65, round_iterations=1,
+                  round_sharp=60.0, out_dir=None):
     """ Top-level convenience API.
 
         Given the FULL path to a .vox file, write three sibling files in
@@ -870,13 +872,27 @@ def exportVoxFile(vox_path, material_name='palette',
         Pass y_up=True for a Y-up orientation (Unity / Three.js).
         Pass scale=1.0, center=False, ground=False to get raw voxel coords.
 
-        Returns (obj_path, mtl_path, png_path, n_vertices, n_quads).
+        out_dir puts the three files in that directory instead of next to
+        the .vox (created if missing) -- that is how the rounded export lands
+        in an Icons/NNN/smoothed/ folder while the flat original stays put.
+
+        round_edges=True swaps the flat one-quad-per-voxel-face mesh for the
+        welded, edge-relaxed, smooth-normal one built by rounded_mesh.py: the
+        outer edges get a small chamfer and the light runs across a face
+        instead of the face being one flat shade. Same triangle count, same
+        placement; see rounded_mesh.py for what the knobs do.
+
+        Returns (obj_path, mtl_path, png_path, n_vertices, n_faces).
     """
     import os
     base, ext = os.path.splitext(vox_path)
     if ext.lower() != '.vox':
         raise ValueError('not a .vox file: %s' % vox_path)
 
+    if out_dir:
+        if not os.path.isdir(out_dir):
+            os.makedirs(out_dir)
+        base = os.path.join(out_dir, os.path.basename(base))
     obj_path = base + '.obj'
     mtl_path = base + '.mtl'
     png_path = base + '.png'
@@ -886,13 +902,25 @@ def exportVoxFile(vox_path, material_name='palette',
     with open(vox_path, 'rb') as f:
         vox, palette = importVoxFull(f)
 
-    quads = vox.toQuads()
-    with open(obj_path, 'w') as f:
-        n_v, n_q = exportObjToStream(f, quads,
-                                     mtl_lib=mtl_name,
-                                     material_name=material_name,
-                                     scale=scale, center=center,
-                                     ground=ground, y_up=y_up)
+    if round_edges:
+        import rounded_mesh
+        mesh = rounded_mesh.RoundedMesh(vox, lam=round_lambda,
+                                        iterations=round_iterations,
+                                        sharp_degrees=round_sharp)
+        with open(obj_path, 'w') as f:
+            n_v, n_q = rounded_mesh.write_obj(f, mesh,
+                                              mtl_lib=mtl_name,
+                                              material_name=material_name,
+                                              scale=scale, center=center,
+                                              ground=ground, y_up=y_up)
+    else:
+        quads = vox.toQuads()
+        with open(obj_path, 'w') as f:
+            n_v, n_q = exportObjToStream(f, quads,
+                                         mtl_lib=mtl_name,
+                                         material_name=material_name,
+                                         scale=scale, center=center,
+                                         ground=ground, y_up=y_up)
     writeMtl(mtl_path, png_name, material_name)
     writePalettePng(png_path, palette)
     return obj_path, mtl_path, png_path, n_v, n_q
@@ -922,25 +950,50 @@ if __name__ == "__main__":
             help='rotate the model -90° around X so that VOX Z (up) maps '
                  'to OBJ Y. Use this for Unity / Three.js / any Y-up engine '
                  '(matches MagicaVoxel native OBJ output orientation).')
+        parser.add_argument('--round', action='store_true', dest='round_edges',
+            help='round the outer edges and write smooth vertex normals '
+                 '(see rounded_mesh.py). Same triangle count as the flat '
+                 'export; the model no longer reads as a pile of cubes.')
+        parser.add_argument('--round-lambda', type=float, default=0.65,
+            metavar='L', help='how far to round, 0..1 (default 0.65). Past '
+                              '~0.8 the model starts to melt: fine detail '
+                              'washes out and thin parts get thinner.')
+        parser.add_argument('--round-iterations', type=int, default=1,
+            metavar='N', help='relax passes (default 1)')
+        parser.add_argument('--round-sharp', type=float, default=60.0,
+            metavar='DEG', help='edges sharper than this keep a hard normal '
+                                '(default 60; raise for softer light)')
+        parser.add_argument('--out-dir', default=None, metavar='DIR',
+            help='write obj/mtl/png here instead of next to the .vox. '
+                 'Relative paths resolve against the .vox folder, so '
+                 '--out-dir smoothed keeps the flat export in place and puts '
+                 'the rounded one in a subfolder.')
         args = parser.parse_args()
 
         center = not args.no_center
         ground = not args.no_ground
-        print('scale=%g  center=%s  ground=%s  y_up=%s' %
+        print('scale=%g  center=%s  ground=%s  y_up=%s  round=%s' %
               (args.scale, str(center).lower(), str(ground).lower(),
-               str(args.y_up).lower()))
+               str(args.y_up).lower(), str(args.round_edges).lower()))
         for vox_path in args.vox:
             if not os.path.isfile(vox_path):
                 print('not found:', vox_path)
                 continue
             try:
+                out_dir = args.out_dir
+                if out_dir and not os.path.isabs(out_dir):
+                    out_dir = os.path.join(os.path.dirname(vox_path), out_dir)
                 obj, mtl, png, nv, nq = exportVoxFile(
                     vox_path, scale=args.scale, center=center,
-                    ground=ground, y_up=args.y_up)
+                    ground=ground, y_up=args.y_up, out_dir=out_dir,
+                    round_edges=args.round_edges,
+                    round_lambda=args.round_lambda,
+                    round_iterations=args.round_iterations,
+                    round_sharp=args.round_sharp)
             except ValueError as exc:
                 print('skipped', vox_path, '-', exc)
                 continue
-            print('%s  (%d verts, %d quads)' % (os.path.basename(obj), nv, nq))
+            print('%s  (%d verts, %d faces)' % (os.path.basename(obj), nv, nq))
             print('  +', os.path.basename(mtl))
             print('  +', os.path.basename(png))
         sys.exit(0)
