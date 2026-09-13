@@ -68,7 +68,7 @@ public class EnemyHitEffect : MonoBehaviour
 
             if (!isFlashing)
             {
-                StartCoroutine(FlashEffect());
+                StartCoroutine(FlashEffect(hitColor));
             }
         }
 
@@ -83,7 +83,8 @@ public class EnemyHitEffect : MonoBehaviour
     /// on the body and the screen flash -- but the body stands its ground. A missed magic
     /// calls nothing.
     /// </summary>
-    public void OnMagicHit()
+    /// <param name="flashColor">The colour the body flashes, when the magic has its own; else hitColor.</param>
+    public void OnMagicHit(Color? flashColor = null)
     {
         if (hitParticle != null)
         {
@@ -93,7 +94,7 @@ public class EnemyHitEffect : MonoBehaviour
 
         if (!isFlashing)
         {
-            StartCoroutine(FlashEffect());
+            StartCoroutine(FlashEffect(flashColor ?? hitColor));
         }
 
         if (hitEffectImage != null)
@@ -105,12 +106,12 @@ public class EnemyHitEffect : MonoBehaviour
     /// <summary>
     /// 
     /// </summary>
-    private IEnumerator FlashEffect()
+    private IEnumerator FlashEffect(Color color)
     {
         isFlashing = true;
         if (enemyRenderer != null)
         {
-            enemyRenderer.material.color = hitColor;
+            enemyRenderer.material.color = color;
         }
         yield return new WaitForSeconds(flashDuration);
         if (enemyRenderer != null)

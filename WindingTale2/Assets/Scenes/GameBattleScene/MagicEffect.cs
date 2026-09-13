@@ -15,7 +15,8 @@ namespace WindingTale.Scenes.GameBattleScene
     ///     own sprite space so the .txt screen coordinates land exactly where they did on
     ///     the 320 x 200 screen, with an additive glow behind every flame, one point light
     ///     following (and coloured by) the hottest flames, and embers thrown off each flame
-    ///     as it erupts. Beams the original screen cut off are carried on upwards.
+    ///     as it erupts. Beams the original screen cut off are carried on upwards. For a
+    ///     friend on the right the whole layout, frames included, is mirrored.
     ///
     /// What a hit does to the target (its red flash, the HP bar) is left to onHit.
     ///
@@ -72,6 +73,9 @@ namespace WindingTale.Scenes.GameBattleScene
 
             /// <summary>Top-left corner of the cell, in the effect's local space.</summary>
             public Vector3 CellTopLeft;
+
+            /// <summary>Drawn mirrored, for a friend on the right.</summary>
+            public bool Mirrored;
         }
 
         private MagicEffectDefinition definition;
@@ -208,13 +212,18 @@ namespace WindingTale.Scenes.GameBattleScene
             Dictionary<MagicStrip, StripAssets> stripAssets = new Dictionary<MagicStrip, StripAssets>();
             int sortingOrder = target.sortingOrder;
 
-            foreach (MagicSpawn spawn in definition.Spawns)
+            // Glows first, then each spawn's frames in the definition's order (炎龙术's fire
+            // over its head), then all the embers.
+            int emberSortingOrder = sortingOrder + 2 + definition.Spawns.Count;
+
+            for (int spawnIndex = 0; spawnIndex < definition.Spawns.Count; spawnIndex++)
             {
+                MagicSpawn spawn = definition.Spawns[spawnIndex];
                 MagicStrip strip = spawn.Strip;
                 StripAssets assets;
                 if (!stripAssets.TryGetValue(strip, out assets))
                 {
-                    assets = CreateStripAssets(strip, additive, sortingOrder + 3);
+                    assets = CreateStripAssets(strip, additive, emberSortingOrder);
                     stripAssets[strip] = assets;
                 }
 
@@ -226,7 +235,11 @@ namespace WindingTale.Scenes.GameBattleScene
                     Spawn = spawn,
                     Assets = assets,
                     CellTopLeft = frameTopLeft + new Vector3(x * unitsPerPixel, -y * unitsPerPixel, 0),
+                    Mirrored = targetIsFriend,
                 };
+
+                // The frames hang from their top-left corner; mirrored, from the top-right one.
+                Vector3 framePosition = flame.CellTopLeft + new Vector3(flame.Mirrored ? strip.CellWidth * unitsPerPixel : 0, 0, towardCamera * 2);
 
                 GameObject glowObject = new GameObject("Glow");
                 glowObject.transform.SetParent(transform, false);
@@ -237,17 +250,19 @@ namespace WindingTale.Scenes.GameBattleScene
 
                 GameObject coreObject = new GameObject("Flame");
                 coreObject.transform.SetParent(transform, false);
-                coreObject.transform.localPosition = flame.CellTopLeft + new Vector3(0, 0, towardCamera * 2);
+                coreObject.transform.localPosition = framePosition;
                 flame.Core = coreObject.AddComponent<SpriteRenderer>();
-                flame.Core.sortingOrder = sortingOrder + 2;
+                flame.Core.sortingOrder = sortingOrder + 2 + spawnIndex;
+                flame.Core.flipX = flame.Mirrored;
 
                 // Sits on the cell's top edge and stretches that one row up.
                 GameObject beamObject = new GameObject("Beam");
                 beamObject.transform.SetParent(transform, false);
-                beamObject.transform.localPosition = flame.CellTopLeft + new Vector3(0, 0, towardCamera * 2);
+                beamObject.transform.localPosition = framePosition;
                 beamObject.transform.localScale = new Vector3(1, BeamExtensionPixels, 1);
                 flame.Beam = beamObject.AddComponent<SpriteRenderer>();
-                flame.Beam.sortingOrder = sortingOrder + 2;
+                flame.Beam.sortingOrder = sortingOrder + 2 + spawnIndex;
+                flame.Beam.flipX = flame.Mirrored;
 
                 flames.Add(flame);
             }
@@ -273,7 +288,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 bool hit = false;
                 foreach (Flame flame in flames)
                 {
-                    hit |= LandFrame(flame, passed - flashFrames - flame.Spawn.StartFrame);
+                    hit |= LandFrame(flame, flame.Spawn.StripFrameAt(passed - flashFrames - flame.Spawn.StartFrame));
                 }
 
                 // Flames hitting on the same frame are one hit.
@@ -295,7 +310,7 @@ namespace WindingTale.Scenes.GameBattleScene
             Color heatColour = Color.clear;
             foreach (Flame flame in flames)
             {
-                int stripFrame = frame - flashFrames - flame.Spawn.StartFrame;
+                int stripFrame = flame.Spawn.StripFrameAt(frame - flashFrames - flame.Spawn.StartFrame);
                 float heat = ShowFrame(flame, stripFrame);
                 if (heat > 0)
                 {
@@ -319,11 +334,11 @@ namespace WindingTale.Scenes.GameBattleScene
             }
         }
 
-        /// <summary>Throws off the frame's embers; true when it is the flame's hit frame.</summary>
+        /// <summary>Throws off the frame's embers; true when it is the flame's hit frame and the flame hits.</summary>
         private bool LandFrame(Flame flame, int stripFrame)
         {
             MagicStrip strip = flame.Spawn.Strip;
-            if (strip.HitFrame < 0)
+            if (strip.HitFrame < 0 || stripFrame < 0)
             {
                 return false;
             }
@@ -331,7 +346,7 @@ namespace WindingTale.Scenes.GameBattleScene
             if (stripFrame == strip.HitFrame)
             {
                 EmitEmbers(flame, stripFrame, EruptionEmbers, 1f);
-                return true;
+                return flame.Spawn.Hits;
             }
 
             if (stripFrame > strip.HitFrame && stripFrame <= strip.HitFrame + BurningEmberFrames)
@@ -341,7 +356,7 @@ namespace WindingTale.Scenes.GameBattleScene
             return false;
         }
 
-        /// <summary>Shows one flame's frame and returns its heat, 0 when it is not burning.</summary>
+        /// <summary>Shows one flame's frame (-1: none) and returns its heat, 0 when it is not burning.</summary>
         private float ShowFrame(Flame flame, int stripFrame)
         {
             MagicStrip strip = flame.Spawn.Strip;
@@ -358,8 +373,8 @@ namespace WindingTale.Scenes.GameBattleScene
             flame.Beam.sprite = flame.Assets.BeamRows[stripFrame];
 
             float heat = strip.Heat[stripFrame];
-            float widthPixels = strip.CellWidth * (2.2f + 1.3f * heat);
-            float heightPixels = strip.PaintedHeight[stripFrame] * 1.2f + strip.CellWidth * 1.5f;
+            float widthPixels = strip.CellWidth * (2.2f + 1.3f * heat) * strip.GlowSize;
+            float heightPixels = (strip.PaintedHeight[stripFrame] * 1.2f + strip.CellWidth * 1.5f) * strip.GlowSize;
             flame.Glow.transform.localPosition = GlowCentre(flame, stripFrame) + new Vector3(0, 0, towardCamera);
             flame.Glow.transform.localScale = new Vector3(widthPixels * unitsPerPixel, heightPixels * unitsPerPixel, 1);
 
@@ -373,7 +388,13 @@ namespace WindingTale.Scenes.GameBattleScene
         {
             MagicStrip strip = flame.Spawn.Strip;
             float centreY = strip.PaintedTop[stripFrame] + strip.PaintedHeight[stripFrame] * 0.5f;
-            return flame.CellTopLeft + new Vector3(strip.CellWidth * 0.5f * unitsPerPixel, -centreY * unitsPerPixel, 0);
+            return flame.CellTopLeft + new Vector3(CellX(flame, strip.PaintedCentreX(stripFrame)) * unitsPerPixel, -centreY * unitsPerPixel, 0);
+        }
+
+        /// <summary>A pixel column of the strip's frames, placed in the (maybe mirrored) cell.</summary>
+        private static float CellX(Flame flame, float x)
+        {
+            return flame.Mirrored ? flame.Spawn.Strip.CellWidth - x : x;
         }
 
         private void UpdateLight(float totalHeat, Vector3 heatCentre, Color heatColour, int frame, int totalFrames)
@@ -407,13 +428,18 @@ namespace WindingTale.Scenes.GameBattleScene
             MagicStrip strip = flame.Spawn.Strip;
             float top = strip.PaintedTop[stripFrame];
             float bottom = top + strip.PaintedHeight[stripFrame];
+            float left = strip.PaintedLeft != null ? strip.PaintedLeft[stripFrame] : 0;
+            float width = strip.PaintedLeft != null ? strip.PaintedWidth[stripFrame] : strip.CellWidth;
+
+            // Wide fire throws off more (up to three times a column's worth).
+            count *= Mathf.Clamp(Mathf.RoundToInt(width / 44f), 1, 3);
 
             // Local simulation space with the effect's own scale, so everything here is in
             // original pixels times unitsPerPixel.
             ParticleSystem.EmitParams emit = new ParticleSystem.EmitParams();
             for (int i = 0; i < count; i++)
             {
-                float x = UnityEngine.Random.Range(0.15f, 0.85f) * strip.CellWidth;
+                float x = CellX(flame, left + UnityEngine.Random.Range(0.15f, 0.85f) * width);
                 float y = Mathf.Lerp(bottom, top, Mathf.Pow(UnityEngine.Random.value, 1.5f) * 0.7f);
                 emit.position = flame.CellTopLeft + new Vector3(x * unitsPerPixel, -y * unitsPerPixel, towardCamera * 3);
                 emit.velocity = new Vector3(
@@ -441,10 +467,12 @@ namespace WindingTale.Scenes.GameBattleScene
                 Embers = CreateEmbers(strip, additive, emberSortingOrder),
             };
 
+            // Cells run in rows as wide as 2048 texels hold (build_magic_strip.py).
+            int columns = Mathf.Max(1, 2048 / (strip.CellWidth + 2));
             for (int i = 0; i < strip.FrameCount; i++)
             {
-                float cellX = 1 + i * (strip.CellWidth + 2);
-                float cellTop = texture.height - 1;
+                float cellX = 1 + (i % columns) * (strip.CellWidth + 2);
+                float cellTop = texture.height - 1 - (i / columns) * (strip.CellHeight + 2);
                 Rect cell = new Rect(cellX, cellTop - strip.CellHeight, strip.CellWidth, strip.CellHeight);
                 assets.Frames[i] = Sprite.Create(texture, cell, new Vector2(0, 1), pixelsPerUnit, 0, SpriteMeshType.FullRect);
                 createdAssets.Add(assets.Frames[i]);

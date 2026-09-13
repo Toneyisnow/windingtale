@@ -33,6 +33,48 @@ public static class MagicEffectCapture
         CaptureInEditor(102);
     }
 
+    [UnityEditor.MenuItem("Tools/Capture Magic Effect/103 炎龙术")]
+    public static void CaptureDragonMagic()
+    {
+        CaptureInEditor(103);
+    }
+
+    [UnityEditor.MenuItem("Tools/Capture Magic Effect/104 天火术")]
+    public static void CaptureSkyFireMagic()
+    {
+        CaptureInEditor(104);
+    }
+
+    [UnityEditor.MenuItem("Tools/Capture Magic Effect/105 电击术")]
+    public static void CaptureShockMagic()
+    {
+        CaptureInEditor(105);
+    }
+
+    [UnityEditor.MenuItem("Tools/Capture Magic Effect/106 落雷术")]
+    public static void CaptureThunderfallMagic()
+    {
+        CaptureInEditor(106);
+    }
+
+    [UnityEditor.MenuItem("Tools/Capture Magic Effect/107 轰雷术")]
+    public static void CaptureThunderstormMagic()
+    {
+        CaptureInEditor(107);
+    }
+
+    [UnityEditor.MenuItem("Tools/Capture Magic Effect/108 神雷术")]
+    public static void CaptureHolyThunderMagic()
+    {
+        CaptureInEditor(108);
+    }
+
+    [UnityEditor.MenuItem("Tools/Capture Magic Effect/109 圣光弹")]
+    public static void CaptureHolyLightMagic()
+    {
+        CaptureInEditor(109);
+    }
+
     private static void CaptureInEditor(int magicId)
     {
         if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())

@@ -293,7 +293,7 @@ namespace WindingTale.Scenes.GameBattleScene
             bool landed = !(damage != null && damage.HasMissed);
             if (landed && targetHitEffect != null)
             {
-                targetHitEffect.OnMagicHit();
+                targetHitEffect.OnMagicHit(effectDefinition != null ? effectDefinition.HitColor : null);
             }
 
             if (damage != null)
