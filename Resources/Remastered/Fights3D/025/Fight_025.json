@@ -1,0 +1,105 @@
+{
+  "creature": "025",
+  "source": "WindingTale/Assets/Resources/Fights/025",
+  "crop": {
+    "x0": 171,
+    "y0": 36,
+    "x1": 314,
+    "y1": 192,
+    "note": "pixel rect in the source frame; vox x = px - x0, vox z = y1-1 - py"
+  },
+  "size": [
+    143,
+    51,
+    156
+  ],
+  "hasVox": true,
+  "midPlaneY": 25,
+  "frontY": 1,
+  "objScale": 0.1,
+  "pivot": [
+    72,
+    25,
+    1
+  ],
+  "frameSeconds": 0.12,
+  "params": {
+    "DEPTH_SCALE": 1.0,
+    "FRONT_FACTOR": 1.0,
+    "BACK_FACTOR": 0.8,
+    "MAX_HALF": 24,
+    "CREASE_K": 0.0,
+    "SLIM_KEEP": 3.0,
+    "UPPER_DEPTH": 0.7,
+    "WAIST_DEPTH": 0.6,
+    "slimFeetRow": 190,
+    "slimTopRow": 41
+  },
+  "paletteColours": 52,
+  "models": 6,
+  "frames": [
+    {
+      "animation": "idle",
+      "index": 1,
+      "time": 0.0,
+      "body": "Fight_025_1_01.obj",
+      "fx": null,
+      "voxels": "Fight_025_1_01.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 1,
+      "time": 0.0,
+      "body": "Fight_025_1_01.obj",
+      "fx": null,
+      "voxels": "Fight_025_1_01.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 2,
+      "time": 0.12,
+      "body": "Fight_025_2_02.obj",
+      "fx": null,
+      "voxels": "Fight_025_2_02.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 3,
+      "time": 0.24,
+      "body": "Fight_025_2_03.obj",
+      "fx": null,
+      "voxels": "Fight_025_2_03.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 4,
+      "time": 0.36,
+      "body": "Fight_025_2_04.obj",
+      "fx": null,
+      "voxels": "Fight_025_2_04.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 5,
+      "time": 0.48,
+      "body": "Fight_025_2_05.obj",
+      "fx": null,
+      "voxels": "Fight_025_2_05.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 6,
+      "time": 0.6,
+      "body": "Fight_025_2_06.obj",
+      "fx": null,
+      "voxels": "Fight_025_2_06.npz",
+      "fxPixels": 0
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "creature": "747",
+  "source": "WindingTale/Assets/Resources/Fights/747",
+  "crop": {
+    "x0": 21,
+    "y0": 8,
+    "x1": 320,
+    "y1": 200,
+    "note": "pixel rect in the source frame; vox x = px - x0, vox z = y1-1 - py"
+  },
+  "size": [
+    299,
+    51,
+    192
+  ],
+  "hasVox": false,
+  "midPlaneY": 25,
+  "frontY": 1,
+  "objScale": 0.1,
+  "pivot": [
+    63,
+    25,
+    51
+  ],
+  "frameSeconds": 0.12,
+  "bodyType": "machine",
+  "params": {
+    "DEPTH_SCALE": 1.0,
+    "FRONT_FACTOR": 1.0,
+    "BACK_FACTOR": 0.8,
+    "MAX_HALF": 24,
+    "CREASE_K": 0.0,
+    "SLIM_KEEP": 3.0,
+    "UPPER_DEPTH": 1.0,
+    "WAIST_DEPTH": 1.0,
+    "slimFeetRow": 148,
+    "slimTopRow": 9
+  },
+  "paletteColours": 43,
+  "models": 5,
+  "frames": [
+    {
+      "animation": "idle",
+      "index": 1,
+      "time": 0.0,
+      "body": "Fight_747_1_01.obj",
+      "fx": null,
+      "voxels": "Fight_747_1_01.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 1,
+      "time": 0.0,
+      "body": "Fight_747_2_01.obj",
+      "fx": null,
+      "voxels": "Fight_747_2_01.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 2,
+      "time": 0.12,
+      "body": "Fight_747_1_01.obj",
+      "fx": null,
+      "voxels": "Fight_747_1_01.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 3,
+      "time": 0.24,
+      "body": "Fight_747_2_01.obj",
+      "fx": null,
+      "voxels": "Fight_747_2_01.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 4,
+      "time": 0.36,
+      "body": "Fight_747_1_01.obj",
+      "fx": null,
+      "voxels": "Fight_747_1_01.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 5,
+      "time": 0.48,
+      "body": "Fight_747_2_05.obj",
+      "fx": "Fight_747_2_05_fx.obj",
+      "voxels": "Fight_747_2_05.npz",
+      "fxPixels": 8757
+    },
+    {
+      "animation": "attack",
+      "index": 6,
+      "time": 0.6,
+      "body": "Fight_747_2_06.obj",
+      "fx": "Fight_747_2_06_fx.obj",
+      "voxels": "Fight_747_2_06.npz",
+      "fxPixels": 2275
+    },
+    {
+      "animation": "attack",
+      "index": 7,
+      "time": 0.72,
+      "body": "Fight_747_2_07.obj",
+      "fx": "Fight_747_2_07_fx.obj",
+      "voxels": "Fight_747_2_07.npz",
+      "fxPixels": 376
+    },
+    {
+      "animation": "attack",
+      "index": 8,
+      "time": 0.84,
+      "body": "Fight_747_1_01.obj",
+      "fx": null,
+      "voxels": "Fight_747_1_01.npz",
+      "fxPixels": 0
+    }
+  ]
+}

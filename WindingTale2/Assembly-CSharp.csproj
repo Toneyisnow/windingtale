@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scenes\GameBattleScene\BattleCameraIntro.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuSystemState.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter26.cs" />
+    <Compile Include="Assets\FightObjects\FightModel3D.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ActivityBase.cs" />
     <Compile Include="Assets\MapObjects\Cursors\MoveIndicator.cs" />
@@ -297,6 +298,7 @@
   <ItemGroup>
     <None Include="Assets\Resources\Data\Chapters\Chapter_30_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\ChapterLegacy_01.txt" />
+    <None Include="Assets\Resources\Materials\FightFxShader.shader" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-21.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_11_Creature.txt" />

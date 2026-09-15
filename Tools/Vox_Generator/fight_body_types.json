@@ -1,0 +1,53 @@
+{
+  "_doc": [
+    "Body type of each Fight animation, and the depth profile fight_to_vox.py uses for it.",
+    "Waist/upper-body slimming (user, 2026-09-14) is for humans and human-shaped creatures only:",
+    "humans, orcs, leopard-men, humanoid mechs. Flying, mounted, dragon and other shapes are tuned",
+    "separately here. Ids not listed are humanoid. Types were assigned by looking at every",
+    "creature's idle and attack frames.",
+    "upper = depth kept across the upper body (t 0.35-0.85 of the body height), waist = extra depth",
+    "kept at the waist (t 0.5), all = depth kept at every height (default 1.0); 1.0 = no slimming.",
+    "flying all 0.5: wings and body inflate as one blob otherwise and read as an egg from the side."
+  ],
+  "default": "humanoid",
+  "profiles": {
+    "humanoid": { "upper": 0.7, "waist": 0.6 },
+    "flying":   { "upper": 1.0, "waist": 1.0, "all": 0.5 },
+    "mounted":  { "upper": 1.0, "waist": 1.0 },
+    "dragon":   { "upper": 1.0, "waist": 1.0 },
+    "machine":  { "upper": 1.0, "waist": 1.0 },
+    "other":    { "upper": 1.0, "waist": 1.0 }
+  },
+  "creatures": {
+    "015": "flying",
+    "019": "flying",
+    "027": "flying",
+    "030": "flying",
+    "115": "flying",
+    "203": "flying",
+    "211": "flying",
+    "213": "flying",
+    "728": "flying",
+    "729": "flying",
+    "730": "flying",
+    "732": "flying",
+    "733": "flying",
+    "734": "flying",
+    "735": "flying",
+
+    "020": "mounted",
+    "103": "mounted",
+    "111": "mounted",
+    "113": "mounted",
+
+    "758": "dragon",
+    "759": "dragon",
+    "760": "dragon",
+
+    "747": "machine",
+    "748": "machine",
+
+    "754": "other",
+    "761": "other"
+  }
+}

@@ -146,6 +146,92 @@ namespace WindingTale.Scenes.GameBattleScene
         /// </summary>
         public Color? HitColor = null;
 
+        // How hard the magic sparks and lights up the scene. The defaults are the plain look
+        // (圣光弹 keeps it); UseFireLook() and UseLightningLook() turn them up.
+
+        /// <summary>Scales how many embers each eruption and its aftermath throw off.</summary>
+        public float EmberAmount = 1f;
+
+        /// <summary>Scales the embers' size and how long they live.</summary>
+        public float EmberScale = 1f;
+        public float EmberLife = 1f;
+
+        /// <summary>Scales how fast embers fly up, and how far they fly out sideways.</summary>
+        public float EmberSpeed = 1f;
+        public float EmberSpread = 1f;
+
+        /// <summary>
+        /// Embers every burning frame throws off on top of the eruptions, per flame, at full
+        /// heat (scaled down by heat); 0 for none.
+        /// </summary>
+        public float BurningEmbersPerFrame = 0f;
+
+        /// <summary>Big soft licks of flame rising off every burning frame, per flame at full heat.</summary>
+        public float FlameWispsPerFrame = 0f;
+
+        /// <summary>Scales those licks' size.</summary>
+        public float WispScale = 1f;
+
+        /// <summary>Scales the additive glow behind every frame.</summary>
+        public float GlowStrength = 1f;
+
+        /// <summary>The point light: its strength at full heat, its reach, and how much it flickers (0..1).</summary>
+        public float LightIntensity = 3f;
+        public float LightRange = 70f;
+        public float LightFlicker = 0.4f;
+
+        /// <summary>Extra light intensity flared up on every hit, dying away within a few frames.</summary>
+        public float HitLightFlare = 0f;
+
+        /// <summary>Whether the light casts (soft) shadows off the backdrop.</summary>
+        public bool LightCastsShadows = false;
+
+        /// <summary>
+        /// The fire magics' look: a shower of embers and licks of flame off everything that
+        /// burns, a brighter glow, and a strong, wide, flickering light that flares on every
+        /// hit and throws moving shadows across the backdrop.
+        /// </summary>
+        public MagicEffectDefinition UseFireLook()
+        {
+            EmberAmount = 2.5f;
+            EmberScale = 3f;
+            EmberLife = 1.4f;
+            BurningEmbersPerFrame = 3f;
+            FlameWispsPerFrame = 1.5f;
+            WispScale = 1.5f;
+            GlowStrength = 1.7f;
+            LightIntensity = 6f;
+            LightRange = 110f;
+            LightFlicker = 0.9f;
+            HitLightFlare = 4f;
+            LightCastsShadows = true;
+            return this;
+        }
+
+        /// <summary>
+        /// The lightning magics' look, the fire look's electric cousin: big sparks shot out fast
+        /// and wide that die quickly, a faint crackling haze off every bolt, a hard glow, and a
+        /// strong light that strobes, flares white-hot on every hit and throws shadows.
+        /// </summary>
+        public MagicEffectDefinition UseLightningLook()
+        {
+            EmberAmount = 2.5f;
+            EmberScale = 2.5f;
+            EmberLife = 0.8f;
+            EmberSpeed = 1.8f;
+            EmberSpread = 3f;
+            BurningEmbersPerFrame = 3f;
+            FlameWispsPerFrame = 0.8f;
+            WispScale = 1.2f;
+            GlowStrength = 1.8f;
+            LightIntensity = 7f;
+            LightRange = 120f;
+            LightFlicker = 1f;
+            HitLightFlare = 6f;
+            LightCastsShadows = true;
+            return this;
+        }
+
         /// <summary>Frames of the magic itself (phase 2), not counting ScreenFlash.</summary>
         public int TotalFrames
         {
@@ -238,7 +324,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 new Vector2Int(50, -15), new Vector2Int(100, -5), new Vector2Int(70, 0),
             };
 
-            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 101 };
+            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 101 }.UseFireLook();
             for (int i = 0; i < startFrames.Length; i++)
             {
                 definition.Spawns.Add(new MagicSpawn { Strip = column, StartFrame = startFrames[i], ScreenPosition = positions[i] });
@@ -302,7 +388,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 CarryBeamsUp = false,
             };
 
-            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 103 };
+            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 103 }.UseFireLook();
 
             // The gaping head (prepare frame 10) is drawn on through all 10 fire frames.
             int[] reachAndHold = new int[21];
@@ -382,7 +468,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 GlowColor = new Color(0.35f, 0.55f, 1f),
             };
 
-            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 104 };
+            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 104 }.UseFireLook();
 
             // Beams first, so the bombs burst over them. The blue beams' x -30 is baked into
             // their strip's fade, so both must stay there.
@@ -461,7 +547,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 MagicId = 105,
                 ScreenFlashColor = new Color(0.5f, 0.3f, 1f, 0.85f),
                 HitColor = new Color(0.5f, 0.3f, 1f),
-            };
+            }.UseLightningLook();
 
             int[] aStarts = { 2, 7, 9, 13 };
             int[] aCellX = { 62, 92, 112, 42 };
@@ -534,7 +620,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 new Vector2Int(20, -10), new Vector2Int(40, -25), new Vector2Int(80, -30), new Vector2Int(120, -25),
             };
 
-            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 102 };
+            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 102 }.UseFireLook();
             for (int i = 0; i < startFrames.Length; i++)
             {
                 definition.Spawns.Add(new MagicSpawn { Strip = blue, StartFrame = startFrames[i], ScreenPosition = bluePositions[i] });
@@ -609,7 +695,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 MagicId = 106,
                 ScreenFlashColor = LightningFlash,
                 HitColor = LightningHit,
-            };
+            }.UseLightningLook();
 
             int[] aStarts = { 0, 3, 5, 6, 8, 9 };
             int[] aCellX = { 30, 70, 40, 30, 60, 100 };
@@ -687,6 +773,10 @@ namespace WindingTale.Scenes.GameBattleScene
                 GlowSize = 0.35f,
                 GlowColor = boltGlow,
                 CarryBeamsUp = false,
+                EmberColor = new Color(0.8f, 0.85f, 1f),
+                EmberHotColor = Color.white,
+                EmberMidColor = new Color(0.55f, 0.6f, 1f),
+                EmberCoolColor = new Color(0.35f, 0.2f, 0.85f),
             };
 
             MagicStrip bomb = new MagicStrip
@@ -715,7 +805,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 MagicId = 107,
                 ScreenFlashColor = LightningFlash,
                 HitColor = LightningHit,
-            };
+            }.UseLightningLook();
 
             // Everything still playing is cut short on the frame the ring gathers in.
             const int gatherFrame = 18;
@@ -809,7 +899,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 MagicId = 108,
                 ScreenFlashColor = LightningFlash,
                 HitColor = LightningHit,
-            };
+            }.UseLightningLook();
 
             int[] positions = { 27, -13, 67, 127, 37, 77, 107, 57 };
             for (int i = 0; i < positions.Length; i++)

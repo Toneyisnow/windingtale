@@ -46,8 +46,11 @@ namespace WindingTale.Scenes.GameBattleScene
         private const int BurningEmbers = 5;
         private const int BurningEmberFrames = 3;
 
-        private const float LightIntensity = 3f;
-        private const float LightRange = 70f;
+        /// <summary>How fast a hit's light flare dies away (per second, exponential).</summary>
+        private const float FlareDecay = 12f;
+
+        /// <summary>Burning frames cooler than this throw off nothing.</summary>
+        private const float BurningHeat = 0.4f;
 
         /// <summary>How far a beam frame is carried on above its cell: a whole original screen.</summary>
         private const int BeamExtensionPixels = 200;
@@ -101,6 +104,7 @@ namespace WindingTale.Scenes.GameBattleScene
         private int hitsLanded = 0;
         private bool completed = false;
         private bool lightPlaced = false;
+        private float lightFlare = 0f;
 
         /// <summary>
         /// Starts a magic on a target body.
@@ -278,6 +282,7 @@ namespace WindingTale.Scenes.GameBattleScene
         public void Advance(float dt)
         {
             time += dt;
+            lightFlare *= Mathf.Exp(-FlareDecay * dt);
             int frame = Mathf.FloorToInt(time / definition.FrameDuration);
 
             // Phase 1 is the screen flash; the magic's own frame 0 comes after it.
@@ -294,6 +299,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 // Flames hitting on the same frame are one hit.
                 if (hit)
                 {
+                    lightFlare = definition.HitLightFlare;
                     hitsLanded++;
                     onHit?.Invoke(hitsLanded * 100 / Mathf.Max(1, definition.HitCount));
                 }
@@ -338,22 +344,42 @@ namespace WindingTale.Scenes.GameBattleScene
         private bool LandFrame(Flame flame, int stripFrame)
         {
             MagicStrip strip = flame.Spawn.Strip;
-            if (strip.HitFrame < 0 || stripFrame < 0)
+            if (stripFrame < 0)
+            {
+                return false;
+            }
+
+            // Everything hot enough keeps sparking while it burns, when the magic asks for it.
+            float heat = strip.Heat[stripFrame];
+            if (heat >= BurningHeat)
+            {
+                EmitEmbers(flame, stripFrame, RandomRound(definition.BurningEmbersPerFrame * heat), 0.7f);
+                EmitWisps(flame, stripFrame, RandomRound(definition.FlameWispsPerFrame * heat));
+            }
+
+            if (strip.HitFrame < 0)
             {
                 return false;
             }
 
             if (stripFrame == strip.HitFrame)
             {
-                EmitEmbers(flame, stripFrame, EruptionEmbers, 1f);
+                EmitEmbers(flame, stripFrame, Mathf.RoundToInt(EruptionEmbers * definition.EmberAmount), 1f);
                 return flame.Spawn.Hits;
             }
 
             if (stripFrame > strip.HitFrame && stripFrame <= strip.HitFrame + BurningEmberFrames)
             {
-                EmitEmbers(flame, stripFrame, BurningEmbers, 0.6f);
+                EmitEmbers(flame, stripFrame, Mathf.RoundToInt(BurningEmbers * definition.EmberAmount), 0.6f);
             }
             return false;
+        }
+
+        /// <summary>A fractional count rounded up or down at random, so small rates still average out.</summary>
+        private static int RandomRound(float value)
+        {
+            int whole = Mathf.FloorToInt(value);
+            return whole + (UnityEngine.Random.value < value - whole ? 1 : 0);
         }
 
         /// <summary>Shows one flame's frame (-1: none) and returns its heat, 0 when it is not burning.</summary>
@@ -379,7 +405,7 @@ namespace WindingTale.Scenes.GameBattleScene
             flame.Glow.transform.localScale = new Vector3(widthPixels * unitsPerPixel, heightPixels * unitsPerPixel, 1);
 
             Color glowColor = strip.GlowColor;
-            glowColor.a = 0.55f * heat;
+            glowColor.a = Mathf.Clamp01(0.55f * heat * definition.GlowStrength);
             flame.Glow.color = glowColor;
             return heat;
         }
@@ -414,17 +440,22 @@ namespace WindingTale.Scenes.GameBattleScene
                 lightPlaced = true;
             }
 
-            float flicker = 0.8f + 0.4f * Mathf.PerlinNoise(time * 14f, definition.MagicId);
+            float flicker = 1f - definition.LightFlicker * 0.5f + definition.LightFlicker * Mathf.PerlinNoise(time * 14f, definition.MagicId);
             float strength = Mathf.Min(1f, totalHeat / 2f);
             if (frame >= totalFrames)
             {
                 strength = Mathf.Max(strength, 0.3f * (1 - tail));
             }
-            flameLight.intensity = LightIntensity * strength * flicker;
+            flameLight.intensity = definition.LightIntensity * strength * flicker + lightFlare;
         }
 
         private void EmitEmbers(Flame flame, int stripFrame, int count, float speedScale)
         {
+            if (count <= 0)
+            {
+                return;
+            }
+
             MagicStrip strip = flame.Spawn.Strip;
             float top = strip.PaintedTop[stripFrame];
             float bottom = top + strip.PaintedHeight[stripFrame];
@@ -443,12 +474,46 @@ namespace WindingTale.Scenes.GameBattleScene
                 float y = Mathf.Lerp(bottom, top, Mathf.Pow(UnityEngine.Random.value, 1.5f) * 0.7f);
                 emit.position = flame.CellTopLeft + new Vector3(x * unitsPerPixel, -y * unitsPerPixel, towardCamera * 3);
                 emit.velocity = new Vector3(
-                    UnityEngine.Random.Range(-12f, 12f),
+                    UnityEngine.Random.Range(-12f, 12f) * definition.EmberSpread,
                     UnityEngine.Random.Range(35f, 90f) * speedScale,
-                    0) * unitsPerPixel;
-                emit.startSize = UnityEngine.Random.Range(1.5f, 3.5f) * unitsPerPixel;
-                emit.startLifetime = UnityEngine.Random.Range(0.45f, 0.9f);
+                    0) * unitsPerPixel * definition.EmberSpeed;
+                emit.startSize = UnityEngine.Random.Range(1.5f, 3.5f) * unitsPerPixel * definition.EmberScale;
+                emit.startLifetime = UnityEngine.Random.Range(0.45f, 0.9f) * definition.EmberLife;
                 emit.startColor = strip.EmberColor;
+                flame.Assets.Embers.Emit(emit, 1);
+            }
+        }
+
+        /// <summary>
+        /// Big, soft, half-transparent licks of flame drifting up out of the burning part of the
+        /// frame: the embers' particle system and colours, only slow and many times the size.
+        /// </summary>
+        private void EmitWisps(Flame flame, int stripFrame, int count)
+        {
+            if (count <= 0)
+            {
+                return;
+            }
+
+            MagicStrip strip = flame.Spawn.Strip;
+            float top = strip.PaintedTop[stripFrame];
+            float bottom = top + strip.PaintedHeight[stripFrame];
+            float left = strip.PaintedLeft != null ? strip.PaintedLeft[stripFrame] : 0;
+            float width = strip.PaintedLeft != null ? strip.PaintedWidth[stripFrame] : strip.CellWidth;
+            count *= Mathf.Clamp(Mathf.RoundToInt(width / 44f), 1, 3);
+
+            ParticleSystem.EmitParams emit = new ParticleSystem.EmitParams();
+            Color colour = strip.EmberColor;
+            colour.a = 0.45f;
+            for (int i = 0; i < count; i++)
+            {
+                float x = CellX(flame, left + UnityEngine.Random.Range(0.2f, 0.8f) * width);
+                float y = Mathf.Lerp(bottom, top, UnityEngine.Random.Range(0.1f, 0.6f));
+                emit.position = flame.CellTopLeft + new Vector3(x * unitsPerPixel, -y * unitsPerPixel, towardCamera * 2.5f);
+                emit.velocity = new Vector3(UnityEngine.Random.Range(-8f, 8f), UnityEngine.Random.Range(12f, 32f), 0) * unitsPerPixel;
+                emit.startSize = UnityEngine.Random.Range(8f, 18f) * unitsPerPixel * definition.WispScale;
+                emit.startLifetime = UnityEngine.Random.Range(0.35f, 0.6f);
+                emit.startColor = colour;
                 flame.Assets.Embers.Emit(emit, 1);
             }
         }
@@ -499,7 +564,7 @@ namespace WindingTale.Scenes.GameBattleScene
             main.playOnAwake = false;
             main.simulationSpace = ParticleSystemSimulationSpace.Local;
             main.scalingMode = ParticleSystemScalingMode.Hierarchy;
-            main.maxParticles = 500;
+            main.maxParticles = 3000;
             main.gravityModifier = -0.02f;
 
             ParticleSystem.EmissionModule emission = particles.emission;
@@ -591,9 +656,10 @@ namespace WindingTale.Scenes.GameBattleScene
             Light light = lightObject.AddComponent<Light>();
             light.type = LightType.Point;
             light.color = definition.Spawns[0].Strip.GlowColor;
-            light.range = LightRange;
+            light.range = definition.LightRange;
             light.intensity = 0;
-            light.shadows = LightShadows.None;
+            light.shadows = definition.LightCastsShadows ? LightShadows.Soft : LightShadows.None;
+            light.shadowStrength = 0.85f;
             light.renderMode = LightRenderMode.ForcePixel;
             return light;
         }

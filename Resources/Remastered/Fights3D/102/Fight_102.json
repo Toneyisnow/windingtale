@@ -1,0 +1,222 @@
+{
+  "creature": "102",
+  "source": "WindingTale/Assets/Resources/Fights/102",
+  "crop": {
+    "x0": 153,
+    "y0": 35,
+    "x1": 320,
+    "y1": 191,
+    "note": "pixel rect in the source frame; vox x = px - x0, vox z = y1-1 - py"
+  },
+  "size": [
+    167,
+    51,
+    156
+  ],
+  "hasVox": true,
+  "midPlaneY": 25,
+  "frontY": 1,
+  "objScale": 0.1,
+  "pivot": [
+    98,
+    25,
+    1
+  ],
+  "frameSeconds": 0.12,
+  "params": {
+    "DEPTH_SCALE": 1.0,
+    "FRONT_FACTOR": 1.0,
+    "BACK_FACTOR": 0.8,
+    "MAX_HALF": 24,
+    "CREASE_K": 0.0,
+    "SLIM_KEEP": 3.0,
+    "UPPER_DEPTH": 0.7,
+    "WAIST_DEPTH": 0.6,
+    "slimFeetRow": 189,
+    "slimTopRow": 56
+  },
+  "paletteColours": 56,
+  "models": 20,
+  "frames": [
+    {
+      "animation": "idle",
+      "index": 1,
+      "time": 0.0,
+      "body": "Fight_102_1_01.obj",
+      "fx": null,
+      "voxels": "Fight_102_1_01.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "idle",
+      "index": 2,
+      "time": 0.12,
+      "body": "Fight_102_1_02.obj",
+      "fx": null,
+      "voxels": "Fight_102_1_02.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "idle",
+      "index": 3,
+      "time": 0.24,
+      "body": "Fight_102_1_03.obj",
+      "fx": null,
+      "voxels": "Fight_102_1_03.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "idle",
+      "index": 4,
+      "time": 0.36,
+      "body": "Fight_102_1_04.obj",
+      "fx": null,
+      "voxels": "Fight_102_1_04.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 1,
+      "time": 0.0,
+      "body": "Fight_102_2_01.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_01.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 2,
+      "time": 0.12,
+      "body": "Fight_102_2_02.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_02.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 3,
+      "time": 0.24,
+      "body": "Fight_102_2_03.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_03.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 4,
+      "time": 0.36,
+      "body": "Fight_102_2_04.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_04.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 5,
+      "time": 0.48,
+      "body": "Fight_102_2_05.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_05.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 6,
+      "time": 0.6,
+      "body": "Fight_102_2_06.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_06.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 7,
+      "time": 0.72,
+      "body": "Fight_102_2_07.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_07.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 8,
+      "time": 0.84,
+      "body": "Fight_102_2_08.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_08.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 9,
+      "time": 0.96,
+      "body": "Fight_102_2_09.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_09.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 10,
+      "time": 1.08,
+      "body": "Fight_102_2_10.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_10.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 11,
+      "time": 1.2,
+      "body": "Fight_102_2_11.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_11.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 12,
+      "time": 1.32,
+      "body": "Fight_102_2_12.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_12.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 13,
+      "time": 1.44,
+      "body": "Fight_102_2_13.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_13.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 14,
+      "time": 1.56,
+      "body": "Fight_102_2_14.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_14.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 15,
+      "time": 1.68,
+      "body": "Fight_102_2_15.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_15.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 16,
+      "time": 1.8,
+      "body": "Fight_102_2_16.obj",
+      "fx": null,
+      "voxels": "Fight_102_2_16.npz",
+      "fxPixels": 0
+    }
+  ]
+}

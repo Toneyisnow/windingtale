@@ -40,6 +40,9 @@ namespace WindingTale.FightObjects
 
             this.onHit = onHit;
             this.onFinish = onFinish;
+
+            // Show the 3D models built from this animation's frames, when there are any.
+            FightModel3D.Attach(gameObject, animationId);
         }
 
         /// <summary>

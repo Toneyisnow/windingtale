@@ -1,0 +1,87 @@
+{
+  "creature": "719",
+  "source": "WindingTale/Assets/Resources/Fights/719",
+  "crop": {
+    "x0": 190,
+    "y0": 62,
+    "x1": 283,
+    "y1": 183,
+    "note": "pixel rect in the source frame; vox x = px - x0, vox z = y1-1 - py"
+  },
+  "size": [
+    93,
+    51,
+    121
+  ],
+  "hasVox": true,
+  "midPlaneY": 25,
+  "frontY": 11,
+  "objScale": 0.1,
+  "pivot": [
+    22,
+    25,
+    1
+  ],
+  "frameSeconds": 0.12,
+  "params": {
+    "DEPTH_SCALE": 1.0,
+    "FRONT_FACTOR": 1.0,
+    "BACK_FACTOR": 0.8,
+    "MAX_HALF": 24,
+    "CREASE_K": 0.0,
+    "SLIM_KEEP": 3.0,
+    "UPPER_DEPTH": 0.7,
+    "WAIST_DEPTH": 0.6,
+    "slimFeetRow": 181,
+    "slimTopRow": 63
+  },
+  "paletteColours": 34,
+  "models": 3,
+  "frames": [
+    {
+      "animation": "idle",
+      "index": 1,
+      "time": 0.0,
+      "body": "Fight_719_1_01.obj",
+      "fx": null,
+      "voxels": "Fight_719_1_01.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "idle",
+      "index": 2,
+      "time": 0.12,
+      "body": "Fight_719_1_02.obj",
+      "fx": null,
+      "voxels": "Fight_719_1_02.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "idle",
+      "index": 3,
+      "time": 0.24,
+      "body": "Fight_719_1_03.obj",
+      "fx": null,
+      "voxels": "Fight_719_1_03.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "idle",
+      "index": 4,
+      "time": 0.36,
+      "body": "Fight_719_1_02.obj",
+      "fx": null,
+      "voxels": "Fight_719_1_02.npz",
+      "fxPixels": 0
+    },
+    {
+      "animation": "attack",
+      "index": 1,
+      "time": 0.0,
+      "body": "Fight_719_1_02.obj",
+      "fx": null,
+      "voxels": "Fight_719_1_02.npz",
+      "fxPixels": 0
+    }
+  ]
+}
