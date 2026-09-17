@@ -342,12 +342,12 @@ namespace WindingTale.Scenes.GameFieldScene
 
         /// <summary>
         /// Turns a chapter's bare clip name ("Battle_2_HD_Final_V3") into the Resources path
-        /// under Audios; an empty name (a situation with no music) resolves to null, which
+        /// under Audios/Musics; an empty name (a situation with no music) resolves to null, which
         /// PlayClipByName reads as "stop".
         /// </summary>
         private static string ResolveAudioPath(string clipName)
         {
-            return string.IsNullOrEmpty(clipName) ? null : "Audios/" + clipName;
+            return string.IsNullOrEmpty(clipName) ? null : "Audios/Musics/" + clipName;
         }
 
         public void StopBackgroundMusic()

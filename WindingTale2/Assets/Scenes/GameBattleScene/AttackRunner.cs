@@ -56,6 +56,13 @@ namespace WindingTale.Scenes.GameBattleScene
         private bool animationFinished = false;
         private DateTime animationFinishTime;
 
+        private const string HitSoundClip = "Audios/Effects/sfx_fight_hit";
+        private const string MissSoundClip = "Audios/Effects/sfx_flight_miss";
+
+        private AudioSource soundSource = null;
+        private AudioClip hitSound = null;
+        private AudioClip missSound = null;
+
 
         // Start is called before the first frame update
         void Start()
@@ -244,6 +251,9 @@ namespace WindingTale.Scenes.GameBattleScene
             // A miss (no HP change) plays no knockback animation.
             bool applyKnockback = hitDamage != null && !hitDamage.HasMissed;
 
+            // Every strike is heard: a thwack when it lands, a swish through the air when it misses.
+            playStrikeSound(applyKnockback);
+
             EnemyHitEffect hitEffect = hitObject.GetComponent<EnemyHitEffect>();
             if (hitEffect != null)
                 hitEffect.OnHit(knockbackDir, applyKnockback);
@@ -264,6 +274,24 @@ namespace WindingTale.Scenes.GameBattleScene
                     var currentHp = damage.HpBefore + (damage.HpAfter - damage.HpBefore) * percent / 100;
                     updateSubjectHp(currentHp);
                 }
+            }
+        }
+
+        private void playStrikeSound(bool landed)
+        {
+            if (soundSource == null)
+            {
+                soundSource = gameObject.AddComponent<AudioSource>();
+                soundSource.playOnAwake = false;
+                soundSource.spatialBlend = 0f;
+                hitSound = Resources.Load<AudioClip>(HitSoundClip);
+                missSound = Resources.Load<AudioClip>(MissSoundClip);
+            }
+
+            AudioClip clip = landed ? hitSound : missSound;
+            if (clip != null)
+            {
+                soundSource.PlayOneShot(clip);
             }
         }
 

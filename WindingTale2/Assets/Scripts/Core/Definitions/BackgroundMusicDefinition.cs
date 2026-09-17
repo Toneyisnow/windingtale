@@ -6,7 +6,7 @@ namespace WindingTale.Core.Definitions
     /// The chapter's background music, one clip name per situation. Matches the
     /// "BackgroundMusic" object in the chapter JSON, e.g.
     ///   "BackgroundMusic": { "Field": "Battle_2_HD_Final_V3", "Enemy": "Battle_Enemy_1_HD_1_Final", "Village": "" }
-    /// Each value is a clip name under Resources/Audios (no folder, no extension); an
+    /// Each value is a clip name under Resources/Audios/Musics (no folder, no extension); an
     /// empty value means that situation has no music -- chapter 1 has no village, so its
     /// Village is left empty.
     /// </summary>

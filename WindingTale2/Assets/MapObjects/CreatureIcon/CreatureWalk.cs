@@ -33,6 +33,8 @@ namespace WindingTale.MapObjects.CreatureIcon
 
         private Quaternion desiredRotation = Quaternion.identity;
 
+        private CreatureWalkSound walkSound = null;
+
         public void Init(FDMovePath path)
         {
             this.movePath = path;
@@ -44,6 +46,7 @@ namespace WindingTale.MapObjects.CreatureIcon
             {
                 pathIndex = 1;
                 StartMove(path.Vertexes[0], path.Vertexes[1]);
+                walkSound = CreatureWalkSound.Play(this.transform, this.creature.Definition);
             }
         }
 
@@ -91,6 +94,14 @@ namespace WindingTale.MapObjects.CreatureIcon
                     animator.SetInteger("state", 0);
                     Destroy(this);
                 }
+            }
+        }
+
+        void OnDestroy()
+        {
+            if (walkSound != null)
+            {
+                walkSound.Stop();
             }
         }
 

@@ -57,6 +57,10 @@ namespace WindingTale.Scenes.GameBattleScene
         private bool spellStarted = false;
         private EnemyHitEffect targetHitEffect = null;
 
+        /// <summary>The target (index into magicResult.Targets) whose magic sound has been played, so each hears it once.</summary>
+        private int soundPlayedForTarget = -1;
+        private AudioSource soundSource = null;
+
         private bool animationFinished = false;
         private DateTime animationFinishTime;
 
@@ -296,11 +300,43 @@ namespace WindingTale.Scenes.GameBattleScene
                 targetHitEffect.OnMagicHit(effectDefinition != null ? effectDefinition.HitColor : null);
             }
 
+            if (landed)
+            {
+                playHitSound();
+            }
+
             if (damage != null)
             {
                 var currentHp = damage.HpBefore + (damage.HpAfter - damage.HpBefore) * percent / 100;
                 updateTargetHp(currentHp);
             }
+        }
+
+        /// <summary>
+        /// Plays the magic's sound on the first hit that lands on the current target. The
+        /// clip carries the whole spell, so the later hits on the same target add nothing.
+        /// </summary>
+        private void playHitSound()
+        {
+            if (soundPlayedForTarget == currentTargetIndex || effectDefinition == null || string.IsNullOrEmpty(effectDefinition.HitSound))
+            {
+                return;
+            }
+            soundPlayedForTarget = currentTargetIndex;
+
+            AudioClip clip = Resources.Load<AudioClip>(effectDefinition.HitSound);
+            if (clip == null)
+            {
+                return;
+            }
+
+            if (soundSource == null)
+            {
+                soundSource = gameObject.AddComponent<AudioSource>();
+                soundSource.playOnAwake = false;
+                soundSource.spatialBlend = 0f;
+            }
+            soundSource.PlayOneShot(clip);
         }
 
         private void onAnimationFinish()

@@ -146,6 +146,13 @@ namespace WindingTale.Scenes.GameBattleScene
         /// </summary>
         public Color? HitColor = null;
 
+        /// <summary>
+        /// Resources path of the sound played when the magic first lands on a target (under
+        /// Audios/Effects, no extension). Magics whose sound is not made yet name a placeholder
+        /// clip that does not exist, and stay silent until it is added.
+        /// </summary>
+        public string HitSound = null;
+
         // How hard the magic sparks and lights up the scene. The defaults are the plain look
         // (圣光弹 keeps it); UseFireLook() and UseLightningLook() turn them up.
 
@@ -324,7 +331,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 new Vector2Int(50, -15), new Vector2Int(100, -5), new Vector2Int(70, 0),
             };
 
-            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 101 }.UseFireLook();
+            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 101, HitSound = "Audios/Effects/sfx_magic_flame" }.UseFireLook();
             for (int i = 0; i < startFrames.Length; i++)
             {
                 definition.Spawns.Add(new MagicSpawn { Strip = column, StartFrame = startFrames[i], ScreenPosition = positions[i] });
@@ -388,7 +395,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 CarryBeamsUp = false,
             };
 
-            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 103 }.UseFireLook();
+            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 103, HitSound = "Audios/Effects/sfx_magic_dragon" }.UseFireLook();
 
             // The gaping head (prepare frame 10) is drawn on through all 10 fire frames.
             int[] reachAndHold = new int[21];
@@ -468,7 +475,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 GlowColor = new Color(0.35f, 0.55f, 1f),
             };
 
-            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 104 }.UseFireLook();
+            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 104, HitSound = "Audios/Effects/sfx_magic_skyfire" }.UseFireLook();
 
             // Beams first, so the bombs burst over them. The blue beams' x -30 is baked into
             // their strip's fade, so both must stay there.
@@ -545,6 +552,7 @@ namespace WindingTale.Scenes.GameBattleScene
             MagicEffectDefinition definition = new MagicEffectDefinition
             {
                 MagicId = 105,
+                HitSound = "Audios/Effects/sfx_magic_shock",
                 ScreenFlashColor = new Color(0.5f, 0.3f, 1f, 0.85f),
                 HitColor = new Color(0.5f, 0.3f, 1f),
             }.UseLightningLook();
@@ -620,7 +628,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 new Vector2Int(20, -10), new Vector2Int(40, -25), new Vector2Int(80, -30), new Vector2Int(120, -25),
             };
 
-            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 102 }.UseFireLook();
+            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 102, HitSound = "Audios/Effects/sfx_magic_blaze" }.UseFireLook();
             for (int i = 0; i < startFrames.Length; i++)
             {
                 definition.Spawns.Add(new MagicSpawn { Strip = blue, StartFrame = startFrames[i], ScreenPosition = bluePositions[i] });
@@ -693,6 +701,7 @@ namespace WindingTale.Scenes.GameBattleScene
             MagicEffectDefinition definition = new MagicEffectDefinition
             {
                 MagicId = 106,
+                HitSound = "Audios/Effects/sfx_magic_thunderfall",
                 ScreenFlashColor = LightningFlash,
                 HitColor = LightningHit,
             }.UseLightningLook();
@@ -803,6 +812,7 @@ namespace WindingTale.Scenes.GameBattleScene
             MagicEffectDefinition definition = new MagicEffectDefinition
             {
                 MagicId = 107,
+                HitSound = "Audios/Effects/sfx_magic_thunderstorm",
                 ScreenFlashColor = LightningFlash,
                 HitColor = LightningHit,
             }.UseLightningLook();
@@ -897,6 +907,7 @@ namespace WindingTale.Scenes.GameBattleScene
             MagicEffectDefinition definition = new MagicEffectDefinition
             {
                 MagicId = 108,
+                HitSound = "Audios/Effects/sfx_magic_holythunder",
                 ScreenFlashColor = LightningFlash,
                 HitColor = LightningHit,
             }.UseLightningLook();
@@ -953,6 +964,7 @@ namespace WindingTale.Scenes.GameBattleScene
             MagicEffectDefinition definition = new MagicEffectDefinition
             {
                 MagicId = 109,
+                HitSound = "Audios/Effects/sfx_magic_holylight",
                 ScreenFlashColor = new Color(0.7f, 0.85f, 1f, 0.9f),
                 HitColor = new Color(0.45f, 0.65f, 1f),
             };

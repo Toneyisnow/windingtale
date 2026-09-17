@@ -1369,12 +1369,12 @@ public class ShoppingScene : MonoBehaviour
     private void PlayShopMusic(int shopIndex)
     {
         string clipName = ShopMusicName(shopIndex);
-        string path = string.IsNullOrEmpty(clipName) ? null : "Audios/" + clipName;
+        string path = string.IsNullOrEmpty(clipName) ? null : "Audios/Musics/" + clipName;
         BackgroundMusic.GetOrCreate().PlayClipByName(path);
     }
 
     /// <summary>
-    /// The Resources/Audios clip name for each shop, keyed by the spot the cursor entered
+    /// The Resources/Audios/Musics clip name for each shop, keyed by the spot the cursor entered
     /// on: item shop (1), church (2), bar (3), armor shop (4), secret shop (5). The armor
     /// and secret shops share the Amor track. Anything else has no music.
     /// </summary>

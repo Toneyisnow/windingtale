@@ -304,7 +304,7 @@ public class VillageScene : MonoBehaviour
         string clipName = chapter != null && chapter.BackgroundMusic != null
             ? chapter.BackgroundMusic.Village
             : null;
-        string path = string.IsNullOrEmpty(clipName) ? null : "Audios/" + clipName;
+        string path = string.IsNullOrEmpty(clipName) ? null : "Audios/Musics/" + clipName;
         BackgroundMusic.GetOrCreate().PlayClipByName(path);
     }
 
