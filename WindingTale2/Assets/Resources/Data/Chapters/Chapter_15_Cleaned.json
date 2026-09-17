@@ -83,7 +83,7 @@
     }
   ],
   "BackgroundMusic": {
-    "Field": "Battle_2_HD_Final_V2",
+    "Field": "Battle_1_HD_Final",
     "Enemy": "Battle_Enemy_Turn_1",
     "Village": "Village_2_HD_Final"
   },
