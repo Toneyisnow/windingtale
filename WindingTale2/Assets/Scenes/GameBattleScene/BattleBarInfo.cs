@@ -14,12 +14,22 @@ namespace WindingTale.Scenes.GameBattleScene
     ///  - CreatureName: "&lt;name&gt;  &lt;occupation&gt;"
     ///  - HpLabel:      "&lt;currentHP&gt; / &lt;maxHP&gt;"
     ///  - MpLabel:      "&lt;currentMP&gt; / &lt;maxMP&gt;"
+    ///
+    /// The bar is also the prefab Resources/Others/CreatureBar, which the field screen
+    /// shows top-right while a friend's move range is up (CreatureBarPanel). There the
+    /// two optional extras are wired: levelLabel ("LV-03") and the hpFill / mpFill
+    /// meshes, which this component then scales itself (from the left edge) -- in the
+    /// battle the runners scale those and leave them unassigned here.
     /// </summary>
     public class BattleBarInfo : MonoBehaviour
     {
         public TextMeshPro creatureNameLabel;
         public TextMeshPro hpLabel;
         public TextMeshPro mpLabel;
+
+        public TextMeshPro levelLabel;
+        public GameObject hpFill;
+        public GameObject mpFill;
 
         private FDCreature creature;
 
@@ -44,6 +54,11 @@ namespace WindingTale.Scenes.GameBattleScene
 
                 ApplyNameFont(creatureNameLabel);
                 creatureNameLabel.text = creature.Definition.Name; // + "  " + occupationName;
+            }
+
+            if (levelLabel != null)
+            {
+                levelLabel.text = "LV-" + StringUtils.Digit2(creature.Level);
             }
 
             SetHp(creature.Hp);
@@ -89,6 +104,11 @@ namespace WindingTale.Scenes.GameBattleScene
                 //// hpLabel.text = StringUtils.Digit3(current) + " / " + StringUtils.Digit3(creature.HpMax);
                 hpLabel.text = StringUtils.Digit3(current);
             }
+
+            if (creature != null)
+            {
+                ScaleFill(hpFill, current, creature.HpMax);
+            }
         }
 
         public void SetMp(int current)
@@ -98,6 +118,26 @@ namespace WindingTale.Scenes.GameBattleScene
                 //// mpLabel.text = StringUtils.Digit3(current) + " / " + StringUtils.Digit3(creature.MpMax);
                 mpLabel.text = StringUtils.Digit3(current);
             }
+
+            if (creature != null)
+            {
+                ScaleFill(mpFill, current, creature.MpMax);
+            }
+        }
+
+        /// <summary>
+        /// Stretches a fill mesh to current / max of its full length. Same rule as the
+        /// battle runners' bar scale: a zero max is an empty bar, overshoot is a full one.
+        /// </summary>
+        private static void ScaleFill(GameObject fill, int current, int max)
+        {
+            if (fill == null)
+            {
+                return;
+            }
+
+            float ratio = max <= 0 ? 0f : Mathf.Clamp01((float)current / max);
+            fill.transform.localScale = new Vector3(ratio, 1f, 1f);
         }
     }
 }

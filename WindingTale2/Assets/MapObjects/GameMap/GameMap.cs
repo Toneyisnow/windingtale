@@ -587,6 +587,71 @@ namespace WindingTale.MapObjects.GameMap
             return fieldLayer != null ? fieldLayer.GetComponent<ShapesLayer>() : null;
         }
 
+        /// <summary>The tile models' layer, or null before the scene is wired.</summary>
+        public ShapesLayer Shapes
+        {
+            get { return getShapesLayer(); }
+        }
+
+        /// <summary>The obstacles' layer, or null when the map has none.</summary>
+        public ObstaclesLayer Obstacles
+        {
+            get { return obstaclesLayer != null ? obstaclesLayer.GetComponent<ObstaclesLayer>() : null; }
+        }
+
+        /// <summary>
+        /// The treasure chests' layer, or null when the scene has none. Looked up by
+        /// name when the Inspector reference is unset, the same way Initialize does.
+        /// </summary>
+        public ObjectsLayer Objects
+        {
+            get
+            {
+                GameObject layer = objectsLayer;
+                if (layer == null)
+                {
+                    Transform found = this.transform.Find("ObjectsLayer");
+                    layer = found != null ? found.gameObject : null;
+                }
+
+                return layer != null ? layer.GetComponent<ObjectsLayer>() : null;
+            }
+        }
+
+        /// <summary>
+        /// True while the map cursor is on screen -- it hides behind an open menu.
+        /// </summary>
+        public bool IsCursorVisible
+        {
+            get { return cursor != null && cursorObject != null && cursorObject.activeSelf; }
+        }
+
+        /// <summary>
+        /// The world position of a tile's model, i.e. where the tile centre stands
+        /// on the board (the tile models are placed by ShapesLayer at exactly this).
+        /// </summary>
+        public Vector3 GetTileWorldCentre(FDPosition position)
+        {
+            Vector3 local = MapCoordinate.ConvertPosToVec3(position);
+            return fieldLayer != null ? fieldLayer.transform.TransformPoint(local) : local;
+        }
+
+        /// <summary>
+        /// Whether the tile is drawn in the right half of the screen. The corner panels
+        /// use it to put themselves on the side the cursor is not on.
+        /// </summary>
+        public bool IsTileOnRightHalfOfScreen(FDPosition position)
+        {
+            Camera camera = Camera.main;
+            if (camera == null || position == null)
+            {
+                return false;
+            }
+
+            Vector3 screen = camera.WorldToScreenPoint(GetTileWorldCentre(position));
+            return screen.x > Screen.width * 0.5f;
+        }
+
         /// <summary>
         /// How far above a tile's origin the board's usual ground surface sits, in
         /// world units (ShapesLayer.GroundSurfaceHeight); 0 before the tiles are built.

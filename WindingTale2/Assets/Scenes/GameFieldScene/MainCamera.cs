@@ -182,7 +182,7 @@ public class MainCamera : MonoBehaviour
     // While the player drives the field cursor by keyboard, the camera pans to keep it
     // on screen: it moves whenever the cursor sits inside the outer margin on any side,
     // and holds still otherwise.
-    private const float CursorEdgeMargin = 0.40f;   // outer 40% of the screen on each side
+    private const float CursorEdgeMargin = 0.25f;   // outer 25% of the screen on each side
 
     // The cursor outruns a moveSpeed pan: held arrow keys step it one tile every
     // PlayerInterface.RepeatInterval (2 world units per 0.08s = 25 units/s). The follow
@@ -363,11 +363,11 @@ public class MainCamera : MonoBehaviour
         // Any manual camera input hands control back to the player.
         if (followActive)
         {
-            bool manualInput = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)
+            bool manualInput = !WindingTale.Scenes.GameFieldScene.MapInput.IsBlocked && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)
                 || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S)
                 || Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.I)
                 || Input.GetKey(KeyCode.K) || Input.GetKey(KeyCode.L)
-                || Input.GetMouseButton(1) || Input.GetAxis("Mouse ScrollWheel") != 0f;
+                || Input.GetMouseButton(1) || Input.GetAxis("Mouse ScrollWheel") != 0f);
             if (!manualInput)
             {
                 if (isReturning)
@@ -384,6 +384,16 @@ public class MainCamera : MonoBehaviour
             followActive = false;
             isSliding = false;
             isReturning = false;
+        }
+
+        // The map is shut off from the player (a battle animation is up, say): no camera
+        // control at all, and nothing left coasting from the last frame.
+        if (WindingTale.Scenes.GameFieldScene.MapInput.IsBlocked)
+        {
+            velocity = Vector3.zero;
+            zoomVelocity = 0f;
+            isRotating = false;
+            return;
         }
 
         Vector3 targetVelocity = Vector3.zero;

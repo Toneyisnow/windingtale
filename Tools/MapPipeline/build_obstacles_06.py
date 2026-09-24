@@ -2,7 +2,7 @@
 
 Run once to produce, in Resources/Remastered/Obstacles/vox/:
 
-    red_church_1     10 cols x 8 rows    the cross-topped church across the
+    red_church_1     10 cols x 6 rows    the cross-topped church across the
                                          bottom-left of the map
     wooden_crate_1    2 cols x 2 rows    one of the eight cargo crates stacked
                                          on the quay along the top
@@ -49,8 +49,35 @@ SIDE_BAYS = ((24, 71), (168, 215))
 STRIPS = ((0, 23), (72, 95), (144, 167), (216, 239))
 
 
+# The art paints the church over rows 17..24, but a creature starts on the top
+# row (the soldier at 10,17, standing on the roof) and another on the bottom one
+# (002 at 8,24, in front of the bays). A model that fills all eight rows has them
+# standing inside it -- the building fades over them from the first turn -- so it
+# is drawn as the six rows between, 18..23, and obstacles_06.json cleans the full
+# eight with ``Clear``.
+CHURCH_ROWS = 6
+
+
+def _squash_depth(m, rows):
+    """Resample a model to ``rows`` tile rows deep, front to back.
+
+    Driven from the target side -- every output layer takes the nearest source
+    layer -- so no surface is lost and nothing collides; only every fourth layer
+    of the source is dropped.
+    """
+    out = Model(m.w // voxlib.TILE, rows, m.h)
+    by_y = {}
+    for (x, y, z), c in m.v.items():
+        by_y.setdefault(y, []).append((x, z, c))
+    for y in range(out.d):
+        source = min(m.d - 1, int(y * m.d / float(out.d) + 0.5))
+        for x, z, c in by_y.get(source, ()):
+            out.set(x, y, z, c)
+    return out
+
+
 def red_church_1():
-    """The whole church, tiles X 1..10 of rows 17..24.
+    """The whole church, tiles X 1..10 of rows 18..23.
 
     Three bays of stained glass over a ridged hall, with the entrance in the
     middle bay instead of at an end. The narrow strips between the bays are
@@ -80,7 +107,7 @@ def red_church_1():
     # here alone and in the middle, which is where the art puts it
     monument(m, cx, bay_y0 - 22, bay_wall, height=52, w=38)
     cross(m, centre, 18)
-    return m
+    return _squash_depth(m, CHURCH_ROWS)
 
 
 # --------------------------------------------------------------------------

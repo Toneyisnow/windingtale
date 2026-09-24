@@ -410,6 +410,13 @@ namespace WindingTale.Scenes.GameFieldScene
                 }
             });
 
+            // Dying events (e.g. a boss's last words) go off as soon as the battle is over,
+            // ahead of the dying animation and the experience.
+            this.PushActivity((gameMain) =>
+            {
+                gameMain.notifyTriggeredEventsFirst();
+            });
+
             // Check if the target is dead
             this.PushActivity((gameMain) =>
             {
@@ -484,6 +491,10 @@ namespace WindingTale.Scenes.GameFieldScene
                 // after the animation gets there.
                 creature.UpdateMp(-result.MpCost);
 
+                // What each recovery / status spell did to its targets, floated over them
+                // once every result is in. Attack spells show theirs in the battle scene.
+                List<ActivityBase> floatingTexts = new List<ActivityBase>();
+
                 foreach (var resultPair in result.Results)
                 {
                     int targetCreatureId = resultPair.Key;
@@ -501,6 +512,8 @@ namespace WindingTale.Scenes.GameFieldScene
                     else if (soleResult.ResultType == SoloResultType.Recover)
                     {
                         RecoverResult recoverResult = (RecoverResult)soleResult;
+                        int hpBefore = target.Hp;
+                        int mpBefore = target.Mp;
                         if (recoverResult.Type == RecoverType.Mp)
                         {
                             target.UpdateMp(recoverResult.Amount);
@@ -509,20 +522,43 @@ namespace WindingTale.Scenes.GameFieldScene
                         {
                             target.UpdateHp(recoverResult.Amount);
                         }
+
+                        // The amount is clamped to the maximum, so show what was really gained.
+                        int gained = recoverResult.Type == RecoverType.Mp ? target.Mp - mpBefore : target.Hp - hpBefore;
+                        Color textColor;
+                        string text = MagicResultText.ForRecover(recoverResult.Type, gained, out textColor);
+                        floatingTexts.Add(ActivityFactory.CreatureFloatingTextActivity(target, text, textColor));
                     }
                     else if (soleResult.ResultType == SoloResultType.Effect)
                     {
-                        target.ApplyEffect((EffectResult)soleResult);
+                        EffectResult effectResult = (EffectResult)soleResult;
+                        target.ApplyEffect(effectResult);
+
+                        // A fresh action also has to put the icon back to its un-greyed look,
+                        // which lives on the map object rather than on the creature.
+                        if (MagicResultText.Contains(effectResult, EffectType.StartAction))
+                        {
+                            gameMap.GetCreature(target)?.ResetTurnState();
+                        }
+
+                        Color textColor;
+                        string text = MagicResultText.ForEffect(effectResult, out textColor);
+                        floatingTexts.Add(ActivityFactory.CreatureFloatingTextActivity(target, text, textColor));
                     }
                 };
+
+                if (floatingTexts.Count > 0)
+                {
+                    gameMain.InsertActivity(new ParallelActivity(floatingTexts));
+                }
             });
 
             // Check dying events
             this.PushActivity((gameMain) =>
             {
-                gameMain.eventHandler.notifyTriggeredEvents();
+                gameMain.notifyTriggeredEventsFirst();
             });
-                
+
             // Check if the target is dead
             this.PushActivity((gameMain) =>
             {
@@ -561,12 +597,24 @@ namespace WindingTale.Scenes.GameFieldScene
         }
 
         /// <summary>
+        /// Fires the events that are due now, and makes whatever they queue (conversations
+        /// and the like) run next instead of at the back of the queue, ahead of the steps
+        /// of the action that is still being wrapped up.
+        /// </summary>
+        private void notifyTriggeredEventsFirst()
+        {
+            int queued = activityQueue.Count;
+            eventHandler.notifyTriggeredEvents();
+            activityQueue.MoveTailToFront(queued);
+        }
+
+        /// <summary>
         /// Who a spell lands on: everyone standing in its blast, on the side the spell is
         /// meant for. Healing and buffs go to the caster's own side (NPCs count as the
         /// player's side), everything else to the other one -- otherwise an enemy healer
         /// would spend the battle patching up the party.
         /// </summary>
-        private List<FDCreature> getMagicTargets(FDCreature creature, MagicDefinition magic, FDRange magicScope)
+        public List<FDCreature> getMagicTargets(FDCreature creature, MagicDefinition magic, FDRange magicScope)
         {
             List<FDPosition> positions = magicScope.ToList();
 

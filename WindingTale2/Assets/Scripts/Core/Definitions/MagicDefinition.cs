@@ -88,9 +88,14 @@ namespace WindingTale.Core.Definitions
             get; private set;
         }
 
+        /// <summary>
+        /// Whether casting this spell plays the battle scene. As in the original
+        /// (MagicDefinition hasAnimation), only attack spells do; recovery, status and
+        /// support spells resolve straight on the field.
+        /// </summary>
         public bool hasAnimaion()
         {
-            return this.MagicId != 0;
+            return this.MagicId != 0 && this.Type == MagicType.Attack;
         }
 
 

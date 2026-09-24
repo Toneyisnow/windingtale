@@ -71,6 +71,11 @@ namespace WindingTale.Scenes.GameFieldScene
 
         private bool CanAcceptKeyboardInput()
         {
+            if (MapInput.IsBlocked)
+            {
+                return false;
+            }
+
             if (gameMain.gameCanvas != null
                 && (gameMain.gameCanvas.IsDialogOpened() || gameMain.gameCanvas.WasDialogClosedThisFrame()))
             {
@@ -218,6 +223,11 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void onSelectedPosition(FDPosition position)
         {
+            if (MapInput.IsBlocked)
+            {
+                return;
+            }
+
             if (gameMain.gameCanvas.IsDialogOpened())
             {
                 return;
@@ -241,6 +251,11 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void onUserCancelled()
         {
+            if (MapInput.IsBlocked)
+            {
+                return;
+            }
+
             IActionState nextState = actionState.onUserCancelled();
             onUpdateState(nextState);
         }

@@ -97,6 +97,58 @@ namespace WindingTale.Core.Algorithms
 
 
         /// <summary>
+        /// A stat raised or lowered by a terrain percentage: 200 on a tile that gives
+        /// "AP+05" is 200 + 200 * 5% = 210. Works for attack and defense alike, and for
+        /// negative percentages.
+        /// </summary>
+        public static int AdjustByTerrain(int value, int percent)
+        {
+            return value + value * percent / 100;
+        }
+
+        /// <summary>
+        /// The creature's attack power (items and effects included) once the terrain it
+        /// stands on is counted: CalculatedAp adjusted by the tile's AP percentage
+        /// (ShapeDefinition.AdjustedAp). A null shape (off the map) adds nothing.
+        /// </summary>
+        public static int GetTerrainAdjustedAp(FDCreature creature, ShapeDefinition shape)
+        {
+            return AdjustByTerrain(creature.CalculatedAp, shape != null ? shape.AdjustedAp : 0);
+        }
+
+        /// <summary>
+        /// The creature's defense power (items and effects included) once the terrain it
+        /// stands on is counted: CalculatedDp adjusted by the tile's DP percentage
+        /// (ShapeDefinition.AdjustedDp). A null shape (off the map) adds nothing.
+        /// </summary>
+        public static int GetTerrainAdjustedDp(FDCreature creature, ShapeDefinition shape)
+        {
+            return AdjustByTerrain(creature.CalculatedDp, shape != null ? shape.AdjustedDp : 0);
+        }
+
+        /// <summary>The same, for the tile the creature is standing on right now.</summary>
+        public static int GetTerrainAdjustedAp(FDCreature creature, FDMap map)
+        {
+            return GetTerrainAdjustedAp(creature, GetShapeUnder(creature, map));
+        }
+
+        /// <summary>The same, for the tile the creature is standing on right now.</summary>
+        public static int GetTerrainAdjustedDp(FDCreature creature, FDMap map)
+        {
+            return GetTerrainAdjustedDp(creature, GetShapeUnder(creature, map));
+        }
+
+        private static ShapeDefinition GetShapeUnder(FDCreature creature, FDMap map)
+        {
+            if (creature == null || creature.Position == null || map == null || map.Field == null)
+            {
+                return null;
+            }
+
+            return map.Field.GetShapeAt(creature.Position);
+        }
+
+        /// <summary>
         /// Get Dp according to the creature's status, and map's block
         /// </summary>
         /// <param name="creature"></param>

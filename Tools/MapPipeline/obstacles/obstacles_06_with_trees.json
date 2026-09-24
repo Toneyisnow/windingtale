@@ -5,8 +5,16 @@
       "DefinitionKey": "red_church_1",
       "Position": {
         "X": 1,
-        "Y": 17
-      }
+        "Y": 18
+      },
+      "Clear": [
+        {
+          "X": 1,
+          "Y": 17,
+          "Cols": 10,
+          "Rows": 8
+        }
+      ]
     },
     {
       "Id": 2,

@@ -283,7 +283,13 @@ namespace WindingTale.Core.Objects
                     delta = defendItem.Ev;
                 }
 
-                return this.Dx + delta;
+                int total = this.Dx + delta;
+                if (this.Effects.Contains(CreatureEffects.EnhancedDx))
+                {
+                    total = (int)(total * 1.15f);
+                }
+
+                return total;
             }
         }
 
@@ -292,7 +298,13 @@ namespace WindingTale.Core.Objects
             get
             {
                 AttackItemDefinition attackItem = this.GetAttackItem();
-                return this.Dx + attackItem.Hit;
+                int total = this.Dx + attackItem.Hit;
+                if (this.Effects.Contains(CreatureEffects.EnhancedDx))
+                {
+                    total = (int)(total * 1.15f);
+                }
+
+                return total;
             }
         }
 
@@ -680,10 +692,19 @@ namespace WindingTale.Core.Objects
                     this.Effects.Remove(CreatureEffects.Frozen);
                     break;
                 case EffectType.StartAction:
-                    // Start new action
+                    // Being given a fresh action is a turn-state reset that also has to grey
+                    // the icon back in, so it is done by the caller on the map (see
+                    // GameMain.creatureMagic), not here.
                     break;
                 case EffectType.Multi:
-                    // TODO: Multi effect
+                    // A spell that lands several effects at once (the all-round buff).
+                    if (effect is MultiEffectResult multi && multi.Effects != null)
+                    {
+                        foreach (EffectResult inner in multi.Effects)
+                        {
+                            this.ApplyEffect(inner);
+                        }
+                    }
                     break;
                 default:
                     break;

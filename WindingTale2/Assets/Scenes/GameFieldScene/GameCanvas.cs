@@ -22,13 +22,43 @@ namespace WindingTale.Scenes.GameFieldScene
         // Start is called before the first frame update
         void Start()
         {
-
+            // The terrain readout in the bottom-left corner builds itself in code, so
+            // the scene needs no extra object for it.
+            if (GetComponent<ShapeInfoPanel>() == null)
+            {
+                gameObject.AddComponent<ShapeInfoPanel>();
+            }
         }
 
         // Update is called once per frame
         void Update()
         {
 
+        }
+
+        /// <summary>
+        /// Shows the creature's status box (name, level, HP / MP bars) in the top-right
+        /// corner. It goes away by itself when the map cursor moves off the tile it was
+        /// up on, or on <see cref="HideCreatureBar"/>.
+        /// </summary>
+        public void ShowCreatureBar(FDCreature creature)
+        {
+            CreatureBarPanel panel = GetComponent<CreatureBarPanel>();
+            if (panel == null)
+            {
+                panel = gameObject.AddComponent<CreatureBarPanel>();
+            }
+
+            panel.Show(creature);
+        }
+
+        public void HideCreatureBar()
+        {
+            CreatureBarPanel panel = GetComponent<CreatureBarPanel>();
+            if (panel != null)
+            {
+                panel.Hide();
+            }
         }
 
         public void ShowCreatureDialog(FDCreature creature, CreatureInfoType infoType, Action<int> onSelected)

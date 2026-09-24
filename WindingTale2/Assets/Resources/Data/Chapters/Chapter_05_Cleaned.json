@@ -76,7 +76,8 @@
       "Position": {
         "X": 1,
         "Y": 1
-      }
+      },
+      "Group": "cathedral"
     },
     {
       "Id": 2,
@@ -84,7 +85,8 @@
       "Position": {
         "X": 11,
         "Y": 1
-      }
+      },
+      "Group": "cathedral"
     },
     {
       "Id": 3,
@@ -92,7 +94,8 @@
       "Position": {
         "X": 26,
         "Y": -1
-      }
+      },
+      "Group": "church"
     },
     {
       "Id": 4,
@@ -100,7 +103,8 @@
       "Position": {
         "X": 33,
         "Y": -1
-      }
+      },
+      "Group": "church"
     },
     {
       "Id": 5,

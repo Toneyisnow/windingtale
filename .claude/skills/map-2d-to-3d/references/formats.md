@@ -124,6 +124,14 @@ Same X/Y axes as a shape VOX. `Position` in the chapter JSON is the
 Note the reading order: in the obstacle prompts, "4 x 6 tiles" means
 **4 rows deep × 6 columns wide**, i.e. `SIZE (144, 96, h)`.
 
+In Unity the exported model is 2.4 units a tile (24 voxels at 0.1) against a
+2-unit tile, and `ObstaclesLayer` scales it to `ObstacleFill` (92%) of its
+footprint across and along the map; height is scaled separately
+(`ObstacleHeight`). A building cut into several models because it is wider
+than 10 tiles (chapter 05's cathedral and church) gives its pieces the same
+`"Group"` in the obstacle list, so they shrink about the building's centre and
+the seam stays closed. `map_clean.py` carries `Group` into the chapter JSON.
+
 Height is chosen from how tall the object looks in the art, in tile units —
 a barrel stack that reads as 1.5 tiles high is 36 voxels.
 
@@ -148,7 +156,7 @@ vary only what is inside it. `install_chapter.py` checks only the first frame.
 An obstacle whose key starts with `lava_` is a *ground cover*: a flat sheet
 `SIZE (24, 24, 1)` per tile shape that lies on the tile instead of standing on
 it (chapter 25's lava, `build_obstacles_25.py`). `ObstaclesLayer.IsGroundCover`
-keeps it at full tile size (no `ObstacleScale` shrink), seats it on the tiles'
+keeps it at full tile size (no `ObstacleFill` shrink), seats it on the tiles'
 measured top surface (`ShapesLayer.GroundSurfaceHeight`) rather than at y = 0,
 never fades it, and gives it emission with no point light. The tile under it
 stays painted: `cover_obstacles.py` writes each cover's `Clear` with `Fill` =

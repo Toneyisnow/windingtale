@@ -31,6 +31,29 @@ namespace WindingTale.Scenes.GameFieldScene
                     activityList.Add(activity);
             }
 
+            /// <summary>Number of activities waiting behind the current one.</summary>
+            public int Count
+            {
+                get { return activityList.Count; }
+            }
+
+            /// <summary>
+            /// Moves everything queued from <paramref name="startIndex"/> on to the front of
+            /// the queue, keeping its order. Used to make what a step just pushed run before
+            /// what was already waiting.
+            /// </summary>
+            public void MoveTailToFront(int startIndex)
+            {
+                if (startIndex < 0 || startIndex >= activityList.Count)
+                {
+                    return;
+                }
+
+                List<ActivityBase> tail = activityList.GetRange(startIndex, activityList.Count - startIndex);
+                activityList.RemoveRange(startIndex, tail.Count);
+                activityList.InsertRange(0, tail);
+            }
+
             public void Insert(ActivityBase activity)
             {
                 activityList.Insert(0, activity);

@@ -50,6 +50,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             gameMain.PushActivity((gameMain) =>
             {
                 gameMain.gameMap.showMoveRange(creature, moveRange);
+                gameMain.gameCanvas.ShowCreatureBar(creature);
             });
 
         }
@@ -58,6 +59,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         {
             // Clear move range on UI
             gameMain.gameMap.clearAllIndicators();
+            gameMain.gameCanvas.HideCreatureBar();
         }
 
         public override IActionState onSelectedPosition(FDPosition position)
@@ -77,7 +79,8 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             else
             {
                 // Outside the move range: ignored. Leaving the state is the cancel key's
-                // job, so a stray click on the map has no effect at all.
+                // job, so a stray click on the map only puts the status box away.
+                gameMain.gameCanvas.HideCreatureBar();
                 return this;
             }
         }

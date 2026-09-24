@@ -125,6 +125,25 @@ namespace WindingTale.MapObjects.GameMap
             }
         }
 
+        /// <summary>
+        /// Every obstacle whose footprint covers the given tile (a tree, or the pieces
+        /// of a building that reach it), empty when there is none. Ground covers are
+        /// included: the lava under a tile is what stands on it.
+        /// </summary>
+        public List<ObstacleInstance> GetObstaclesAt(FDPosition position)
+        {
+            List<ObstacleInstance> found = new List<ObstacleInstance>();
+            foreach (ObstacleInstance instance in instances)
+            {
+                if (instance != null && instance.Covers(position))
+                {
+                    found.Add(instance);
+                }
+            }
+
+            return found;
+        }
+
         private static bool ShouldFade(ObstacleInstance instance, List<FDCreature> creatures, FDPosition[] uiTiles)
         {
             if (creatures != null)
@@ -166,6 +185,9 @@ namespace WindingTale.MapObjects.GameMap
             SetMapClipBounds(field);
             Shader clipShader = Shader.Find("Custom/MapClip");
 
+            // The pieces of each multi-piece building (ObstacleDefinition.Group).
+            Dictionary<string, List<GameObject>> groups = new Dictionary<string, List<GameObject>>();
+
             foreach (ObstacleDefinition obstacle in field.Obstacles)
             {
                 if (obstacle == null || string.IsNullOrEmpty(obstacle.DefinitionKey) || obstacle.Position == null)
@@ -190,15 +212,15 @@ namespace WindingTale.MapObjects.GameMap
                 obj.transform.SetParent(this.transform);
                 obj.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(pos), Quaternion.Euler(90, 0, 0));
 
-                // Every obstacle reads slightly oversized against the tiles, so all of
-                // them are shrunk uniformly by ObstacleScale. On top of that, house/hut
-                // buildings are too tall and get their height halved as well. The model
-                // is Z-up in its own local space (the upright rotation comes from the
-                // parent Euler(90)), so the vertical axis is local Z. The anchor math
-                // below reads the scaled world bounds, so it needs no adjustment.
-                float heightScale = GetHeightScale(obstacle.DefinitionKey);
+                // Every obstacle is fitted to ObstacleFill of its tile footprint across
+                // and along the map, and scaled by ObstacleHeight upward. On top of
+                // that, house/hut buildings are too tall and get their height halved as
+                // well. The model is Z-up in its own local space (the upright rotation
+                // comes from the parent Euler(90)), so the vertical axis is local Z. The
+                // anchor math below reads the scaled world bounds, so it needs no
+                // adjustment.
                 float scale = GetObstacleScale(obstacle.DefinitionKey);
-                obj.transform.localScale = new Vector3(scale, scale, scale * heightScale);
+                obj.transform.localScale = new Vector3(scale, scale, GetObstacleHeightScale(obstacle.DefinitionKey));
 
                 Transform inner = obj.transform.Find("default");
                 if (inner != null)
@@ -217,10 +239,10 @@ namespace WindingTale.MapObjects.GameMap
                 ApplyClipShader(obj, clipShader);
 
                 // Which tiles this obstacle covers, from the model's own world bounds:
-                // one tile is 2 world units (MapCoordinate.ConvertPosToVec3), map X runs
+                // one tile of the model is ModelUnitsPerTile before scaling, map X runs
                 // along world -X and map Y along world +Z, so the tile extents are just
-                // the bounding-box size over the tile size. The bounds are already
-                // shrunk by ObstacleScale, so divide it back out -- the obstacle still
+                // the bounding-box size over the scaled tile size. The bounds are
+                // already shrunk by the scale, so divide it back out -- the obstacle still
                 // occupies the tiles the chapter authored it on, it just renders a
                 // little smaller inside them. Needed both to place the model (below)
                 // and so the fade can tell what stands on it.
@@ -230,7 +252,7 @@ namespace WindingTale.MapObjects.GameMap
 
                 if (TryGetWorldBounds(obj, out Bounds bounds))
                 {
-                    float tileSize = WorldUnitsPerTile * scale;
+                    float tileSize = ModelUnitsPerTile * scale;
                     tileWidth = Mathf.Max(1, Mathf.RoundToInt(bounds.size.x / tileSize));
                     tileHeight = Mathf.Max(1, Mathf.RoundToInt(bounds.size.z / tileSize));
 
@@ -273,6 +295,16 @@ namespace WindingTale.MapObjects.GameMap
                 instance.IsGroundCover = IsGroundCover(obstacle.DefinitionKey);
                 instances.Add(instance);
 
+                if (!string.IsNullOrEmpty(obstacle.Group))
+                {
+                    if (!groups.TryGetValue(obstacle.Group, out List<GameObject> pieces))
+                    {
+                        pieces = new List<GameObject>();
+                        groups[obstacle.Group] = pieces;
+                    }
+                    pieces.Add(obj);
+                }
+
                 // Only now, with the bounds read off every frame, settle on the first one.
                 if (animation != null)
                 {
@@ -286,6 +318,53 @@ namespace WindingTale.MapObjects.GameMap
                 {
                     obj.AddComponent<ObstacleGlow>().Init(glow, glowBounds);
                 }
+            }
+
+            foreach (List<GameObject> pieces in groups.Values)
+            {
+                JoinPieces(pieces);
+            }
+        }
+
+        /// <summary>
+        /// Moves the pieces of one building so that it is shrunk to ObstacleFill as a
+        /// whole. Each piece was shrunk about its own centre, which pulls every seam
+        /// apart; shrinking about the building's centre instead differs from that by
+        /// (1 - ObstacleFill) x (building centre - piece centre), and that is the move.
+        /// </summary>
+        private static void JoinPieces(List<GameObject> pieces)
+        {
+            if (pieces.Count < 2)
+            {
+                return;
+            }
+
+            List<Bounds> fitted = new List<Bounds>();
+            Bounds building = new Bounds();
+            foreach (GameObject piece in pieces)
+            {
+                TryGetWorldBounds(piece, out Bounds b);
+                fitted.Add(b);
+
+                // The piece at full footprint size, the building being their union.
+                Vector3 size = b.size;
+                size.x /= ObstacleFill;
+                size.z /= ObstacleFill;
+                Bounds full = new Bounds(b.center, size);
+                if (fitted.Count == 1)
+                {
+                    building = full;
+                }
+                else
+                {
+                    building.Encapsulate(full);
+                }
+            }
+
+            for (int i = 0; i < pieces.Count; i++)
+            {
+                Vector3 shift = (1f - ObstacleFill) * (building.center - fitted[i].center);
+                pieces[i].transform.position += new Vector3(shift.x, 0f, shift.z);
             }
         }
 
@@ -484,14 +563,27 @@ namespace WindingTale.MapObjects.GameMap
         // One map tile spans 2 world units; see MapCoordinate.ConvertPosToVec3.
         private const float WorldUnitsPerTile = 2f;
 
+        // One map tile in an imported obstacle model: the models are authored at 24
+        // voxels a tile (Tools/MapPipeline/voxlib.TILE) and exported at 0.1 units a
+        // voxel, so a model is 1.2x the size of the tiles it stands on until scaled.
+        private const float ModelUnitsPerTile = 2.4f;
+
         /// <summary>
-        /// Uniform shrink applied to every obstacle model as it is placed. The models
-        /// are authored to fill their tile footprint exactly, which leaves them looking
-        /// slightly oversized next to the units and the terrain; a little air around
-        /// each one reads better. This is presentation only -- the tiles an obstacle
-        /// occupies are unchanged (see the footprint math in buildObstacles).
+        /// How much of its tile footprint an obstacle fills, across and along the map.
+        /// The models are authored to fill their footprint exactly, which leaves them
+        /// looking oversized next to the units and crowding the creatures standing on
+        /// the tiles beside them; a little air around each one reads better. This is
+        /// presentation only -- the tiles an obstacle occupies are unchanged (see the
+        /// footprint math in buildObstacles).
         /// </summary>
-        private const float ObstacleScale = 0.9f;
+        private const float ObstacleFill = 0.92f;
+
+        /// <summary>
+        /// Vertical scale of every obstacle model, relative to the imported model --
+        /// on top of GetHeightScale. Kept apart from ObstacleFill so that shrinking an
+        /// obstacle's footprint does not also lower it.
+        /// </summary>
+        private const float ObstacleHeight = 0.9f;
 
         /// <summary>
         /// Publishes the map's world-space rectangle to the "Custom/MapClip" shader as
@@ -571,7 +663,7 @@ namespace WindingTale.MapObjects.GameMap
         /// <summary>
         /// Whether the obstacle is a ground cover: a flat sheet that lies on its tiles
         /// rather than standing on them -- chapter 25's lava. A cover keeps the full
-        /// tile size instead of the ObstacleScale shrink (its edges must meet the
+        /// tile size instead of the ObstacleFill shrink (its edges must meet the
         /// neighbouring covers), is seated on the tile's top surface instead of at
         /// y = 0, is never faded, and glows without a light (GetGlow).
         /// </summary>
@@ -580,9 +672,18 @@ namespace WindingTale.MapObjects.GameMap
             return definitionKey != null && definitionKey.StartsWith(LavaKeyPrefix);
         }
 
+        /// <summary>
+        /// Horizontal scale of the imported model: ObstacleFill of the footprint. A
+        /// ground cover is left as imported, the same size as the shape tiles under it.
+        /// </summary>
         private static float GetObstacleScale(string definitionKey)
         {
-            return IsGroundCover(definitionKey) ? 1f : ObstacleScale;
+            return IsGroundCover(definitionKey) ? 1f : ObstacleFill * WorldUnitsPerTile / ModelUnitsPerTile;
+        }
+
+        private static float GetObstacleHeightScale(string definitionKey)
+        {
+            return IsGroundCover(definitionKey) ? 1f : ObstacleHeight * GetHeightScale(definitionKey);
         }
 
         /// <summary>

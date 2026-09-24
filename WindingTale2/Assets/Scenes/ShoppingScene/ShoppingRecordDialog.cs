@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using WindingTale.Core.Files;
 
@@ -137,6 +138,8 @@ public class ShoppingRecordDialog : MonoBehaviour
             return;
         }
 
+        ReleaseUiSelection();
+
         if (firstFrame)
         {
             // Swallow the frame Init ran on; act on the next one.
@@ -253,17 +256,49 @@ public class ShoppingRecordDialog : MonoBehaviour
     }
 
     /// <summary>
-    /// The chapter's own name, the "初试身手" half of "第X关：初试身手". Kept here as a small
-    /// table for now -- the only place a chapter's name is needed -- to be lifted into the
-    /// localization tables (a "Chapter-XX" key) once every chapter has one written.
+    /// The chapter's own name, the "孤岛" half of "第X关：孤岛". Taken from the original
+    /// game's "Title-NN" strings (FlameDragon Resources/Strings/Maps/Chapter-NN.strings,
+    /// e.g. "第一章  孤岛") with the "第N章" prefix dropped, since the row already says
+    /// 第X关. Kept here as a small table -- the only place a chapter's name is needed.
     /// </summary>
+    private static readonly string[] ChapterNames =
+    {
+        "",                 // 0: no chapter
+        "孤岛",
+        "罗德镇",
+        "往塞拉村途中",
+        "塞拉村前",
+        "塞拉村",
+        "普里兹港",
+        "往王城的途中",
+        "王城前的战斗",
+        "骑士的抉择",
+        "洞窟中的激战",
+        "幻之森林",
+        "北山道",
+        "哈斯米尔之战",
+        "平原的会战",
+        "拉卡湖的激战",
+        "冰原之战",
+        "血与冰之刃",
+        "遥远的彼岸",
+        "黑暗中的狙击",
+        "死亡般的沉寂",
+        "亚述森林",
+        "远古的呼唤",
+        "向天空之旅",
+        "在天空的彼方",
+        "火焰的审判",
+        "未知的回廊",
+        "命运的交会点",
+        "探索者",
+        "无边的黑暗之中",
+        "传说的终章",
+    };
+
     private static string GetChapterName(int chapterId)
     {
-        switch (chapterId)
-        {
-            case 1: return "初试身手";
-            default: return "";
-        }
+        return chapterId >= 0 && chapterId < ChapterNames.Length ? ChapterNames[chapterId] : "";
     }
 
     private void Confirm()
@@ -319,8 +354,30 @@ public class ShoppingRecordDialog : MonoBehaviour
             return;
         }
 
+        // The dialog steers by its own Up / Down handling. Left on Automatic, the EventSystem
+        // would also walk its UI selection to these arrows (or the title's buttons) on the
+        // same key press, and a following Space / Enter would submit that button as well as
+        // confirm the highlighted slot -- turning the page under the confirm.
+        Navigation navigation = button.navigation;
+        navigation.mode = Navigation.Mode.None;
+        button.navigation = navigation;
+
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => TurnPage(dir));
+    }
+
+    /// <summary>
+    /// Keeps the EventSystem from holding a selected button. A mouse click on an arrow (or
+    /// on the title's Load) leaves it selected, and Space / Enter would then submit it in
+    /// addition to this dialog's own Confirm.
+    /// </summary>
+    private static void ReleaseUiSelection()
+    {
+        EventSystem eventSystem = EventSystem.current;
+        if (eventSystem != null && eventSystem.currentSelectedGameObject != null)
+        {
+            eventSystem.SetSelectedGameObject(null);
+        }
     }
 
     /// <summary>
@@ -363,11 +420,37 @@ public class ShoppingRecordDialog : MonoBehaviour
         indicatorImage.color = color;
     }
 
+    // A dynamic font asset over the Chinese source font, built on first use and shared by
+    // every picker opened afterwards. See GetRecordFont.
+    private static TMP_FontAsset recordFont = null;
+
     /// <summary>
-    /// Drops a line onto a row, in the Chinese message font. The row prefab ships with
-    /// LiberationSans, which carries no Chinese glyphs, so the whole FZB_Message font asset
-    /// is assigned (which pulls its own material with it) rather than only the material --
-    /// the same fix the field dialog's messages use.
+    /// The font the slot rows are drawn in. The baked FZB_Message atlas only holds the
+    /// glyphs of the fixed shop/field messages -- not 第, 关, 空, most digits, nor any
+    /// chapter name -- so the rows came out as boxes. A dynamic asset over FangZhengBlack
+    /// (the font the chapter atlases are baked from) rasterizes whatever a row asks for.
+    /// Falls back to FZB_Message if the source font cannot be loaded.
+    /// </summary>
+    public static TMP_FontAsset GetRecordFont()
+    {
+        if (recordFont == null)
+        {
+            Font sourceFont = Resources.Load<Font>(@"Fonts/FangZhengBlack");
+            if (sourceFont != null)
+            {
+                recordFont = TMP_FontAsset.CreateFontAsset(
+                    sourceFont, 64, 6, UnityEngine.TextCore.LowLevel.GlyphRenderMode.SDFAA,
+                    1024, 1024, AtlasPopulationMode.Dynamic, enableMultiAtlasSupport: true);
+            }
+        }
+
+        return recordFont != null ? recordFont : Resources.Load<TMP_FontAsset>(@"Fonts/FontAssets/zh/FZB_Message");
+    }
+
+    /// <summary>
+    /// Drops a line onto a row, in the Chinese record font. The row prefab ships with
+    /// LiberationSans, which carries no Chinese glyphs, so the whole font asset is assigned
+    /// (which pulls its own material with it) rather than only the material.
     /// </summary>
     private static void SetLabelText(GameObject labelObject, string text)
     {
@@ -377,10 +460,10 @@ public class ShoppingRecordDialog : MonoBehaviour
             return;
         }
 
-        TMP_FontAsset messageFont = Resources.Load<TMP_FontAsset>(@"Fonts/FontAssets/zh/FZB_Message");
-        if (messageFont != null)
+        TMP_FontAsset font = GetRecordFont();
+        if (font != null)
         {
-            textMesh.font = messageFont;
+            textMesh.font = font;
         }
 
         textMesh.text = text;

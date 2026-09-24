@@ -19,6 +19,9 @@ namespace WindingTale.Core.Algorithms
 
         private static int DEFAULT_CRITICAL_ATTACK_RATE = 5;
 
+        /// <summary>The most experience a single battle or spell can earn.</summary>
+        private static int MAX_EXPERIENCE_GAIN = 99;
+
         #region Public Methods 
 
         /// <summary>
@@ -62,6 +65,8 @@ namespace WindingTale.Core.Algorithms
             }
 
             // Calculate experience and level up
+            result.Experience = Math.Min(result.Experience, MAX_EXPERIENCE_GAIN);
+            result.BackExperience = Math.Min(result.BackExperience, MAX_EXPERIENCE_GAIN);
 
             return result;
         }
@@ -109,6 +114,8 @@ namespace WindingTale.Core.Algorithms
                     result.Experience += CalculateMagicEffectExp(subject, target, magic, (EffectResult)soloResult);
                 }
             }
+
+            result.Experience = Math.Min(result.Experience, MAX_EXPERIENCE_GAIN);
 
             return result;
         }
@@ -222,13 +229,12 @@ namespace WindingTale.Core.Algorithms
             int reduceHp = 0;
             if (isHit)
             {
-                FDPosition pos = subject.Position;
-                ShapeDefinition shape = field.GetShapeAt(pos);
-                int adjustedAp = subject.CalculatedAp * (100 + shape.AdjustedAp) / 100;
+                // Each side is counted on the terrain it stands on itself.
+                ShapeDefinition shape = field.GetShapeAt(subject.Position);
+                int adjustedAp = CreatureFormula.GetTerrainAdjustedAp(subject, shape);
 
-                FDPosition targetPos = target.Position;
-                ShapeDefinition targetShape = field.GetShapeAt(targetPos);
-                int adjustedDp = target.CalculatedDp * (100 + shape.AdjustedDp) / 100;
+                ShapeDefinition targetShape = field.GetShapeAt(target.Position);
+                int adjustedDp = CreatureFormula.GetTerrainAdjustedDp(target, targetShape);
 
                 int attackMax = adjustedAp - adjustedDp;
                 int attackMin = (int)(attackMax * 0.9f);
@@ -399,6 +405,15 @@ namespace WindingTale.Core.Algorithms
 
             // target has weapon and not freezing
             if (!target.CanAttack())
+            {
+                return false;
+            }
+
+            // A ranged weapon (bow etc., scope starting at 2) cannot hit an adjacent
+            // attacker, so its holder never fights back. Ported from the original's
+            // FDCreature canFightBack: [aItem.attackRange min] == 1.
+            AttackItemDefinition attackItem = target.GetAttackItem();
+            if (attackItem == null || attackItem.AttackScope == null || attackItem.AttackScope.Min != 1)
             {
                 return false;
             }

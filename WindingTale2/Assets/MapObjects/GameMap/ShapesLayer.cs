@@ -203,6 +203,22 @@ namespace WindingTale.MapObjects.GameMap
         }
 
         /// <summary>
+        /// The renderer of the model standing on the given tile, or null off the board
+        /// or before the field is built. Read-only access for the tile preview, which
+        /// clones what it draws rather than touching the tile.
+        /// </summary>
+        public MeshRenderer GetShapeRenderer(FDPosition pos)
+        {
+            if (pos == null)
+            {
+                return null;
+            }
+
+            shapeRendererByPos.TryGetValue(TileKey(pos), out MeshRenderer renderer);
+            return renderer;
+        }
+
+        /// <summary>
         /// The height, above the tile origin, of the tile mesh's dominant upward-facing
         /// surface: the level that covers the most ground area when seen from above.
         /// Using the dominant level rather than the mesh top means a tree's crown or a

@@ -93,6 +93,28 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         }
 
         /// <summary>
+        /// Floats a line of text up from over a creature -- the "+30" of a healing spell, the
+        /// name of a buff -- and finishes when the text has faded out. Several of these run
+        /// side by side inside a ParallelActivity when a spell touches more than one creature.
+        /// A creature with no icon on the map (already gone) is skipped without waiting.
+        /// </summary>
+        public static DurationActivity CreatureFloatingTextActivity(FDCreature creature, string text, Color color)
+        {
+            CreatureFloatingText floating = null;
+
+            Action<GameMain> startAction = gameMain =>
+            {
+                Creature creatureObj = gameMain.gameMap.GetCreature(creature);
+                floating = CreatureFloatingText.Spawn(creatureObj, text, color);
+            };
+
+            // The text destroys itself at the end of its float; Unity's null check sees that.
+            Func<GameMain, bool> checkEnd = gameMain => floating == null;
+
+            return new DurationActivity(startAction, checkEnd);
+        }
+
+        /// <summary>
         /// A creature resting in place recovers HP: the HP is applied up front and the
         /// creature flashes white for the length of the flash, after which it greys out
         /// as an actioned creature. Only ever queued when recoveredHp > 0 -- a creature

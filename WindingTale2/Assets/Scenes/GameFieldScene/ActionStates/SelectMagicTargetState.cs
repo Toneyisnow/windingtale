@@ -102,7 +102,10 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 DirectRangeFinder rangeFinder = new DirectRangeFinder(fdMap.Field, position, this.Magic.EffectScope);
                 FDRange magicScope = rangeFinder.CalculateRange();
 
-                List<FDCreature> targets = fdMap.GetCreaturesInRange(magicScope.ToList(), CreatureFaction.Enemy);
+                // Whose side the spell lands on depends on its kind: attack and debuff magic
+                // on the enemy, recovery and buffs on the caster's own side. Asking for
+                // enemies only left every healing spell with "nobody to cast on".
+                List<FDCreature> targets = gameMain.getMagicTargets(this.Creature, this.Magic, magicScope);
                 if (targets == null || targets.Count == 0)
                 {
                     // Cannot spell on that position, do nothing

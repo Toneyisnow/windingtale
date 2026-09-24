@@ -215,7 +215,7 @@ python map_clean.py 04 --obstacles obstacles/obstacles_04_with_trees.json
 第 25 关的岩浆不是抠掉的 footprint，而是"地面覆盖层"：瓦片照画（`Shapes` 里加 `"glow": 0.9`，
 ShapesLayer 只让亮像素自发光，同一块瓦片上的岩石不亮），上面再铺一片 1 格厚、只覆盖该瓦片
 岩浆像素的 obstacle（`lava_25_<tile>`，两帧，跟火柱同一个帧率闪动，自发光、不挂灯）。
-`ObstaclesLayer.IsGroundCover` 认 `lava_` 前缀：不按 0.9 缩小、坐在瓦片顶面而不是 y=0、永不淡出。
+`ObstaclesLayer.IsGroundCover` 认 `lava_` 前缀：不按 ObstacleFill 缩小、坐在瓦片顶面而不是 y=0、永不淡出。
 
 ```bash
 python build_obstacles_25.py                 # fire_pillar_4 + lava_25_4..15,50（各两帧）

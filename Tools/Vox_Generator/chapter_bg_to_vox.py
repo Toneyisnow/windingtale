@@ -875,7 +875,10 @@ def crates(bd, spots):
     on the level the quay would have been at if the basin were not there.
     """
     m = obstacle('wooden_crate_1')
-    lift = m.shape[2]
+    # The model's array is taller than the crate (the top few layers are empty),
+    # so stepping up by the array height leaves every crate above the first
+    # hanging in the air. Step by the crate itself.
+    lift = int(np.nonzero(m.any(axis=(0, 1)))[0].max()) + 1
     for x, y, n in spots:
         z = bd.flatten(x, x + m.shape[0], y, y + m.shape[1], margin=0) + 1
         for i in range(n):

@@ -16,11 +16,11 @@
     "cleaning back to the tiles the art actually covers."
   ],
   "Obstacles": [
-    { "Id": 1, "DefinitionKey": "red_cathedral_1", "Position": { "X": 1, "Y": 1 } },
-    { "Id": 2, "DefinitionKey": "red_cathedral_2", "Position": { "X": 11, "Y": 1 } },
+    { "Id": 1, "DefinitionKey": "red_cathedral_1", "Position": { "X": 1, "Y": 1 }, "Group": "cathedral" },
+    { "Id": 2, "DefinitionKey": "red_cathedral_2", "Position": { "X": 11, "Y": 1 }, "Group": "cathedral" },
 
-    { "Id": 3, "DefinitionKey": "blue_church_1", "Position": { "X": 26, "Y": -1 } },
-    { "Id": 4, "DefinitionKey": "blue_church_2", "Position": { "X": 33, "Y": -1 } },
+    { "Id": 3, "DefinitionKey": "blue_church_1", "Position": { "X": 26, "Y": -1 }, "Group": "church" },
+    { "Id": 4, "DefinitionKey": "blue_church_2", "Position": { "X": 33, "Y": -1 }, "Group": "church" },
 
     { "Id": 5, "DefinitionKey": "red_mansion_1", "Position": { "X": 18, "Y": 13 } },
     { "Id": 6, "DefinitionKey": "blue_hall_1", "Position": { "X": 6, "Y": 12 } },

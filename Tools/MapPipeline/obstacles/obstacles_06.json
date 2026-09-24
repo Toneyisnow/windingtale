@@ -20,7 +20,8 @@
     "the art stacks them that way and the models are left stacked too."
   ],
   "Obstacles": [
-    { "Id": 1, "DefinitionKey": "red_church_1", "Position": { "X": 1, "Y": 17 } },
+    { "Id": 1, "DefinitionKey": "red_church_1", "Position": { "X": 1, "Y": 18 },
+      "Clear": [ { "X": 1, "Y": 17, "Cols": 10, "Rows": 8 } ] },
     { "Id": 2, "DefinitionKey": "red_cathedral_2", "Position": { "X": 14, "Y": 15 },
       "Size": { "Cols": 7, "Rows": 8 } },
 

@@ -164,6 +164,10 @@ namespace WindingTale.Scenes.GameBattleScene
                 ? attackResult.Damages[0].HpBefore : attackResult.Target.Hp;
             updateTargetHp(targetInitialHp);
 
+            // A physical attack never spends MP, so each MP bar just shows current / max.
+            updateMpBar(subjectMpBar, attackResult.Subject);
+            updateMpBar(targetMpBar, attackResult.Target);
+
 
             currentAnimationIndex = 0;
             onAnimationStart();
@@ -316,7 +320,7 @@ namespace WindingTale.Scenes.GameBattleScene
             }
 
             // Re-show the subject bar/tai before this attack round (they were hidden a
-            // frame before the previous round's RemoteAttackFrame).
+            // previous round's RemoteAttackFrame).
             SetSubjectExtrasActive(true);
             subjectExtrasHidden = false;
         }
@@ -371,8 +375,16 @@ namespace WindingTale.Scenes.GameBattleScene
             if (targetBarInfo != null) targetBarInfo.SetHp(current);
         }
 
+        private void updateMpBar(GameObject mpBar, FDCreature creature)
+        {
+            if (mpBar != null)
+            {
+                mpBar.transform.localScale = new Vector3(getBarScale(creature.Mp, creature.MpMax), 1, 1);
+            }
+        }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="maxValue"></param>
@@ -419,8 +431,9 @@ namespace WindingTale.Scenes.GameBattleScene
                 {
                     float frame = state.normalizedTime * subjectFightAnimation.AttackFrameCount;
 
-                    // Hide the subject's bar/tai one frame before the target appears.
-                    if (!subjectExtrasHidden && frame >= subjectFightAnimation.RemoteAttackFrame - 1)
+                    // Hide the subject's bar/tai on the same frame the creature leaves the
+                    // animation, i.e. when the attack reaches RemoteAttackFrame.
+                    if (!subjectExtrasHidden && frame >= subjectFightAnimation.RemoteAttackFrame)
                     {
                         SetSubjectExtrasActive(false);
                         subjectExtrasHidden = true;

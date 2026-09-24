@@ -286,9 +286,12 @@ def main():
             footprints.append((key, x, y, cols, rows, None))
         if erase_only:
             continue
-        clean_list.append(OrderedDict([('Id', int(o.get('Id', i))),
-                                       ('DefinitionKey', key),
-                                       ('Position', OrderedDict([('X', x), ('Y', y)]))]))
+        entry = OrderedDict([('Id', int(o.get('Id', i))),
+                             ('DefinitionKey', key),
+                             ('Position', OrderedDict([('X', x), ('Y', y)]))])
+        if o.get('Group'):
+            entry['Group'] = o['Group']
+        clean_list.append(entry)
 
     cleared, forced, per = covered_tiles(width, height, footprints)
     total = len(cleared)

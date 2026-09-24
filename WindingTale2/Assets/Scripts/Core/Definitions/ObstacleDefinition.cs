@@ -18,6 +18,15 @@ namespace WindingTale.Core.Definitions
 
         [JsonProperty(PropertyName = "Position")]
         public ObstaclePosition Position { get; set; }
+
+        /// <summary>
+        /// Optional. Obstacles sharing a Group are the pieces of one building, cut
+        /// apart only because a .vox is at most 10 tiles wide (chapter 05's cathedral
+        /// and church). ObstaclesLayer shrinks them about the building's centre rather
+        /// than each about its own, so no gap opens at the seam.
+        /// </summary>
+        [JsonProperty(PropertyName = "Group")]
+        public string Group { get; set; }
     }
 
     public class ObstaclePosition
