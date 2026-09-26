@@ -25,7 +25,7 @@ namespace WindingTale.MapObjects.CreatureIcon
         public const float StartHeight = 3.2f;
 
         /// <summary>Text size. TextMeshPro world text is about a tenth of a unit per point.</summary>
-        public const float FontSize = 14f * 0.7f;
+        public const float FontSize = 14f * 0.7f * 0.6f;
 
         // The part of the lifetime it holds full opacity for, before fading over the rest.
         private const float FadeStartFraction = 0.6f;

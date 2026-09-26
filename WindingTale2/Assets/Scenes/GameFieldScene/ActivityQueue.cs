@@ -19,6 +19,8 @@ namespace WindingTale.Scenes.GameFieldScene
 
             public bool IsIdle { get; private set; }
 
+            private const string MapInputBlockReason = "ActivityQueue";
+
             public ActivityQueue(GameMain gameMain)
             {
                 this.gameMain = gameMain;
@@ -88,6 +90,9 @@ namespace WindingTale.Scenes.GameFieldScene
                     if (!IsIdle)
                     {
                         IsIdle = true;
+
+                        // The cutscene / animation batch is over: the map is the player's again.
+                        MapInput.SetBlocked(MapInputBlockReason, false);
                         /// gameInterface.GetGameHandler().NotifyAI();
 
                         // Conversation (or any activity batch) finished: hand the camera
@@ -101,7 +106,11 @@ namespace WindingTale.Scenes.GameFieldScene
                     return;
                 }
 
+                // While anything is queued or playing -- walk-ins, conversations, enemy
+                // moves -- the map ignores the player: no camera or cursor control, only the
+                // dialogs' own confirm / cancel to speed the talking along.
                 IsIdle = false;
+                MapInput.SetBlocked(MapInputBlockReason, true);
                 if (currentActivity == null || currentActivity.HasFinished)
                 {
                     if (currentActivity != null)

@@ -227,6 +227,15 @@ namespace WindingTale.Core.Definitions
             return definition;
         }
 
+        /// <summary>
+        /// Monks and priests (occupations 154 and 155): the ones who look after their own
+        /// side and never charge into the enemy.
+        /// </summary>
+        public bool IsHealer()
+        {
+            return Occupation == 154 || Occupation == 155;
+        }
+
         public bool CanFly()
         {
             if (Occupation == 133 || Occupation == 171)

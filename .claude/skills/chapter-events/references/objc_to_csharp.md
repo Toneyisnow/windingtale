@@ -131,6 +131,84 @@ Two differences to handle:
   the next `round1_N` — runs after the whole `ParallelActivity`, which is what
   the original's join did too.
 
+### The march-in pattern -- how a group appears at the start of a turn
+
+Any creature the script brings on **at the start of a turn** -- a wave of enemies, the
+party's reinforcements, an Npc squad -- comes on by walking, never by popping into its
+place, and it walks the same way every time. The models are chapter 1's Npc squad on turn 6
+(`Chapter1.turn6_Npc`) and chapter 7's chasers behind Kaili (`Chapter7.kailiAppear`): both
+are stacked on one tile and share one route until the last leg.
+
+1. **One group per creature definition id.** Every creature of the same definition (all
+   `50703`, say) is one group. A wave with three definitions is three groups.
+2. **The group appears together on one entry tile** -- every member added to that same
+   `FDPosition`, stacked. Add them inside a queued lambda (`PushActivity((gameMain) => ...)`)
+   so they appear when the group's turn in the sequence comes, not while the queue is being
+   built.
+3. **They share the route and split only at the end.** All members walk the same trunk from
+   the entry tile; each leaves it as late as possible -- typically the trunk's last row or
+   column -- for his own tile. With `FDMovePath.Create(entry, trunkEnd, ownTile)` a member who
+   is already on the trunk uses `Create(entry, ownTile)`. Chapter 1: `(24,15)` to `(19,15)`
+   shared, then `(19,14)` / `(19,16)` / `(20,15)`, and the one at `(18,15)` simply keeps
+   going. Chapter 7: `(27,14)` to row 14, then up to `(25,12)` / `(24,13)` / `(26,13)`.
+4. **The group is one `ParallelActivity`** of `CreatureWalkActivity`s.
+5. **Groups go one after the other, all from the same entry tile.** The next group is added
+   and walks only once the previous one has arrived. Order them so a later group stops short
+   of the rows before it (front rank first, then the ones behind) and never has to walk
+   through creatures already standing.
+6. **Cursor first.** Slide the camera to where the entry / ranks are
+   (`new SlideCursorActivity(x, y)`) before the first group so the player sees them come on.
+
+**Don't hand-write it -- call `ChapterEvents.MarchInGroups`:**
+
+```csharp
+gameMain.PushActivity(new SlideCursorActivity(entry.X, entry.Y + 3));   // camera first
+MarchInGroups(gameMain, CreatureFaction.Enemy, roster, order, entry,
+    aiType: AITypes.AIType_StandBy,        // optional; default = the creature's usual AI
+    laneBlockedRow: 6);                    // optional; see below
+```
+
+`roster` is rows of `(id, definition, x, y, drop item)` -- keep the chapter's roster in
+that layout. `order` lists the definition ids in the order the groups march, furthest
+tiles first. The lane is the entry tile's column; a member walks it down to his own row,
+then along the row to his tile. `laneBlockedRow` covers a row where the lane tile itself is
+wall: members on it (and below) leave the lane one row earlier and step down. Pick an entry
+tile just off the edge the group comes from (a row or column outside the map, or a real gate
+tile) and a lane over walkable ground; the map has to be read, not guessed. Used by
+`Chapter4` (bandits) and `Chapter7` (garrison). A group with no common entry (chapter 4's
+beasts, each from a different edge) cannot use it and gets a short walk each instead.
+
+### The party's entrance -- everybody at once from one point
+
+Our own side's opening entrance (the party, and any friend group arriving together) is the
+same idea without the groups: **everyone starts on one entry tile and they all walk in
+together to their own tiles**. The entry is a tile just off the edge the party comes from
+(the south edge, for a party that starts at the bottom of the map); they share the lane --
+the entry's column -- and leave it at their own row, like a march-in group.
+
+```csharp
+MarchInTogether(gameMain, CreatureFaction.Friend, partyRoster, entry);
+```
+
+`partyRoster` is rows of `(id, definition, x, y, drop item)`; a friend's definition is his
+own id and the drop is `0`. `Chapter7` is the worked example (`PartyRoster` / `PartyEntry`).
+
+**Opening sequence.** When both sides come on in the opening cutscene, do it in this order,
+not all at the top: **cursor to where our side comes on, our side walks in, then the first two
+lines of dialog, then the cursor to the enemy entry and the enemy march-in, then the rest of
+the dialog.** Every entrance -- ours or theirs -- is preceded by a `SlideCursorActivity` to
+where the creatures come on. In `Chapter7.turn1`: `SlideCursorActivity` + `MarchInTogether` ->
+`PushConversationsActivities(.., 1, 1, 2)` -> `SlideCursorActivity` + `MarchInGroups` ->
+`PushConversationsActivities(.., 1, 3, N)`. While any of it plays the map is locked (no camera
+or cursor control, only the dialog's confirm / cancel): `ActivityQueue` sets
+`MapInput.SetBlocked("ActivityQueue", true)` whenever it is non-idle, so nothing has to be
+done per chapter. Take the split point from
+the user for other chapters -- it was "after two lines" in chapter 7.
+
+The original often just `addEnemy`'s the creatures in their final places with no walk
+(chapter 7's garrison did). That is a fidelity gap, not a rule: use this pattern for those
+too whenever they appear at the start of a turn, and say so in the report.
+
 ## Conversations
 
 ```objc

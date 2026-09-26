@@ -84,6 +84,13 @@ Register events in the same order as the original's `loadEvents` — the event i
 is just a counter, but keeping the order keeps the diff readable against the
 `.m`.
 
+Creatures that appear at the start of a turn walk on in groups by definition id from a
+shared entry tile -- see "The march-in pattern" in `references/objc_to_csharp.md`. Use it
+for every such appearance (enemies, reinforcements, Npc squads), also where the original
+just placed them. The party's own opening entrance uses `MarchInTogether` (all from one
+entry tile at once), and the opening runs in the order: our side walks in, two lines of
+dialog, the enemy marches in, the rest of the dialog.
+
 ### 4. Register the chapter
 
 Add to `ChapterLoader.CreateChapter`:

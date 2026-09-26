@@ -46,6 +46,14 @@ namespace WindingTale.Chapters
             { 10, 17, 40 },
         };
 
+        /// <summary>
+        /// Where the party comes on: the tile just off the south edge, in the column of the
+        /// middle of the line-up. They all start on it and walk up the lane to their places
+        /// together, and the cursor follows them from a little way up the lane.
+        /// </summary>
+        private static readonly FDPosition PartyMarchEntry = FDPosition.At(15, 45);
+        private const int PartyMarchCursorLead = 3;
+
         /// <summary>The first friend id that is optional: everyone from here on may be missing.</summary>
         private const int FirstOptionalFriendId = 10;
 
@@ -131,17 +139,10 @@ namespace WindingTale.Chapters
 
         private Action<GameMain> turn1 = (gameMain) =>
         {
-            for (int i = 0; i < PartyEntry.GetLength(0); i++)
-            {
-                int creatureId = PartyEntry[i, 0];
-                if (creatureId >= FirstOptionalFriendId && !PartyCarries(gameMain, creatureId))
-                {
-                    continue;
-                }
-
-                AddCreatureToMap(gameMain, CreatureFaction.Friend, creatureId, creatureId,
-                    FDPosition.At(PartyEntry[i, 1], PartyEntry[i, 2]));
-            }
+            // The party walks in from the south, all together, and only then does the
+            // talking begin. The cursor is already there to watch them come.
+            gameMain.PushActivity(new SlideCursorActivity(PartyMarchEntry.X, PartyMarchEntry.Y - PartyMarchCursorLead));
+            MarchInTogether(gameMain, CreatureFaction.Friend, BuildPartyRoster(gameMain), PartyMarchEntry);
 
             // Rona is a new friend, not a guest: she arrives as one and stays one.
             AddCreatureToMap(gameMain, CreatureFaction.Friend, RonaId, RonaId, RonaEntry);
@@ -200,6 +201,38 @@ namespace WindingTale.Chapters
             // OnGameWin queues itself behind the closing lines, so they play out first.
             gameMain.OnGameWin();
         };
+
+        /// <summary>
+        /// The party's line-up as roster rows of (id, definition, x, y, drop item): a
+        /// friend's definition is his own id, and the optional ones are left out when the
+        /// party record does not carry them.
+        /// </summary>
+        private static int[,] BuildPartyRoster(GameMain gameMain)
+        {
+            List<int> rows = new List<int>();
+            for (int i = 0; i < PartyEntry.GetLength(0); i++)
+            {
+                int creatureId = PartyEntry[i, 0];
+                if (creatureId >= FirstOptionalFriendId && !PartyCarries(gameMain, creatureId))
+                {
+                    continue;
+                }
+
+                rows.Add(creatureId);
+                rows.Add(creatureId);
+                rows.Add(PartyEntry[i, 1]);
+                rows.Add(PartyEntry[i, 2]);
+                rows.Add(0);
+            }
+
+            int[,] roster = new int[rows.Count / 5, 5];
+            for (int i = 0; i < rows.Count; i++)
+            {
+                roster[i / 5, i % 5] = rows[i];
+            }
+
+            return roster;
+        }
 
         /// <summary>
         /// Whether the party that walked in from the village carries this creature. A

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngineInternal;
+using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Events;
@@ -234,6 +235,91 @@ namespace WindingTale.Chapters
             unrevived.Position = null;
 
             deadCreatures.Add(unrevived);
+        }
+
+        /// <summary>
+        /// Brings a roster on at the start of a turn by the march-in pattern (see "The
+        /// march-in pattern" in the chapter-events skill): one group per creature definition
+        /// id, in the given order, every group added stacked on the one <paramref name="entry"/>
+        /// tile and walking together down the shared lane -- the column of the entry -- with
+        /// each member leaving it at his own row and walking along that row to his own tile,
+        /// so a group only splits up at the very end. A group is added only after the
+        /// previous one has arrived.
+        ///
+        /// <paramref name="roster"/> is rows of (id, definition, x, y, drop item), the layout
+        /// the chapters already keep their rosters in. Put the tiles that are furthest from
+        /// the entry first in <paramref name="order"/>, so a later group stops short of the
+        /// rows before it. From <paramref name="laneBlockedRow"/> down the lane tile is
+        /// itself blocked: a creature on such a row leaves the lane one row earlier and
+        /// steps down onto his tile. Queue the camera slide to the entry before calling.
+        /// </summary>
+        public static void MarchInGroups(GameMain gameMain, CreatureFaction faction, int[,] roster, int[] order,
+            FDPosition entry, AITypes? aiType = null, int laneBlockedRow = int.MaxValue)
+        {
+            foreach (int definitionId in order)
+            {
+                MarchInMembers(gameMain, faction, roster, definitionId, entry, aiType, laneBlockedRow);
+            }
+        }
+
+        /// <summary>
+        /// The party's (or any side's) entrance, all at once: everybody in the roster is added
+        /// stacked on the one <paramref name="entry"/> tile and they walk in together, each to
+        /// his own tile, sharing the lane -- the column of the entry -- and leaving it at his
+        /// own row, exactly as a MarchInGroups group does. Same roster layout: rows of
+        /// (id, definition, x, y, drop item). The entry is normally just off the edge the
+        /// side comes from, and the roster's tiles lie between it and the lane's far end.
+        /// </summary>
+        public static void MarchInTogether(GameMain gameMain, CreatureFaction faction, int[,] roster,
+            FDPosition entry, AITypes? aiType = null)
+        {
+            MarchInMembers(gameMain, faction, roster, null, entry, aiType, int.MaxValue);
+        }
+
+        /// <summary>
+        /// Adds the roster's members of one definition (all of them when definitionId is
+        /// null) on the entry tile, then walks them in together: the lane, then their own row.
+        /// </summary>
+        private static void MarchInMembers(GameMain gameMain, CreatureFaction faction, int[,] roster,
+            int? definitionId, FDPosition entry, AITypes? aiType, int laneBlockedRow)
+        {
+            gameMain.PushActivity((gameMain) =>
+            {
+                for (int i = 0; i < roster.GetLength(0); i++)
+                {
+                    if (definitionId == null || roster[i, 1] == definitionId)
+                    {
+                        AddCreatureToMap(gameMain, faction, roster[i, 0], roster[i, 1], entry, roster[i, 4], aiType);
+                    }
+                }
+            });
+
+            List<ActivityBase> marches = new List<ActivityBase>();
+            for (int i = 0; i < roster.GetLength(0); i++)
+            {
+                if (definitionId != null && roster[i, 1] != definitionId)
+                {
+                    continue;
+                }
+
+                FDPosition place = FDPosition.At(roster[i, 2], roster[i, 3]);
+                int laneRow = place.Y >= laneBlockedRow ? place.Y - 1 : place.Y;
+
+                FDMovePath path = FDMovePath.Create(entry);
+                path.Push(FDPosition.At(entry.X, laneRow));
+                if (place.X != entry.X)
+                {
+                    path.Push(FDPosition.At(place.X, laneRow));
+                }
+                if (laneRow != place.Y)
+                {
+                    path.Push(place);
+                }
+
+                marches.Add(ActivityFactory.CreatureWalkActivity(roster[i, 0], path));
+            }
+
+            gameMain.PushActivity(new ParallelActivity(marches.ToArray()));
         }
 
         /// <summary>

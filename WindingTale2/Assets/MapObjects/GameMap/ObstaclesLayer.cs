@@ -647,6 +647,13 @@ namespace WindingTale.MapObjects.GameMap
         /// </summary>
         private static float GetGroundYOffset(string definitionKey)
         {
+            // The trunks of the trees (tree_<colour>, pine_<colour>) read as sunk into
+            // the tile: lift the whole tree a third of a tile.
+            if (definitionKey.StartsWith(TreeKeyPrefix) || definitionKey.StartsWith(PineKeyPrefix))
+            {
+                return TreeLift;
+            }
+
             switch (definitionKey)
             {
                 case "barrel_group_1":
@@ -655,6 +662,12 @@ namespace WindingTale.MapObjects.GameMap
                     return 0f;
             }
         }
+
+        // Keys of the trees (Tools/MapPipeline/build_trees.py) and how far they are
+        // raised off the seat point: a third of a tile.
+        private const string TreeKeyPrefix = "tree_";
+        private const string PineKeyPrefix = "pine_";
+        private const float TreeLift = WorldUnitsPerTile / 3f;
 
         // Keys of the ground covers: "lava_" + chapter + "_" + tile id, one flat
         // one-voxel sheet per lava tile shape (Tools/MapPipeline/build_obstacles_25.py).

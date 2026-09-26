@@ -51,6 +51,12 @@ namespace WindingTale.Scenes.GameBattleScene
         private bool targetHiddenForRemote = false;
         private bool subjectExtrasHidden = false;
 
+        // True once this round's attack animation has actually been started. The previous
+        // round's attack state lingers for a moment after its finish event (FightBody only
+        // returns the animator to idle 0.1s later), and Update must not mistake that stale
+        // state for the new round's swing and reveal the hidden Target at once.
+        private bool attackRoundStarted = false;
+
         private int currentAnimationIndex = 0;
 
         private bool animationFinished = false;
@@ -183,6 +189,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 // Enter remote state for this attack round: hide the Target node now;
                 // Update() reveals it once the animation reaches RemoteAttackFrame. This
                 // re-runs for every attack, so a second attack hides it again.
+                attackRoundStarted = false;
                 if (remoteAttackEnabled)
                 {
                     HideTargetForRemote();
@@ -191,6 +198,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 MonoBehaviourUtils.ExecuteWithDelay(this, ANIMATION_INTERVAL, () =>
                 {
                     subjectAnimator.SetInteger("actionState", 1);
+                    attackRoundStarted = true;
                 });
             }
             else
@@ -423,7 +431,7 @@ namespace WindingTale.Scenes.GameBattleScene
         void Update()
         {
             // Track the subject's attack frame for the remote-attack transitions.
-            if (remoteAttackEnabled && subjectAnimator != null && subjectFightAnimation != null
+            if (remoteAttackEnabled && attackRoundStarted && subjectAnimator != null && subjectFightAnimation != null
                 && (targetHiddenForRemote || !subjectExtrasHidden))
             {
                 AnimatorStateInfo state = subjectAnimator.GetCurrentAnimatorStateInfo(0);

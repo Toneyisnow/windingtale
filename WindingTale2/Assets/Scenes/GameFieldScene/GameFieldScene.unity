@@ -1181,7 +1181,7 @@ MonoBehaviour:
   acceleration: 12
   deceleration: 5
   minHeight: 5
-  maxHeight: 11
+  maxHeight: 14.8
   rotationAngle: 60
   minRotationAngle: 25
   edgeScrollSpeed: 10

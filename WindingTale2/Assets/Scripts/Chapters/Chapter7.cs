@@ -31,19 +31,28 @@ namespace WindingTale.Chapters
     /// </summary>
     public class Chapter7 : ChapterEvents
     {
-        /// <summary>Where the party lines up, in creature id order 1..9.</summary>
-        private static readonly int[,] PartyEntry = new int[,]
+        /// <summary>
+        /// Where the party lines up, as (id, definition, x, y, drop item) in creature id
+        /// order 1..9 -- a friend's definition is his own id.
+        /// </summary>
+        private static readonly int[,] PartyRoster = new int[,]
         {
-            { 1, 11, 33 },
-            { 2, 16, 31 },
-            { 3, 13, 32 },
-            { 4, 14, 30 },
-            { 5, 11, 31 },
-            { 6, 12, 29 },
-            { 7, 10, 30 },
-            { 8,  8, 32 },
-            { 9, 15, 33 },
+            { 1, 1, 11, 33, 0 },
+            { 2, 2, 16, 31, 0 },
+            { 3, 3, 13, 32, 0 },
+            { 4, 4, 14, 30, 0 },
+            { 5, 5, 11, 31, 0 },
+            { 6, 6, 12, 29, 0 },
+            { 7, 7, 10, 30, 0 },
+            { 8, 8,  8, 32, 0 },
+            { 9, 9, 15, 33, 0 },
         };
+
+        /// <summary>
+        /// Where the party comes on: the tile just off the south edge, at the middle of the
+        /// line-up. They all start on it and walk up the lane to their places together.
+        /// </summary>
+        private static readonly FDPosition PartyEntry = FDPosition.At(12, 34);
 
         /// <summary>
         /// The whole garrison, as (id, definition, x, y, drop item), in the order the
@@ -84,6 +93,24 @@ namespace WindingTale.Chapters
 
             { 121, 50706, 14,  3, 317 },
         };
+
+        /// <summary>
+        /// Where every group of the garrison comes on: the tile just off the north edge of
+        /// the map, in the middle of the ranks. (The original had them simply appear in
+        /// their places.) They all use this one tile and walk the lane straight down from
+        /// it -- see ChapterEvents.MarchInGroups.
+        /// </summary>
+        private static readonly FDPosition MarchEntry = FDPosition.At(15, 0);
+
+        /// <summary>
+        /// The order the garrison marches in, one creature definition at a time: the front
+        /// rank first, so that each later group stops short of the rows before it and never
+        /// has to walk through them.
+        /// </summary>
+        private static readonly int[] MarchOrder = new int[] { 50703, 50702, 50701, 50704, 50705, 50706 };
+
+        /// <summary>Where the camera goes to watch the garrison march in.</summary>
+        private static readonly FDPosition MarchCursor = FDPosition.At(15, 4);
 
         /// <summary>The captain, who has the last word when he falls.</summary>
         private const int CaptainId = 121;
@@ -134,22 +161,20 @@ namespace WindingTale.Chapters
 
         private Action<GameMain> turn1 = (gameMain) =>
         {
-            for (int i = 0; i < PartyEntry.GetLength(0); i++)
-            {
-                AddCreatureToMap(gameMain, CreatureFaction.Friend, PartyEntry[i, 0], PartyEntry[i, 0],
-                    FDPosition.At(PartyEntry[i, 1], PartyEntry[i, 2]));
-            }
+            // The party walks in from the south, all together, with the cursor already there.
+            gameMain.PushActivity(new SlideCursorActivity(PartyEntry.X, PartyEntry.Y - 3));
+            MarchInTogether(gameMain, CreatureFaction.Friend, PartyRoster, PartyEntry);
 
-            // Nobody in the garrison moves until its own wave is called.
-            for (int i = 0; i < Garrison.GetLength(0); i++)
-            {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, Garrison[i, 0], Garrison[i, 1],
-                    FDPosition.At(Garrison[i, 2], Garrison[i, 3]), Garrison[i, 4],
-                    AITypes.AIType_StandBy);
-            }
+            // Two lines, then the garrison shows itself.
+            PushConversationsActivities(gameMain, 7, 1, 1, 2);
 
-            // Talking
-            PushConversationsActivities(gameMain, 7, 1, 1, 8);
+            // The garrison marches in from the north edge, one definition at a time. Nobody
+            // in it moves again until its own wave is called.
+            gameMain.PushActivity(new SlideCursorActivity(MarchCursor.X, MarchCursor.Y));
+            MarchInGroups(gameMain, CreatureFaction.Enemy, Garrison, MarchOrder, MarchEntry, AITypes.AIType_StandBy);
+
+            // The rest of the talking
+            PushConversationsActivities(gameMain, 7, 1, 3, 8);
 
             gameMain.PushActivity((gameMain) =>
             {

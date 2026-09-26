@@ -9,6 +9,7 @@ using WindingTale.Chapters;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
+using WindingTale.Core.Definitions.Items;
 using WindingTale.Core.Events;
 using WindingTale.Core.Files;
 using WindingTale.Core.Map;
@@ -661,10 +662,25 @@ namespace WindingTale.Scenes.GameFieldScene
 
             int itemId = creature.Items[itemIndex];
             creature.RemoveItemAt(itemIndex);
+
+            int hpBefore = target.Hp;
+            int mpBefore = target.Mp;
             CreatureFormula.TakeItemEffect(target, itemId);
 
             Creature c = gameMap.GetCreature(creature);
             c.SetActioned(true);
+
+            // What a restorative did, floated over the target the same way a healing
+            // spell's is: the amount really gained, clamped to the maximum.
+            ConsumableItemDefinition consumable = DefinitionStore.Instance.GetItemDefinition(itemId) as ConsumableItemDefinition;
+            if (consumable != null && (consumable.UseType == ItemUseType.Hp || consumable.UseType == ItemUseType.Mp))
+            {
+                RecoverType recoverType = consumable.UseType == ItemUseType.Mp ? RecoverType.Mp : RecoverType.Hp;
+                int gained = recoverType == RecoverType.Mp ? target.Mp - mpBefore : target.Hp - hpBefore;
+                Color textColor;
+                string text = MagicResultText.ForRecover(recoverType, gained, out textColor);
+                this.PushActivity(ActivityFactory.CreatureFloatingTextActivity(target, text, textColor));
+            }
 
             this.PushActivity((gameMain) =>
             {
@@ -885,6 +901,10 @@ namespace WindingTale.Scenes.GameFieldScene
                         if (hero != null && hero.Position != null)
                         {
                             game.gameMap.SlideCursorTo(hero.Position, GameCanvas.DialogPosition.Bottom);
+
+                            // The camera is to stay on 001 when the turn's follow ends, not
+                            // drift back to where it stood before the slide.
+                            game.gameMap.RebaseCameraOnTile(hero.Position);
                         }
                     },
                     game => !game.gameMap.IsSlideBusy

@@ -53,6 +53,26 @@ namespace WindingTale.Chapters
             { 40, 50402, 10, 4,   0 },
         };
 
+        /// <summary>
+        /// The tile every bandit group comes on at: just off the north edge, over the one
+        /// stretch of open ground in the wall of trees. They all use this one tile and walk
+        /// the lane straight down from it -- see ChapterEvents.MarchInGroups.
+        /// </summary>
+        private static readonly FDPosition BanditEntry = FDPosition.At(11, 0);
+
+        /// <summary>
+        /// The order the bandits march in, one creature definition at a time: the front
+        /// rank first, the captain last, so each later group stops short of the rows before
+        /// it and never has to walk through them.
+        /// </summary>
+        private static readonly int[] BanditMarchOrder = new int[] { 50404, 50405, 50401, 50402 };
+
+        /// <summary>
+        /// From this row down the lane tile itself is wall, so a bandit standing on it comes
+        /// off the lane one row earlier and steps down onto his tile from above.
+        /// </summary>
+        private const int BanditLaneBlockedRow = 6;
+
         /// <summary>The definition every one of the four beasts is built from.</summary>
         private const int BeastDefinitionId = 50403;
 
@@ -115,14 +135,13 @@ namespace WindingTale.Chapters
                 AddCreatureToMap(gameMain, CreatureFaction.Friend, creatureId, creatureId, PartyEntry);
             }
 
-            // The bandits are already waiting, drawn up across the north of the clearing.
-            for (int i = 0; i < Bandits.GetLength(0); i++)
-            {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, Bandits[i, 0], Bandits[i, 1],
-                    FDPosition.At(Bandits[i, 2], Bandits[i, 3]), Bandits[i, 4]);
-            }
-
             gameMain.PushActivity(new ParallelActivity(PartyWalkIn()));
+
+            // The bandits draw up across the north of the clearing: they come on at the
+            // north edge and march down to their places, one definition at a time.
+            gameMain.PushActivity(new SlideCursorActivity(BanditEntry.X, BanditEntry.Y + 3));
+            MarchInGroups(gameMain, CreatureFaction.Enemy, Bandits, BanditMarchOrder, BanditEntry,
+                laneBlockedRow: BanditLaneBlockedRow);
 
             // Sol has walked out in front; frame him for the argument that follows.
             gameMain.PushActivity(new SlideCursorActivity(11, 18));
@@ -142,10 +161,19 @@ namespace WindingTale.Chapters
             // The noise has brought a pack out of the forest. Three come in from the edges
             // of the map; the fourth arrives behind the party, so it takes the first free
             // tile it can find rather than landing on top of somebody.
-            AddCreatureToMap(gameMain, CreatureFaction.Enemy, 81, BeastDefinitionId, FDPosition.At(1, 9));
-            AddCreatureToMap(gameMain, CreatureFaction.Enemy, 82, BeastDefinitionId, FDPosition.At(20, 8));
-            AddCreatureToMap(gameMain, CreatureFaction.Enemy, 83, BeastDefinitionId, FDPosition.At(1, 19));
+            // The three from the edges step in out of the trees together, each onto the tile
+            // it will run back to; they cannot share a route, having three different sides
+            // to come from.
+            for (int i = 0; i < 3; i++)
+            {
+                int beastId = Beasts[i, 0];
+                FDPosition edge = FDPosition.At(Beasts[i, 1], Beasts[i, 2]);
+                FDPosition outside = FDPosition.At(edge.X <= 1 ? 0 : edge.X + 1, edge.Y);
+                AddCreatureToMap(gameMain, CreatureFaction.Enemy, beastId, BeastDefinitionId, outside);
+            }
             AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, 84, BeastDefinitionId, PartyEntry);
+
+            gameMain.PushActivity(new ParallelActivity(BeastsStepIn()));
 
             // Talking
             PushConversationsActivities(gameMain, 4, 2, 1, 4);
@@ -182,6 +210,22 @@ namespace WindingTale.Chapters
             // itself behind the conversation above, so the closing lines play out first.
             gameMain.OnGameWin();
         };
+
+        /// <summary>
+        /// The three edge beasts each taking the one step from outside the map onto the tile
+        /// they arrive on (and later run back to).
+        /// </summary>
+        private static ActivityBase[] BeastsStepIn()
+        {
+            ActivityBase[] steps = new ActivityBase[3];
+            for (int i = 0; i < steps.Length; i++)
+            {
+                FDPosition edge = FDPosition.At(Beasts[i, 1], Beasts[i, 2]);
+                FDPosition outside = FDPosition.At(edge.X <= 1 ? 0 : edge.X + 1, edge.Y);
+                steps[i] = ActivityFactory.CreatureWalkActivity(Beasts[i, 0], FDMovePath.Create(outside, edge));
+            }
+            return steps;
+        }
 
         /// <summary>
         /// The party fanning out from the mouth of the path. They all start stacked on the

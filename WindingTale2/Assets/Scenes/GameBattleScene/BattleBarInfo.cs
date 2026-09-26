@@ -43,6 +43,8 @@ namespace WindingTale.Scenes.GameBattleScene
         {
             this.creature = creature;
 
+            EnsureLevelLabel();
+
             if (creatureNameLabel != null)
             {
                 string occupationName = "";
@@ -63,6 +65,33 @@ namespace WindingTale.Scenes.GameBattleScene
 
             SetHp(creature.Hp);
             SetMp(creature.Mp);
+        }
+
+        // Where the LV label sits on the bar: the LevelLabel of
+        // Resources/Others/CreatureBar, right-aligned so it ends at the bar's right edge.
+        private static readonly Vector2 LevelLabelPosition = new Vector2(1.5f, 4.42f);
+
+        /// <summary>
+        /// The two bars authored in the battle scene have no LV label (only the prefab the
+        /// field screen shows has one), so build it beside the name the first time a bar
+        /// is bound: a copy of the name label -- same size, same row -- switched to the
+        /// default Latin font and right-aligned, exactly as the prefab's LevelLabel is.
+        /// </summary>
+        private void EnsureLevelLabel()
+        {
+            if (levelLabel != null || creatureNameLabel == null)
+            {
+                return;
+            }
+
+            GameObject copy = Instantiate(creatureNameLabel.gameObject, creatureNameLabel.transform.parent, false);
+            copy.name = "LevelLabel";
+
+            levelLabel = copy.GetComponent<TextMeshPro>();
+            levelLabel.font = TMP_Settings.defaultFontAsset;
+            levelLabel.horizontalAlignment = HorizontalAlignmentOptions.Right;
+
+            levelLabel.rectTransform.anchoredPosition = LevelLabelPosition;
         }
 
         /// <summary>

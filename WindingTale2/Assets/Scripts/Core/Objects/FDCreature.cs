@@ -43,7 +43,24 @@ namespace WindingTale.Core.Objects
         /// through the battle (the sleeping guards that wake up on a trigger), and because
         /// a StandBy creature that gets hit turns aggressive -- see WakeUpByAttack.
         /// </summary>
-        public AITypes AIType { get; set; }
+        /// <remarks>
+        /// A monk or priest is never Aggressive: whatever a chapter script or a wake-up
+        /// asks for, it stays Defensive and keeps to its own side instead of charging.
+        /// </remarks>
+        public AITypes AIType
+        {
+            get
+            {
+                if (aiType == AITypes.AIType_Aggressive && Definition != null && Definition.IsHealer())
+                {
+                    return AITypes.AIType_Defensive;
+                }
+                return aiType;
+            }
+            set { aiType = value; }
+        }
+
+        private AITypes aiType;
 
         /// <summary>
         /// Where an Escape (or Treasure) AI is heading for. Null for every other AI type.
