@@ -93,7 +93,7 @@ public class MainCamera : MonoBehaviour
 
         cameraUpTiles = keepCursorLow ? FollowTopCameraUpTiles : 0f;
 
-        float yaw = transform.rotation.eulerAngles.y;
+        float yaw = GetYaw();
         slideTargetRotation = Quaternion.Euler(FollowPitchAngle, yaw, 0f);
         slideTargetPosition = FramePositionFor(groundTarget, slideTargetRotation);
 
@@ -163,6 +163,32 @@ public class MainCamera : MonoBehaviour
         isReturning = true;
     }
 
+    /// <summary>
+    /// Makes the framing the follow will hand the camera back to one that looks at the
+    /// given ground point, at the angle and height it was already saved with. Without
+    /// this the follow returns to wherever the camera stood before it took over, which
+    /// after the turn-start slide to hero 001 is somewhere else entirely: the camera
+    /// reaches 001 and then drifts on to the old spot. No-op while not following.
+    /// </summary>
+    public void RebaseSavedFraming(Vector3 groundFocus)
+    {
+        if (!followActive)
+        {
+            return;
+        }
+
+        Vector3 forward = savedRotation * Vector3.forward;
+        if (forward.y > -0.01f)
+        {
+            return; // looking level or up: no ground point to aim at
+        }
+
+        // The camera keeps its saved height and angle; only the spot on the ground the
+        // view is centred on moves.
+        float distance = -savedPosition.y / forward.y;
+        savedPosition = groundFocus - forward * distance;
+    }
+
     private void UpdateReturn()
     {
         returnElapsed += Time.deltaTime;
@@ -208,15 +234,31 @@ public class MainCamera : MonoBehaviour
     private float zoomToTopStartHeight = 0f;
     private float zoomToTopElapsed = 0f;
 
+    // The menu also squares the view up with the map: the left/right orbit (the A/D and
+    // right-drag rotation) is turned back to the heading the game starts at, about the
+    // point at the screen centre so the board does not slide away. The pitch is left to
+    // the height framing above.
+    private const float MapFacingYaw = 180f;        // the heading Start gives the camera
+    private bool yawAlignActive = false;
+    private float yawAlignDelta = 0f;               // total signed turn needed, degrees
+    private float yawAlignApplied = 0f;             // how much of it has been turned so far
+    private float yawAlignElapsed = 0f;
+
     /// <summary>
-    /// Eases the camera up to its highest, most top-down framing. Any manual zoom hands
-    /// control straight back to the player.
+    /// Eases the camera up to its highest, most top-down framing, and turns its heading
+    /// back to face the map square on. Any manual zoom hands the height back to the
+    /// player, and any manual rotation hands the heading back.
     /// </summary>
     public void ZoomToTop()
     {
         zoomToTopStartHeight = transform.position.y;
         zoomToTopElapsed = 0f;
         zoomToTopActive = true;
+
+        yawAlignDelta = Mathf.DeltaAngle(GetYaw(), MapFacingYaw);
+        yawAlignApplied = 0f;
+        yawAlignElapsed = 0f;
+        yawAlignActive = Mathf.Abs(yawAlignDelta) > 0.01f;
 
         // The conversation follow drives the transform itself and returns out of Update
         // before the zoom runs, so it has to let go or the camera would never rise.
@@ -240,6 +282,24 @@ public class MainCamera : MonoBehaviour
         }
 
         return transform.position.y - target;
+    }
+
+    // One frame of the heading turn: orbits the camera about the ground point at the screen
+    // centre, easing over the same time as the height framing.
+    private void UpdateYawAlign()
+    {
+        yawAlignElapsed += Time.deltaTime;
+
+        float t = Mathf.Clamp01(yawAlignElapsed / ZoomToTopDuration);
+        float applied = yawAlignDelta * Mathf.SmoothStep(0f, 1f, t);
+
+        transform.RotateAround(GetKeyboardOrbitPivot(), Vector3.up, applied - yawAlignApplied);
+        yawAlignApplied = applied;
+
+        if (t >= 1f)
+        {
+            yawAlignActive = false;
+        }
     }
 
     /// <summary>
@@ -272,7 +332,7 @@ public class MainCamera : MonoBehaviour
         float pushX = MarginPush(screen.x, Screen.width);
         float pushY = MarginPush(screen.y, Screen.height);
 
-        Vector3 groundForward = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
+        Vector3 groundForward = GetGroundForward();
         Vector3 direction = transform.right * pushX + groundForward * pushY;
 
         if (direction.sqrMagnitude < 0.0001f)
@@ -348,13 +408,16 @@ public class MainCamera : MonoBehaviour
     void Start()
     {
         // ���ó�ʼ�Ƕ�
-        transform.rotation = Quaternion.Euler(rotationAngle, 180, 0);
-
         cam = GetComponent<Camera>();
         if (cam == null)
         {
             cam = Camera.main;
         }
+
+        // Start out at the default viewing angle, at the height that goes with it.
+        Vector3 position = transform.position;
+        transform.position = new Vector3(position.x, GetHeightForPitch(DefaultPitch), position.z);
+        transform.rotation = Quaternion.Euler(DefaultPitch, 180, 0);
     }
 
     void Update()
@@ -416,11 +479,11 @@ public class MainCamera : MonoBehaviour
         // Forward / back on I/K, along the ground plane.
         if (Input.GetKey(KeyCode.I))
         {
-            targetVelocity += new Vector3(transform.forward.x, 0, transform.forward.z) * moveSpeed * (float)1.5;
+            targetVelocity += GetGroundForward() * moveSpeed * (float)1.5;
         }
         if (Input.GetKey(KeyCode.K))
         {
-            targetVelocity -= new Vector3(transform.forward.x, 0, transform.forward.z) * moveSpeed * (float)1.5;
+            targetVelocity -= GetGroundForward() * moveSpeed * (float)1.5;
         }
 
 
@@ -475,6 +538,17 @@ public class MainCamera : MonoBehaviour
         {
             Vector3 orbitPivot = GetKeyboardOrbitPivot();
             transform.RotateAround(orbitPivot, Vector3.up, keyRotate * keyboardRotateSpeed * Time.deltaTime);
+            yawAlignActive = false; // the player is steering the heading now
+        }
+
+        if (isRotating && Mathf.Abs(Input.GetAxis("Mouse X")) > Mathf.Epsilon)
+        {
+            yawAlignActive = false;
+        }
+
+        if (yawAlignActive)
+        {
+            UpdateYawAlign();
         }
 
         // ���㾵ͷ���� -- mouse wheel, plus W/S as an equivalent zoom in / out.
@@ -520,13 +594,103 @@ public class MainCamera : MonoBehaviour
         transform.position = new Vector3(transform.position.x, newHeight, transform.position.z);
 
         // �����½Ƕ�
-        float newAngle = Mathf.Lerp(minRotationAngle, rotationAngle, Mathf.InverseLerp(minHeight, maxHeight, newHeight));
-        transform.rotation = Quaternion.Euler(newAngle, transform.rotation.eulerAngles.y, 0);
+        float newAngle = GetPitchForHeight(newHeight);
+        transform.rotation = Quaternion.Euler(newAngle, GetYaw(), 0);
 
         if (hasZoomAnchor)
         {
             PinGroundPointToScreenCenter(zoomAnchor);
         }
+    }
+
+    // ---- Height -> pitch ----
+    // From WideViewMinPitch to TailStartPitch, the pitch is chosen so the screen keeps
+    // showing about 13 tiles across (on 16:9): a camera that tilts up without backing off
+    // would sit closer and closer to the ground in front of it. Below that the camera is
+    // free to close in, the way zooming in is meant to; above it the last stretch to
+    // straight down is spread evenly over the remaining height (up to maxHeight), so the
+    // view turns over slowly instead of in a rush.
+    private const float DefaultPitch = 53f;         // the angle the game starts at
+    private const float WideViewDepth = 12.67f;     // camera-space distance at which 13 tiles span a 16:9 screen (60 deg vertical FOV)
+    private const float WideViewRefY = 0.2f;        // where that width is measured: this share of half the screen height below centre
+    private const float WideViewMinPitch = 45f;
+    private float TailStartPitch { get { return Mathf.Min(63f, rotationAngle); } }   // never past the top angle, or the tail would tilt back down
+
+    /// <summary>
+    /// The pitch for a camera height. Three stretches, meeting without a kink:
+    /// zoomed in (minRotationAngle up to WideViewMinPitch, linear in height); the wide
+    /// stretch, where height and pitch keep the width constant (the ground point a fifth
+    /// of the way down the screen stays WideViewDepth away, measured square to the
+    /// screen, i.e. h = K sin(pitch + a)); and the tail, linear in height up to
+    /// rotationAngle at maxHeight.
+    /// </summary>
+    private float GetPitchForHeight(float height)
+    {
+        GetWideViewParameters(out float k, out float a, out float wideStartHeight, out float tailStartHeight);
+
+        if (height <= wideStartHeight)
+        {
+            return Mathf.Lerp(minRotationAngle, WideViewMinPitch, Mathf.InverseLerp(minHeight, wideStartHeight, height));
+        }
+        if (height < tailStartHeight)
+        {
+            return (Mathf.Asin(height / k) - a) * Mathf.Rad2Deg;
+        }
+        return Mathf.Lerp(TailStartPitch, rotationAngle, Mathf.InverseLerp(tailStartHeight, maxHeight, height));
+    }
+
+    /// <summary>The camera height at which GetPitchForHeight gives this pitch.</summary>
+    private float GetHeightForPitch(float pitch)
+    {
+        GetWideViewParameters(out float k, out float a, out float wideStartHeight, out float tailStartHeight);
+
+        if (pitch <= WideViewMinPitch)
+        {
+            return Mathf.Lerp(minHeight, wideStartHeight, Mathf.InverseLerp(minRotationAngle, WideViewMinPitch, pitch));
+        }
+        if (pitch <= TailStartPitch)
+        {
+            return k * Mathf.Sin(pitch * Mathf.Deg2Rad + a);
+        }
+        return Mathf.Lerp(tailStartHeight, maxHeight, Mathf.InverseLerp(TailStartPitch, rotationAngle, pitch));
+    }
+
+    // k: the height a pitch of 90 - a would sit at (h = k sin(pitch + a)); a: how far below
+    // the view axis the width reference sits; and the heights where the wide stretch and
+    // the tail begin.
+    private void GetWideViewParameters(out float k, out float a, out float wideStartHeight, out float tailStartHeight)
+    {
+        float fov = cam != null ? cam.fieldOfView : 60f;
+        a = Mathf.Atan(WideViewRefY * Mathf.Tan(fov * 0.5f * Mathf.Deg2Rad));
+        k = WideViewDepth / Mathf.Cos(a);
+        wideStartHeight = k * Mathf.Sin(WideViewMinPitch * Mathf.Deg2Rad + a);
+        tailStartHeight = k * Mathf.Sin(TailStartPitch * Mathf.Deg2Rad + a);
+    }
+
+    /// <summary>
+    /// The direction the camera faces along the ground (the way "up the screen" points on
+    /// the map). Looking straight down (the top zoom is 90 degrees) the forward vector has
+    /// no ground part left, but the camera's up vector then points exactly that way.
+    /// </summary>
+    private Vector3 GetGroundForward()
+    {
+        Vector3 flat = new Vector3(transform.forward.x, 0f, transform.forward.z);
+        if (flat.sqrMagnitude < 1e-4f)
+        {
+            flat = new Vector3(transform.up.x, 0f, transform.up.z);
+        }
+        return flat.normalized;
+    }
+
+    /// <summary>
+    /// The camera's heading in degrees. eulerAngles.y is unreliable at 90 degrees of
+    /// pitch (gimbal lock spills the heading into the roll), so it is read off the
+    /// ground direction instead.
+    /// </summary>
+    private float GetYaw()
+    {
+        Vector3 groundForward = GetGroundForward();
+        return Mathf.Atan2(groundForward.x, groundForward.z) * Mathf.Rad2Deg;
     }
 
     /// <summary>
@@ -566,12 +730,7 @@ public class MainCamera : MonoBehaviour
     // edge case.
     private Vector3 GetKeyboardOrbitPivot()
     {
-        Vector3 groundForward = new Vector3(transform.forward.x, 0f, transform.forward.z);
-        if (groundForward.sqrMagnitude < 1e-4f)
-        {
-            groundForward = Vector3.forward; // camera looking straight down/up: pick any heading
-        }
-        groundForward.Normalize();
+        Vector3 groundForward = GetGroundForward();
 
         Vector3 flatCamPos = new Vector3(transform.position.x, 0f, transform.position.z);
 

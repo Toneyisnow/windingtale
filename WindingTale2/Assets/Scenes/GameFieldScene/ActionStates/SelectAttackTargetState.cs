@@ -27,6 +27,9 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             get; private set;
         }
 
+        // Set once the attack is ordered, so the target stops flashing before it is hit.
+        private bool attackOrdered = false;
+
         public SelectAttackTargetState(GameMain gameMain, FDCreature creature) : base(gameMain)
         {
             this.Creature = creature;
@@ -66,6 +69,33 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         {
             // Clear move range on UI
             gameMain.gameMap.clearAllIndicators();
+            gameMain.gameMap.SetBlinkTargets(null);
+        }
+
+        /// <summary>
+        /// The enemy under the cursor, when it is inside the attack range -- the one the
+        /// next confirm would hit.
+        /// </summary>
+        public override List<FDCreature> GetBlinkTargets()
+        {
+            if (attackOrdered || this.AttackRange == null)
+            {
+                return null;
+            }
+
+            FDPosition cursor = gameMain.gameMap.GetCursorPosition();
+            if (cursor == null || !this.AttackRange.Contains(cursor))
+            {
+                return null;
+            }
+
+            FDCreature target = fdMap.GetCreatureAt(cursor);
+            if (target == null || target.Faction != CreatureFaction.Enemy)
+            {
+                return null;
+            }
+
+            return new List<FDCreature> { target };
         }
 
         public override IActionState onSelectedPosition(FDPosition position)
@@ -76,6 +106,8 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 if (target != null && target.Faction == CreatureFaction.Enemy)
                 {
                     // Do the attack
+                    attackOrdered = true;
+                    gameMain.gameMap.SetBlinkTargets(null);
                     this.gameMain.creatureAttackAsync(this.Creature, target);
                     return new IdleState(gameMain);
                 }

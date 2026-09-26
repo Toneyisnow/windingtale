@@ -30,6 +30,14 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         private FDRange magicRange = null;
 
+        // Set once the spell is ordered, so its targets stop flashing before it lands.
+        private bool magicOrdered = false;
+
+        // The blink targets last worked out, and the tile they were for. The cursor rests
+        // on one tile for many frames; the blast only has to be recomputed when it moves.
+        private FDPosition blinkCursor = null;
+        private List<FDCreature> blinkTargets = null;
+
         public SelecteMagicTargetState(GameMain gameMain, FDCreature creature, MagicDefinition magic) : base(gameMain)
         {
             this.Creature = creature;
@@ -87,6 +95,38 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         {
             // Clear move range on UI
             gameMain.gameMap.clearAllIndicators();
+            gameMain.gameMap.SetBlinkTargets(null);
+        }
+
+        // Attack and debuff magic hurts (red); recovery, buffs and transmit help (green).
+        public override Color BlinkTint => IsTargetingEnemy ? Color.red : Color.green;
+
+        /// <summary>
+        /// Everyone the spell would land on if it were cast at the cursor: the valid targets
+        /// (enemy or own side, as the spell demands) inside the blast around that tile. For a
+        /// wide spell that is the whole crowd, not only the creature under the cursor.
+        /// </summary>
+        public override List<FDCreature> GetBlinkTargets()
+        {
+            if (magicOrdered || magicRange == null)
+            {
+                return null;
+            }
+
+            FDPosition cursor = gameMain.gameMap.GetCursorPosition();
+            if (cursor == null || !magicRange.Contains(cursor))
+            {
+                return null;
+            }
+
+            if (blinkCursor == null || !blinkCursor.AreSame(cursor))
+            {
+                DirectRangeFinder rangeFinder = new DirectRangeFinder(fdMap.Field, cursor, this.Magic.EffectScope);
+                blinkTargets = gameMain.getMagicTargets(this.Creature, this.Magic, rangeFinder.CalculateRange());
+                blinkCursor = FDPosition.At(cursor.X, cursor.Y);
+            }
+
+            return blinkTargets;
         }
 
         public override IActionState onSelectedPosition(FDPosition position)
@@ -113,6 +153,8 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 }
                 else
                 {
+                    magicOrdered = true;
+                    gameMain.gameMap.SetBlinkTargets(null);
                     gameMain.creatureMagic(this.Creature, position, this.Magic.MagicId);
                     return new IdleState(gameMain);
                 }

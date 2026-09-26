@@ -181,6 +181,78 @@ namespace WindingTale.MapObjects.CreatureIcon
             }
         }
 
+        // The per-instance materials of a creature that is flashing, kept so the flash can
+        // set their alpha every frame without going back through the renderers.
+        private Material[] blinkMaterials = null;
+
+        /// <summary>
+        /// Readies the creature to flash: switches its materials to alpha blending once, so
+        /// SetBlinkAlpha is then only a colour write. Finish with EndBlink().
+        /// </summary>
+        public void BeginBlink()
+        {
+            if (blinkMaterials != null)
+            {
+                return;
+            }
+
+            List<Material> instances = new List<Material>();
+            foreach (string clip in ClipNames)
+            {
+                MeshRenderer renderer = GetClipRenderer(clip);
+                if (renderer == null)
+                {
+                    continue;
+                }
+
+                Material[] mats = renderer.materials; // per-instance copies
+                foreach (Material m in mats)
+                {
+                    SetMaterialFade(m);
+                    instances.Add(m);
+                }
+                renderer.materials = mats;
+            }
+
+            blinkMaterials = instances.ToArray();
+        }
+
+        /// <summary>
+        /// Sets the flashing creature's opacity (0..1) and the colour its model is tinted
+        /// with (white = no tint). No effect outside BeginBlink / EndBlink.
+        /// </summary>
+        public void SetBlink(float alpha, Color tint)
+        {
+            if (blinkMaterials == null)
+            {
+                return;
+            }
+
+            tint.a = alpha;
+            foreach (Material m in blinkMaterials)
+            {
+                m.color = tint;
+            }
+        }
+
+        /// <summary>Stops the flash and puts the creature back to full opacity.</summary>
+        public void EndBlink()
+        {
+            if (blinkMaterials == null)
+            {
+                return;
+            }
+
+            // Back to the untinted colour first; ResetTransparency only restores the alpha.
+            foreach (Material m in blinkMaterials)
+            {
+                m.color = Color.white;
+            }
+
+            blinkMaterials = null;
+            ResetTransparency();
+        }
+
         /// <summary>
         /// Picks the first idle frame immediately, before any Update runs.
         /// Without this the prefab spawns with all three clips enabled and the

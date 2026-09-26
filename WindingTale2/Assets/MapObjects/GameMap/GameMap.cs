@@ -298,6 +298,20 @@ namespace WindingTale.MapObjects.GameMap
         }
 
         /// <summary>
+        /// Makes the tile the cursor was just slid to the place the camera settles on when
+        /// the follow ends, instead of the spot it was standing at before the slide.
+        /// Call right after SlideCursorTo. See MainCamera.RebaseSavedFraming.
+        /// </summary>
+        public void RebaseCameraOnTile(FDPosition position)
+        {
+            EnsureMainCamera();
+            if (mainCamera != null && position != null)
+            {
+                mainCamera.RebaseSavedFraming(MapCoordinate.ConvertPosToVec3(position));
+            }
+        }
+
+        /// <summary>
         /// Ends the conversation camera follow, smoothly handing control back to
         /// gameplay. Safe to call any time (no-op if the camera isn't following).
         /// </summary>
@@ -502,6 +516,105 @@ namespace WindingTale.MapObjects.GameMap
         }
 
 
+        // A flashing valid target swings between full opacity and this, in 0.6 seconds per
+        // full there-and-back (100% -> 30% -> 100%).
+        private const float BlinkMinAlpha = 0.3f;
+        private const float BlinkPeriod = 0.6f;
+
+        private class BlinkingCreature
+        {
+            public Creature creature;
+            public float startTime;
+        }
+
+        // The creatures flashing right now, by creature id.
+        private readonly Dictionary<int, BlinkingCreature> blinkingCreatures = new Dictionary<int, BlinkingCreature>();
+        private readonly List<int> blinkScratch = new List<int>();
+
+        // The colour the flashing creatures lean towards at their faintest.
+        private Color blinkTint = Color.white;
+
+        /// <summary>
+        /// Makes exactly these creatures flash and everyone else stand still. Called every
+        /// frame with the current answer, so a creature already flashing keeps its phase,
+        /// a new one starts at full opacity, and one that dropped out is restored. Null
+        /// or empty stops all flashing. The creatures shift towards <paramref name="tint"/>
+        /// as they fade (none at full opacity, the whole of it at the faintest point);
+        /// leave it out for no tint.
+        /// </summary>
+        public void SetBlinkTargets(List<FDCreature> targets, Color? tint = null)
+        {
+            blinkTint = tint ?? Color.white;
+
+            if (blinkingCreatures.Count == 0 && (targets == null || targets.Count == 0))
+            {
+                return;
+            }
+
+            blinkScratch.Clear();
+            foreach (KeyValuePair<int, BlinkingCreature> pair in blinkingCreatures)
+            {
+                if (targets == null || !targets.Exists(t => t.Id == pair.Key))
+                {
+                    blinkScratch.Add(pair.Key);
+                }
+            }
+
+            foreach (int id in blinkScratch)
+            {
+                Creature stopped = blinkingCreatures[id].creature;
+                if (stopped != null)
+                {
+                    stopped.EndBlink();
+                }
+                blinkingCreatures.Remove(id);
+            }
+
+            if (targets == null)
+            {
+                return;
+            }
+
+            foreach (FDCreature target in targets)
+            {
+                if (blinkingCreatures.ContainsKey(target.Id))
+                {
+                    continue;
+                }
+
+                Creature component = GetCreature(target);
+                if (component == null)
+                {
+                    continue;
+                }
+
+                component.BeginBlink();
+                blinkingCreatures[target.Id] = new BlinkingCreature { creature = component, startTime = Time.time };
+            }
+        }
+
+        void Update()
+        {
+            if (blinkingCreatures.Count == 0)
+            {
+                return;
+            }
+
+            foreach (BlinkingCreature blinking in blinkingCreatures.Values)
+            {
+                if (blinking.creature == null)
+                {
+                    // Destroyed while flashing; SetBlinkTargets drops it on its next call.
+                    continue;
+                }
+
+                // Cosine, so it opens at full opacity and dips to BlinkMinAlpha at mid-period.
+                float phase = (Time.time - blinking.startTime) / BlinkPeriod;
+                float t = 0.5f + 0.5f * Mathf.Cos(2f * Mathf.PI * phase);
+                blinking.creature.SetBlink(Mathf.Lerp(BlinkMinAlpha, 1f, t), Color.Lerp(blinkTint, Color.white, t));
+            }
+        }
+
         public void ResetCreaturePosition(FDCreature creature, FDPosition position)
         {
             //// creature.Position = position;
@@ -642,14 +755,25 @@ namespace WindingTale.MapObjects.GameMap
         /// </summary>
         public bool IsTileOnRightHalfOfScreen(FDPosition position)
         {
+            return GetTileScreenFraction(position) > 0.5f;
+        }
+
+        /// <summary>
+        /// Where the tile is drawn across the screen, 0 at the left edge and 1 at the
+        /// right (0 when there is no camera or position). A cursor the camera has just
+        /// centred sits right at 0.5, so a panel that flips sides on the halves should
+        /// use this and leave a dead band around the middle.
+        /// </summary>
+        public float GetTileScreenFraction(FDPosition position)
+        {
             Camera camera = Camera.main;
             if (camera == null || position == null)
             {
-                return false;
+                return 0f;
             }
 
             Vector3 screen = camera.WorldToScreenPoint(GetTileWorldCentre(position));
-            return screen.x > Screen.width * 0.5f;
+            return screen.x / Screen.width;
         }
 
         /// <summary>

@@ -59,6 +59,8 @@ namespace WindingTale.Scenes.GameFieldScene
                 return;
             }
 
+            UpdateTargetBlink();
+
             if (!CanAcceptKeyboardInput())
             {
                 heldDirection = null;
@@ -67,6 +69,21 @@ namespace WindingTale.Scenes.GameFieldScene
 
             HandleDirectionKeys();
             HandleConfirmAndCancelKeys();
+        }
+
+        /// <summary>
+        /// Tells the map which creatures the current state wants flashing. Asked every frame
+        /// -- not only on input -- because the cursor also moves by mouse and by its own
+        /// slide, and the flash has to follow it wherever it lands.
+        /// </summary>
+        private void UpdateTargetBlink()
+        {
+            if (gameMain.gameMap == null || gameMain.gameMap.Map == null)
+            {
+                return;
+            }
+
+            gameMain.gameMap.SetBlinkTargets(actionState.GetBlinkTargets(), actionState.BlinkTint);
         }
 
         private bool CanAcceptKeyboardInput()

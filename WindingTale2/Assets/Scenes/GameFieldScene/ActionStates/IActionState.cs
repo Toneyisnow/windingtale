@@ -76,6 +76,20 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             gameMain.gameMap.SlideCursorTo(position, GameCanvas.DialogPosition.Bottom);
         }
 
+        /// <summary>
+        /// The creatures that should be flashing on the map right now. The select-target
+        /// states answer from wherever the cursor is standing (the valid targets it would
+        /// land on); every other state has nothing to flash. Polled once a frame by
+        /// PlayerInterface, so it has to be cheap.
+        /// </summary>
+        public virtual List<FDCreature> GetBlinkTargets()
+        {
+            return null;
+        }
+
+        /// <summary>The colour a flashing target leans to: red where it is about to be hurt, green where helped.</summary>
+        public virtual Color BlinkTint => Color.red;
+
         #region Keyboard input
 
         /// <summary>

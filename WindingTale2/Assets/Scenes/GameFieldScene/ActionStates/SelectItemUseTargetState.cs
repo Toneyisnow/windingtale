@@ -31,6 +31,9 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         private FDRange itemRange = null;
 
+        // Set once the item is used, so the target stops flashing before it takes effect.
+        private bool itemUsed = false;
+
         /// <summary>
         /// 
         /// </summary>
@@ -66,6 +69,36 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         {
             // Clear move range on UI
             gameMain.gameMap.clearAllIndicators();
+            gameMain.gameMap.SetBlinkTargets(null);
+        }
+
+        // Items are only ever used on one's own side.
+        public override Color BlinkTint => Color.green;
+
+        /// <summary>
+        /// The friend / NPC under the cursor, when it is inside the usage range -- the one
+        /// the next confirm would use the item on.
+        /// </summary>
+        public override List<FDCreature> GetBlinkTargets()
+        {
+            if (itemUsed || itemRange == null)
+            {
+                return null;
+            }
+
+            FDPosition cursor = gameMain.gameMap.GetCursorPosition();
+            if (cursor == null || !itemRange.Contains(cursor))
+            {
+                return null;
+            }
+
+            FDCreature target = fdMap.GetCreatureAt(cursor);
+            if (target == null || target.Faction == CreatureFaction.Enemy)
+            {
+                return null;
+            }
+
+            return new List<FDCreature> { target };
         }
 
         public override IActionState onSelectedPosition(FDPosition position)
@@ -85,6 +118,8 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             }
 
             // Do the use item action
+            itemUsed = true;
+            gameMain.gameMap.SetBlinkTargets(null);
             this.gameMain.creatureUseItem(this.Creature, SelectedItemIndex, targetCreature);
             return new IdleState(gameMain);
         }

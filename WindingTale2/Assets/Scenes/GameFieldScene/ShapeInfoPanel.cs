@@ -40,7 +40,18 @@ namespace WindingTale.Scenes.GameFieldScene
         private const float TextWidth = 110f;
         private const float TextLineHeight = 38f;
         private const float TextBottom = 12f;
-        private const float TextFontSize = 32f;
+        private const float TextFontSize = 24f;
+
+        // The drop shadow under the text: a dark copy of it, this many canvas units down and
+        // to the right. A copy rather than the font material's underlay, which the dynamic
+        // record font did not show reliably.
+        private const float TextShadowOffset = 4f;
+        private static readonly Color TextShadowColor = new Color(0f, 0f, 0f, 0.8f);
+
+        // How far past the middle of the screen the cursor has to go before the panel
+        // changes corners. The camera centres on the cursor, which then sits right on the
+        // middle line, and without a dead band the panel would jump between the corners.
+        private const float SideSwitchMargin = 0.05f;
 
         // How often a moving picture (an idling creature, a flickering flame) is
         // taken again, in seconds -- the rate the creatures' idle frames turn at.
@@ -50,8 +61,8 @@ namespace WindingTale.Scenes.GameFieldScene
 
         private RectTransform root = null;
         private RawImage picture = null;
-        private TextMeshProUGUI apText = null;
-        private TextMeshProUGUI dpText = null;
+        private ShadowedText apText = null;
+        private ShadowedText dpText = null;
 
         private bool panelOnRight = false;
 
@@ -98,8 +109,12 @@ namespace WindingTale.Scenes.GameFieldScene
             picture.enabled = false;
 
             TMP_FontAsset font = ShoppingRecordDialog.GetRecordFont();
-            apText = CreateText("Ap", font, TextBottom + TextLineHeight);
-            dpText = CreateText("Dp", font, TextBottom);
+            apText = new ShadowedText(
+                CreateText("ApShadow", font, TextBottom + TextLineHeight, TextShadowColor, TextShadowOffset),
+                CreateText("Ap", font, TextBottom + TextLineHeight, TextColor, 0f));
+            dpText = new ShadowedText(
+                CreateText("DpShadow", font, TextBottom, TextShadowColor, TextShadowOffset),
+                CreateText("Dp", font, TextBottom, TextColor, 0f));
 
             root.gameObject.SetActive(false);
         }
@@ -118,11 +133,16 @@ namespace WindingTale.Scenes.GameFieldScene
             root.anchoredPosition = new Vector2(right ? -Margin : Margin, Margin);
         }
 
-        private TextMeshProUGUI CreateText(string objectName, TMP_FontAsset font, float bottom)
+        /// <summary>
+        /// One line of text. The shadow is the same line in the shadow colour, nudged
+        /// <paramref name="offset"/> units down and to the right, and created first so the
+        /// real text draws over it.
+        /// </summary>
+        private TextMeshProUGUI CreateText(string objectName, TMP_FontAsset font, float bottom, Color color, float offset)
         {
             GameObject textObject = new GameObject(objectName, typeof(RectTransform), typeof(TextMeshProUGUI));
             textObject.transform.SetParent(root, false);
-            SetRect(textObject.GetComponent<RectTransform>(), TextLeft, bottom, TextWidth, TextLineHeight);
+            SetRect(textObject.GetComponent<RectTransform>(), TextLeft + offset, bottom - offset, TextWidth, TextLineHeight);
 
             TextMeshProUGUI text = textObject.GetComponent<TextMeshProUGUI>();
             if (font != null)
@@ -135,9 +155,31 @@ namespace WindingTale.Scenes.GameFieldScene
             text.alignment = TextAlignmentOptions.MidlineLeft;
             text.textWrappingMode = TextWrappingModes.NoWrap;
             text.overflowMode = TextOverflowModes.Overflow;
-            text.color = TextColor;
+            text.color = color;
             text.raycastTarget = false;
             return text;
+        }
+
+        /// <summary>A line of text and the shadow copy under it, kept saying the same thing.</summary>
+        private class ShadowedText
+        {
+            private readonly TextMeshProUGUI shadow;
+            private readonly TextMeshProUGUI front;
+
+            public ShadowedText(TextMeshProUGUI shadow, TextMeshProUGUI front)
+            {
+                this.shadow = shadow;
+                this.front = front;
+            }
+
+            public string text
+            {
+                set
+                {
+                    shadow.text = value;
+                    front.text = value;
+                }
+            }
         }
 
         private static void SetRect(RectTransform rect, float left, float bottom, float width, float height)
@@ -194,7 +236,18 @@ namespace WindingTale.Scenes.GameFieldScene
 
             // The corner away from the cursor: bottom-left while it is on the right half of
             // the screen, bottom-right while it is on the left half.
-            bool onRight = !map.IsTileOnRightHalfOfScreen(position);
+            // Only once the cursor is clearly on the other side (see SideSwitchMargin).
+            float across = map.GetTileScreenFraction(position);
+            bool onRight = panelOnRight;
+            if (panelOnRight && across > 0.5f + SideSwitchMargin)
+            {
+                onRight = false;
+            }
+            else if (!panelOnRight && across < 0.5f - SideSwitchMargin)
+            {
+                onRight = true;
+            }
+
             if (onRight != panelOnRight)
             {
                 SetSide(onRight);
