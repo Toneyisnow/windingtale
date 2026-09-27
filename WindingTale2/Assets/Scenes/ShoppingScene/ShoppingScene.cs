@@ -40,6 +40,12 @@ public class ShoppingScene : MonoBehaviour
     /// <summary>The CommonStrings "Confirm-52" line shown before a load: "确定要读取游戏吗？".</summary>
     private const int LoadConfirmId = 52;
 
+    /// <summary>
+    /// Asked before a save is written over an occupied slot. Kept as a literal, drawn in the
+    /// dynamic record font, because the baked message atlases carry no 覆, 盖 or 档.
+    /// </summary>
+    private const string OverwriteConfirmText = "是否要覆盖存档？";
+
     /// <summary>CommonStrings "Message-63" shown when the purse cannot cover an item: "钱不够！".</summary>
     private const int NotEnoughMoneyMessageId = 63;
 
@@ -149,6 +155,9 @@ public class ShoppingScene : MonoBehaviour
 
     /// <summary>The slot the load flow is waiting on the player to confirm reading from.</summary>
     private int pendingLoadSlot = -1;
+
+    // The slot a save is waiting to overwrite while the overwrite question is up.
+    private int pendingSaveSlot = -1;
 
     /// <summary>
     /// The item the Buy flow is in the middle of purchasing -- carried from the item picker,
@@ -1158,8 +1167,15 @@ public class ShoppingScene : MonoBehaviour
 
         if (isSave)
         {
-            GameRecordManager.SaveToFile(slotIndex, record);
-            OpenMessageDialog(SaveDoneMessageId);
+            // A slot that already holds a save is only written over once the player says so.
+            if (GameRecordManager.LoadFromFile(slotIndex) != null)
+            {
+                pendingSaveSlot = slotIndex;
+                OpenOverwriteConfirmDialog();
+                return;
+            }
+
+            SaveToSlot(slotIndex);
         }
         else
         {
@@ -1174,6 +1190,44 @@ public class ShoppingScene : MonoBehaviour
 
             pendingLoadSlot = slotIndex;
             OpenConfirmDialog(LoadConfirmId, OnLoadConfirmed);
+        }
+    }
+
+    private void SaveToSlot(int slotIndex)
+    {
+        GameRecordManager.SaveToFile(slotIndex, record);
+        OpenMessageDialog(SaveDoneMessageId);
+    }
+
+    /// <summary>Asks "是否要覆盖存档？" before a save is written over an occupied slot.</summary>
+    private void OpenOverwriteConfirmDialog()
+    {
+        ShoppingConfirmDialog dialog = InstantiateConfirmDialog();
+        if (dialog == null)
+        {
+            return;
+        }
+
+        dialog.InitLiteral(OverwriteConfirmText, OnOverwriteConfirmed);
+        PushDialog(dialog.gameObject);
+    }
+
+    /// <summary>
+    /// The overwrite question has closed. On Yes the save is written into the slot and the
+    /// "saved" notice shown; on No the question is popped and the slot picker comes back, so
+    /// the player can choose another slot or back out.
+    /// </summary>
+    private void OnOverwriteConfirmed(bool yes)
+    {
+        PopDialog();
+
+        if (yes)
+        {
+            SaveToSlot(pendingSaveSlot);
+        }
+        else
+        {
+            OpenRecordDialog(isSave: true);
         }
     }
 

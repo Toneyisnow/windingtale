@@ -283,7 +283,7 @@ def stone_statue_2():
 
 BUILDERS = {
     'castle_wall_1': castle_wall_1,
-    'stone_statue_1': stone_statue_1,
+    # 'stone_statue_1' is built by build_stone_props.py now (bigger, in its own palette)
     'stone_statue_2': stone_statue_2,
 }
 

@@ -64,6 +64,15 @@ public class TalkDialog : MonoBehaviour
     // Right moves to No, Left comes back. Meaningless while needConfirm is false.
     private bool confirmSelected = true;
 
+    // A message longer than this many lines scrolls: the top line goes and the rest slide up
+    // to make room for the next, one line at a time (see BuildScrollingText).
+    private const int MaxVisibleLines = 4;
+    private const float ScrollSeconds = 0.18f;
+
+    // The message text's resting Y, captured in Awake; the scroll slides it and Init puts it back.
+    private float messageTextBaseY = 0f;
+    private bool messageTextBaseCaptured = false;
+
     private int creatureAnimationId = 0;
 
     private Action<int> onSelected = null;
@@ -85,6 +94,13 @@ public class TalkDialog : MonoBehaviour
                 confirmArrowBaseY = rt.anchoredPosition.y;
                 confirmArrowBaseCaptured = true;
             }
+        }
+
+        RectTransform messageRt = messageTextObj != null ? messageTextObj.GetComponent<RectTransform>() : null;
+        if (messageRt != null)
+        {
+            messageTextBaseY = messageRt.anchoredPosition.y;
+            messageTextBaseCaptured = true;
         }
 
         RectTransform confirmRt = confirmButtonObj != null ? confirmButtonObj.GetComponent<RectTransform>() : null;
@@ -256,6 +272,12 @@ public class TalkDialog : MonoBehaviour
         if (cancelButtonObj != null)
         {
             cancelButtonObj.SetActive(needConfirm);
+        }
+
+        // A scroll cut short by the previous line must not leave the text off its line.
+        if (messageTextBaseCaptured)
+        {
+            SetAnchoredY(messageTextObj.GetComponent<RectTransform>(), messageTextBaseY);
         }
 
         // Every confirm dialog opens with Yes selected.
@@ -503,6 +525,14 @@ public class TalkDialog : MonoBehaviour
 
     private IEnumerator BuildText()
     {
+        string[] lines = fullText.Split('\n');
+        if (activeTextObj == messageTextObj && lines.Length > MaxVisibleLines)
+        {
+            yield return BuildScrollingText(lines);
+            textFinished = true;
+            yield break;
+        }
+
         for (int i = 0; i < fullText.Length; i++)
         {
             if (skipToFullText)
@@ -519,6 +549,67 @@ public class TalkDialog : MonoBehaviour
         }
 
         textFinished = true;
+    }
+
+    /// <summary>
+    /// Types out a message of more than MaxVisibleLines lines. The first four lines type out as
+    /// usual; for each line after that the top line is dropped, the three below it slide up into
+    /// the places of the top three, and the new line types out in the fourth place. A key press
+    /// (skipToFullText) jumps straight to the last four lines.
+    /// </summary>
+    private IEnumerator BuildScrollingText(string[] lines)
+    {
+        TextMeshProUGUI text = messageTextObj.GetComponent<TextMeshProUGUI>();
+        RectTransform rect = messageTextObj.GetComponent<RectTransform>();
+
+        for (int line = 0; line < lines.Length; line++)
+        {
+            int first = Mathf.Max(0, line - MaxVisibleLines + 1);
+
+            if (line >= MaxVisibleLines)
+            {
+                // The rest, less the dropped top line, starts one line lower -- where it was --
+                // and slides up.
+                text.text = JoinLines(lines, first, line - 1);
+                text.ForceMeshUpdate();
+                float lineHeight = text.textInfo.lineCount > 0 ? text.textInfo.lineInfo[0].lineHeight : text.fontSize * 1.2f;
+
+                for (float elapsed = 0f; elapsed < ScrollSeconds && !skipToFullText; elapsed += Time.deltaTime)
+                {
+                    float t = elapsed / ScrollSeconds;
+                    SetAnchoredY(rect, messageTextBaseY - lineHeight * (1f - t));
+                    yield return null;
+                }
+                SetAnchoredY(rect, messageTextBaseY);
+            }
+
+            string above = line > first ? JoinLines(lines, first, line - 1) + "\n" : string.Empty;
+            for (int i = 1; i <= lines[line].Length; i++)
+            {
+                if (skipToFullText)
+                {
+                    text.text = JoinLines(lines, Mathf.Max(0, lines.Length - MaxVisibleLines), lines.Length - 1);
+                    SetAnchoredY(rect, messageTextBaseY);
+                    yield break;
+                }
+
+                text.text = above + lines[line].Substring(0, i);
+                yield return new WaitForSeconds(0.05f);
+            }
+
+            text.text = above + lines[line];
+            if (skipToFullText)
+            {
+                text.text = JoinLines(lines, Mathf.Max(0, lines.Length - MaxVisibleLines), lines.Length - 1);
+                SetAnchoredY(rect, messageTextBaseY);
+                yield break;
+            }
+        }
+    }
+
+    private static string JoinLines(string[] lines, int first, int last)
+    {
+        return string.Join("\n", lines, first, last - first + 1);
     }
 
 

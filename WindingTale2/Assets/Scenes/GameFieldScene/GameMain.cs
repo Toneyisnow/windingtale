@@ -171,6 +171,8 @@ namespace WindingTale.Scenes.GameFieldScene
                 return;
             }
 
+            HandleMarchCancelKey();
+
             activityQueue.Update();
         }
 
@@ -681,6 +683,16 @@ namespace WindingTale.Scenes.GameFieldScene
                 string text = MagicResultText.ForRecover(recoverType, gained, out textColor);
                 this.PushActivity(ActivityFactory.CreatureFloatingTextActivity(target, text, textColor));
             }
+            else if (consumable != null)
+            {
+                // A stat potion: its permanent gain, in the potion's own shimmering colour.
+                Color textColor;
+                string text = MagicResultText.ForPotion(consumable.UseType, consumable.Quantity, out textColor);
+                if (text != null)
+                {
+                    this.PushActivity(ActivityFactory.CreatureFloatingTextActivity(target, text, textColor, iridescent: true));
+                }
+            }
 
             this.PushActivity((gameMain) =>
             {
@@ -698,6 +710,191 @@ namespace WindingTale.Scenes.GameFieldScene
                 onCreatureEndTurn(creature);
             });
         }
+
+        #region March
+
+        /// <summary>The march under way, or null when the party is not marching.</summary>
+        private MarchSession marchSession = null;
+
+        /// <summary>
+        /// 行军: the party marches on the enemy on its own. The march point is the middle of
+        /// every enemy's coordinates; then the friends who have not acted, in id order, each
+        /// take a turn the way an enemy does -- the cursor goes to the creature's feet, then to
+        /// where it will end up, and the creature walks there as far as its move points reach
+        /// and ends its turn. No move range is shown and nobody attacks.
+        ///
+        /// The player calls it off with Cancel (Esc / Backspace): see CancelMarch.
+        /// </summary>
+        public void StartMarch()
+        {
+            FDPosition target = FindMarchPoint();
+            if (target == null)
+            {
+                // Nobody to march on.
+                return;
+            }
+
+            marchSession = new MarchSession(target);
+            MarchSession session = marchSession;
+            this.PushActivity((gameMain) =>
+            {
+                gameMain.marchNext(session);
+            });
+        }
+
+        /// <summary>
+        /// The tile the party marches on: the average of the enemies' positions, rounded onto
+        /// the map, and if that tile cannot be walked on (water, a wall) the nearest one that
+        /// can. Null when there is no enemy left to march on.
+        /// </summary>
+        private FDPosition FindMarchPoint()
+        {
+            List<FDCreature> enemies = gameMap.Map.Enemies.FindAll(c => c.Position != null && (!(c is FDAICreature ai) || ai.IsNoticable()));
+            if (enemies.Count == 0)
+            {
+                return null;
+            }
+
+            FDField field = gameMap.Map.Field;
+            int x = Mathf.Clamp(Mathf.RoundToInt((float)enemies.Average(c => c.Position.X)), 1, field.Width);
+            int y = Mathf.Clamp(Mathf.RoundToInt((float)enemies.Average(c => c.Position.Y)), 1, field.Height);
+
+            for (int radius = 0; radius <= Mathf.Max(field.Width, field.Height); radius++)
+            {
+                for (int dx = -radius; dx <= radius; dx++)
+                {
+                    for (int dy = -radius; dy <= radius; dy++)
+                    {
+                        if (Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dy)) != radius)
+                        {
+                            continue;
+                        }
+
+                        FDPosition candidate = FDPosition.At(x + dx, y + dy);
+                        if (candidate.X < 1 || candidate.X > field.Width || candidate.Y < 1 || candidate.Y > field.Height)
+                        {
+                            continue;
+                        }
+
+                        ShapeDefinition shape = field.GetShapeAt(candidate);
+                        if (shape != null && shape.Type != ShapeType.Gap)
+                        {
+                            return candidate;
+                        }
+                    }
+                }
+            }
+
+            return FDPosition.At(x, y);
+        }
+
+        /// <summary>
+        /// The march's next step: the lowest-id friend who can still act goes out. Queued
+        /// behind whatever finishes the last friend's turn, so it starts once that has played
+        /// out. When nobody is left the march is over and the player has the field back.
+        /// </summary>
+        private void marchNext(MarchSession session)
+        {
+            if (session.Cancelled || marchSession != session)
+            {
+                return;
+            }
+
+            FDCreature next = null;
+            foreach (FDCreature friend in gameMap.Map.Friends)
+            {
+                if (friend.CanTakeAction() && (next == null || friend.Id < next.Id))
+                {
+                    next = friend;
+                }
+            }
+
+            if (next == null)
+            {
+                EndMarch(session);
+                return;
+            }
+
+            session.Current = next;
+            this.PushActivity(new MarchSlideActivity(session, next.Position));
+            this.PushActivity(new MarchMoveActivity(session, next));
+            this.PushActivity((gameMain) =>
+            {
+                gameMain.marchEndStep(session, next);
+            });
+        }
+
+        /// <summary>
+        /// Ends the marching creature's turn where it stopped, and sends the next one out --
+        /// unless the march has been called off in the meantime, in which case a creature that
+        /// had already finished its walk goes back to where it started, unspent.
+        /// </summary>
+        private void marchEndStep(MarchSession session, FDCreature creature)
+        {
+            if (session.Cancelled)
+            {
+                if (creature.HasMoved() && !creature.HasActioned)
+                {
+                    FDPosition origin = creature.PrePosition;
+                    creature.ResetPosition();
+                    gameMap.ResetCreaturePosition(creature, origin);
+                    creature.PrePosition = null;
+                    gameMap.SlideCursorTo(origin, GameCanvas.DialogPosition.Bottom);
+                }
+
+                return;
+            }
+
+            session.Current = null;
+            creatureRest(creature);
+        }
+
+        private void EndMarch(MarchSession session)
+        {
+            if (marchSession == session)
+            {
+                marchSession = null;
+            }
+
+            PlayerInterface.getDefault().onUpdateState(new WindingTale.Scenes.GameFieldScene.ActionStates.IdleState(this));
+        }
+
+        /// <summary>
+        /// Cancel (Esc / Backspace) during the march stops it: the friend on his way back to
+        /// the tile he set out from, those who marched before him where they stopped and
+        /// spent, and the game back in the idle state. Read straight from the keyboard --
+        /// the map ignores the player's input while the march plays, and this is the one
+        /// key it listens for.
+        /// </summary>
+        private void HandleMarchCancelKey()
+        {
+            if (marchSession == null || marchSession.Cancelled || Time.frameCount <= marchSession.StartFrame + 1)
+            {
+                return;
+            }
+
+            if (!Input.GetKeyDown(KeyCode.Escape) && !Input.GetKeyDown(KeyCode.Backspace))
+            {
+                return;
+            }
+
+            if (gameCanvas != null && gameCanvas.IsDialogOpened())
+            {
+                return;
+            }
+
+            CancelMarch();
+        }
+
+        private void CancelMarch()
+        {
+            marchSession.Cancelled = true;
+            marchSession = null;
+
+            PlayerInterface.getDefault().onUpdateState(new WindingTale.Scenes.GameFieldScene.ActionStates.IdleState(this));
+        }
+
+        #endregion
 
         public void endTurnForAll()
         {
@@ -776,6 +973,14 @@ namespace WindingTale.Scenes.GameFieldScene
             GlobalVariables.Set(BattleLoader.ChapterIdVariableName, chapterId);
 
             gameMap.Initialize(chapterId);
+
+            // The sky the chapter names, the way it names its music.
+            ChapterDefinition chapterDefinition = DefinitionStore.Instance.LoadChapter(chapterId);
+            SkySphere sky = FindFirstObjectByType<SkySphere>();
+            if (sky != null)
+            {
+                sky.SetSky(chapterDefinition != null ? chapterDefinition.Sky : null);
+            }
 
             List<FDEvent> chapterEvents = ChapterLoader.LoadEvents(this, chapterId);
             eventHandler = new EventHandler(chapterEvents, this);
@@ -1126,9 +1331,22 @@ namespace WindingTale.Scenes.GameFieldScene
 
             if (gameMap.Map.HasAllCreaturesActioned(creature.Faction))
             {
+                // Everyone has acted: a march has nobody left to send.
+                marchSession = null;
+
                 this.PushActivity((game) =>
                 {
                     game.onStartNextTurn();
+                });
+                return;
+            }
+
+            if (marchSession != null && creature.Faction == CreatureFaction.Friend)
+            {
+                MarchSession session = marchSession;
+                this.PushActivity((game) =>
+                {
+                    game.marchNext(session);
                 });
                 return;
             }

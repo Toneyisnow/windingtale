@@ -1535,6 +1535,34 @@ MonoBehaviour:
     m_Key: Message-93
     m_Metadata:
       m_Items: []
+  - m_Id: 57368735781
+    m_Key: VillageShop-00
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57368735782
+    m_Key: VillageShop-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57368735783
+    m_Key: VillageShop-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57368735784
+    m_Key: VillageShop-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57368735785
+    m_Key: VillageShop-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57368735786
+    m_Key: VillageShop-05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57368735787
+    m_Key: Confirm-09
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

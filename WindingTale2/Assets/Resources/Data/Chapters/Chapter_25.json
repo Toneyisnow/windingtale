@@ -55,6 +55,7 @@
       "ItemId": 281
     }
   ],
+  "Sky": "SKY_02",
   "BackgroundMusic": {
     "Field": "Battle_4_HD_Final_V2",
     "Enemy": "Battle_Enemy_Turn_1",

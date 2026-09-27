@@ -276,6 +276,28 @@ namespace WindingTale.Scenes.GameBattleScene
         }
 
         /// <summary>
+        /// The frame playing t seconds in: the flash frames (if this run has them) go at the
+        /// definition's FlashFrameDuration, the magic's own frames after them at FrameDuration.
+        /// </summary>
+        private int FrameAt(float t)
+        {
+            float flashSeconds = flashFrames * definition.FlashFrameDuration;
+            if (t < flashSeconds)
+            {
+                return Mathf.FloorToInt(t / definition.FlashFrameDuration);
+            }
+
+            return flashFrames + Mathf.FloorToInt((t - flashSeconds) / definition.FrameDuration);
+        }
+
+        /// <summary>The time, in seconds, at which the given frame starts (the inverse of FrameAt).</summary>
+        private float TimeOfFrame(int frame)
+        {
+            int flashPart = Mathf.Min(frame, flashFrames);
+            return flashPart * definition.FlashFrameDuration + (frame - flashPart) * definition.FrameDuration;
+        }
+
+        /// <summary>
         /// Moves the effect on by dt seconds: lands the hits and eruptions of every frame
         /// passed, then shows the current one.
         /// </summary>
@@ -283,7 +305,7 @@ namespace WindingTale.Scenes.GameBattleScene
         {
             time += dt;
             lightFlare *= Mathf.Exp(-FlareDecay * dt);
-            int frame = Mathf.FloorToInt(time / definition.FrameDuration);
+            int frame = FrameAt(time);
 
             // Phase 1 is the screen flash; the magic's own frame 0 comes after it.
             int totalFrames = flashFrames + definition.TotalFrames;
@@ -334,7 +356,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 onComplete?.Invoke();
             }
 
-            if (time >= totalFrames * definition.FrameDuration + TailSeconds && Application.isPlaying)
+            if (time >= TimeOfFrame(totalFrames) + TailSeconds && Application.isPlaying)
             {
                 Destroy(gameObject);
             }
@@ -425,7 +447,7 @@ namespace WindingTale.Scenes.GameBattleScene
 
         private void UpdateLight(float totalHeat, Vector3 heatCentre, Color heatColour, int frame, int totalFrames)
         {
-            float tail = Mathf.Clamp01((time - totalFrames * definition.FrameDuration) / TailSeconds);
+            float tail = Mathf.Clamp01((time - TimeOfFrame(totalFrames)) / TailSeconds);
             if (totalHeat > 0)
             {
                 // The light takes the colour of what is burning, weighted by heat.

@@ -217,6 +217,9 @@ public class VillageScene : MonoBehaviour
 
     private ScreenFader fader = null;
 
+    /// <summary>The bottom-right name plate saying what the cursor is standing on.</summary>
+    private VillageInfoBar infoBar = null;
+
     /// <summary>True while the camera is pulling into a shop; input is shut off until the scene changes.</summary>
     private bool transitioning = false;
 
@@ -254,6 +257,7 @@ public class VillageScene : MonoBehaviour
         ShowBackground(this.villageId);
         PlayVillageMusic(returnInfo);
         SetupCursor();
+        infoBar = VillageInfoBar.Create();
 
         if (returnInfo != null && returnInfo.Spots != null && returnInfo.Spots.Count > 0)
         {
@@ -281,6 +285,11 @@ public class VillageScene : MonoBehaviour
     {
         AnimateCursor();
         HandleInput();
+
+        if (infoBar != null && spots != null)
+        {
+            infoBar.SetSpot(spotIndex);
+        }
     }
 
     /// <summary>

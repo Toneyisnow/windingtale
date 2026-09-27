@@ -39,6 +39,9 @@ public class ShoppingConfirmDialog : MonoBehaviour
 
     private bool initialized = false;
 
+    // Draw the question in the dynamic record font instead of the baked FZB_Message atlas.
+    private bool useRecordFont = false;
+
     // Ignore the frame Init ran on: the key that opened this question (the confirm on the
     // slot picker) is still down this frame and would answer it instantly.
     private bool firstFrame = false;
@@ -62,14 +65,23 @@ public class ShoppingConfirmDialog : MonoBehaviour
         Init(LocalizationManager.GetFDMessageString(message).GetLocalizedString(), onSelected);
     }
 
-    private void Init(string messageText, Action<bool> onSelected)
+    /// <summary>
+    /// Shows a literal question rather than a CommonStrings line, drawn in the dynamic record
+    /// font. For a line whose glyphs the baked FZB_Message atlases do not carry (the
+    /// overwrite-a-save question needs 覆, 盖 and 档), which would come out as boxes there.
+    /// </summary>
+    public void InitLiteral(string messageText, Action<bool> onSelected)
+    {
+        Init(messageText, onSelected, useRecordFont: true);
+    }
+
+    private void Init(string messageText, Action<bool> onSelected, bool useRecordFont = false)
     {
         this.OnSelected = onSelected;
+        this.useRecordFont = useRecordFont;
 
         CaptureButtonBaseY();
         ShowText(messageText);
-        SetButtonLabel(YesButton, "是");
-        SetButtonLabel(NoButton, "否");
         WireButtonClicks();
 
         yesSelected = true;
@@ -138,31 +150,6 @@ public class ShoppingConfirmDialog : MonoBehaviour
         });
     }
 
-    /// <summary>
-    /// Writes a button's face label in the Chinese message font. The label TMP under each
-    /// button ships with LiberationSans (no Chinese glyphs), so the whole FZB_Message font
-    /// asset is assigned -- the same fix the message line uses.
-    /// </summary>
-    private static void SetButtonLabel(GameObject buttonObject, string text)
-    {
-        TextMeshProUGUI textMesh = buttonObject != null
-            ? buttonObject.GetComponentInChildren<TextMeshProUGUI>(true)
-            : null;
-        if (textMesh == null)
-        {
-            return;
-        }
-
-        TMP_FontAsset messageFont = Resources.Load<TMP_FontAsset>(@"Fonts/FontAssets/zh/FZB_Message");
-        if (messageFont != null)
-        {
-            textMesh.font = messageFont;
-        }
-
-        textMesh.text = text;
-        textMesh.ForceMeshUpdate();
-    }
-
     private void CaptureButtonBaseY()
     {
         RectTransform yesRt = YesButton != null ? YesButton.GetComponent<RectTransform>() : null;
@@ -216,11 +203,16 @@ public class ShoppingConfirmDialog : MonoBehaviour
             return;
         }
 
-        TMP_FontAsset messageFont = Resources.Load<TMP_FontAsset>(@"Fonts/FontAssets/zh/FZB_Message");
+        TMP_FontAsset messageFont = useRecordFont
+            ? ShoppingRecordDialog.GetRecordFont()
+            : Resources.Load<TMP_FontAsset>(@"Fonts/FontAssets/zh/FZB_Message");
         if (messageFont != null)
         {
             textMesh.font = messageFont;
         }
+
+        // The prefab's font colour is a dark grey; the question reads white like the rest of the UI.
+        textMesh.color = Color.white;
 
         // '#' is the source line-break marker, same as the field dialogs use.
         textMesh.text = text.Replace("#", "\n");

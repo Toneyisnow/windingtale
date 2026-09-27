@@ -19,10 +19,14 @@ namespace WindingTale.MapObjects.CreatureIcon
         public const float Lifetime = 1.1f;
 
         /// <summary>How far it climbs over its lifetime, in world units (a tile is 2).</summary>
-        public const float RiseDistance = 1.4f;
+        public const float RiseDistance = 2.8f;
 
-        /// <summary>Where it starts above the creature's feet, in world units.</summary>
-        public const float StartHeight = 3.2f;
+        /// <summary>
+        /// Where it starts above the creature's feet, in world units: over the creature's
+        /// body (a creature stands about 2 units tall). It climbs to about twice the
+        /// creature's height, StartHeight + RiseDistance.
+        /// </summary>
+        public const float StartHeight = 1.2f;
 
         /// <summary>Text size. TextMeshPro world text is about a tenth of a unit per point.</summary>
         public const float FontSize = 14f * 0.7f * 0.6f;
@@ -34,16 +38,24 @@ namespace WindingTale.MapObjects.CreatureIcon
         // draws the text over whatever stands in front of it.
         private const string DepthTestProperty = "unity_GUIZTestMode";
 
+        // The soap-bubble sheen on a stat potion's text: how far the rainbow is mixed into
+        // the base colour, and how fast and how tightly the bands run across the glyphs.
+        private const float SheenStrength = 0.45f;
+        private const float SheenSpeed = 1.6f;
+        private const float SheenBandsPerUnit = 0.4f;
+
         private TextMeshPro textMesh = null;
         private Vector3 origin = Vector3.zero;
         private Color baseColor = Color.white;
         private float elapsed = 0f;
+        private bool iridescent = false;
 
         /// <summary>
         /// Puts a floating line over a creature and returns it, or null when the creature
-        /// has no icon on the map (nothing to float over).
+        /// has no icon on the map (nothing to float over). An iridescent line carries a
+        /// shifting rainbow sheen over its colour, like the surface of a soap bubble.
         /// </summary>
-        public static CreatureFloatingText Spawn(Creature creature, string text, Color color)
+        public static CreatureFloatingText Spawn(Creature creature, string text, Color color, bool iridescent = false)
         {
             if (creature == null || string.IsNullOrEmpty(text))
             {
@@ -52,12 +64,13 @@ namespace WindingTale.MapObjects.CreatureIcon
 
             GameObject textObject = new GameObject("floating_text");
             CreatureFloatingText floating = textObject.AddComponent<CreatureFloatingText>();
-            floating.Initialize(creature.transform.position, text, color);
+            floating.Initialize(creature.transform.position, text, color, iridescent);
             return floating;
         }
 
-        private void Initialize(Vector3 creatureFeet, string text, Color color)
+        private void Initialize(Vector3 creatureFeet, string text, Color color, bool iridescent)
         {
+            this.iridescent = iridescent;
             origin = creatureFeet + Vector3.up * StartHeight;
             baseColor = color;
             transform.position = origin;
@@ -85,7 +98,9 @@ namespace WindingTale.MapObjects.CreatureIcon
             material.SetFloat(DepthTestProperty, (float)CompareFunction.Always);
             material.renderQueue = (int)RenderQueue.Overlay;
             textMesh.outlineWidth = 0.22f;
-            textMesh.outlineColor = new Color32(0, 0, 0, 255);
+
+            // The dark potion colours vanish into a black edge, so the sheen text gets a pale one.
+            textMesh.outlineColor = iridescent ? new Color32(235, 235, 255, 255) : new Color32(0, 0, 0, 255);
 
             FaceCamera();
         }
@@ -110,9 +125,50 @@ namespace WindingTale.MapObjects.CreatureIcon
                 Color color = baseColor;
                 color.a = t <= FadeStartFraction ? 1f : 1f - (t - FadeStartFraction) / (1f - FadeStartFraction);
                 textMesh.color = color;
+
+                if (iridescent)
+                {
+                    ApplySheen(color);
+                }
             }
 
             FaceCamera();
+        }
+
+        /// <summary>
+        /// Recolours every glyph corner: the base colour with a rainbow band mixed in, the
+        /// band's hue set by where the corner sits along the line and by the time, so the
+        /// colours slide across the text like light over a soap bubble. Per-vertex colours
+        /// rather than a shader, so it rides on the ordinary text material.
+        /// </summary>
+        private void ApplySheen(Color tint)
+        {
+            textMesh.ForceMeshUpdate();
+            TMP_TextInfo info = textMesh.textInfo;
+
+            for (int i = 0; i < info.characterCount; i++)
+            {
+                TMP_CharacterInfo character = info.characterInfo[i];
+                if (!character.isVisible)
+                {
+                    continue;
+                }
+
+                Color32[] colors = info.meshInfo[character.materialReferenceIndex].colors32;
+                Vector3[] vertices = info.meshInfo[character.materialReferenceIndex].vertices;
+                for (int corner = 0; corner < 4; corner++)
+                {
+                    int index = character.vertexIndex + corner;
+                    Vector3 v = vertices[index];
+                    float hue = Mathf.Repeat(elapsed * SheenSpeed * 0.5f + (v.x + v.y * 0.6f) * SheenBandsPerUnit, 1f);
+                    Color rainbow = Color.HSVToRGB(hue, 0.55f, 1f);
+                    Color mixed = Color.Lerp(tint, rainbow, SheenStrength);
+                    mixed.a = tint.a;
+                    colors[index] = mixed;
+                }
+            }
+
+            textMesh.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
         }
 
         private void FaceCamera()

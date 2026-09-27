@@ -121,7 +121,7 @@ def notice_board_1():
 
 
 BUILDERS = {
-    'stone_pillar_1': stone_pillar_1,
+    # 'stone_pillar_1' is built by build_stone_props.py now (bigger, in its own palette)
     'notice_board_1': notice_board_1,
 }
 

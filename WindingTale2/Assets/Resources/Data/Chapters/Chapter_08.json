@@ -46,8 +46,9 @@
       "ItemId": 115
     }
   ],
+  "Sky": "SKY_01",
   "BackgroundMusic": {
-    "Field": "Battle_3_HD_Final",
+    "Field": "Battle_2_HD_Final_V1",
     "Enemy": "Battle_Enemy_Turn_1",
     "Village": "Village_2_HD_Final"
   },

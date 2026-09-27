@@ -17,10 +17,25 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         public MenuSystemState(GameMain gameMain, FDPosition central)
             : base(gameMain, central, new IdleState(gameMain))
         {
-            // Matching
-            this.SetMenu(0, MenuItemId.SystemMatching, false, () =>
+            // March (行军): the party marches on the enemy by itself, until it has all moved
+            // or the player cancels. See GameMain.StartMarch.
+            this.SetMenu(0, MenuItemId.SystemMatching, true, () =>
             {
-                // TODO
+                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Confirm, 9);
+                var rawText = LocalizationManager.GetFDMessageString(message);
+
+                gameMain.gameCanvas.ShowTalkDialog(0, rawText, true, GameCanvas.DialogPosition.Top, (index) =>
+                {
+                    // Back to the idle state either way (the menu closes with it); a Yes then
+                    // queues the march behind that, so the menu is gone before anyone moves.
+                    PlayerInterface.getDefault().onUpdateState(new IdleState(gameMain));
+
+                    if (index == 1)
+                    {
+                        gameMain.StartMarch();
+                    }
+                });
+
                 return this;
             });
 

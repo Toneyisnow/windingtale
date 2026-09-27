@@ -62,6 +62,26 @@ namespace WindingTale.Core.Algorithms
                     case ItemUseType.Mp:
                         creature.UpdateMp(consumable.Quantity);
                         break;
+                    case ItemUseType.HpMax:
+                        creature.HpMax += consumable.Quantity;
+                        creature.UpdateHp(consumable.Quantity);
+                        break;
+                    case ItemUseType.MpMax:
+                        creature.MpMax += consumable.Quantity;
+                        creature.UpdateMp(consumable.Quantity);
+                        break;
+                    case ItemUseType.Ap:
+                        creature.Ap += consumable.Quantity;
+                        break;
+                    case ItemUseType.Dp:
+                        creature.Dp += consumable.Quantity;
+                        break;
+                    case ItemUseType.Dx:
+                        creature.Dx += consumable.Quantity;
+                        break;
+                    case ItemUseType.Mv:
+                        creature.Mv += consumable.Quantity;
+                        break;
                     default:
                         break;
                 }

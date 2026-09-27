@@ -98,14 +98,14 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         /// side by side inside a ParallelActivity when a spell touches more than one creature.
         /// A creature with no icon on the map (already gone) is skipped without waiting.
         /// </summary>
-        public static DurationActivity CreatureFloatingTextActivity(FDCreature creature, string text, Color color)
+        public static DurationActivity CreatureFloatingTextActivity(FDCreature creature, string text, Color color, bool iridescent = false)
         {
             CreatureFloatingText floating = null;
 
             Action<GameMain> startAction = gameMain =>
             {
                 Creature creatureObj = gameMain.gameMap.GetCreature(creature);
-                floating = CreatureFloatingText.Spawn(creatureObj, text, color);
+                floating = CreatureFloatingText.Spawn(creatureObj, text, color, iridescent);
             };
 
             // The text destroys itself at the end of its float; Unity's null check sees that.

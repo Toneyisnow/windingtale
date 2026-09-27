@@ -75,6 +75,16 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        /// <summary>
+        /// Which sky the battlefield stands under: "SKY_01" (blue sky and clouds, the default
+        /// when the chapter names none) or "SKY_02" (the lava cave). See SkySphere.
+        /// </summary>
+        [JsonProperty(PropertyName = "Sky")]
+        public string Sky
+        {
+            get; set;
+        }
+
         [JsonProperty(PropertyName = "BackgroundMusic")]
         public BackgroundMusicDefinition BackgroundMusic
         {

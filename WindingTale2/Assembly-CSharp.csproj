@@ -103,6 +103,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ItemDefinition.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter21.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIAggressiveDelegate.cs" />
+    <Compile Include="Assets\Scenes\VillageScene\VillageInfoBar.cs" />
     <Compile Include="Assets\Scripts\UI\Common\TaggedButton.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\DefendItemDefinition.cs" />
     <Compile Include="Assets\FightObjects\FightBody.cs" />
@@ -181,6 +182,7 @@
     <Compile Include="Assets\MapObjects\GameMap\MapObjectFade.cs" />
     <Compile Include="Assets\Scenes\GameBattleScene\MagicEffect.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\SecretSequenceDefinition.cs" />
+    <Compile Include="Assets\Scenes\GameFieldScene\Activities\MarchActivities.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureMaterial.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIMagicalDefensiveDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\FDMovePath.cs" />
@@ -291,6 +293,7 @@
     <Compile Include="Assets\Scenes\Shared\SceneTransition.cs" />
     <Compile Include="Assets\Scenes\GameBattleScene\MagicRunner.cs" />
     <Compile Include="Assets\MapObjects\Menus\MenuItem.cs" />
+    <Compile Include="Assets\Scripts\AI\Delegates\AIMarchDelegate.cs" />
     <Compile Include="Assets\Scripts\Core\Common\DirectedPosition.cs" />
     <Compile Include="Assets\Scenes\GameBattleScene\BattleBarInfo.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\IGameActions.cs" />
@@ -314,6 +317,7 @@
     <None Include="Assets\Resources\Data\Chapters\Chapter_17_ConversationId.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-20.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
+    <None Include="Assets\Resources\Skies\Sky01.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_20_Creature.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-11.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_25_Creature.txt" />
@@ -322,6 +326,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_28_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_01_ConversationId.txt" />
+    <None Include="Assets\Resources\Skies\Sky02.shader" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Race.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-12.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-04.txt" />

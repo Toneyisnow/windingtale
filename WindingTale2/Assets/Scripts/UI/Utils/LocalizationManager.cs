@@ -44,6 +44,16 @@ public class LocalizationManager
         return GetLocalString("CommonStrings", key);
     }
     
+    /// <summary>
+    /// The name shown on the village info bar for a cursor spot: 0 is the way out to the next
+    /// chapter, 1-5 the shops (the last being the secret one).
+    /// </summary>
+    public static LocalizedString GetVillageShopString(int spotIndex)
+    {
+        string key = string.Format(@"VillageShop-{0}", StringUtils.Digit2(spotIndex));
+        return GetLocalString("CommonStrings", key);
+    }
+
     public static LocalizedString GetMessageString(int messageId)
     {
         string key = string.Format(@"Message-{0}", StringUtils.Digit2(messageId));

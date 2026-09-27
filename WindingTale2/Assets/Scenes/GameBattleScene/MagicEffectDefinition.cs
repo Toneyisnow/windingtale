@@ -126,8 +126,15 @@ namespace WindingTale.Scenes.GameBattleScene
     {
         public int MagicId;
 
-        /// <summary>Seconds per original frame (the reference GIFs run at 60ms), both phases.</summary>
+        /// <summary>Seconds per original frame (the reference GIFs run at 60ms) of the magic itself (phase 2).</summary>
         public float FrameDuration = 0.06f;
+
+        /// <summary>
+        /// Seconds per frame of the opening screen flash (phase 1). The same for every magic, so
+        /// a magic that plays its own frames faster or slower (FrameDuration) still opens on the
+        /// usual flash.
+        /// </summary>
+        public float FlashFrameDuration = 0.06f;
 
         public List<MagicSpawn> Spawns = new List<MagicSpawn>();
 
@@ -475,7 +482,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 GlowColor = new Color(0.35f, 0.55f, 1f),
             };
 
-            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 104, HitSound = "Audios/Effects/sfx_magic_skyfire" }.UseFireLook();
+            MagicEffectDefinition definition = new MagicEffectDefinition { MagicId = 104, HitSound = "Audios/Effects/sfx_magic_skyfire", FrameDuration = 0.1f }.UseFireLook();
 
             // Beams first, so the bombs burst over them. The blue beams' x -30 is baked into
             // their strip's fade, so both must stay there.

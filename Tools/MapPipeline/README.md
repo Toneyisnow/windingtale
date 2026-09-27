@@ -40,6 +40,7 @@ pip install Pillow
 | `build_obstacles_06.py` | 第 06 关新加的两个模型：中央大门的红顶教堂、码头上的木货箱 |
 | `build_obstacles_08.py` | 第 08 关：29 格宽的整段城堡城墙（一个 obstacle）和骑士石像（`stone_statue_2` 是误读，已弃用） |
 | `build_obstacles_09.py` | 第 09 关：石球石柱（复用 08 关的底座，第 08 关的两根也换成了它）和路中央的公告板 |
+| `build_stone_props.py` | 第 08 / 09 关路边的两个石柱：`stone_pillar_1`（方柱 + 大石球，45 高）和 `stone_statue_1`（同一根方柱 + 按原画立体化的 T 形面甲骑士像，带盾、双角，56 高），底座铺满整格，自带白 / 灰 / 青灰调色板（取代 08、09 脚本里的旧版） |
 | `build_obstacles_10.py` | 第 10 关：三种火柱（矮 / 亮 / 略暗），每种两帧动画（`<key>.vox` + `<key>_f2.vox`） |
 | `build_obstacles_13.py` | 第 13 关：两顶帐篷（灰绿 / 蓝白，同一形状两套颜色，自带调色板） |
 | `build_obstacles_21.py` | 第 21 关：石头神龛、高石柱、矮石柱（都是"画几行站一行"，蓝灰石头色自带调色板） |

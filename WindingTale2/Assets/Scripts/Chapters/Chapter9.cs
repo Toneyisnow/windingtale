@@ -49,13 +49,23 @@ namespace WindingTale.Chapters
             { 11, 16, 36 },
         };
 
+        /// <summary>
+        /// Where the party comes on: the tiles just off the south edge, in the column of the
+        /// middle of the line-up. They all start on it and walk up the lane to their places
+        /// together, and the cursor follows them from a little way up the lane.
+        /// </summary>
+        private static readonly FDPosition PartyMarchEntry = FDPosition.At(13, 40);
+        private const int PartyMarchCursorLead = 3;
+
         /// <summary>The first friend id that is optional: everyone from here on may be missing.</summary>
         private const int FirstOptionalFriendId = 10;
 
         /// <summary>
         /// The royal guard, as (id, definition, x, y, drop item), in the order the original
         /// added them. Four pairs share a tile (101/112, 102/111, 103/113, 104/114): the
-        /// original stacked them the same way.
+        /// original stacked them on one tile, which reads as two archers drawn on top of
+        /// each other, so the later of each pair is set on the free tile next to it instead
+        /// (see AddCreatureAroundToMap).
         /// </summary>
         private static readonly int[,] Guard = new int[,]
         {
@@ -161,21 +171,14 @@ namespace WindingTale.Chapters
 
         private Action<GameMain> turn1 = (gameMain) =>
         {
-            for (int i = 0; i < PartyEntry.GetLength(0); i++)
-            {
-                int creatureId = PartyEntry[i, 0];
-                if (creatureId >= FirstOptionalFriendId && !PartyCarries(gameMain, creatureId))
-                {
-                    continue;
-                }
-
-                AddCreatureToMap(gameMain, CreatureFaction.Friend, creatureId, creatureId,
-                    FDPosition.At(PartyEntry[i, 1], PartyEntry[i, 2]));
-            }
+            // The party walks in from the south, all together, and only then does the
+            // talking begin. The cursor is already there to watch them come.
+            gameMain.PushActivity(new SlideCursorActivity(PartyMarchEntry.X, PartyMarchEntry.Y - PartyMarchCursorLead));
+            MarchInTogether(gameMain, CreatureFaction.Friend, BuildPartyRoster(gameMain), PartyMarchEntry);
 
             for (int i = 0; i < Guard.GetLength(0); i++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, Guard[i, 0], Guard[i, 1],
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, Guard[i, 0], Guard[i, 1],
                     FDPosition.At(Guard[i, 2], Guard[i, 3]), Guard[i, 4]);
             }
 
@@ -255,6 +258,38 @@ namespace WindingTale.Chapters
             // would follow the party to the church waiting to be revived.
             gameMain.gameMap.RemoveCreature(LaitingFriendId);
             gameMain.gameMap.Map.DeadCreatures.RemoveAll(creature => creature.Id == LaitingFriendId);
+        }
+
+        /// <summary>
+        /// The party's line-up as roster rows of (id, definition, x, y, drop item): a
+        /// friend's definition is his own id, and the optional ones are left out when the
+        /// party record does not carry them.
+        /// </summary>
+        private static int[,] BuildPartyRoster(GameMain gameMain)
+        {
+            List<int> rows = new List<int>();
+            for (int i = 0; i < PartyEntry.GetLength(0); i++)
+            {
+                int creatureId = PartyEntry[i, 0];
+                if (creatureId >= FirstOptionalFriendId && !PartyCarries(gameMain, creatureId))
+                {
+                    continue;
+                }
+
+                rows.Add(creatureId);
+                rows.Add(creatureId);
+                rows.Add(PartyEntry[i, 1]);
+                rows.Add(PartyEntry[i, 2]);
+                rows.Add(0);
+            }
+
+            int[,] roster = new int[rows.Count / 5, 5];
+            for (int i = 0; i < rows.Count; i++)
+            {
+                roster[i / 5, i % 5] = rows[i];
+            }
+
+            return roster;
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 using UnityEngine;
 using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
+using WindingTale.Core.Definitions.Items;
 
 namespace WindingTale.Scenes.GameFieldScene.Activities
 {
@@ -18,24 +19,56 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
 
         private const string NothingText = "无效";
 
+        // The stat potions, each in a colour of its own: strength deep purple, speed deep
+        // teal, endurance deep blue-violet, the wind spirit's feather bright silver.
+        private static readonly Color PotionApColor = new Color(0.42f, 0.10f, 0.62f);
+        private static readonly Color PotionDxColor = new Color(0.00f, 0.42f, 0.45f);
+        private static readonly Color PotionDpColor = new Color(0.27f, 0.16f, 0.72f);
+        private static readonly Color PotionMvColor = new Color(0.85f, 0.89f, 0.95f);
+
         /// <summary>
-        /// The line for a healing spell that restored the given amount (0 = nothing), and its
-        /// colour. The amount is prefixed with what it restored: "HP+30" / "MP+12".
+        /// The line for a permanent stat potion: "AP+3", "DP+3", "DX+3", "MV+1" (or "HP上限+20"
+        /// / "MP上限+20" for the max-HP / max-MP ones), with the colour it is shown in. Null for
+        /// an item that is not one of these.
+        /// </summary>
+        public static string ForPotion(ItemUseType type, int amount, out Color color)
+        {
+            switch (type)
+            {
+                case ItemUseType.Ap:
+                    color = PotionApColor;
+                    return "AP+" + amount;
+                case ItemUseType.Dp:
+                    color = PotionDpColor;
+                    return "DP+" + amount;
+                case ItemUseType.Dx:
+                    color = PotionDxColor;
+                    return "DX+" + amount;
+                case ItemUseType.Mv:
+                    color = PotionMvColor;
+                    return "MV+" + amount;
+                case ItemUseType.HpMax:
+                    color = HealColor;
+                    return "HP上限+" + amount;
+                case ItemUseType.MpMax:
+                    color = BuffColor;
+                    return "MP上限+" + amount;
+                default:
+                    color = NoneColor;
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// The line for a healing spell that restored the given amount, and its colour. The
+        /// amount is prefixed with what it restored: "HP+30" / "MP+12". A heal that restored
+        /// nothing (a full-health target) reads "HP+0" in grey rather than a vague "invalid".
         /// </summary>
         public static string ForRecover(RecoverType type, int recovered, out Color color)
         {
-            string text;
-            if (recovered > 0)
-            {
-                bool isMp = type == RecoverType.Mp;
-                text = (isMp ? "MP+" : "HP+") + recovered;
-                color = isMp ? BuffColor : HealColor;
-            }
-            else
-            {
-                text = NothingText;
-                color = NoneColor;
-            }
+            bool isMp = type == RecoverType.Mp;
+            string text = (isMp ? "MP+" : "HP+") + Mathf.Max(0, recovered);
+            color = recovered > 0 ? (isMp ? BuffColor : HealColor) : NoneColor;
             return text;
         }
 
