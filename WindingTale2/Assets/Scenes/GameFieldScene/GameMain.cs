@@ -251,8 +251,23 @@ namespace WindingTale.Scenes.GameFieldScene
         /// </summary>
         public void OnGameWin()
         {
+            FadeOutMusicForVictory();
             this.PushActivity(game => game.EnterVillage());
         }
+
+        /// <summary>
+        /// The chapter is won: the battle music fades out right away, under the closing
+        /// conversation, instead of playing on until the field fades to the next scene.
+        /// Common to every chapter -- they all end through OnGameWin / OnGameEnding. The flag
+        /// keeps the turn cycle, which may still have steps queued, from starting a track again.
+        /// </summary>
+        private void FadeOutMusicForVictory()
+        {
+            victoryReached = true;
+            StopBackgroundMusic();
+        }
+
+        private bool victoryReached = false;
 
         /// <summary>
         /// The battle is over and the story goes straight on to one of the ending
@@ -264,6 +279,7 @@ namespace WindingTale.Scenes.GameFieldScene
         /// </summary>
         public void OnGameEnding(int endingChapterId)
         {
+            FadeOutMusicForVictory();
             this.PushActivity(game => game.EnterEnding(endingChapterId));
         }
 
@@ -325,6 +341,11 @@ namespace WindingTale.Scenes.GameFieldScene
         /// <summary>The Field track, played through the player's turn.</summary>
         private void PlayFieldMusic()
         {
+            if (victoryReached)
+            {
+                return;
+            }
+
             BackgroundMusicDefinition music = GetBackgroundMusic();
             BackgroundMusic.GetOrCreate().PlayClipByName(ResolveAudioPath(music?.Field));
         }
@@ -332,6 +353,11 @@ namespace WindingTale.Scenes.GameFieldScene
         /// <summary>The Enemy track, played through the enemy's turn.</summary>
         private void PlayEnemyMusic()
         {
+            if (victoryReached)
+            {
+                return;
+            }
+
             BackgroundMusicDefinition music = GetBackgroundMusic();
             BackgroundMusic.GetOrCreate().PlayClipByName(ResolveAudioPath(music?.Enemy));
         }
@@ -1178,10 +1204,9 @@ namespace WindingTale.Scenes.GameFieldScene
             // The NPC turn plays in silence.
             StopBackgroundMusic();
 
-            if (gameMap.Map.Npcs.Count > 0)
+            if (gameMap.Map.Npcs.Count > 0 && npcAIHandler.Notified())
             {
-                //// Start AI Handler to process the NPC turn
-                npcAIHandler.Notified();
+                // The NPCs are under way; their last one ends the turn.
             }
             else
             {
@@ -1209,8 +1234,11 @@ namespace WindingTale.Scenes.GameFieldScene
 
             if (gameMap.Map.Enemies.Count > 0)
             {
-                //// Start AI Handler to process the NPC turn
-                enemyAIHandler.Notified();
+                //// Start AI Handler to process the enemy turn
+                if (!enemyAIHandler.Notified())
+                {
+                    onStartNextTurn();
+                }
             }
             else
             {
@@ -1226,6 +1254,12 @@ namespace WindingTale.Scenes.GameFieldScene
         /// </summary>
         private void applyExperienceAndLevelUp(FDCreature creature, int experience)
         {
+            // A creature that died in the battle earns nothing from it.
+            if (creature.IsDead())
+            {
+                return;
+            }
+
             LevelUpInfo levelUp = BattleHandler.ApplyExperience(creature, experience);
             if (levelUp != null)
             {
@@ -1360,13 +1394,21 @@ namespace WindingTale.Scenes.GameFieldScene
         /// </summary>
         private void notifyAIHandler(CreatureFaction faction)
         {
+            // A handler with nobody able to act (a side made up of frozen captives, say) has
+            // no creature whose end of turn would move the game on, so move it on here.
             if (faction == CreatureFaction.Enemy)
             {
-                enemyAIHandler.Notified();
+                if (!enemyAIHandler.Notified())
+                {
+                    onStartNextTurn();
+                }
             }
             else if (faction == CreatureFaction.Npc)
             {
-                npcAIHandler.Notified();
+                if (!npcAIHandler.Notified())
+                {
+                    onStartNextTurn();
+                }
             }
         }
 

@@ -1191,7 +1191,7 @@ EMBER_10 = 72                  # rock with a coal still glowing in it
 # five voxels a row from y 110 is well past that by then. The sides have to
 # reach the same height, or a wedge of sky opens where the two walls meet.
 CAVE_X_10 = (30, 228)
-CAVE_Y_10 = (110, 148)
+CAVE_Y_10 = (100, 152)
 CAVE_TOP_10 = 89
 CAVE_SLOPE_10 = 5.0
 
@@ -1206,55 +1206,310 @@ def tiles_10(tx, ty):
     return ROCK_10[rnd.randrange(len(ROCK_10))]
 
 
-def cavern(bd, x0, x1, y0, y1, top=CAVE_TOP_10, slope=CAVE_SLOPE_10):
-    """Close a cave in: rock climbing out of the floor at both sides and across
-    the back, and dropping to the floor again behind the cliff.
+def _vnoise(xs, ys, cell, seed):
+    """Smooth 0..1 value noise over voxel coordinates (broadcastable arrays)."""
+    rnd = np.random.RandomState(seed)
+    g = rnd.rand(int(max(np.max(xs), 1) / cell) + 3, int(max(np.max(ys), 1) / cell) + 3)
+    u, v = xs / float(cell), ys / float(cell)
+    iu, iv = np.floor(u).astype(int), np.floor(v).astype(int)
+    fu, fv = u - iu, v - iv
+    fu, fv = fu * fu * (3 - 2 * fu), fv * fv * (3 - 2 * fv)
+    a = g[iu, iv] * (1 - fu) + g[iu + 1, iv] * fu
+    b = g[iu, iv + 1] * (1 - fu) + g[iu + 1, iv + 1] * fu
+    return a * (1 - fv) + b * fv
 
-    ``rise`` lifts the far ground to close a horizon off, which is all an
-    outdoor chapter wants; this has to go much further -- above the top of the
-    frame -- and it has to come back down afterwards, because everything behind
-    the cliff is hidden by it and filling that with stone would only double the
-    model for nothing.
+
+# The cavern is a lava tube: a long tunnel that lava once ran through, its cross
+# section a wide ellipse -- flat-ish floor, walls that curve up and over into one
+# arched ceiling, like a cylinder laid on its side -- running away from the camera
+# and wandering from side to side as it goes.
+# The fighters' ground: the tunnel is narrower than the open-air backdrops' floor, so the
+# usual FIGHTER_ZONE would cover all of it and leave nowhere for the fires.
+TUBE_ZONE_10 = (94, 130, 20, 150)
+# The tunnel's middle line. 111 put it on the camera's axis; the picture is then slid
+# 32 voxels the other way (about a fifth of the frame at the depth the background
+# is seen at), so the fighters sit right of the middle of the bore.
+TUBE_X_10 = 143
+TUBE_END_10 = 168              # where the tunnel is stopped off by rock
+CEILING_THICK_10 = 8           # voxels of rock laid over the arch (nobody sees more)
+
+
+def _tube_axis(ys):
+    """Where the tunnel's middle is at each depth (x), and its half-width."""
+    # On the camera's line (x 111 is the middle of the frame), bending only a little,
+    # so the two sides of the bore are much the same picture.
+    cx = TUBE_X_10 + 8 * np.sin(np.clip(ys - 30, 0, None) / 50.0)
+    a = 64 + 6 * np.sin(ys / 19.0 + 1.0) + 3 * np.sin(ys / 8.3)
+    return cx, a
+
+
+def cavern(bd, top=CAVE_TOP_10):
+    """Cut the tunnel out of solid rock, as a floor height map plus a ceiling.
+
+    Every column of the model is either inside the tunnel -- floor rising along
+    the ellipse's lower arc, air, then ceiling from its upper arc up -- or wholly
+    rock. The floor is the heightmap the other recipes use; the ceiling is a second
+    surface (``bd.ceiling``, the z of its first voxel) that ``rock_walls`` fills,
+    since a heightmap cannot hang anything over a floor.
+
+    The first cut was a floor with a ramp of rock rising off each side and across
+    the back: from the battle camera, a room with walls. A tunnel has no walls, only
+    one surface that curls all the way round.
     """
     xs = np.arange(bd.size[0], dtype=np.float64)[:, None]
     ys = np.arange(bd.size[1], dtype=np.float64)[None, :]
-    # Rock does not have straight edges. Two slow waves bend the foot of every
-    # wall so the cavern is a cave and not a room.
-    wob = 5.0 * np.sin(ys / 19.0 + 0.6) + 3.0 * np.cos(xs / 13.0 + 1.1)
-    side = np.maximum((x0 + wob) - xs, xs - (x1 - wob))
-    side = np.where(ys < y1, side, -1e9)          # the cliff takes over past y1
-    back = np.minimum(ys - (y0 + 0.4 * wob), (y1 - ys) * 3.0)
-    d = np.maximum(side, back)
-    bd.ground = bd.ground + np.clip(d * slope, 0, top - GROUND_Z).astype(np.int16)
+    cx, a = _tube_axis(ys)
+    b = 39.0 + 3.0 * np.sin(ys / 31.0 + 0.4)          # half-height of the bore
+    u = (xs - cx) / a
+    inside = (np.abs(u) < 1.0) & (ys < TUBE_END_10)
+    s = np.sqrt(np.clip(1.0 - u * u, 0.0, 1.0))
+
+    # Rock is never smooth: noise roughens the arc, more the further it has climbed.
+    lumps = (_vnoise(xs, ys, 9.0, 101) - 0.5) * 2.0 + 0.6 * (_vnoise(xs, ys, 4.0, 102) - 0.5) * 2.0
+    rise = b * (1.0 - s)
+    rise = rise + lumps * np.clip(rise, 0, 10) * 0.35
+    rise = np.where(inside, np.clip(rise, 0, top - GROUND_Z), top - GROUND_Z)
+    bd.ground = bd.ground + rise.astype(np.int16)
+
+    # The crown of the arch, ragged with hanging rock.
+    crown = GROUND_Z + b * (1.0 + s) + 3.0 * (_vnoise(xs, ys, 7.0, 104) - 0.5) * 2.0
+    crown = np.where(inside, crown, bd.size[2]).astype(np.int16)
+    bd.ceiling = np.minimum(crown, bd.size[2])
+    bd.tube_cx = cx[0]
+
+
+# What the walls are made of: dark basalt, in a few warm greys, laid down in
+# strata. It replaces the floor's tan tiles up the walls -- those were the
+# "yellow" of the first cut, and they stripe when a cliff is a column of tile.
+WALL_ROCK_10 = ((40, 30, 30), (54, 40, 36), (68, 50, 42), (82, 60, 46),
+                (50, 44, 46), (34, 26, 28))
+WALL_MIN_10 = GROUND_Z + 6     # ground height from which a column counts as wall
+
+
+def rock_walls(bd):
+    """Repaint the tunnel's rock: every voxel of a climbed column, and the ceiling laid
+    over the arch, in strata of basalt."""
+    xs = np.arange(bd.size[0], dtype=np.float64)[:, None]
+    ys = np.arange(bd.size[1], dtype=np.float64)[None, :]
+    wall = bd.ground >= WALL_MIN_10
+    ceiling = bd.ceiling
+    along = xs * 0.8 + ys * 0.6
+    tones = [[BOOK.index(tuple(int(c * s) for c in rgb)) for s in (1.0, 0.82, 0.66)]
+             for rgb in WALL_ROCK_10]
+    tones = np.array(tones, np.uint16)                  # tone, shade
+    grain = _vnoise(along, ys * 0.0 + 1, 3.0, 111)      # crumbly, along the wall
+    for z in range(GROUND_Z - 2, bd.size[2]):
+        layer = bd.a[:, :, z]
+        rows = _vnoise(along, np.full_like(along, z * 1.0), 5.0, 112)
+        strata = _vnoise(np.full_like(along, z * 1.0), np.full_like(along, 7.0), 3.0, 113)
+        pick = np.clip((0.5 * rows + 0.5 * strata + 0.35 * (grain - 0.5)) * len(WALL_ROCK_10),
+                       0, len(WALL_ROCK_10) - 1e-6).astype(int)
+        shade = np.clip(((z - GROUND_Z) / 70.0 * 2.0 + 0.25 * (rows - 0.5)), 0, 1.999).astype(int)
+        paint = tones[pick, shade]
+        roof = (z >= ceiling) & (z < ceiling + CEILING_THICK_10)
+        m = (wall & (layer > 0)) | roof
+        layer[m] = paint[m]
+
+
+# The far end of the bore. The tunnel is stopped off at TUBE_END_10 with a flat face of
+# rock, and from the battle camera that face is a plainly visible ellipse -- the cut
+# through the tube -- sitting dead ahead. Rather than pretend the tunnel goes on, the
+# last stretch of it fades into the dark: every voxel from FADE_FROM_10 back is dimmed
+# a little more the deeper it lies, so the walls run out into black and the end face is
+# black, its rim melting into the rock round it.
+FADE_FROM_10 = 126
+FADE_LEVELS_10 = (1.0, 0.82, 0.66, 0.5, 0.36, 0.24, 0.14, 0.07, 0.03)
+
+
+def fade_depth(bd):
+    n = len(FADE_LEVELS_10) - 1
+    span = float(TUBE_END_10 - FADE_FROM_10)
+    for k in range(1, len(FADE_LEVELS_10)):
+        # the rows whose fade lands on this level (the last level takes everything behind)
+        y0 = FADE_FROM_10 + int(round(span * (k - 0.5) / n))
+        y1 = bd.size[1] if k == n else FADE_FROM_10 + int(round(span * (k + 0.5) / n))
+        if y0 >= y1:
+            continue
+        f = FADE_LEVELS_10[k]
+        lut = np.zeros(len(BOOK.colours) + 1, np.uint16)
+        for i, (r, g, b, _a) in enumerate(list(BOOK.colours)):
+            lut[i + 1] = BOOK.index((r * f, g * f, b * f))
+        block = bd.a[:, y0:y1, :]
+        # lut may have grown while it was built (new dark colours); index by the old ones only
+        block[:] = np.where(block > 0, lut[np.minimum(block, len(lut) - 1)], 0)
+
+
+# Lava: from the flames' own palette, so it belongs to the same fire as the pillars.
+LAVA_10 = ((255, 226, 110), (255, 170, 40), (240, 110, 18), (200, 60, 10))
+CRUST_10 = ((78, 30, 20), (52, 22, 18))
+
+
+def _face(bd, x, y, least=3):
+    """How many voxels of the column at (x, y) the camera can see: from the
+    ground of the lowest neighbour up to its own. On a steep wall that is many
+    -- painting only the top few leaves a dotted line instead of a fall."""
+    lo = int(bd.ground[max(0, x - 1):x + 2, max(0, y - 1):y + 2].min())
+    return max(least, int(bd.ground[x, y]) - lo + 1)
+
+
+def _lava_paint(bd, xs, ys, seed, depth=3, core_bias=0.0):
+    """Turn the visible face of the columns (xs, ys) to molten rock."""
+    palette = [BOOK.index(c) for c in LAVA_10]
+    for x, y, w in zip(xs, ys, core_bias if np.ndim(core_bias) else [core_bias] * len(xs)):
+        top = int(bd.ground[x, y])
+        n = _vnoise(np.array([[x * 1.0]]), np.array([[y * 1.0]]), 3.0, seed)[0, 0]
+        pick = int(np.clip((n * 0.9 + w * 0.5) * len(palette), 0, len(palette) - 1))
+        pick = len(palette) - 1 - pick                      # 0 = hottest
+        bd.a[x, y, max(0, top - _face(bd, x, y, depth) + 1):top + 1] = palette[pick]
+
+
+def lava_pool(bd, cx, cy, rx, ry, seed):
+    """A small pool sunk into the floor: hot in the middle, crusted at the rim."""
+    xs = np.arange(bd.size[0], dtype=np.float64)[:, None]
+    ys = np.arange(bd.size[1], dtype=np.float64)[None, :]
+    wob = 0.22 * np.sin(np.arctan2(ys - cy, xs - cx) * 3 + seed) + 0.12 * np.sin(np.arctan2(ys - cy, xs - cx) * 5 + seed * 2)
+    r = np.hypot((xs - cx) / rx, (ys - cy) / ry) + wob
+    crust = [BOOK.index(c) for c in CRUST_10]
+    inner = np.argwhere(r < 1.0)
+    rim = np.argwhere((r >= 1.0) & (r < 1.3))
+    for x, y in rim:
+        top = int(bd.ground[x, y])
+        bd.a[x, y, max(0, top - 1):top + 1] = crust[(x + y) % 2]
+    for x, y in inner:
+        # sunk one voxel below the rock round it
+        top = int(bd.ground[x, y])
+        bd.a[x, y, top:top + 1] = 0
+        bd.ground[x, y] = top - 1
+    xs_i, ys_i = inner[:, 0], inner[:, 1]
+    heat = 1.0 - r[xs_i, ys_i]
+    _lava_paint(bd, xs_i, ys_i, seed, depth=2, core_bias=heat)
+
+
+def lava_flow(bd, x, y, seed, rnd, width=2.7, pool=(9, 6)):
+    """A lava fall: from a crack high on the wall, down the steepest way to the floor.
+
+    The way down is followed on the heightmap, wandering a little; the fall
+    widens as it goes, its edge is crusted black-red and it ends in a small pool.
+    """
+    g = bd.ground.astype(np.float64)
+    gx, gy = np.gradient(g)
+    cx, cy = float(x), float(y)
+    path = []
+    heading = 0.0
+    for _ in range(400):
+        ix, iy = int(round(cx)), int(round(cy))
+        if not (1 <= ix < bd.size[0] - 1 and 1 <= iy < bd.size[1] - 1):
+            break
+        if g[ix, iy] < GROUND_Z + 5:
+            break
+        path.append((cx, cy))
+        vx, vy = -gx[ix, iy], -gy[ix, iy]
+        n = math.hypot(vx, vy) or 1.0
+        heading = 0.9 * heading + rnd.uniform(-0.9, 0.9)
+        dx, dy = vx / n, vy / n
+        cx += dx - dy * heading * 0.7
+        cy += dy + dx * heading * 0.7
+    if len(path) < 6:
+        return
+    crust = [BOOK.index(c) for c in CRUST_10]
+    n = len(path)
+    cells = {}
+    # The fall does not run true: it swings from side to side across the face, a
+    # few voxels each way, the way it would find its way round lumps of rock.
+    swung = []
+    for i, (px, py) in enumerate(path):
+        qx, qy = path[min(i + 1, n - 1)][0] - path[max(i - 1, 0)][0], path[min(i + 1, n - 1)][1] - path[max(i - 1, 0)][1]
+        norm = math.hypot(qx, qy) or 1.0
+        swing = 2.6 * math.sin(i * 0.5 + seed) + 1.3 * math.sin(i * 1.3 + seed * 2.0)
+        swung.append((px - qy / norm * swing, py + qx / norm * swing))
+    path = swung
+    for i, (px, py) in enumerate(path):
+        w = width * (0.6 + 0.7 * i / n) * (0.8 + 0.5 * abs(math.sin(i * 0.23 + seed)))
+        r = int(math.ceil(w + 1.4))
+        for ox in range(-r, r + 1):
+            for oy in range(-r, r + 1):
+                px_i, py_i = int(round(px)) + ox, int(round(py)) + oy
+                if not (0 <= px_i < bd.size[0] and 0 <= py_i < bd.size[1]):
+                    continue
+                dist = math.hypot(ox, oy)
+                key = (px_i, py_i)
+                if dist <= w:
+                    cells[key] = max(cells.get(key, 0), 2 - dist / w)
+                elif dist <= w + 1.4 and key not in cells:
+                    cells[key] = -1
+    core = [(k, v) for k, v in cells.items() if v > 0]
+    for (px_i, py_i), v in cells.items():
+        if v < 0:
+            top = int(bd.ground[px_i, py_i])
+            bd.a[px_i, py_i, max(0, top - _face(bd, px_i, py_i, 2) + 1):top + 1] = crust[(px_i + py_i) % 2]
+    if core:
+        xs = [k[0] for k, _ in core]
+        ys = [k[1] for k, _ in core]
+        heat = np.array([min(1.0, v / 2.0) for _, v in core])
+        _lava_paint(bd, xs, ys, seed, depth=3, core_bias=heat)
+    fx, fy = path[-1]
+    lava_pool(bd, fx, fy, pool[0], pool[1], seed)
 
 
 def recipe_10(bd):
     bd.undulate(amplitude=2.5, wavelength=60.0, seed=10)
-    cavern(bd, CAVE_X_10[0], CAVE_X_10[1], CAVE_Y_10[0], CAVE_Y_10[1])
+    cavern(bd)
 
     # The rock is drawn in blobs several pixels across, wide enough to survive a
     # backdrop voxel, so it keeps more of its grain than grass or cobbles would;
     # and an ember keeps all of its, because dulling it is putting it out.
     bd.lay_ground(tiles_10, '10',
                   contrast=lambda t: 1.0 if t == EMBER_10 else 0.7)
+    rock_walls(bd)
+    fade_depth(bd)
 
     # Fire is the only light down here, so it goes where it will be seen against
     # the walls -- the columns up against the rock, the bowls out on the floor.
-# Sparingly. The first cut strewed them the way the map does -- seventy-one
+    # Sparingly. The first cut strewed them the way the map does -- seventy-one
     # of them, over a board forty-five tiles deep -- and packing that many into
     # one frame gave a bonfire with no cave left in it: fire is the only bright
     # thing down here, so a dozen of them is already a lot of picture.
     scatter_trees(bd, FIRE_COLUMNS_10,
-                  boxes=[(34, 88, 60, 132, 0.45), (176, 226, 60, 132, 0.45)],
-                  spacing=26, seed=20, scale=2, avoid=(FIGHTER_ZONE,))
+                  boxes=[(163, 191, 60, 150, 0.5), (80, 94, 60, 150, 0.5)],
+                  spacing=26, seed=20, scale=2, avoid=(TUBE_ZONE_10, LAVA_POOL_ZONE_10))
     scatter_trees(bd, FIRE_BOWLS_10,
-                  boxes=[(38, 92, 28, 128, 0.4), (174, 222, 28, 128, 0.4)],
-                  spacing=30, seed=30, scale=2, avoid=(FIGHTER_ZONE,))
+                  boxes=[(163, 191, 28, 150, 0.45), (80, 94, 28, 150, 0.45)],
+                  spacing=30, seed=30, scale=2, avoid=(TUBE_ZONE_10, LAVA_POOL_ZONE_10))
 
     # Two columns close to the camera, for the same reason chapter 04 has two
     # big pines there: without a foreground the cave is a painted flat.
-    bd.stamp(obstacle('fire_pillar_2', 2), 56, 44)
-    bd.stamp(obstacle('fire_pillar_3', 2), 196, 40)
+    bd.stamp(obstacle('fire_pillar_2', 2), 174, 44)
+    bd.stamp(obstacle('fire_pillar_3', 2), 72, 40)
+
+    # Lava. A small pool on the floor, off the fighters' ground, and falls of it
+    # running down the walls out of cracks in the rock, each ending in a puddle.
+    rnd = random.Random(1010)
+    lava_pool(bd, LAVA_POOL_10[0], LAVA_POOL_10[1], LAVA_POOL_10[2], LAVA_POOL_10[3], 5)
+    for i, (side, at) in enumerate(LAVA_FALLS_10):
+        start = _wall_start(bd, side, at)
+        if start is not None:
+            lava_flow(bd, start[0], start[1], 40 + i, rnd)
+
+
+# The floor pool: (x, y, radius x, radius y). Screen right of the fighters and well
+# inside the frame (at y 80 the frame spans about x 35..183).
+LAVA_POOL_10 = (174, 110, 16, 10)
+LAVA_POOL_ZONE_10 = (154, 194, 96, 124)
+
+# Where the falls come out of the rock: the tunnel's side ('left' = large x, 'right' =
+# small x) and the depth (y) along it. They start high on the curve and run down it.
+LAVA_FALLS_10 = (('right', 84), ('left', 70), ('right', 108), ('left', 100), ('right', 136), ('left', 140))
+
+
+def _wall_start(bd, side, at, height=GROUND_Z + 26):
+    """The first point on the tunnel's side, going out from its middle, that is ``height`` up."""
+    g = bd.ground
+    mid = int(round(bd.tube_cx[at]))
+    rng = range(mid, bd.size[0]) if side == 'left' else range(mid, -1, -1)
+    for x in rng:
+        if g[x, at] >= height:
+            return x, at
+    return None
 
 
 # --------------------------------------------------------------------------- #

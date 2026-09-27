@@ -85,6 +85,8 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             });
         }
 
+        // Opens on the Up item (211 / 221).
+        protected override int PreferredDefaultIndex => 1;
     }
 }
 

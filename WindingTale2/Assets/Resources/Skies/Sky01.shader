@@ -3,16 +3,17 @@ Shader "Skybox/WT_Sky01"
     // SKY_01 -- the standard daytime sky: a blue gradient from a pale horizon up to a deep
     // zenith, with soft white clouds drifting across it. The clouds are a fractal noise laid
     // on a flat layer overhead (so they shrink towards the horizon like real ones), lit from
-    // the top and greyer underneath, and fade into the haze at the horizon.
+    // the top and greyer underneath, and fade into the haze at the horizon. The cloud edges
+    // are crisp (cumulus-like puffs, not a soft haze), and the blue is a deep, saturated one.
     Properties
     {
-        _ZenithColor ("Zenith", Color) = (0.13, 0.34, 0.80, 1)
-        _MidColor ("Mid Sky", Color) = (0.30, 0.55, 0.92, 1)
-        _HorizonColor ("Horizon Haze", Color) = (0.74, 0.87, 0.98, 1)
-        _GroundColor ("Below Horizon", Color) = (0.62, 0.76, 0.90, 1)
+        _ZenithColor ("Zenith", Color) = (0.03, 0.22, 0.74, 1)
+        _MidColor ("Mid Sky", Color) = (0.12, 0.42, 0.95, 1)
+        _HorizonColor ("Horizon Haze", Color) = (0.50, 0.74, 0.98, 1)
+        _GroundColor ("Below Horizon", Color) = (0.42, 0.62, 0.90, 1)
         _CloudColor ("Cloud Lit", Color) = (1, 1, 1, 1)
-        _CloudShade ("Cloud Shade", Color) = (0.66, 0.72, 0.84, 1)
-        _CloudCover ("Cloud Cover", Range(0, 1)) = 0.5
+        _CloudShade ("Cloud Shade", Color) = (0.52, 0.60, 0.78, 1)
+        _CloudCover ("Cloud Cover", Range(0, 1)) = 0.55
         _CloudScale ("Cloud Scale", Float) = 1.6
         _CloudSpeed ("Cloud Drift Speed", Float) = 0.012
         _SunDir ("Sun Direction", Vector) = (0.35, 0.55, 0.45, 0)
@@ -87,7 +88,8 @@ Shader "Skybox/WT_Sky01"
             {
                 float n = fbm(uv);
                 float threshold = lerp(0.78, 0.36, _CloudCover);
-                return smoothstep(threshold, threshold + 0.22, n);
+                // A narrow ramp gives the puffs a defined edge.
+                return smoothstep(threshold, threshold + 0.07, n);
             }
 
             fixed4 frag (v2f i) : SV_Target
@@ -122,7 +124,7 @@ Shader "Skybox/WT_Sky01"
                     // Shade: sample a little towards the sun; if the cloud thickens there, this
                     // spot is in shadow and reads greyer.
                     float2 towardSun = normalize(sun.xz + 1e-4) * 0.06;
-                    float shade = saturate((cloudDensity(uv + towardSun) - density) * 3.0 + 0.25);
+                    float shade = saturate((cloudDensity(uv + towardSun) - density) * 4.0 + 0.3);
 
                     float3 cloud = lerp(_CloudColor.rgb, _CloudShade.rgb, shade);
                     float horizonFade = smoothstep(0.0, 0.22, h);

@@ -27,7 +27,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             FDCreature creature = this.fdMap.GetCreatureAt(position);
             if (creature != null)
             {
-                if (creature.Faction == CreatureFaction.Friend && !creature.HasActioned)
+                if (creature.Faction == CreatureFaction.Friend && creature.CanTakeAction())
                 {
                     return new ShowMoveRangeState(gameMain, creature);
                 }

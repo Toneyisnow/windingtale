@@ -348,6 +348,73 @@ namespace WindingTale.MapObjects.CreatureIcon
 
         }
 
+        // A frozen creature (a bound captive, say) trembles in place: it shakes from side to
+        // side ShakesPerSecond times a second, so it reads as held fast at a glance.
+        private const float ShakesPerSecond = 6f;
+        private const float ShakeAmplitude = 0.07f;   // world units, a little over 3% of a tile
+
+        // The animation clips' resting local positions while a shake is under way. The three
+        // clips are what the eye sees, and the Animator only toggles them on and off, so
+        // shaking them leaves the creature's own transform (walking, placement) untouched.
+        private Vector3[] shakeRestPositions = null;
+
+        void LateUpdate()
+        {
+            bool frozen = creature != null && creature.Hp > 0
+                && creature.Effects.Contains(CreatureEffects.Frozen);
+
+            if (frozen)
+            {
+                ApplyShake();
+            }
+            else if (shakeRestPositions != null)
+            {
+                EndShake();
+            }
+        }
+
+        private void ApplyShake()
+        {
+            if (shakeRestPositions == null)
+            {
+                shakeRestPositions = new Vector3[ClipNames.Length];
+                for (int i = 0; i < ClipNames.Length; i++)
+                {
+                    Transform clip = transform.Find(ClipNames[i]);
+                    shakeRestPositions[i] = clip != null ? clip.localPosition : Vector3.zero;
+                }
+            }
+
+            // Side to side as the player sees it: along the camera's right, flat on the ground.
+            Vector3 right = Camera.main != null ? Camera.main.transform.right : Vector3.right;
+            right.y = 0f;
+            right = right.sqrMagnitude > 1e-6f ? right.normalized : Vector3.right;
+
+            float offset = Mathf.Sin(Time.time * ShakesPerSecond * 2f * Mathf.PI) * ShakeAmplitude;
+            for (int i = 0; i < ClipNames.Length; i++)
+            {
+                Transform clip = transform.Find(ClipNames[i]);
+                if (clip != null)
+                {
+                    clip.localPosition = shakeRestPositions[i] + transform.InverseTransformVector(right * offset);
+                }
+            }
+        }
+
+        private void EndShake()
+        {
+            for (int i = 0; i < ClipNames.Length; i++)
+            {
+                Transform clip = transform.Find(ClipNames[i]);
+                if (clip != null)
+                {
+                    clip.localPosition = shakeRestPositions[i];
+                }
+            }
+
+            shakeRestPositions = null;
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
             Debug.Log("OnPointerClick " + this.creature.Position.ToString());

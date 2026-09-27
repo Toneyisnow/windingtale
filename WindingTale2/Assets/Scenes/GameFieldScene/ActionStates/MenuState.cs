@@ -47,11 +47,25 @@ public class MenuState : IActionState
     }
 
     /// <summary>
-    /// Selects (and animates) the first enabled item scanning index 0..3
-    /// (Left, Up, Right, Bottom). No-op if the menu has no enabled item.
+    /// The item a menu opens on, when it is enabled (Left / Up / Right / Bottom = 0..3);
+    /// otherwise the first enabled item is used. A menu overrides this to open elsewhere.
+    /// </summary>
+    protected virtual int PreferredDefaultIndex => 0;
+
+    /// <summary>
+    /// Selects (and animates) the preferred item, else the first enabled item scanning
+    /// index 0..3 (Left, Up, Right, Bottom). No-op if the menu has no enabled item.
     /// </summary>
     private void SelectDefaultItem()
     {
+        FDMenuItem preferred = this.fdMenu.Items[PreferredDefaultIndex];
+        if (preferred != null && preferred.Enabled)
+        {
+            this.fdMenu.SetSelected(PreferredDefaultIndex);
+            gameMain.gameMap.SetMenuActiveItem(PreferredDefaultIndex);
+            return;
+        }
+
         for (int index = 0; index < 4; index++)
         {
             FDMenuItem item = this.fdMenu.Items[index];

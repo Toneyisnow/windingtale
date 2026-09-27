@@ -326,7 +326,9 @@ namespace WindingTale.Core.Map
 
         public bool HasAllCreaturesActioned(CreatureFaction faction)
         {
-            return !this.Creatures.Any(creature => creature.Faction == faction && !creature.HasActioned);
+            // Only those who can still act hold the turn open: a frozen creature (a bound
+            // captive, say) never acts, so waiting on it would stall the turn for good.
+            return !this.Creatures.Any(creature => creature.Faction == faction && creature.CanTakeAction());
         }
 
 

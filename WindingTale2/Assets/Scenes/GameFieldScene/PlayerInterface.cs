@@ -219,7 +219,7 @@ namespace WindingTale.Scenes.GameFieldScene
             }
 
             List<FDCreature> friends = map.Friends
-                .Where(f => f.Position != null && !f.HasActioned)
+                .Where(f => f.Position != null && f.CanTakeAction())
                 .OrderBy(f => f.Id)
                 .ToList();
             if (friends.Count == 0)

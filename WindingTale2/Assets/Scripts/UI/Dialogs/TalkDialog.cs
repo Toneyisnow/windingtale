@@ -64,14 +64,17 @@ public class TalkDialog : MonoBehaviour
     // Right moves to No, Left comes back. Meaningless while needConfirm is false.
     private bool confirmSelected = true;
 
-    // A message longer than this many lines scrolls: the top line goes and the rest slide up
-    // to make room for the next, one line at a time (see BuildScrollingText).
+    // A message or conversation longer than this many lines scrolls: the top line goes and
+    // the rest slide up to make room for the next, one line at a time (see BuildScrollingText).
     private const int MaxVisibleLines = 4;
     private const float ScrollSeconds = 0.18f;
 
-    // The message text's resting Y, captured in Awake; the scroll slides it and Init puts it back.
+    // The message and conversation texts' resting Y, captured in Awake; the scroll slides the
+    // active one and Init puts it back.
     private float messageTextBaseY = 0f;
     private bool messageTextBaseCaptured = false;
+    private float conversationTextBaseY = 0f;
+    private bool conversationTextBaseCaptured = false;
 
     private int creatureAnimationId = 0;
 
@@ -101,6 +104,13 @@ public class TalkDialog : MonoBehaviour
         {
             messageTextBaseY = messageRt.anchoredPosition.y;
             messageTextBaseCaptured = true;
+        }
+
+        RectTransform conversationRt = conversationTextObj != null ? conversationTextObj.GetComponent<RectTransform>() : null;
+        if (conversationRt != null)
+        {
+            conversationTextBaseY = conversationRt.anchoredPosition.y;
+            conversationTextBaseCaptured = true;
         }
 
         RectTransform confirmRt = confirmButtonObj != null ? confirmButtonObj.GetComponent<RectTransform>() : null;
@@ -152,8 +162,12 @@ public class TalkDialog : MonoBehaviour
         else
         {
             // Need confirm: Left / Right move the selection between Yes and No,
-            // Space / Enter triggers whichever is selected.
-            if (Input.GetKeyDown(KeyCode.RightArrow))
+            // Space / Enter triggers whichever is selected; Esc / Backspace cancels, i.e. picks No.
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace))
+            {
+                onCancel();
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 confirmSelected = false;
             }
@@ -278,6 +292,10 @@ public class TalkDialog : MonoBehaviour
         if (messageTextBaseCaptured)
         {
             SetAnchoredY(messageTextObj.GetComponent<RectTransform>(), messageTextBaseY);
+        }
+        if (conversationTextBaseCaptured)
+        {
+            SetAnchoredY(conversationTextObj.GetComponent<RectTransform>(), conversationTextBaseY);
         }
 
         // Every confirm dialog opens with Yes selected.
@@ -525,8 +543,10 @@ public class TalkDialog : MonoBehaviour
 
     private IEnumerator BuildText()
     {
-        string[] lines = fullText.Split('\n');
-        if (activeTextObj == messageTextObj && lines.Length > MaxVisibleLines)
+        // A message counts the lines the text itself breaks into; a conversation counts the
+        // lines it actually takes up on screen, wrapping included, since its lines run long.
+        string[] lines = activeTextObj == messageTextObj ? fullText.Split('\n') : GetDisplayLines(fullText);
+        if (lines.Length > MaxVisibleLines)
         {
             yield return BuildScrollingText(lines);
             textFinished = true;
@@ -552,6 +572,35 @@ public class TalkDialog : MonoBehaviour
     }
 
     /// <summary>
+    /// The text as it lays out in the active text box: one entry per line on screen, so a
+    /// line that wraps counts as the two it shows as.
+    /// </summary>
+    private string[] GetDisplayLines(string text)
+    {
+        TextMeshProUGUI tmp = activeTextObj.GetComponent<TextMeshProUGUI>();
+        tmp.text = text;
+        tmp.ForceMeshUpdate();
+
+        TMP_TextInfo info = tmp.textInfo;
+        List<string> lines = new List<string>();
+        for (int i = 0; i < info.lineCount; i++)
+        {
+            TMP_LineInfo line = info.lineInfo[i];
+            int start = line.firstCharacterIndex;
+            int end = Mathf.Min(start + line.characterCount, info.characterCount);
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            for (int c = start; c < end; c++)
+            {
+                sb.Append(info.characterInfo[c].character);
+            }
+            lines.Add(sb.ToString().TrimEnd('\n', '\r'));
+        }
+
+        tmp.text = string.Empty;
+        return lines.Count > 0 ? lines.ToArray() : new string[] { text };
+    }
+
+    /// <summary>
     /// Types out a message of more than MaxVisibleLines lines. The first four lines type out as
     /// usual; for each line after that the top line is dropped, the three below it slide up into
     /// the places of the top three, and the new line types out in the fourth place. A key press
@@ -559,8 +608,9 @@ public class TalkDialog : MonoBehaviour
     /// </summary>
     private IEnumerator BuildScrollingText(string[] lines)
     {
-        TextMeshProUGUI text = messageTextObj.GetComponent<TextMeshProUGUI>();
-        RectTransform rect = messageTextObj.GetComponent<RectTransform>();
+        TextMeshProUGUI text = activeTextObj.GetComponent<TextMeshProUGUI>();
+        RectTransform rect = activeTextObj.GetComponent<RectTransform>();
+        float baseY = activeTextObj == messageTextObj ? messageTextBaseY : conversationTextBaseY;
 
         for (int line = 0; line < lines.Length; line++)
         {
@@ -577,10 +627,10 @@ public class TalkDialog : MonoBehaviour
                 for (float elapsed = 0f; elapsed < ScrollSeconds && !skipToFullText; elapsed += Time.deltaTime)
                 {
                     float t = elapsed / ScrollSeconds;
-                    SetAnchoredY(rect, messageTextBaseY - lineHeight * (1f - t));
+                    SetAnchoredY(rect, baseY - lineHeight * (1f - t));
                     yield return null;
                 }
-                SetAnchoredY(rect, messageTextBaseY);
+                SetAnchoredY(rect, baseY);
             }
 
             string above = line > first ? JoinLines(lines, first, line - 1) + "\n" : string.Empty;
@@ -589,7 +639,7 @@ public class TalkDialog : MonoBehaviour
                 if (skipToFullText)
                 {
                     text.text = JoinLines(lines, Mathf.Max(0, lines.Length - MaxVisibleLines), lines.Length - 1);
-                    SetAnchoredY(rect, messageTextBaseY);
+                    SetAnchoredY(rect, baseY);
                     yield break;
                 }
 
@@ -601,7 +651,7 @@ public class TalkDialog : MonoBehaviour
             if (skipToFullText)
             {
                 text.text = JoinLines(lines, Mathf.Max(0, lines.Length - MaxVisibleLines), lines.Length - 1);
-                SetAnchoredY(rect, messageTextBaseY);
+                SetAnchoredY(rect, baseY);
                 yield break;
             }
         }

@@ -97,6 +97,9 @@ public class ShoppingMessageDialog : MonoBehaviour
             textMesh.font = messageFont;
         }
 
+        // The prefab's font colour is a dark grey; the notice reads white like the rest of the UI.
+        textMesh.color = Color.white;
+
         // '#' is the source line-break marker, same as the field dialogs use.
         textMesh.text = text.Replace("#", "\n");
         textMesh.ForceMeshUpdate();
