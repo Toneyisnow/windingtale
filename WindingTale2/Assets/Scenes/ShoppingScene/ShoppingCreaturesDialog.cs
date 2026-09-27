@@ -147,6 +147,12 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     /// <summary>Vertical nudge of the indicator off the cell centre, in world units.</summary>
     public float IndicatorOffsetY = 0.2f;
 
+    /// <summary>
+    /// Extra stretch of the indicator's height on top of IndicatorScale (1 = none). The
+    /// stretch is anchored at the top edge, so the highlight only grows downwards.
+    /// </summary>
+    public float IndicatorHeightScale = 1.1f;
+
     /// <summary>The indicator's brightest opacity, the high point of its pulse.</summary>
     public float IndicatorAlpha = 0.2f;
 
@@ -805,11 +811,18 @@ public class ShoppingCreaturesDialog : MonoBehaviour
             return;
         }
 
+        // Stretch the height by IndicatorHeightScale with the top edge held in place: the
+        // sprite grows about its centre, so the centre drops by half of the added height.
+        float scale = Mathf.Max(0f, IndicatorScale);
+        float heightScale = Mathf.Max(0f, IndicatorHeightScale);
+        float spriteHeight = indicatorRenderer.sprite != null ? indicatorRenderer.sprite.bounds.size.y : 0f;
+        float topAnchorShift = spriteHeight * scale * (heightScale - 1f) * 0.5f;
+
         Vector3 cell = CellLocalPosition(selectedIndex);
         Transform indicatorTransform = indicatorRenderer.transform;
-        indicatorTransform.localPosition = new Vector3(cell.x, cell.y + IndicatorOffsetY, IndicatorBehindIcons);
+        indicatorTransform.localPosition = new Vector3(cell.x, cell.y + IndicatorOffsetY - topAnchorShift, IndicatorBehindIcons);
         indicatorTransform.localRotation = Quaternion.identity;
-        indicatorTransform.localScale = Vector3.one * Mathf.Max(0f, IndicatorScale);
+        indicatorTransform.localScale = new Vector3(scale, scale * heightScale, 1f);
     }
 
     /// <summary>
