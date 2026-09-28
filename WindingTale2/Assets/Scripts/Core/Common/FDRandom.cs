@@ -21,12 +21,12 @@ namespace WindingTale.Core.Common
 
         public static int IntFromSpan(FDSpan span)
         {
-            return span.Min + UnityEngine.Random.Range(0, 1) * (span.Max - span.Min);
+            return IntFromSpan(span.Min, span.Max);
         }
 
         public static int IntFromSpan(int min, int max)
         {
-            return min + UnityEngine.Random.Range(0, 1) * (max - min);
+            return UnityEngine.Random.Range(min, max + 1);
         }
 
     }
