@@ -15,6 +15,7 @@ namespace WindingTale.Scenes.GameFieldScene
     ///
     ///   SKY_01  standard blue sky with white clouds
     ///   SKY_02  volcanic cave: dark rock ceiling, veins of magma and a sea of lava
+    ///   SKY_03  overcast: a grey sky under a heavy deck of dark storm cloud
     /// </summary>
     public class SkySphere : MonoBehaviour
     {
@@ -82,6 +83,8 @@ namespace WindingTale.Scenes.GameFieldScene
                     return "Skybox/WT_Sky01";
                 case "SKY_02":
                     return "Skybox/WT_Sky02";
+                case "SKY_03":
+                    return "Skybox/WT_Sky03";
                 default:
                     return null;
             }

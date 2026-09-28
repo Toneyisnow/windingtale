@@ -80,6 +80,11 @@ namespace WindingTale.Core.Files
         // Poisoned / frozen / stat buffs currently on the creature.
         public List<CreatureEffects> Effects;
 
+        // Rounds left on each of Effects, index for index (FDCreature.EffectTurns); -1 for an
+        // effect that never wears off. Null in records written before the counters existed,
+        // whose effects all load as never wearing off -- which is what they did then.
+        public List<int> EffectTurns;
+
         // Only ever true for an entry in DeadCreatures: this one fell in an earlier
         // chapter and has not been revived, so it never took this field at all. Records
         // written before this field existed decode it as false, which is what every
@@ -117,6 +122,7 @@ namespace WindingTale.Core.Files
             copy.ItemIds = this.ItemIds == null ? null : new List<int>(this.ItemIds);
             copy.MagicIds = this.MagicIds == null ? null : new List<int>(this.MagicIds);
             copy.Effects = this.Effects == null ? null : new List<CreatureEffects>(this.Effects);
+            copy.EffectTurns = this.EffectTurns == null ? null : new List<int>(this.EffectTurns);
 
             return copy;
         }

@@ -115,7 +115,7 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
                     color = HealColor;
                     break;
                 case EffectType.AntiFreeze:
-                    text = "解冻";
+                    text = "解除麻痹";
                     color = HealColor;
                     break;
                 case EffectType.StartAction:
@@ -127,7 +127,7 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
                     color = DebuffColor;
                     break;
                 case EffectType.Freezing:
-                    text = "冰冻";
+                    text = "麻痹";
                     color = DebuffColor;
                     break;
                 case EffectType.Forbidden:

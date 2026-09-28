@@ -9,6 +9,7 @@ using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
 using WindingTale.FightObjects;
 using WindingTale.UI.Utils;
+using UnityEngine.UI;
 
 namespace WindingTale.Scenes.GameBattleScene
 {
@@ -58,6 +59,13 @@ namespace WindingTale.Scenes.GameBattleScene
         private bool attackRoundStarted = false;
 
         private int currentAnimationIndex = 0;
+
+        // The strike (animation index) that last flashed for a critical hit: an attack clip
+        // can fire several hit events per strike, and the flash is once per strike.
+        private int criticalFlashedIndex = -1;
+
+        // The white screen-edge flash of a critical hit: up at once, then fading out.
+        private const float CriticalFlashSeconds = 0.3f;
 
         private bool animationFinished = false;
         private DateTime animationFinishTime;
@@ -266,6 +274,13 @@ namespace WindingTale.Scenes.GameBattleScene
             // Every strike is heard: a thwack when it lands, a swish through the air when it misses.
             playStrikeSound(applyKnockback);
 
+            // A critical hit flashes the screen edge white, once, on its first hit frame.
+            if (applyKnockback && hitDamage.IsCritical && criticalFlashedIndex != currentAnimationIndex)
+            {
+                criticalFlashedIndex = currentAnimationIndex;
+                StartCoroutine(FlashCriticalEdge());
+            }
+
             EnemyHitEffect hitEffect = hitObject.GetComponent<EnemyHitEffect>();
             if (hitEffect != null)
                 hitEffect.OnHit(knockbackDir, applyKnockback);
@@ -287,6 +302,44 @@ namespace WindingTale.Scenes.GameBattleScene
                     updateSubjectHp(currentHp);
                 }
             }
+        }
+
+        /// <summary>
+        /// A white ring round the screen edge (the magic screen flash's shape), on an overlay
+        /// canvas above both cameras, fading out over CriticalFlashSeconds.
+        /// </summary>
+        private IEnumerator FlashCriticalEdge()
+        {
+            GameObject canvasObject = new GameObject("CriticalFlash");
+            SceneManager.MoveGameObjectToScene(canvasObject, gameObject.scene);
+            Canvas canvas = canvasObject.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 30000;
+
+            GameObject imageObject = new GameObject("EdgeRing");
+            imageObject.transform.SetParent(canvasObject.transform, false);
+            RawImage image = imageObject.AddComponent<RawImage>();
+            image.raycastTarget = false;
+            RectTransform rect = image.rectTransform;
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+
+            Texture2D ring = MagicEffect.CreateEdgeRingTexture(Color.white);
+            image.texture = ring;
+
+            float elapsed = 0f;
+            while (elapsed < CriticalFlashSeconds)
+            {
+                float t = elapsed / CriticalFlashSeconds;
+                image.color = new Color(1, 1, 1, 1f - t * t);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            Destroy(canvasObject);
+            Destroy(ring);
         }
 
         private void playStrikeSound(bool landed)

@@ -74,6 +74,7 @@
     }
   ],
   "Sky": "SKY_01",
+  "Tai": 22,
   "BackgroundMusic": {
     "Field": "Battle_5_HD_Final",
     "Enemy": "Battle_Enemy_Turn_1",

@@ -20,8 +20,14 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         /// spawns and walks the party in one breath, and a friend who fell in an earlier
         /// chapter is never spawned (see ChapterEvents.AddCreatureToMap), so the walk its
         /// script queued has nobody to move.
+        ///
+        /// recordOrigin is for a move the player (or the AI) makes in its turn: the start
+        /// tile is kept as the creature's PrePosition, so the move can be taken back. A
+        /// chapter script's walk leaves it alone -- it is not the creature's move, and a
+        /// PrePosition left over from a walk-in sent the creature back to where it walked
+        /// in from the moment it was clicked (see ShowMoveRangeState.onEnter).
         /// </summary>
-        public static DurationActivity CreatureWalkActivity(int creatureId, FDMovePath movePath)
+        public static DurationActivity CreatureWalkActivity(int creatureId, FDMovePath movePath, bool recordOrigin = false)
         {
             Action<GameMain> startAction = gameMain =>
             {
@@ -31,8 +37,12 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
                     return;
                 }
 
-                // Save the current position
-                creature.PrePosition = creature.Position;
+                if (recordOrigin)
+                {
+                    // Save the current position
+                    creature.PrePosition = creature.Position;
+                }
+
                 gameMain.gameMap.MoveCreature(creature, movePath);
             };
 

@@ -220,6 +220,19 @@ namespace WindingTale.Core.Objects
             get; private set;
         }
 
+        /// <summary>
+        /// Rounds left on each effect in <see cref="Effects"/>, as in the original's
+        /// statusFrozen / statusPoisoned / ... counters: an effect starts at the N its magic
+        /// (or weapon) rolled, loses 1 at the end of every round (see <see cref="UpdateEffectsAtRoundEnd"/>)
+        /// and is gone when it reaches 0. An effect in <see cref="Effects"/> with no entry here
+        /// never wears off -- a chapter script's bound captive, or a record saved before the
+        /// counters existed.
+        /// </summary>
+        public Dictionary<CreatureEffects, int> EffectTurns
+        {
+            get; private set;
+        }
+
 
 
         #endregion
@@ -341,6 +354,7 @@ namespace WindingTale.Core.Objects
             this.Items = new List<int>();
             this.Magics = new List<int>();
             this.Effects = new HashSet<CreatureEffects>();
+            this.EffectTurns = new Dictionary<CreatureEffects, int>();
 
             this.AttackItemIndex = -1;
             this.DefendItemIndex = -1;
@@ -382,6 +396,7 @@ namespace WindingTale.Core.Objects
             }
 
             this.Effects = new HashSet<CreatureEffects>();
+            this.EffectTurns = new Dictionary<CreatureEffects, int>();
         }
 
         #endregion
@@ -685,28 +700,28 @@ namespace WindingTale.Core.Objects
             switch (effect.Type)
             {
                 case EffectType.EnhancedAp:
-                    this.Effects.Add(CreatureEffects.EnhancedAp);
+                    this.AddEffect(CreatureEffects.EnhancedAp, effect.RoundCount);
                     break;
                 case EffectType.EnhancedDp:
-                    this.Effects.Add(CreatureEffects.EnhancedDp);
+                    this.AddEffect(CreatureEffects.EnhancedDp, effect.RoundCount);
                     break;
                 case EffectType.EnhancedDx:
-                    this.Effects.Add(CreatureEffects.EnhancedDx);
+                    this.AddEffect(CreatureEffects.EnhancedDx, effect.RoundCount);
                     break;
                 case EffectType.Poison:
-                    this.Effects.Add(CreatureEffects.Poisoned);
+                    this.AddEffect(CreatureEffects.Poisoned, effect.RoundCount);
                     break;
                 case EffectType.Forbidden:
-                    this.Effects.Add(CreatureEffects.Forbidden);
+                    this.AddEffect(CreatureEffects.Forbidden, effect.RoundCount);
                     break;
                 case EffectType.Freezing:
-                    this.Effects.Add(CreatureEffects.Frozen);
+                    this.AddEffect(CreatureEffects.Frozen, effect.RoundCount);
                     break;
                 case EffectType.AntiPoison:
-                    this.Effects.Remove(CreatureEffects.Poisoned);
+                    this.RemoveEffect(CreatureEffects.Poisoned);
                     break;
                 case EffectType.AntiFreeze:
-                    this.Effects.Remove(CreatureEffects.Frozen);
+                    this.RemoveEffect(CreatureEffects.Frozen);
                     break;
                 case EffectType.StartAction:
                     // Being given a fresh action is a turn-state reset that also has to grey
@@ -726,6 +741,53 @@ namespace WindingTale.Core.Objects
                 default:
                     break;
             }
+        }
+
+        /// <summary>
+        /// Starts (or restarts) an effect with <paramref name="turns"/> rounds on it. Like the
+        /// original, a second cast replaces the count rather than adding to it. A count of 0
+        /// or less is taken as 1, so the effect still lasts the round it was cast in.
+        /// </summary>
+        public void AddEffect(CreatureEffects effect, int turns)
+        {
+            this.Effects.Add(effect);
+            this.EffectTurns[effect] = Math.Max(turns, 1);
+        }
+
+        public void RemoveEffect(CreatureEffects effect)
+        {
+            this.Effects.Remove(effect);
+            this.EffectTurns.Remove(effect);
+        }
+
+        /// <summary>
+        /// The end of a round (after the enemy phase, as the original's updateStatusInTurn):
+        /// every counted effect loses one round, and those that reach 0 are removed.
+        /// Uncounted effects (see <see cref="EffectTurns"/>) are left alone.
+        /// </summary>
+        /// <returns>The effects that wore off.</returns>
+        public List<CreatureEffects> UpdateEffectsAtRoundEnd()
+        {
+            List<CreatureEffects> expired = new List<CreatureEffects>();
+            foreach (CreatureEffects effect in new List<CreatureEffects>(this.EffectTurns.Keys))
+            {
+                int left = this.EffectTurns[effect] - 1;
+                if (left <= 0)
+                {
+                    expired.Add(effect);
+                }
+                else
+                {
+                    this.EffectTurns[effect] = left;
+                }
+            }
+
+            foreach (CreatureEffects effect in expired)
+            {
+                this.RemoveEffect(effect);
+            }
+
+            return expired;
         }
 
         /// <summary>

@@ -38,12 +38,13 @@ namespace WindingTale.MapObjects.GameMap
         // How opaque a tile's grass stays while an indicator/menu covers it (0 = invisible).
         private const float IndicatorTileAlpha = 0.2f;
 
-        // How opaque a creature stays while a menu item covers its tile.
-        private const float MenuCreatureAlpha = 0.7f;
+        // How opaque a creature stays while a menu item covers its tile: 20%, the same as
+        // the grass, so the menu icon reads clearly over it. (0.7 barely showed under the
+        // VoxelCreature shader's rim light.)
+        private const float MenuCreatureAlpha = 0.2f;
 
-        // Acted (greyed-out) creatures use a lower alpha; the grey shader washes them
-        // out, so 0.7 barely reads as faded.
-        private const float MenuActionedCreatureAlpha = 0.4f;
+        // Acted (greyed-out) creatures fade the same way.
+        private const float MenuActionedCreatureAlpha = 0.2f;
 
         private GameObject cursorObject = null;
         private Cursor cursor = null;
@@ -169,6 +170,42 @@ namespace WindingTale.MapObjects.GameMap
             cursorObject.transform.SetLocalPositionAndRotation(indicatorPositionAt(position), Quaternion.identity);
         }
 
+        // The cursor's own (single-tile) mesh, kept so SetCursorScope can put it back.
+        private Mesh singleTileCursorMesh = null;
+
+        /// <summary>
+        /// Switches the cursor to the outline of a spell's blast: scope 2, 3 and 4 use the
+        /// original's Cursor-02/03/04 (Resources/Others/Cursors/Cursor_N, the diamond of every
+        /// tile within scope - 1 of the centre); scope 1 or less is the ordinary cursor. Only
+        /// the mesh is swapped, so the cursor keeps its material, position and slide.
+        /// </summary>
+        public void SetCursorScope(int scope)
+        {
+            MeshFilter filter = cursorObject != null ? cursorObject.GetComponentInChildren<MeshFilter>(true) : null;
+            if (filter == null)
+            {
+                return;
+            }
+
+            if (singleTileCursorMesh == null)
+            {
+                singleTileCursorMesh = filter.sharedMesh;
+            }
+
+            Mesh mesh = singleTileCursorMesh;
+            if (scope >= 2)
+            {
+                GameObject model = Resources.Load<GameObject>(string.Format("Others/Cursors/Cursor_{0}", Mathf.Min(scope, 4)));
+                MeshFilter modelFilter = model != null ? model.GetComponentInChildren<MeshFilter>(true) : null;
+                if (modelFilter != null && modelFilter.sharedMesh != null)
+                {
+                    mesh = modelFilter.sharedMesh;
+                }
+            }
+
+            filter.sharedMesh = mesh;
+        }
+
         /// <summary>
         /// Shows or hides the map cursor (hidden while a menu is open).
         /// </summary>
@@ -197,8 +234,14 @@ namespace WindingTale.MapObjects.GameMap
         /// <summary>
         /// Slides the cursor to the given tile: first horizontally from (x0, y0) to
         /// (x, y0), then vertically to (x, y), at a constant tiles-per-second speed.
+        ///
+        /// keepCameraFraming is for a slide the player asked for (cycling to the next
+        /// friend, a target state parking on its target): the camera only pans across at
+        /// the height and angle the player left it, and lets go when it lands. Otherwise
+        /// the camera takes the conversation framing and returns to where it was once the
+        /// activity queue runs dry (see MainCamera.SlideFocusTo / ReturnToGameplay).
         /// </summary>
-        public void SlideCursorTo(FDPosition position, GameCanvas.DialogPosition dialogPosition)
+        public void SlideCursorTo(FDPosition position, GameCanvas.DialogPosition dialogPosition, bool keepCameraFraming = false)
         {
             if (cursor == null || cursorObject == null || position == null)
             {
@@ -209,10 +252,10 @@ namespace WindingTale.MapObjects.GameMap
             {
                 StopCoroutine(cursorSlideCoroutine);
             }
-            cursorSlideCoroutine = StartCoroutine(CursorSlideCoroutine(position, dialogPosition));
+            cursorSlideCoroutine = StartCoroutine(CursorSlideCoroutine(position, dialogPosition, keepCameraFraming));
         }
 
-        private IEnumerator CursorSlideCoroutine(FDPosition target, GameCanvas.DialogPosition dialogPosition)
+        private IEnumerator CursorSlideCoroutine(FDPosition target, GameCanvas.DialogPosition dialogPosition, bool keepCameraFraming)
         {
             FDPosition from = cursor.Position;
 
@@ -232,7 +275,11 @@ namespace WindingTale.MapObjects.GameMap
             int tileDistance = Mathf.Abs(target.X - from.X) + Mathf.Abs(target.Y - from.Y);
             float slideDuration = tileDistance / CursorSlideTilesPerSecond;
             EnsureMainCamera();
-            if (mainCamera != null)
+            if (mainCamera != null && keepCameraFraming)
+            {
+                mainCamera.PanFocusTo(MapCoordinate.ConvertPosToVec3(target), slideDuration);
+            }
+            else if (mainCamera != null)
             {
                 // Top dialog covers the top of the screen: keep the cursor lower.
                 bool keepCursorLow = dialogPosition == GameCanvas.DialogPosition.Top;

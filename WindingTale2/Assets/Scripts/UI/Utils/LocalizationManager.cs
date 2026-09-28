@@ -54,6 +54,29 @@ public class LocalizationManager
         return GetLocalString("CommonStrings", key);
     }
 
+    /// <summary>
+    /// A chapter's name as the village title bar shows it, e.g. "第11关 幻之森林".
+    /// </summary>
+    public static LocalizedString GetChapterTitleString(int chapterId)
+    {
+        string key = string.Format(@"ChapterTitle-{0}", StringUtils.Digit2(chapterId));
+        return GetLocalString("CommonStrings", key);
+    }
+
+    /// <summary>What wins the chapter's battle (胜利条件), as the chapter info box shows it.</summary>
+    public static LocalizedString GetChapterWinConditionString(int chapterId)
+    {
+        string key = string.Format(@"ChapterWin-{0}", StringUtils.Digit2(chapterId));
+        return GetLocalString("CommonStrings", key);
+    }
+
+    /// <summary>What loses the chapter's battle (失败条件), as the chapter info box shows it.</summary>
+    public static LocalizedString GetChapterLoseConditionString(int chapterId)
+    {
+        string key = string.Format(@"ChapterLose-{0}", StringUtils.Digit2(chapterId));
+        return GetLocalString("CommonStrings", key);
+    }
+
     public static LocalizedString GetMessageString(int messageId)
     {
         string key = string.Format(@"Message-{0}", StringUtils.Digit2(messageId));

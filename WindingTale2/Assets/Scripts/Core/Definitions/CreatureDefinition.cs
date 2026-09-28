@@ -261,9 +261,13 @@ namespace WindingTale.Core.Definitions
             return false;
         }
 
+        /// <summary>
+        /// Mounted knights, occupations 131 and 132 as in the original's CreatureDefinition.m
+        /// (133 is the flying knight -- see CanFly).
+        /// </summary>
         public bool IsKnight()
         {
-            return (Occupation == 133 || Occupation == 132);
+            return (Occupation == 131 || Occupation == 132);
         }
 
         public bool IsMagical()

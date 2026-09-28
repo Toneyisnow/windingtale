@@ -92,6 +92,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
     <Compile Include="Assets\Scripts\Core\Files\ResourceJsonFile.cs" />
     <Compile Include="Assets\Scripts\Core\Common\Callbacks.cs" />
+    <Compile Include="Assets\Scenes\GameFieldScene\ChapterInfoDialog.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter23.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\PlayerInterface.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Assets\Scripts\Core\Algorithms\CreatureFormula.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
+    <Compile Include="Assets\Scenes\VillageScene\VillageTitleBar.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIDelegate.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuItemState.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter22.cs" />
@@ -335,6 +337,7 @@
     <None Include="Assets\Resources\Data\LeveledCreature.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_18_ConversationId.txt" />
+    <None Include="Assets\Resources\Skies\Sky03.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_08_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_12_Creature.txt" />
     <None Include="Assets\Resources\Data\Creature.txt" />
@@ -503,6 +506,7 @@
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-22.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_18_Creature.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
+    <None Include="Assets\Resources\Materials\DeathExplosionShader.shader" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-26.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-02.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_23_ConversationId.txt" />

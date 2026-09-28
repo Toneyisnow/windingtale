@@ -283,6 +283,9 @@ namespace WindingTale.Core.Files
             record.AttackItemIndex = creature.AttackItemIndex;
             record.DefendItemIndex = creature.DefendItemIndex;
             record.Effects = creature.Effects.ToList();
+            record.EffectTurns = record.Effects
+                .Select(effect => creature.EffectTurns.TryGetValue(effect, out int turns) ? turns : -1)
+                .ToList();
             record.Position = creature.Position;
             record.IsUnrevived = creature.IsUnrevived;
 
@@ -343,9 +346,17 @@ namespace WindingTale.Core.Files
 
             if (record.Effects != null)
             {
-                foreach (CreatureEffects effect in record.Effects)
+                for (int i = 0; i < record.Effects.Count; i++)
                 {
-                    creature.Effects.Add(effect);
+                    int turns = (record.EffectTurns != null && i < record.EffectTurns.Count) ? record.EffectTurns[i] : -1;
+                    if (turns > 0)
+                    {
+                        creature.AddEffect(record.Effects[i], turns);
+                    }
+                    else
+                    {
+                        creature.Effects.Add(record.Effects[i]);
+                    }
                 }
             }
 

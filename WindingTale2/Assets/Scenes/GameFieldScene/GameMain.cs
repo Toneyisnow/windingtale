@@ -399,6 +399,9 @@ namespace WindingTale.Scenes.GameFieldScene
                 return shape.TaiId;
 
             ChapterDefinition chapter = DefinitionStore.Instance.LoadChapter(gameMap.Map.ChapterId);
+            if (chapter != null && chapter.TaiId > 0)
+                return chapter.TaiId;
+
             if (chapter?.DefaultTaiIds != null && chapter.DefaultTaiIds.Count > 0)
                 return chapter.DefaultTaiIds[UnityEngine.Random.Range(0, chapter.DefaultTaiIds.Count)];
 
@@ -407,7 +410,7 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void creatureMoveAsync(FDCreature creature, FDMovePath movePath)
         {
-            this.PushActivity(ActivityFactory.CreatureWalkActivity(creature.Id, movePath));
+            this.PushActivity(ActivityFactory.CreatureWalkActivity(creature.Id, movePath, true));
         }
 
         public void creatureAttackAsync(FDCreature creature, FDCreature target)
@@ -1099,6 +1102,28 @@ namespace WindingTale.Scenes.GameFieldScene
                         this.gameMap.Map.IsEndOfTurn = true;
                         eventHandler.notifyTriggeredEvents();
                         this.gameMap.Map.IsEndOfTurn = false;
+
+                        // Status rounds, as the original's updateStatusInTurn right after
+                        // those events: poison bites first, then every creature's effects
+                        // lose a round, and the ones at 0 wear off (a paralysed creature can
+                        // act again next round).
+                        List<ActivityBase> poisonTexts = new List<ActivityBase>();
+                        foreach (FDCreature creature in this.gameMap.Map.Creatures)
+                        {
+                            int poisonLoss = ApplyPoisonDamage(creature);
+                            if (poisonLoss > 0)
+                            {
+                                poisonTexts.Add(ActivityFactory.CreatureFloatingTextActivity(
+                                    creature, "-" + poisonLoss, PoisonTextColor));
+                            }
+
+                            creature.UpdateEffectsAtRoundEnd();
+                        }
+
+                        if (poisonTexts.Count > 0)
+                        {
+                            PushActivity(new ParallelActivity(poisonTexts));
+                        }
                     }
 
                     this.gameMap.Map.TurnNo++;
@@ -1177,6 +1202,30 @@ namespace WindingTale.Scenes.GameFieldScene
             }
 
             turnInfo.Play(turnNo);
+        }
+
+        private static readonly Color PoisonTextColor = new Color(0.72f, 0.4f, 0.95f);
+
+        /// <summary>
+        /// A poisoned creature loses a random 1/20 .. 1/10 of its max HP at the end of the
+        /// round (the original took a flat 1/10). Like the original, poison never kills: it
+        /// stops at 1 HP. Returns the HP actually lost.
+        /// </summary>
+        private static int ApplyPoisonDamage(FDCreature creature)
+        {
+            if (creature.Hp <= 0 || !creature.HasEffect(CreatureEffects.Poisoned))
+            {
+                return 0;
+            }
+
+            int min = Math.Max(1, creature.HpMax / 20);
+            int max = Math.Max(min, creature.HpMax / 10);
+            int loss = UnityEngine.Random.Range(min, max + 1);
+
+            int hpAfter = Math.Max(1, creature.Hp - loss);
+            int lost = creature.Hp - hpAfter;
+            creature.Hp = hpAfter;
+            return lost;
         }
 
         private void onPlayerTurn()

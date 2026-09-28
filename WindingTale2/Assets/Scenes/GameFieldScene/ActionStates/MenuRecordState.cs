@@ -34,12 +34,12 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 return this;
             });
 
-            // Game Info
+            // Game Info: the chapter info box over the map, closed by any key. The menu
+            // goes away first (back to the idle state), and the box comes up behind it.
             this.SetMenu(1, MenuItemId.RecordInfo, true, () =>
             {
-                //ShowGameInfoActivity info = new ShowGameInfoActivity(gameMain);
-                //activityManager.Push(info);
-                return this;
+                gameMain.PushActivity(gameMain => ChapterInfoDialog.Show(gameMain.gameMap.Map));
+                return new IdleState(gameMain);
             });
 
             // Load Game. Needs a save belonging to *this* chapter. With no save at all,
@@ -72,6 +72,9 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 return this;
             });
         }
+
+        // Opens on the Up item, ShowInfo (231): the one that is always there to choose.
+        protected override int PreferredDefaultIndex => 1;
 
         private void OnContinueGameConfirmed(int index)
         {

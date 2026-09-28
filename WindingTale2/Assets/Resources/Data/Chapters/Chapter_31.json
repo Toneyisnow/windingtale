@@ -3,6 +3,7 @@
   "Width": 35,
   "Height": 45,
   "Sky": "SKY_01",
+  "Tai": 1,
   "BackgroundMusic": {
     "Field": "",
     "Enemy": "",

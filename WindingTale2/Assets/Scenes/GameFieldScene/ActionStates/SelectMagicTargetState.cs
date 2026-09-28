@@ -64,6 +64,9 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             //ShowRangeActivity activity = new ShowRangeActivity(magicRange.ToList());
             //activityManager.Push(activity);
 
+            // A spell with a blast wider than one tile shows its outline as the cursor.
+            gameMain.gameMap.SetCursorScope(this.Magic.EffectScope);
+
             // Send magic range to UI, then park the cursor on the creature this magic is
             // most likely meant for (own tile when the range holds nobody suitable).
             gameMain.PushActivity((gameMain) =>
@@ -96,6 +99,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Clear move range on UI
             gameMain.gameMap.clearAllIndicators();
             gameMain.gameMap.SetBlinkTargets(null);
+            gameMain.gameMap.SetCursorScope(1);
         }
 
         // Attack and debuff magic hurts (red); recovery, buffs and transmit help (green).

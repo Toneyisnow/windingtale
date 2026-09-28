@@ -713,6 +713,10 @@ namespace WindingTale.Scenes.GameBattleScene
                 HitColor = LightningHit,
             }.UseLightningLook();
 
+            // No licks of flame rising off the strikes: the user saw them as a stray little
+            // flame that has nothing to do with a thunderbolt.
+            definition.FlameWispsPerFrame = 0f;
+
             int[] aStarts = { 0, 3, 5, 6, 8, 9 };
             int[] aCellX = { 30, 70, 40, 30, 60, 100 };
             for (int i = 0; i < aStarts.Length; i++)

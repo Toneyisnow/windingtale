@@ -689,9 +689,9 @@ namespace WindingTale.Scenes.GameBattleScene
         /// <summary>
         /// The colour at the screen edge fading to clear inside, stretched over the view.
         /// Each axis fades over its outer part and the two combine as a screen blend, so the
-        /// corners are the deepest red.
+        /// corners are the deepest red. Also used by AttackRunner's critical-hit flash.
         /// </summary>
-        private static Texture2D CreateEdgeRingTexture(Color colour)
+        internal static Texture2D CreateEdgeRingTexture(Color colour)
         {
             const int size = 128;
             const float innerX = 0.55f;

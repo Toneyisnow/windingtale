@@ -77,10 +77,24 @@ namespace WindingTale.Core.Definitions
 
         /// <summary>
         /// Which sky the battlefield stands under: "SKY_01" (blue sky and clouds, the default
-        /// when the chapter names none) or "SKY_02" (the lava cave). See SkySphere.
+        /// when the chapter names none), "SKY_02" (the lava cave) or "SKY_03" (an overcast
+        /// sky under dark clouds). See SkySphere.
         /// </summary>
         [JsonProperty(PropertyName = "Sky")]
         public string Sky
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// The platform the fighters stand on in the battle animation: Resources/Tais/NN/Tai_NN.
+        /// Every chapter from 1 to 30 has its own (the original game drew Tai-NN.png for
+        /// chapter NN); a chapter without one names the Tai of a chapter with the nearest
+        /// ground. 0 when the chapter names none, which falls back to DefaultTaiIds. A shape
+        /// that carries its own "tai" still wins over this (see GameMain.GetLocalTaiId).
+        /// </summary>
+        [JsonProperty(PropertyName = "Tai")]
+        public int TaiId
         {
             get; set;
         }

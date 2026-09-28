@@ -19,13 +19,14 @@ public class VillageInfoBar : MonoBehaviour
     private const int SortingOrder = 50;
 
     // Layout in canvas units (scaled from 800 x 600). The frame bitmap is 60 x 24.
-    private const float BarWidth = 200f;
-    private const float BarHeight = 80f;
+    // Sized down by a fifth from the first cut (200 x 80, 32 pt), which crowded the corner.
+    private const float BarWidth = 160f;
+    private const float BarHeight = 64f;
     private const float Margin = 8f;
-    private const float FontSize = 32f;
+    private const float FontSize = 26f;
 
     // The drop shadow under the text: a dark copy, this many canvas units down and right.
-    private const float ShadowOffset = 3f;
+    private const float ShadowOffset = 2.5f;
     private static readonly Color ShadowColor = new Color(0f, 0f, 0f, 0.8f);
 
     private TextMeshProUGUI label = null;

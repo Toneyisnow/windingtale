@@ -234,7 +234,7 @@ namespace WindingTale.Scenes.GameFieldScene
             }
 
             lastCycledFriendId = next.Id;
-            gameMain.gameMap.SlideCursorTo(next.Position, GameCanvas.DialogPosition.Bottom);
+            gameMain.gameMap.SlideCursorTo(next.Position, GameCanvas.DialogPosition.Bottom, true);
         }
 
 

@@ -258,6 +258,7 @@ public class VillageScene : MonoBehaviour
         PlayVillageMusic(returnInfo);
         SetupCursor();
         infoBar = VillageInfoBar.Create();
+        VillageTitleBar.Create(record.ChapterId);
 
         if (returnInfo != null && returnInfo.Spots != null && returnInfo.Spots.Count > 0)
         {

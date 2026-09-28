@@ -163,6 +163,11 @@ namespace WindingTale.Chapters
 
         private static void ReinforceGroup(GameMain gameMain, int firstId, int group)
         {
+            // The cursor slides to the passage first, so the player sees where the group
+            // steps out (the four of a group share one spawn tile).
+            int firstRow = group * GroupSize;
+            gameMain.PushActivity(new SlideCursorActivity(Wave[firstRow, 0], Wave[firstRow, 1]));
+
             gameMain.PushActivity((gameMain) =>
             {
                 ActivityBase[] walks = new ActivityBase[GroupSize];

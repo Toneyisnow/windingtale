@@ -73,7 +73,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 return;
             }
 
-            gameMain.gameMap.SlideCursorTo(position, GameCanvas.DialogPosition.Bottom);
+            gameMain.gameMap.SlideCursorTo(position, GameCanvas.DialogPosition.Bottom, true);
         }
 
         /// <summary>

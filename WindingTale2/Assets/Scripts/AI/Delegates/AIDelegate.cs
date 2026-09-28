@@ -229,7 +229,7 @@ namespace WindingTale.AI.Delegates
 
             FDCreature terminateCreature = candidates[candidateIndex];
 
-            DistanceResolver disResolver = new DistanceResolver(gameField.Field);
+            DistanceResolver disResolver = new DistanceResolver(gameField.Field, this.creature);
             disResolver.ResolveDistanceFrom(this.creature.Position, terminateCreature.Position);
 
             float minDistance = 999;
@@ -261,7 +261,7 @@ namespace WindingTale.AI.Delegates
                 return null;
             }
 
-            DistanceResolver disResolver = new DistanceResolver(gameField.Field);
+            DistanceResolver disResolver = new DistanceResolver(gameField.Field, this.creature);
             disResolver.ResolveDistanceFrom(this.creature.Position, candidates[0].Position);
 
             float minDistance = 999;
@@ -309,7 +309,7 @@ namespace WindingTale.AI.Delegates
         /// </summary>
         protected FDMovePath DecidePositionAndPath(FDPosition targetPos)
         {
-            DistanceResolver disResolver = new DistanceResolver(gameField.Field);
+            DistanceResolver disResolver = new DistanceResolver(gameField.Field, this.creature);
             disResolver.ResolveDistanceFrom(targetPos, this.creature.Position);
 
             FDPosition originalPos = this.creature.Position;
@@ -353,6 +353,22 @@ namespace WindingTale.AI.Delegates
                     if (distance < bestDistance)
                     {
                         bestDistance = distance;
+                        finalPos = movePos;
+                    }
+                }
+            }
+
+            if (!inAttackScope && bestDistance >= DistanceResolver.Unreachable)
+            {
+                // No way there on foot (the target is across water, or walled in): rather
+                // than stand still all battle, close in as the crow flies.
+                int bestDirect = GetDirectDistance(targetPos, originalPos);
+                foreach (FDPosition movePos in moveRange.ToList())
+                {
+                    int direct = GetDirectDistance(targetPos, movePos);
+                    if (direct < bestDirect)
+                    {
+                        bestDirect = direct;
                         finalPos = movePos;
                     }
                 }

@@ -155,7 +155,8 @@ namespace WindingTale.Core.Definitions
                     value = FDRandom.IntFromSpan(3, 5);
                     return new EffectResult(EffectType.Poison, value);
                 case 303:
-                    value = FDRandom.IntFromSpan(2, 4);
+                    // 麻痹术: one round shorter than the original's 2..4.
+                    value = FDRandom.IntFromSpan(1, 3);
                     return new EffectResult(EffectType.Freezing, value);
                 case 401:
                     return new EffectResult(EffectType.EnhancedAp, 5);

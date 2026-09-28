@@ -129,7 +129,16 @@ namespace WindingTale.Core.Algorithms
 
         private int GetMoveCost(FDPosition position, FDCreature creature)
         {
-            ShapeDefinition targetShape = gameMap.Field.GetShapeAt(position);
+            return GetMoveCost(gameMap.Field.GetShapeAt(position), creature);
+        }
+
+        /// <summary>
+        /// The move points it costs the creature to step onto a tile of this shape, or -1
+        /// when it cannot stand there at all. Shared with DistanceResolver, so the AI judges
+        /// distances by the same ground rules the move range is walked by.
+        /// </summary>
+        public static int GetMoveCost(ShapeDefinition targetShape, FDCreature creature)
+        {
             if (targetShape == null)
             {
                 return -1;

@@ -132,22 +132,27 @@ namespace WindingTale.Chapters
 
             // Bailu appears only once the first half of the talk is over, and rides in
             // before the second half -- the original chained this as initialBattle_2.
+            // Everything is queued here, flat, rather than from inside the activity that
+            // adds her: pushed from in there it all landed behind the turn-1 banner and
+            // onPlayerTurn, which started the Field music the moment she appeared (under
+            // a conversation not yet finished), and cleared the turn's PrePosition before
+            // her walk-in instead of after it.
             gameMain.PushActivity((gameMain) =>
             {
                 AddCreatureToMap(gameMain, CreatureFaction.Friend, BailuId, BailuId, BailuEntry);
+            });
 
-                gameMain.PushActivity(new SlideCursorActivity(BailuStop.X, BailuStop.Y));
-                gameMain.PushActivity(ActivityFactory.CreatureWalkActivity(BailuId,
-                    FDMovePath.Create(BailuEntry, BailuStop)));
+            gameMain.PushActivity(new SlideCursorActivity(BailuStop.X, BailuStop.Y));
+            gameMain.PushActivity(ActivityFactory.CreatureWalkActivity(BailuId,
+                FDMovePath.Create(BailuEntry, BailuStop)));
 
-                // Talking
-                PushConversationsActivities(gameMain, 11, 1, 13, 25);
+            // Talking
+            PushConversationsActivities(gameMain, 11, 1, 13, 25);
 
-                gameMain.PushActivity((gameMain) =>
-                {
-                    // Play background music
-                    gameMain.PlayBackgroundMusic();
-                });
+            gameMain.PushActivity((gameMain) =>
+            {
+                // Play background music
+                gameMain.PlayBackgroundMusic();
             });
         };
 

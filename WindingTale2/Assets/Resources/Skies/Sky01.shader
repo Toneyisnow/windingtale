@@ -5,6 +5,13 @@ Shader "Skybox/WT_Sky01"
     // on a flat layer overhead (so they shrink towards the horizon like real ones), lit from
     // the top and greyer underneath, and fade into the haze at the horizon. The cloud edges
     // are crisp (cumulus-like puffs, not a soft haze), and the blue is a deep, saturated one.
+    //
+    // The field camera looks steeply down on the map, so the only sky it ever shows is the
+    // strip at the map's edges -- directions at or below the horizon, where the overhead
+    // layer has faded out. A second, low bank of cloud lives there: 3D noise laid on the
+    // view direction itself (seamless all the way round), squashed flat so it reads as
+    // layered banks, lit on top. Clouds live only in the upper half of the box: nothing
+    // below the horizon.
     Properties
     {
         _ZenithColor ("Zenith", Color) = (0.03, 0.22, 0.74, 1)
@@ -17,6 +24,9 @@ Shader "Skybox/WT_Sky01"
         _CloudScale ("Cloud Scale", Float) = 1.6
         _CloudSpeed ("Cloud Drift Speed", Float) = 0.012
         _SunDir ("Sun Direction", Vector) = (0.35, 0.55, 0.45, 0)
+        _LowCloudCover ("Low Cloud Cover", Range(0, 1)) = 0.6
+        _LowCloudScale ("Low Cloud Scale", Float) = 3.2
+        _LowCloudOpacity ("Low Cloud Opacity", Range(0, 1)) = 0.95
     }
     SubShader
     {
@@ -35,6 +45,7 @@ Shader "Skybox/WT_Sky01"
             fixed4 _ZenithColor, _MidColor, _HorizonColor, _GroundColor, _CloudColor, _CloudShade;
             float _CloudCover, _CloudScale, _CloudSpeed;
             float4 _SunDir;
+            float _LowCloudCover, _LowCloudScale, _LowCloudOpacity;
 
             struct appdata { float4 vertex : POSITION; };
             struct v2f
@@ -83,6 +94,54 @@ Shader "Skybox/WT_Sky01"
                 return v;
             }
 
+            float hash31(float3 p)
+            {
+                p = frac(p * float3(0.1031, 0.1030, 0.0973));
+                p += dot(p, p.yxz + 33.33);
+                return frac((p.x + p.y) * p.z);
+            }
+
+            float vnoise3(float3 p)
+            {
+                float3 i = floor(p);
+                float3 f = frac(p);
+                f = f * f * (3.0 - 2.0 * f);
+                float n000 = hash31(i);
+                float n100 = hash31(i + float3(1, 0, 0));
+                float n010 = hash31(i + float3(0, 1, 0));
+                float n110 = hash31(i + float3(1, 1, 0));
+                float n001 = hash31(i + float3(0, 0, 1));
+                float n101 = hash31(i + float3(1, 0, 1));
+                float n011 = hash31(i + float3(0, 1, 1));
+                float n111 = hash31(i + float3(1, 1, 1));
+                return lerp(lerp(lerp(n000, n100, f.x), lerp(n010, n110, f.x), f.y),
+                            lerp(lerp(n001, n101, f.x), lerp(n011, n111, f.x), f.y), f.z);
+            }
+
+            float fbm3(float3 p)
+            {
+                float v = 0.0;
+                float a = 0.5;
+                for (int k = 0; k < 5; k++)
+                {
+                    v += a * vnoise3(p);
+                    p = p * 2.02 + float3(17.1, 9.7, 3.3);
+                    a *= 0.5;
+                }
+                return v;
+            }
+
+            // Low cloud density for a view direction. The noise is stretched three times as
+            // fine vertically as across, so the puffs lie in flat banks along the horizon.
+            float lowCloudDensity(float3 d)
+            {
+                float3 p = d * float3(_LowCloudScale, _LowCloudScale * 3.0, _LowCloudScale)
+                         + float3(_Time.y * _CloudSpeed * 2.0, 0, _Time.y * _CloudSpeed * 0.8);
+                float n = fbm3(p);
+                float threshold = lerp(0.72, 0.32, _LowCloudCover);
+                return smoothstep(threshold, threshold + 0.08, n);
+            }
+
             // Cloud density at a point on the cloud layer.
             float cloudDensity(float2 uv)
             {
@@ -129,6 +188,21 @@ Shader "Skybox/WT_Sky01"
                     float3 cloud = lerp(_CloudColor.rgb, _CloudShade.rgb, shade);
                     float horizonFade = smoothstep(0.0, 0.22, h);
                     sky = lerp(sky, cloud, density * horizonFade);
+                }
+
+                // The low bank: sits just above the horizon (fading in over h = 0..0.06) and is
+                // gone by h = 0.4, so it takes over where the overhead layer fades out. Nothing
+                // below the horizon -- the lower half of the box stays clear sky.
+                float lowBand = smoothstep(0.0, 0.06, h) * (1.0 - smoothstep(0.12, 0.4, h));
+                if (lowBand > 0.0)
+                {
+                    float low = lowCloudDensity(d);
+
+                    // Lit on top: if the cloud is thicker a little higher up, this spot is
+                    // on the underside and reads greyer.
+                    float lowShade = saturate((lowCloudDensity(d + float3(0, 0.035, 0)) - low) * 4.0 + 0.2);
+                    float3 lowCloud = lerp(_CloudColor.rgb, _CloudShade.rgb, lowShade);
+                    sky = lerp(sky, lowCloud, low * lowBand * _LowCloudOpacity);
                 }
 
                 return fixed4(sky, 1);

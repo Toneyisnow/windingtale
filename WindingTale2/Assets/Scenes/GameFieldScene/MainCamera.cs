@@ -63,6 +63,11 @@ public class MainCamera : MonoBehaviour
 
     private const float ReturnDuration = 0.4f;      // ease back to gameplay framing, seconds
     private bool isReturning = false;
+
+    // Set by PanFocusTo: the slide under way is the player's own (cycling to a friend,
+    // parking on a target), not a cutscene's. It keeps the camera's height and angle and,
+    // on arriving, simply lets go -- there is no earlier framing to go back to.
+    private bool releaseOnArrive = false;
     private float returnElapsed = 0f;
     // Camera transform captured just before the follow took over, restored on return.
     private Vector3 savedPosition = Vector3.zero;
@@ -84,7 +89,10 @@ public class MainCamera : MonoBehaviour
     {
         // Remember the gameplay camera transform the first time follow takes over,
         // so it can be restored exactly when the conversation ends.
-        bool firstEntry = !followActive;
+        // A pan the player started is no framing to return to: a cutscene that takes over
+        // part way through it saves the camera from where it stands now.
+        bool firstEntry = !followActive || releaseOnArrive;
+        releaseOnArrive = false;
         if (firstEntry)
         {
             savedPosition = transform.position;
@@ -107,6 +115,39 @@ public class MainCamera : MonoBehaviour
         isSliding = true;
         isReturning = false;
         followActive = true;
+    }
+
+    /// <summary>
+    /// Glides the camera, at its current height and angle, until it looks at the given
+    /// ground point, and hands control straight back once there. For slides the player
+    /// makes (see GameMap.SlideCursorTo's keepCameraFraming): SlideFocusTo would remember
+    /// the framing it left, and the next time the activity queue ran dry ReturnToGameplay
+    /// would fly the camera back to that stale spot -- the jump away from the creature
+    /// the player had just picked, and back again, on opening its move range.
+    /// </summary>
+    public void PanFocusTo(Vector3 groundTarget, float duration)
+    {
+        Vector3 forward = transform.rotation * Vector3.forward;
+        if (forward.y > -0.01f)
+        {
+            return; // looking level or up: no ground point to aim at
+        }
+
+        // Same height, same rotation; only the spot on the ground the view centres on moves.
+        float along = (groundTarget.y - transform.position.y) / forward.y;
+        Vector3 target = groundTarget - forward * along;
+
+        slideStartPosition = transform.position;
+        slideStartRotation = transform.rotation;
+        slideTargetPosition = new Vector3(target.x, transform.position.y, target.z);
+        slideTargetRotation = transform.rotation;
+
+        slideDuration = Mathf.Max(duration, 0.15f);
+        slideElapsed = 0f;
+        isSliding = true;
+        isReturning = false;
+        followActive = true;
+        releaseOnArrive = true;
     }
 
     private Vector3 FramePositionFor(Vector3 groundFocus, Quaternion rotation)
@@ -141,6 +182,13 @@ public class MainCamera : MonoBehaviour
         if (t >= 1f)
         {
             isSliding = false;
+
+            if (releaseOnArrive)
+            {
+                // The player's own pan: nothing to return to, control is theirs again.
+                releaseOnArrive = false;
+                followActive = false;
+            }
         }
     }
 
@@ -151,8 +199,10 @@ public class MainCamera : MonoBehaviour
     /// </summary>
     public void ReturnToGameplay()
     {
-        if (!followActive || isReturning)
+        if (!followActive || isReturning || releaseOnArrive)
         {
+            // A pan of the player's releases itself when it lands; it has no framing to
+            // hand back to.
             return;
         }
 
@@ -447,6 +497,7 @@ public class MainCamera : MonoBehaviour
             followActive = false;
             isSliding = false;
             isReturning = false;
+            releaseOnArrive = false;
         }
 
         // The map is shut off from the player (a battle animation is up, say): no camera

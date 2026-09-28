@@ -74,6 +74,7 @@ namespace WindingTale.Core.Files
                 healed.Hp = healed.HpMax;
                 healed.Mp = healed.MpMax;
                 healed.Effects = new List<CreatureEffects>();
+                healed.EffectTurns = new List<int>();
 
                 record.Friends.Add(healed);
             }
@@ -87,6 +88,7 @@ namespace WindingTale.Core.Files
                 CreatureMapRecord revived = fallen.Clone();
                 revived.Hp = 0;
                 revived.Effects = new List<CreatureEffects>();
+                revived.EffectTurns = new List<int>();
                 revived.IsUnrevived = false;
 
                 record.Friends.Add(revived);
