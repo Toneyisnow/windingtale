@@ -207,6 +207,26 @@ namespace WindingTale.Chapters
         }
 
         /// <summary>
+        /// The tile AddCreatureAroundToMap would pick, without adding anything: the first of
+        /// the nine at or next to <paramref name="position"/> that nobody stands on and that
+        /// is not already in <paramref name="claimed"/>. For a walk-in, where the whole group
+        /// is placed before anyone arrives. Null when all nine are taken.
+        /// </summary>
+        protected static FDPosition FindFreeAround(GameMain gameMain, FDPosition position, List<FDPosition> claimed)
+        {
+            for (int i = 0; i < AroundOffsets.GetLength(0); i++)
+            {
+                FDPosition candidate = FDPosition.At(position.X + AroundOffsets[i, 0], position.Y + AroundOffsets[i, 1]);
+                if (gameMain.gameMap.Map.GetCreatureAt(candidate) == null && !claimed.Exists(c => c.AreSame(candidate)))
+                {
+                    return candidate;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Keeps a party member who is still waiting to be revived on the map as one of its
         /// DeadCreatures. They are not on the field and no icon is drawn for them, but the
         /// chapter can still have them speak -- and a speaker nothing can look up talks with
@@ -258,7 +278,21 @@ namespace WindingTale.Chapters
         {
             foreach (int definitionId in order)
             {
-                MarchInMembers(gameMain, faction, roster, definitionId, entry, aiType, laneBlockedRow);
+                MarchInMembers(gameMain, faction, roster, definitionId, entry, aiType, laneBlockedRow, false);
+            }
+        }
+
+        /// <summary>
+        /// MarchInGroups for a side that comes in from the east or west edge: the shared lane
+        /// is the entry's row instead of its column, and each member leaves it at his own
+        /// column and walks up or down that column to his own tile.
+        /// </summary>
+        public static void MarchInGroupsAlongRow(GameMain gameMain, CreatureFaction faction, int[,] roster, int[] order,
+            FDPosition entry, AITypes? aiType = null)
+        {
+            foreach (int definitionId in order)
+            {
+                MarchInMembers(gameMain, faction, roster, definitionId, entry, aiType, int.MaxValue, true);
             }
         }
 
@@ -273,7 +307,17 @@ namespace WindingTale.Chapters
         public static void MarchInTogether(GameMain gameMain, CreatureFaction faction, int[,] roster,
             FDPosition entry, AITypes? aiType = null)
         {
-            MarchInMembers(gameMain, faction, roster, null, entry, aiType, int.MaxValue);
+            MarchInMembers(gameMain, faction, roster, null, entry, aiType, int.MaxValue, false);
+        }
+
+        /// <summary>
+        /// MarchInTogether from the east or west edge: the lane is the entry's row, and each
+        /// member leaves it at his own column.
+        /// </summary>
+        public static void MarchInTogetherAlongRow(GameMain gameMain, CreatureFaction faction, int[,] roster,
+            FDPosition entry, AITypes? aiType = null)
+        {
+            MarchInMembers(gameMain, faction, roster, null, entry, aiType, int.MaxValue, true);
         }
 
         /// <summary>
@@ -281,7 +325,7 @@ namespace WindingTale.Chapters
         /// null) on the entry tile, then walks them in together: the lane, then their own row.
         /// </summary>
         private static void MarchInMembers(GameMain gameMain, CreatureFaction faction, int[,] roster,
-            int? definitionId, FDPosition entry, AITypes? aiType, int laneBlockedRow)
+            int? definitionId, FDPosition entry, AITypes? aiType, int laneBlockedRow, bool laneAlongRow)
         {
             gameMain.PushActivity((gameMain) =>
             {
@@ -303,6 +347,22 @@ namespace WindingTale.Chapters
                 }
 
                 FDPosition place = FDPosition.At(roster[i, 2], roster[i, 3]);
+                if (laneAlongRow)
+                {
+                    FDMovePath rowPath = FDMovePath.Create(entry);
+                    if (place.X != entry.X)
+                    {
+                        rowPath.Push(FDPosition.At(place.X, entry.Y));
+                    }
+                    if (place.Y != entry.Y)
+                    {
+                        rowPath.Push(place);
+                    }
+
+                    marches.Add(ActivityFactory.CreatureWalkActivity(roster[i, 0], rowPath));
+                    continue;
+                }
+
                 int laneRow = place.Y >= laneBlockedRow ? place.Y - 1 : place.Y;
 
                 FDMovePath path = FDMovePath.Create(entry);

@@ -58,8 +58,18 @@ public class VillageTitleBar : MonoBehaviour
 
     private void Build(string title)
     {
-        GameObject frameObject = new GameObject("Frame", typeof(RectTransform), typeof(Image));
-        frameObject.transform.SetParent(transform, false);
+        AddTitlePlate(transform, title);
+    }
+
+    /// <summary>
+    /// Adds the framed title plate, top centre, to a canvas built from 800 x 600 like this
+    /// one. Also used by the battlefield's ChapterInfoDialog, so the chapter name looks the
+    /// same there as in the village. Returns the plate's frame.
+    /// </summary>
+    public static RectTransform AddTitlePlate(Transform canvas, string title)
+    {
+        GameObject frameObject = new GameObject("TitlePlate", typeof(RectTransform), typeof(Image));
+        frameObject.transform.SetParent(canvas, false);
 
         RectTransform frameRect = frameObject.GetComponent<RectTransform>();
         frameRect.anchorMin = new Vector2(0.5f, 1f);
@@ -80,6 +90,7 @@ public class VillageTitleBar : MonoBehaviour
         TMP_FontAsset font = ShoppingRecordDialog.GetRecordFont();
         CreateLabel("Shadow", frameRect, font, ShadowColor, ShadowOffset).text = title;
         CreateLabel("Label", frameRect, font, Color.white, 0f).text = title;
+        return frameRect;
     }
 
     private static TextMeshProUGUI CreateLabel(string objectName, RectTransform parent, TMP_FontAsset font, Color color, float offset)

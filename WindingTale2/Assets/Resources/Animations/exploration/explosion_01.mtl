@@ -1,3 +1,9 @@
+newmtl m_ffffd6
+Kd 1.0000 1.0000 0.8392
+Ka 0 0 0
+Ks 0 0 0
+illum 1
+
 newmtl m_ffff00
 Kd 1.0000 1.0000 0.0000
 Ka 0 0 0

@@ -132,7 +132,8 @@ def find_split_y(px, img_w, img_h):
 
 def make_tai_vox(image_path, out_path,
                  target_diameter=TARGET_DIAMETER,
-                 target_side_h=TARGET_SIDE_H):
+                 target_side_h=TARGET_SIDE_H,
+                 split_y=None):
     im = Image.open(image_path).convert('RGBA')
     img_w, img_h = im.size
     px = im.load()
@@ -148,7 +149,9 @@ def make_tai_vox(image_path, out_path,
     y_bot   = max(y for y in range(img_h) if rows_extent[y])
     img_diameter_px = max(e[1] - e[0] + 1 for e in rows_extent if e)
 
-    y_split = find_split_y(px, img_w, img_h)
+    # A plate with no grass (sand, stone) has nothing green to split on: pass the
+    # row where the rim starts under the plate's centre instead (--split).
+    y_split = split_y if split_y is not None else find_split_y(px, img_w, img_h)
 
     top_h_image  = max(1, y_split - y_top)
     side_h_image = max(1, y_bot - y_split + 1)
@@ -293,6 +296,9 @@ def _parse_args(argv):
     p.add_argument('-H', '--height', type=int, default=TARGET_SIDE_H,
                    help=f'side-wall height in voxels, top face adds +1 '
                         f'(default {TARGET_SIDE_H})')
+    p.add_argument('--split', type=int, default=None,
+                   help='first image row of the side rim; overrides the grass/dirt '
+                        'detection, for plates with no green top')
     p.add_argument('--src-dir', default=SRC_DIR,
                    help='override source folder (default: %(default)s)')
     p.add_argument('--out-dir', default=OUT_DIR,
@@ -310,7 +316,8 @@ def main(argv=None):
     dst = os.path.join(args.out_dir, f'Tai_{tai_id}.vox')
     n_vox, n_col, D, H = make_tai_vox(src, dst,
                                       target_diameter=args.diameter,
-                                      target_side_h=args.height)
+                                      target_side_h=args.height,
+                                      split_y=args.split)
     print(f'wrote {dst}: {n_vox} voxels, {n_col} palette colors, dims {D}x{D}x{H}')
 
 

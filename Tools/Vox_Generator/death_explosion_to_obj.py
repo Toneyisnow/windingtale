@@ -2,7 +2,8 @@
 death_explosion_to_obj.py -- the map death explosion, 2D sprite -> 3D voxel frames.
 
 Source: the original game's blow-up sprite, OriginData/Other/040-04.bmp .. 040-11.bmp
-(eight frames: white-hot fireball -> hollow ring of fire with spikes -> red embers).
+(eight frames: white-hot fireball -> fireball bursting open -> ring of fire -> red embers
+-> the last dying sparks).
 Output: WindingTale2/Assets/Resources/Animations/exploration/explosion_00..07.obj + .mtl,
 played by CreatureDying / ExplosionPlayer.
 
@@ -18,7 +19,7 @@ original sprite. The mesh reaches further above y = 0 than below (flames lean up
 explosion floats round the creature's body centre) and late frames lift a little, like rising embers.
 
 1 voxel = 1 original pixel = 1 OBJ unit. All frames share one origin (the centre of
-the 72 x 72 canvas); CreatureDying scales by the tile size (24 px per tile).
+the 72 x 72 canvas); CreatureDying scales it to the tile size (64 px per tile).
 One material per exact sprite colour (m_RRGGBB), read back by CreatureDying.
 
 Usage:  python death_explosion_to_obj.py [source_dir] [out_dir]
@@ -49,6 +50,37 @@ LIFT = [0, 0, 0, 0, 1, 2, 3, 4]  # per-frame rise, voxels (embers drift up)
 DENSITY = [0.0, 0.5, 0.55, 0.55, 0.5, 0.45, 0.4, 0.35]
 FILL_FALLOFF = 9.0             # px: how fast the fill thins out toward the centre
 FILL_SEED = 1234
+# The opening (user 2026-09-28): frame 0 is a closed fireball at ~80% of the widest frame
+# (040-04 is 51 px against 040-08's 72, so it is enlarged by FRAME_SCALE); frame 1 is still
+# almost closed, only just opening: 040-05's hollow middle is filled with the white-hot
+# fireball of 040-04, except a small opening where the hole is deeper than OPEN_DEPTH px.
+FRAME_SCALE = [1.13, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+OPEN_DEPTH = 3.0
+
+
+def close_opening(rgb, fireball):
+    """Frame 1: fill the hollow middle with the fireball, leaving a small opening."""
+    mask = rgb.any(axis=2)
+    hole = ndimage.binary_fill_holes(mask) & ~mask
+    depth = ndimage.distance_transform_edt(~mask)
+    fill = hole & (depth <= OPEN_DEPTH) & fireball.any(axis=2)
+    out = rgb.copy()
+    out[fill] = fireball[fill]
+    return out
+
+
+def scale_frame(rgb, s):
+    """Enlarge a frame about the canvas centre by s (nearest pixel)."""
+    if abs(s - 1.0) < 1e-6:
+        return rgb
+    c = (CANVAS - 1) / 2.0
+    yy, xx = np.mgrid[0:CANVAS, 0:CANVAS]
+    sy = np.rint(c + (yy - c) / s).astype(int)
+    sx = np.rint(c + (xx - c) / s).astype(int)
+    ok = (sy >= 0) & (sy < CANVAS) & (sx >= 0) & (sx < CANVAS)
+    out = np.zeros_like(rgb)
+    out[ok] = rgb[sy[ok], sx[ok]]
+    return out
 
 
 def fill_centre(rgb, k):
@@ -189,8 +221,11 @@ def main():
     src_dir = sys.argv[1] if len(sys.argv) > 1 else SRC_DIR
     out_dir = sys.argv[2] if len(sys.argv) > 2 else OUT_DIR
     os.makedirs(out_dir, exist_ok=True)
+    fireball = load(FIRST, src_dir)
     for k, i in enumerate(range(FIRST, LAST + 1)):
-        vox = build_voxels(fill_centre(load(i, src_dir), k), LIFT[k])
+        rgb = load(i, src_dir)
+        rgb = close_opening(rgb, fireball) if k == 1 else fill_centre(rgb, k)
+        vox = build_voxels(scale_frame(rgb, FRAME_SCALE[k]), LIFT[k])
         name = "explosion_%02d" % k
         nv, nf, nm = write_frame(name, vox, out_dir)
         ys = [p[1] for p in vox]

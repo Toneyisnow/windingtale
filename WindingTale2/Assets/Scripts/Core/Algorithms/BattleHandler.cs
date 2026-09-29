@@ -35,14 +35,16 @@ namespace WindingTale.Core.Algorithms
         {
             AttackResult result = new AttackResult(subject, target);
 
-            DamageResult damage1 = DamageFrom(subject, target, field);
+            DamageResult damage1 = DamageFrom(subject, target, field, target.Hp);
             result.Experience = CalculateDamageExp(subject, target, damage1);
             result.Damages.Add(damage1);
             int targetLastHp = damage1.HpAfter;
 
             if (targetLastHp > 0 && FDRandom.BoolFromRate(DEFAULT_DOUBLE_ATTACK_RATE))
             {
-                DamageResult damage2 = DamageFrom(subject, target, field);
+                // The second strike lands on what the first one left, as the original's
+                // attackFrom did by updating the target's HP after every strike.
+                DamageResult damage2 = DamageFrom(subject, target, field, damage1.HpAfter);
                 result.Experience += CalculateDamageExp(subject, target, damage2);
                 result.Damages.Add(damage2);
                 targetLastHp = damage2.HpAfter;
@@ -52,13 +54,13 @@ namespace WindingTale.Core.Algorithms
             bool canFightBack = CanFightBack(subject, target, field);
             if (canFightBack && targetLastHp > 0)
             {
-                DamageResult back1 = DamageFrom(target, subject, field);
+                DamageResult back1 = DamageFrom(target, subject, field, subject.Hp);
                 result.BackExperience += CalculateDamageExp(target, subject, back1);
                 result.BackDamages.Add(back1);
 
                 if (back1.HpAfter > 0 && FDRandom.BoolFromRate(DEFAULT_DOUBLE_ATTACK_RATE))
                 {
-                    DamageResult back2 = DamageFrom(target, subject, field);
+                    DamageResult back2 = DamageFrom(target, subject, field, back1.HpAfter);
                     result.BackExperience += CalculateDamageExp(target, subject, back2);
                     result.BackDamages.Add(back2);
                 }
@@ -215,13 +217,15 @@ namespace WindingTale.Core.Algorithms
         #region Private Methods
 
         /// <summary>
-        /// Calculate a single damage result
+        /// Calculate a single damage result. <paramref name="targetHp"/> is the target's HP
+        /// before this strike: the creature's own Hp is only written once the whole attack
+        /// has played, so a second strike has to be told what the first one left.
         /// </summary>
         /// <param name="subject"></param>
         /// <param name="target"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        private static DamageResult DamageFrom(FDCreature subject, FDCreature target, FDField field)
+        private static DamageResult DamageFrom(FDCreature subject, FDCreature target, FDField field, int targetHp)
         {
             bool isHit = FDRandom.BoolFromRate(subject.CalculatedHit - target.CalculatedEv);
             bool isCritical = FDRandom.BoolFromRate(DEFAULT_CRITICAL_ATTACK_RATE);
@@ -258,8 +262,8 @@ namespace WindingTale.Core.Algorithms
                 }
             }
 
-            int hpAfter = Math.Max(target.Hp - reduceHp, 0);
-            DamageResult damage = new DamageResult(target.Hp, hpAfter, isCritical);
+            int hpAfter = Math.Max(targetHp - reduceHp, 0);
+            DamageResult damage = new DamageResult(targetHp, hpAfter, isCritical);
             return damage;
         }
 

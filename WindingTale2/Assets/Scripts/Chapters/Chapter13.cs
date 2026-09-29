@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
@@ -44,6 +45,13 @@ namespace WindingTale.Chapters
         };
 
         private const int FirstOptionalFriendId = 10;
+
+        /// <summary>
+        /// Where the party walks in: a point on the western edge. Row 16 is open from the
+        /// edge all the way across the party's line-up, so it serves as their lane.
+        /// </summary>
+        private static readonly FDPosition PartyMarchEntry = FDPosition.At(1, 16);
+        private const int PartyMarchCursorLead = 3;
 
         /// <summary>The enemy host, as (id, definition, x, y, drop item).</summary>
         private static readonly int[,] Enemies = new int[,]
@@ -137,6 +145,13 @@ namespace WindingTale.Chapters
         private static readonly FDPosition BossEntry = FDPosition.At(35, 9);
         private const int ReinforcementTurn = 9;
 
+        /// <summary>
+        /// Where the turn-9 reinforcement walks in: the eastern edge, on the middle row of
+        /// the escort's block. Row 10 is their lane, heading west.
+        /// </summary>
+        private static readonly FDPosition ReinforcementEntry = FDPosition.At(40, 10);
+        private const int ReinforcementCursorLead = 3;
+
         /// <summary>The hero's badge: where it lies, who speaks from it, and what Sol is given.</summary>
         private static readonly FDPosition BadgeTile = FDPosition.At(25, 6);
         private const int GhostId = 88;
@@ -166,7 +181,10 @@ namespace WindingTale.Chapters
 
         private Action<GameMain> turn1 = (gameMain) =>
         {
-            SettleParty(gameMain, PartyEntry, FirstOptionalFriendId);
+            // The party walks in from one point on the western edge, all together, and
+            // only then does the talking begin. The cursor is already there to watch them.
+            gameMain.PushActivity(new SlideCursorActivity(PartyMarchEntry.X + PartyMarchCursorLead, PartyMarchEntry.Y));
+            MarchInTogetherAlongRow(gameMain, CreatureFaction.Friend, BuildPartyRoster(gameMain), PartyMarchEntry);
 
             for (int i = 0; i < Enemies.GetLength(0); i++)
             {
@@ -225,19 +243,77 @@ namespace WindingTale.Chapters
             PushConversationsActivities(gameMain, 13, 2, 1, 7);
         };
 
-        /// <summary>Turn 9: the general and his escort arrive at the eastern edge.</summary>
+        /// <summary>
+        /// Turn 9: the general and his escort walk in from the eastern edge (the march-in
+        /// pattern). Each still ends on the first free tile at or next to the one the
+        /// original named ("Around:"), worked out now, before anyone has moved. The
+        /// general's tile is the furthest in, so his group goes first.
+        /// </summary>
         private Action<GameMain> reinforcement = (gameMain) =>
         {
+            List<FDPosition> claimed = new List<FDPosition>();
+            List<int> rows = new List<int>();
+
+            FDPosition bossPlace = FindFreeAround(gameMain, BossEntry, claimed);
+            if (bossPlace != null)
+            {
+                claimed.Add(bossPlace);
+                rows.AddRange(new int[] { BossId, BossDefinitionId, bossPlace.X, bossPlace.Y, BossDropItemId });
+            }
+
             for (int i = 0; i < Escort.GetLength(0); i++)
             {
-                AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, Escort[i, 0], EscortDefinitionId,
-                    FDPosition.At(Escort[i, 1], Escort[i, 2]), Escort[i, 3]);
+                FDPosition place = FindFreeAround(gameMain, FDPosition.At(Escort[i, 1], Escort[i, 2]), claimed);
+                if (place == null)
+                {
+                    continue;
+                }
+
+                claimed.Add(place);
+                rows.AddRange(new int[] { Escort[i, 0], EscortDefinitionId, place.X, place.Y, Escort[i, 3] });
             }
-            AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, BossId, BossDefinitionId, BossEntry, BossDropItemId);
+
+            gameMain.PushActivity(new SlideCursorActivity(ReinforcementEntry.X - ReinforcementCursorLead, ReinforcementEntry.Y));
+            MarchInGroupsAlongRow(gameMain, CreatureFaction.Enemy, ToRoster(rows),
+                new int[] { BossDefinitionId, EscortDefinitionId }, ReinforcementEntry);
 
             // Talking
             PushConversationsActivities(gameMain, 13, 3, 1, 1);
         };
+
+        /// <summary>
+        /// The party's line-up as roster rows of (id, definition, x, y, drop item): a
+        /// friend's definition is his own id, and the optional ones are left out when the
+        /// party record does not carry them.
+        /// </summary>
+        private static int[,] BuildPartyRoster(GameMain gameMain)
+        {
+            List<int> rows = new List<int>();
+            for (int i = 0; i < PartyEntry.GetLength(0); i++)
+            {
+                int creatureId = PartyEntry[i, 0];
+                if (creatureId >= FirstOptionalFriendId && !PartyCarries(gameMain, creatureId))
+                {
+                    continue;
+                }
+
+                rows.AddRange(new int[] { creatureId, creatureId, PartyEntry[i, 1], PartyEntry[i, 2], 0 });
+            }
+
+            return ToRoster(rows);
+        }
+
+        /// <summary>Flat (id, definition, x, y, drop item) values as roster rows.</summary>
+        private static int[,] ToRoster(List<int> rows)
+        {
+            int[,] roster = new int[rows.Count / 5, 5];
+            for (int i = 0; i < rows.Count; i++)
+            {
+                roster[i / 5, i % 5] = rows[i];
+            }
+
+            return roster;
+        }
 
         private Action<GameMain> enemyClear = (gameMain) =>
         {

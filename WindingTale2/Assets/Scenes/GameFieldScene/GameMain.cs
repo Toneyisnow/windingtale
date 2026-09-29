@@ -1250,8 +1250,8 @@ namespace WindingTale.Scenes.GameFieldScene
 
         private void onNpcTurn()
         {
-            // The NPC turn plays in silence.
-            StopBackgroundMusic();
+            // The NPC turn carries on with the player's Field track (user 2026-09-28); the
+            // enemy turn that follows swaps in the Enemy track.
 
             if (gameMap.Map.Npcs.Count > 0 && npcAIHandler.Notified())
             {

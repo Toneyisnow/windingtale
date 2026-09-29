@@ -65,7 +65,8 @@ namespace WindingTale.Scenes.GameBattleScene
         private int criticalFlashedIndex = -1;
 
         // The white screen-edge flash of a critical hit: up at once, then fading out.
-        private const float CriticalFlashSeconds = 0.3f;
+        // Halved from 0.3 s (user: end it twice as fast); the magic flash is separate.
+        private const float CriticalFlashSeconds = 0.15f;
 
         private bool animationFinished = false;
         private DateTime animationFinishTime;

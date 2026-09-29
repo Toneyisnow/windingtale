@@ -654,6 +654,13 @@ namespace WindingTale.MapObjects.GameMap
                 return TreeLift;
             }
 
+            // The tents (tent_<colour>_N, chapter 13's camp) sat too low: raised a
+            // whole tile, the height of a creature.
+            if (definitionKey.StartsWith(TentKeyPrefix))
+            {
+                return TentLift;
+            }
+
             switch (definitionKey)
             {
                 case "barrel_group_1":
@@ -668,6 +675,10 @@ namespace WindingTale.MapObjects.GameMap
         private const string TreeKeyPrefix = "tree_";
         private const string PineKeyPrefix = "pine_";
         private const float TreeLift = WorldUnitsPerTile / 3f;
+
+        // Keys of the tents and how far they are raised: one whole tile.
+        private const string TentKeyPrefix = "tent_";
+        private const float TentLift = WorldUnitsPerTile;
 
         // Keys of the ground covers: "lava_" + chapter + "_" + tile id, one flat
         // one-voxel sheet per lava tile shape (Tools/MapPipeline/build_obstacles_25.py).

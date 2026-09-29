@@ -174,10 +174,12 @@ namespace WindingTale.MapObjects.GameMap
         private Mesh singleTileCursorMesh = null;
 
         /// <summary>
-        /// Switches the cursor to the outline of a spell's blast: scope 2, 3 and 4 use the
-        /// original's Cursor-02/03/04 (Resources/Others/Cursors/Cursor_N, the diamond of every
-        /// tile within scope - 1 of the centre); scope 1 or less is the ordinary cursor. Only
-        /// the mesh is swapped, so the cursor keeps its material, position and slide.
+        /// Switches the cursor to the outline of a spell's blast. The scope is the magic data's
+        /// EffectScope, counted from 0: 0 is the target tile alone (the ordinary cursor), 1 the
+        /// cross of five (回复术), 2 and 3 the wider diamonds. Scope N uses the original's
+        /// Cursor-0(N+1) (Resources/Others/Cursors/Cursor_N+1, the diamond of every tile within
+        /// N of the centre); anything past 3 uses the widest, Cursor_4. Only the mesh is
+        /// swapped, so the cursor keeps its material, position and slide.
         /// </summary>
         public void SetCursorScope(int scope)
         {
@@ -193,9 +195,9 @@ namespace WindingTale.MapObjects.GameMap
             }
 
             Mesh mesh = singleTileCursorMesh;
-            if (scope >= 2)
+            if (scope >= 1)
             {
-                GameObject model = Resources.Load<GameObject>(string.Format("Others/Cursors/Cursor_{0}", Mathf.Min(scope, 4)));
+                GameObject model = Resources.Load<GameObject>(string.Format("Others/Cursors/Cursor_{0}", Mathf.Min(scope + 1, 4)));
                 MeshFilter modelFilter = model != null ? model.GetComponentInChildren<MeshFilter>(true) : null;
                 if (modelFilter != null && modelFilter.sharedMesh != null)
                 {

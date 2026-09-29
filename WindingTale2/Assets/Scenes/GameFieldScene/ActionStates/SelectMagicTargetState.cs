@@ -99,7 +99,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Clear move range on UI
             gameMain.gameMap.clearAllIndicators();
             gameMain.gameMap.SetBlinkTargets(null);
-            gameMain.gameMap.SetCursorScope(1);
+            gameMain.gameMap.SetCursorScope(0);
         }
 
         // Attack and debuff magic hurts (red); recovery, buffs and transmit help (green).

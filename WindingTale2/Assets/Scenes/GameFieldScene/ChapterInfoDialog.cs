@@ -9,7 +9,8 @@ namespace WindingTale.Scenes.GameFieldScene
 {
     /// <summary>
     /// The battlefield's info box (the Record menu's "ShowInfo"): the original game's
-    /// ChapterInfo picture in the middle of the screen, with the chapter and turn, what wins
+    /// ChapterInfo picture in the middle of the screen, the chapter's name framed just above
+    /// it as in the village (VillageTitleBar), with the chapter and turn, what wins
     /// and what loses the battle, how many enemies, friends and NPCs are still standing, and
     /// the party's money filled into it. Any key, or a click, puts it away.
     ///
@@ -36,6 +37,9 @@ namespace WindingTale.Scenes.GameFieldScene
         // to about 440 units tall.
         private const float PixelScale = 2.6f;
 
+        // Canvas units between the box's top edge and the title plate above it.
+        private const float TitleGap = 4f;
+
         private static readonly Color TextColor = new Color(0.86f, 0.90f, 0.98f, 1f);
         private static readonly Color ShadowColor = new Color(0f, 0f, 0f, 0.8f);
         private const float ShadowOffset = 2f;
@@ -44,6 +48,9 @@ namespace WindingTale.Scenes.GameFieldScene
         private const float ConditionFontSize = 22f;
 
         private RectTransform box = null;
+
+        // The chapter's name just above the box, in the village's title plate.
+        private RectTransform titlePlate = null;
         private bool closing = false;
 
         // The frame the box went up on: the key press that chose "ShowInfo" is still down
@@ -90,6 +97,15 @@ namespace WindingTale.Scenes.GameFieldScene
 
             TMP_FontAsset font = ShoppingRecordDialog.GetRecordFont();
             int chapterId = map.ChapterId;
+
+            // "第13关 ...", framed as in the village (VillageTitleBar), sitting just on top
+            // of the box.
+            titlePlate = VillageTitleBar.AddTitlePlate(transform,
+                LocalizationManager.GetChapterTitleString(chapterId).GetLocalizedString());
+            titlePlate.anchorMin = new Vector2(0.5f, 0.5f);
+            titlePlate.anchorMax = new Vector2(0.5f, 0.5f);
+            titlePlate.pivot = new Vector2(0.5f, 0f);
+            titlePlate.anchoredPosition = new Vector2(0f, BitmapHeight * PixelScale / 2f + TitleGap);
 
             // MAP . nn   TURN . nn
             AddText(font, map.ChapterId.ToString(), 67, 3, 16, 12, NumberFontSize, TextAlignmentOptions.Left);
@@ -168,6 +184,10 @@ namespace WindingTale.Scenes.GameFieldScene
                 if (box != null)
                 {
                     box.gameObject.SetActive(false);
+                }
+                if (titlePlate != null)
+                {
+                    titlePlate.gameObject.SetActive(false);
                 }
             }
         }
