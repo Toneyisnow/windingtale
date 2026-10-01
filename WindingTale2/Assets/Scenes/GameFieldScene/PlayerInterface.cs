@@ -106,6 +106,13 @@ namespace WindingTale.Scenes.GameFieldScene
                 return false;
             }
 
+            // The cursor is still gliding (e.g. cycling to the next friend): moving it now
+            // would leave it off by the rest of the glide.
+            if (gameMain.gameMap != null && gameMain.gameMap.IsCursorSliding)
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -251,6 +258,11 @@ namespace WindingTale.Scenes.GameFieldScene
             }
 
             if (!gameMain.activityQueue.IsIdle)
+            {
+                return;
+            }
+
+            if (gameMain.gameMap.IsCursorSliding)
             {
                 return;
             }

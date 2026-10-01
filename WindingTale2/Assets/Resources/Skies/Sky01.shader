@@ -10,8 +10,8 @@ Shader "Skybox/WT_Sky01"
     // strip at the map's edges -- directions at or below the horizon, where the overhead
     // layer has faded out. A second, low bank of cloud lives there: 3D noise laid on the
     // view direction itself (seamless all the way round), squashed flat so it reads as
-    // layered banks, lit on top. Clouds live only in the upper half of the box: nothing
-    // below the horizon.
+    // layered banks, lit on top. The bank reaches well down below the horizon, so it shows
+    // past the map's far (north) edge at the camera's usual look-down angle.
     Properties
     {
         _ZenithColor ("Zenith", Color) = (0.03, 0.22, 0.74, 1)
@@ -190,10 +190,10 @@ Shader "Skybox/WT_Sky01"
                     sky = lerp(sky, cloud, density * horizonFade);
                 }
 
-                // The low bank: sits just above the horizon (fading in over h = 0..0.06) and is
-                // gone by h = 0.4, so it takes over where the overhead layer fades out. Nothing
-                // below the horizon -- the lower half of the box stays clear sky.
-                float lowBand = smoothstep(0.0, 0.06, h) * (1.0 - smoothstep(0.12, 0.4, h));
+                // The low bank: fades in from h = -0.42 to -0.28 -- below the horizon, where the
+                // camera looks past the map's far edge -- and is gone by h = 0.4, so it takes
+                // over where the overhead layer fades out. Further down the box stays clear sky.
+                float lowBand = smoothstep(-0.42, -0.28, h) * (1.0 - smoothstep(0.12, 0.4, h));
                 if (lowBand > 0.0)
                 {
                     float low = lowCloudDensity(d);

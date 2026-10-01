@@ -229,6 +229,13 @@ namespace WindingTale.MapObjects.GameMap
 
         private MainCamera mainCamera = null;
 
+        /// <summary>
+        /// True while the cursor itself is gliding to a tile. Its logical position is already
+        /// the destination, so moving it by hand now would leave the glide to drag the visual
+        /// back to the old destination -- the player's input is ignored until it lands.
+        /// </summary>
+        public bool IsCursorSliding => cursorSlideCoroutine != null;
+
         // True while either the cursor or its follow camera is still animating a slide.
         public bool IsSlideBusy => cursorSlideCoroutine != null
             || (mainCamera != null && mainCamera.IsFollowSliding);

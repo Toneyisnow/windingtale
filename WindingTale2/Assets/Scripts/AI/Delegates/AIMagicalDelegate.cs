@@ -241,7 +241,8 @@ namespace WindingTale.AI.Delegates
 
         /// <summary>
         /// Whether the spell would do the target any good: healing for the wounded, an
-        /// antidote for the poisoned, a thaw for the frozen, a buff for anyone.
+        /// antidote for the poisoned, a thaw for the frozen, a buff for anyone not already
+        /// carrying one.
         /// </summary>
         private static bool HasDefensiveEffectOn(MagicDefinition magic, FDCreature target)
         {
@@ -260,10 +261,18 @@ namespace WindingTale.AI.Delegates
                 case 402:
                 case 403:
                 case 407:
-                    return true;
+                    return !HasAnyEnhancement(target);
                 default:
                     return false;
             }
+        }
+
+        /// <summary>Whether the target already carries any of the AP / DP / DX buffs.</summary>
+        private static bool HasAnyEnhancement(FDCreature target)
+        {
+            return target.HasEffect(CreatureEffects.EnhancedAp)
+                || target.HasEffect(CreatureEffects.EnhancedDp)
+                || target.HasEffect(CreatureEffects.EnhancedDx);
         }
 
         /// <summary>

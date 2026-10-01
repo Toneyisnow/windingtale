@@ -6,14 +6,13 @@ namespace WindingTale.MapObjects.CreatureIcon
 {
     /// <summary>
     /// The footstep sound of a creature walking on the map: loops the clip that fits how the
-    /// creature moves -- wings for a flyer, hooves for a knight, feet for everyone else --
+    /// creature moves -- wings for a flyer, feet for everyone else (knights included) --
     /// for as long as the walk lasts, then fades it out briefly so the loop is never cut off
     /// mid-step. Lives on its own child object, which removes itself once the fade is done.
     /// </summary>
     public class CreatureWalkSound : MonoBehaviour
     {
         private const string NormalClip = "Audios/Effects/sfx_move_normal";
-        private const string KnightClip = "Audios/Effects/sfx_move_knight";
         private const string FlyClip = "Audios/Effects/sfx_move_fly";
 
         private const float Volume = 0.8f;
@@ -49,17 +48,12 @@ namespace WindingTale.MapObjects.CreatureIcon
             return sound;
         }
 
-        /// <summary>A flyer that is also a knight (the pegasus knight) takes to the air, so flying is checked first.</summary>
+        /// <summary>Knights walk with the normal footsteps; only flyers sound different.</summary>
         private static string ClipNameFor(CreatureDefinition definition)
         {
             if (definition.CanFly())
             {
                 return FlyClip;
-            }
-
-            if (definition.IsKnight())
-            {
-                return KnightClip;
             }
 
             return NormalClip;

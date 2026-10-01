@@ -30,9 +30,9 @@ public class MainCamera : MonoBehaviour
     public float rotateSpeed = 4.0f;   // degrees per unit of horizontal mouse movement
 
     // Keyboard camera controls: A/D orbit the view left/right (like the right-drag),
-    // W/S zoom in/out (like the mouse wheel). J/I/K/L do the old A/W/S/D panning.
+    // W/S tilt it up/down (see the vertical orbit). Zoom is on the mouse wheel only.
+    // J/I/K/L do the old A/W/S/D panning.
     public float keyboardRotateSpeed = 60f;   // degrees per second while A/D held
-    public float keyboardZoomSpeed = 0.15f;   // wheel-equivalent zoom per frame while W/S held
 
     private bool isRotating = false;
     private Vector3 rotatePivot = Vector3.zero;
@@ -301,7 +301,8 @@ public class MainCamera : MonoBehaviour
     /// </summary>
     public void ZoomToTop()
     {
-        zoomToTopStartHeight = transform.position.y;
+        SyncZoomHeight();
+        zoomToTopStartHeight = zoomHeight;
         zoomToTopElapsed = 0f;
         zoomToTopActive = true;
 
@@ -331,7 +332,7 @@ public class MainCamera : MonoBehaviour
             zoomToTopActive = false;
         }
 
-        return transform.position.y - target;
+        return zoomHeight - target;
     }
 
     // One frame of the heading turn: orbits the camera about the ground point at the screen
@@ -468,6 +469,38 @@ public class MainCamera : MonoBehaviour
         Vector3 position = transform.position;
         transform.position = new Vector3(position.x, GetHeightForPitch(DefaultPitch), position.z);
         transform.rotation = Quaternion.Euler(DefaultPitch, 180, 0);
+
+        zoomHeight = transform.position.y;
+        lastAppliedHeight = zoomHeight;
+        pitchOffset = 0f;
+    }
+
+    // ---- Vertical orbit ----
+    // Up/down on the right-drag (and W/S) tips the camera over about the ground point at
+    // the screen centre, all the way to straight down. It is a true orbit: the camera keeps
+    // its distance to that point, the distance the zoom level gives (zoomHeight / sin of the
+    // zoom's own pitch), so near and at 90 degrees the view neither races in nor backs off.
+    // Nothing is divided by the pitch's cosine, so straight down is just another angle.
+    //
+    // zoomHeight is the zoom level: the height the camera would stand at with no tilt, and
+    // what minHeight / maxHeight and the height -> pitch curve apply to. With pitchOffset 0
+    // the camera height is exactly zoomHeight, as before the vertical orbit existed.
+    public float keyboardPitchSpeed = 60f;          // degrees per second while W/S held
+    private const float MaxOrbitPitch = 90f;
+    private float zoomHeight = 0f;
+    private float pitchOffset = 0f;                 // the player's tilt on top of the zoom's pitch
+    private float lastAppliedHeight = 0f;           // camera height this script last set
+
+    // Anything else that moved the camera up or down (a conversation framing, say) owns its
+    // height now: take that as the zoom level and drop the tilt, as the camera did before.
+    private void SyncZoomHeight()
+    {
+        if (Mathf.Abs(transform.position.y - lastAppliedHeight) > 0.001f)
+        {
+            zoomHeight = Mathf.Clamp(transform.position.y, minHeight, maxHeight);
+            pitchOffset = 0f;
+            lastAppliedHeight = transform.position.y;
+        }
     }
 
     void Update()
@@ -578,6 +611,23 @@ public class MainCamera : MonoBehaviour
             {
                 transform.RotateAround(rotatePivot, Vector3.up, dx * rotateSpeed);
             }
+
+            // Up/down tips the camera over (see the vertical orbit): moving the mouse up
+            // raises it towards straight down.
+            float dy = Input.GetAxis("Mouse Y");
+            if (Mathf.Abs(dy) > Mathf.Epsilon)
+            {
+                pitchOffset += dy * rotateSpeed;
+            }
+        }
+
+        // W/S keyboard tilt: W tips the view over towards straight down, S flattens it.
+        float keyPitch = 0f;
+        if (Input.GetKey(KeyCode.W)) keyPitch += 1f;
+        if (Input.GetKey(KeyCode.S)) keyPitch -= 1f;
+        if (keyPitch != 0f)
+        {
+            pitchOffset += keyPitch * keyboardPitchSpeed * Time.deltaTime;
         }
 
         // A/D keyboard orbit: rotate the view left/right around the ground point at the
@@ -602,21 +652,15 @@ public class MainCamera : MonoBehaviour
             UpdateYawAlign();
         }
 
-        // ���㾵ͷ���� -- mouse wheel, plus W/S as an equivalent zoom in / out.
+        // ���㾵ͷ���� -- mouse wheel.
+        SyncZoomHeight();
+
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-        float keyZoom = 0f;
-        if (Input.GetKey(KeyCode.W)) keyZoom += 1f;
-        if (Input.GetKey(KeyCode.S)) keyZoom -= 1f;
 
         if (scroll != 0)
         {
             zoomVelocity = scroll * zoomSpeed;
             zoomToTopActive = false; // player is zooming: abandon the menu framing
-        }
-        else if (keyZoom != 0f)
-        {
-            zoomVelocity = keyZoom * keyboardZoomSpeed;
-            zoomToTopActive = false;
         }
         else if (zoomToTopActive)
         {
@@ -626,32 +670,40 @@ public class MainCamera : MonoBehaviour
         {
             zoomVelocity = Mathf.Lerp(zoomVelocity, 0, Time.deltaTime * zoomDeceleration);
         }
-        float oldHeight = transform.position.y;
-        float newHeight = Mathf.Clamp(oldHeight - zoomVelocity, minHeight, maxHeight);
+        float oldZoomHeight = zoomHeight;
+        zoomHeight = Mathf.Clamp(zoomHeight - zoomVelocity, minHeight, maxHeight);
+
+        // The pitch the zoom level gives, plus the player's tilt, up to straight down.
+        float basePitch = GetPitchForHeight(zoomHeight);
+        pitchOffset = Mathf.Clamp(pitchOffset, minRotationAngle - basePitch, MaxOrbitPitch - basePitch);
+        float newAngle = basePitch + pitchOffset;
+
+        float currentPitch = Mathf.Asin(Mathf.Clamp(-transform.forward.y, -1f, 1f)) * Mathf.Rad2Deg;
+        bool reframe = Mathf.Abs(zoomHeight - oldZoomHeight) > 0.0001f || Mathf.Abs(currentPitch - newAngle) > 0.01f;
 
         // Zooming drops the camera and flattens its pitch, which on its own would drag the
         // framed ground point away from under the camera. Pin it instead: capture whatever
-        // the camera is aimed at now, and put it back on the screen centre once the new
-        // framing is applied. The camera then dollies straight in toward that point --
-        // closer with every step, and standing still once the height clamps at minHeight.
-        Vector3 zoomAnchor = Vector3.zero;
-        bool hasZoomAnchor = false;
-        if (Mathf.Abs(newHeight - oldHeight) > 0.0001f)
+        // the camera is aimed at now, and put the camera back on the ray through the screen
+        // centre, at the distance the zoom level gives. Zooming then dollies straight in
+        // toward that point -- closer with every step, and standing still once the height
+        // clamps at minHeight -- and tilting swings the camera round it at a fixed distance.
+        float yaw = GetYaw();
+        Quaternion rotation = Quaternion.Euler(newAngle, yaw, 0);
+        float distance = zoomHeight / Mathf.Sin(basePitch * Mathf.Deg2Rad);
+
+        Vector3 screenCenter = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
+        if (reframe && TryGetGroundPoint(screenCenter, out Vector3 zoomAnchor))
         {
-            Vector3 screenCenter = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
-            hasZoomAnchor = TryGetGroundPoint(screenCenter, out zoomAnchor);
+            transform.rotation = rotation;
+            transform.position = zoomAnchor - (rotation * Vector3.forward) * distance;
+        }
+        else
+        {
+            transform.rotation = rotation;
+            transform.position = new Vector3(transform.position.x, distance * Mathf.Sin(newAngle * Mathf.Deg2Rad), transform.position.z);
         }
 
-        transform.position = new Vector3(transform.position.x, newHeight, transform.position.z);
-
-        // �����½Ƕ�
-        float newAngle = GetPitchForHeight(newHeight);
-        transform.rotation = Quaternion.Euler(newAngle, GetYaw(), 0);
-
-        if (hasZoomAnchor)
-        {
-            PinGroundPointToScreenCenter(zoomAnchor);
-        }
+        lastAppliedHeight = transform.position.y;
     }
 
     // ---- Height -> pitch ----
@@ -742,30 +794,6 @@ public class MainCamera : MonoBehaviour
     {
         Vector3 groundForward = GetGroundForward();
         return Mathf.Atan2(groundForward.x, groundForward.z) * Mathf.Rad2Deg;
-    }
-
-    /// <summary>
-    /// Slides the camera along the ground so the given ground point sits back under the
-    /// screen centre at the current height and pitch. The centre ray runs along the camera
-    /// forward, so its ground hit lies exactly height / tan(pitch) ahead on the flattened
-    /// forward -- no raycast needed to place it.
-    /// </summary>
-    private void PinGroundPointToScreenCenter(Vector3 groundAnchor)
-    {
-        Vector3 forward = transform.forward;
-        Vector3 groundForward = new Vector3(forward.x, 0f, forward.z);
-
-        float horizontal = groundForward.magnitude;
-        float down = -forward.y;
-        if (horizontal < 1e-4f || down < 0.01f)
-        {
-            return; // looking straight down, or level / upward: no usable centre ground hit
-        }
-        groundForward /= horizontal;
-
-        float distance = transform.position.y * horizontal / down; // height / tan(pitch)
-        Vector3 position = groundAnchor - groundForward * distance;
-        transform.position = new Vector3(position.x, transform.position.y, position.z);
     }
 
     // Farthest the A/D orbit pivot may sit in front of the camera, in world units.

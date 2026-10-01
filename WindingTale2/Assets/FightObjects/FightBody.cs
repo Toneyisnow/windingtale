@@ -69,6 +69,11 @@ namespace WindingTale.FightObjects
         public void onAttackFinish()
         {
             Debug.Log("=== onAttackFinish ===");
+
+            // A double attack plays the same clip again: its hit points start over, or the
+            // second strike's hits are all swallowed and the HP bar never moves.
+            this.animationHitIndex = 0;
+
             Animator animator = this.GetComponent<Animator>();
 
             MonoBehaviourUtils.ExecuteWithDelay(this, 0.1f, () =>

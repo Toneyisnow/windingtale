@@ -101,6 +101,13 @@ namespace WindingTale.Scenes.GameFieldScene
         /// </summary>
         private bool isQuitting = false;
 
+        /// <summary>
+        /// Set for the one phase advance that follows loading a record. The save was taken
+        /// at the start of a turn, after the round before it had already ended, so that
+        /// advance must not end the round a second time.
+        /// </summary>
+        private bool isResumingFromRecord = false;
+
         void Start()
         {
             DontDestroyOnLoad(gameObject);
@@ -155,6 +162,10 @@ namespace WindingTale.Scenes.GameFieldScene
             // Chapter turn scripts are skipped when continuing, so start the music here
             PlayBackgroundMusic();
 
+            // ApplyRecord rewound the turn by one phase so the kick-off lands on the saved
+            // one. A Friend-phase save is rewound into the Enemy phase before it, and that
+            // round had already ended when the save was taken -- see onStartNextTurn.
+            isResumingFromRecord = true;
             onKickOff();
         }
 
@@ -1097,7 +1108,13 @@ namespace WindingTale.Scenes.GameFieldScene
                     //// "team eliminated" event matches an empty team at once: chapter 2
                     //// loses the battle for its villagers being wiped out before a single
                     //// villager exists, and every chapter wins it for having no enemies.
-                    if (this.gameMap.Map.TurnNo > 0)
+                    ////
+                    //// Nor straight after a load (isResumingFromRecord): a Friend-phase save
+                    //// is rewound into the Enemy phase before it, but that round ended before
+                    //// the save was written. Ending it again gave poison one more bite and
+                    //// every effect one round less on every load -- enough loads and a
+                    //// poisoned creature sat at the 1 HP poison stops at.
+                    if (this.gameMap.Map.TurnNo > 0 && !isResumingFromRecord)
                     {
                         this.gameMap.Map.IsEndOfTurn = true;
                         eventHandler.notifyTriggeredEvents();
@@ -1130,6 +1147,7 @@ namespace WindingTale.Scenes.GameFieldScene
                     this.gameMap.Map.TurnType = CreatureFaction.Friend;
                     break;
             }
+            isResumingFromRecord = false;
 
             //// Main entry to notify the turn events
             eventHandler.notifyTurnEvents();

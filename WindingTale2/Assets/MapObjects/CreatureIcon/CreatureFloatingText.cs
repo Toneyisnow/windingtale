@@ -38,11 +38,18 @@ namespace WindingTale.MapObjects.CreatureIcon
         // draws the text over whatever stands in front of it.
         private const string DepthTestProperty = "unity_GUIZTestMode";
 
-        // The soap-bubble sheen on a stat potion's text: how far the rainbow is mixed into
-        // the base colour, and how fast and how tightly the bands run across the glyphs.
-        private const float SheenStrength = 0.45f;
-        private const float SheenSpeed = 1.6f;
-        private const float SheenBandsPerUnit = 0.4f;
+        // The rainbow sheen on a stat potion's text, at full strength: pure rainbow over the
+        // base colour, fully saturated, the whole spectrum across one line of text and
+        // running fast enough to shimmer.
+        private const float SheenStrength = 1f;
+        private const float SheenSaturation = 1f;
+        private const float SheenSpeed = 3f;
+        private const float SheenBandsPerUnit = 0.9f;
+
+        // Sheen text is drawn larger than a plain number, and pulses gently while it rises.
+        private const float SheenSizeScale = 1.35f;
+        private const float SheenPulseAmount = 0.08f;
+        private const float SheenPulseSpeed = 14f;
 
         private TextMeshPro textMesh = null;
         private Vector3 origin = Vector3.zero;
@@ -86,7 +93,7 @@ namespace WindingTale.MapObjects.CreatureIcon
             }
 
             textMesh.text = text;
-            textMesh.fontSize = FontSize;
+            textMesh.fontSize = iridescent ? FontSize * SheenSizeScale : FontSize;
             textMesh.fontStyle = FontStyles.Bold;
             textMesh.alignment = TextAlignmentOptions.Center;
             textMesh.textWrappingMode = TextWrappingModes.NoWrap;
@@ -99,8 +106,16 @@ namespace WindingTale.MapObjects.CreatureIcon
             material.renderQueue = (int)RenderQueue.Overlay;
             textMesh.outlineWidth = 0.22f;
 
-            // The dark potion colours vanish into a black edge, so the sheen text gets a pale one.
-            textMesh.outlineColor = iridescent ? new Color32(235, 235, 255, 255) : new Color32(0, 0, 0, 255);
+            // A dark edge makes the saturated rainbow stand out; a soft white glow round it
+            // makes the sheen text shine.
+            textMesh.outlineColor = iridescent ? new Color32(20, 0, 40, 255) : new Color32(0, 0, 0, 255);
+            if (iridescent)
+            {
+                material.EnableKeyword(ShaderUtilities.Keyword_Glow);
+                material.SetColor(ShaderUtilities.ID_GlowColor, new Color(1f, 1f, 1f, 0.75f));
+                material.SetFloat(ShaderUtilities.ID_GlowOuter, 0.6f);
+                material.SetFloat(ShaderUtilities.ID_GlowPower, 0.6f);
+            }
 
             FaceCamera();
         }
@@ -129,6 +144,7 @@ namespace WindingTale.MapObjects.CreatureIcon
                 if (iridescent)
                 {
                     ApplySheen(color);
+                    transform.localScale = Vector3.one * (1f + SheenPulseAmount * Mathf.Sin(elapsed * SheenPulseSpeed));
                 }
             }
 
@@ -161,7 +177,7 @@ namespace WindingTale.MapObjects.CreatureIcon
                     int index = character.vertexIndex + corner;
                     Vector3 v = vertices[index];
                     float hue = Mathf.Repeat(elapsed * SheenSpeed * 0.5f + (v.x + v.y * 0.6f) * SheenBandsPerUnit, 1f);
-                    Color rainbow = Color.HSVToRGB(hue, 0.55f, 1f);
+                    Color rainbow = Color.HSVToRGB(hue, SheenSaturation, 1f);
                     Color mixed = Color.Lerp(tint, rainbow, SheenStrength);
                     mixed.a = tint.a;
                     colors[index] = mixed;
