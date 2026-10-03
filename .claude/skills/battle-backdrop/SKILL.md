@@ -23,6 +23,11 @@ docstrings are the real manual.
   pass it to `scatter_trees(avoid=...)`. Centre axial things (roads, stairs,
   causeways) on x ≈ 116, not 128.
 - Flat things (water, paving) must come **forward** (y < ~120) to be seen.
+- A narrow way (causeway, bridge, paved road) laid straight up the axis leaves
+  one fighter over the water/drop beside it. Lay such a recipe out in a
+  `Turn` frame (45°, pivot = the fighters' ground point): the way then crosses
+  the frame from the near screen-right corner to the far screen-left and both
+  fighters stand on it. Chapters 17, 18, 22, 23, 26 and 29 do this.
 - A backdrop is a few of the chapter's things placed where they read, not the
   map rebuilt. One landmark behind the fight, framing at the edges.
 - Only tiles with a `Shapes_NN` VOX can be laid (tiles under trees were never
@@ -54,6 +59,7 @@ docstrings are the real manual.
 | cliff / wall faces | `rock_faces(bd, NN, tile, min_rise)` |
 | water / pits one colour all the way down | `sink_colour(bd, mask)` |
 | close the frame (no sky) | `enclose` |
+| path on the slant (both fighters on it) | `turn = Turn(bd)`; masks from `turn.u/v`, `turn.stamp`, `scatter_turned`, `railing_turned` |
 | trees / props | `scatter_trees(..., where=fn)`, `bd.stamp`, `building`, `avenue`, `pillar_rows` |
 | built geometry | `railing`, `fence`, `crates`, `log_pile`, `well`, `stump`, `cave_mouth`, `light_beam`, lava `_lava_paint` / `lava_pool` |
 

@@ -2210,6 +2210,95 @@ def recipe_16(bd):
 
 
 # --------------------------------------------------------------------------- #
+# shared by 17, 18, 22, 23, 26, 29 -- a scene turned on the slant             #
+# --------------------------------------------------------------------------- #
+
+# A causeway, a bridge or a paved way laid straight up the camera axis puts
+# the two fighters side by side across it, and one of them ends up over the
+# water or the drop at its edge. Turned 45 degrees, the way runs across the
+# frame on the slant, from the near screen-right corner away to the far
+# screen-left, and both fighters stand on it.
+#
+# Turning the finished model would leave its corners empty in the frame, so
+# these recipes are laid out in their own (u, v) frame instead: every mask is
+# a function of ``turn.u`` / ``turn.v`` rather than x / y, and every model goes
+# in through ``turn.stamp``. The design reads exactly as an unturned recipe
+# does -- the way runs up v at u 116 -- and anything that belongs to the
+# screen rather than the scene (``enclose``, ``FIGHTER_ZONE``) stays in x / y.
+
+TURN_PIVOT = (116.0, 76.0)             # the ground the fighters are seen standing on
+TURN_DEG = -45.0                       # in model space; the screen is mirrored, so
+                                       # this turns the scene anticlockwise on screen
+
+
+class Turn(object):
+    def __init__(self, bd, deg=TURN_DEG, pivot=TURN_PIVOT):
+        a = math.radians(deg)
+        self.bd, self.c, self.s, self.p = bd, math.cos(a), math.sin(a), pivot
+        xs, ys = np.broadcast_arrays(*_grid(bd))
+        dx, dy = xs - pivot[0], ys - pivot[1]
+        self.u = pivot[0] + self.c * dx + self.s * dy
+        self.v = pivot[1] - self.s * dx + self.c * dy
+
+    def world(self, u, v):
+        du, dv = u - self.p[0], v - self.p[1]
+        return (self.p[0] + self.c * du - self.s * dv,
+                self.p[1] + self.s * du + self.c * dv)
+
+    def inside(self, u, v):
+        wx, wy = self.world(u, v)
+        return 0 <= wx < self.bd.size[0] and 0 <= wy < self.bd.size[1]
+
+    def stamp(self, m, x, y, z=None):
+        """``bd.stamp`` with (x, y) the model's near-left corner in the design;
+        the model keeps its own facing, only where it stands turns."""
+        cx, cy = self.world(x + m.shape[0] / 2.0, y + m.shape[1] / 2.0)
+        self.bd.stamp(m, int(round(cx - m.shape[0] / 2.0)),
+                      int(round(cy - m.shape[1] / 2.0)), z)
+
+
+def scatter_turned(bd, turn, keys, boxes, spacing=11, jitter=4, seed=3,
+                   avoid=(), scale=SCALE, where=None):
+    """``scatter_trees`` with ``boxes`` and ``where`` in the turned design and
+    ``avoid`` on the screen (x / y, like ``FIGHTER_ZONE``)."""
+    rnd = random.Random(seed)
+    models = [obstacle(k, scale) for k in keys]
+    for (bx0, bx1, by0, by1, density) in boxes:
+        for gx in range(int(bx0), int(bx1), spacing):
+            for gy in range(int(by0), int(by1), spacing):
+                if rnd.random() > density:
+                    continue
+                x = gx + rnd.randint(-jitter, jitter)
+                y = gy + rnd.randint(-jitter, jitter)
+                m = models[rnd.randrange(len(models))]
+                cu, cv = x + m.shape[0] / 2.0, y + m.shape[1] / 2.0
+                wx, wy = turn.world(cu, cv)
+                if not turn.inside(cu, cv):
+                    continue
+                if any(ax0 <= wx <= ax1 and ay0 <= wy <= ay1
+                       for (ax0, ax1, ay0, ay1) in avoid):
+                    continue
+                if where is not None and not where(cu, cv):
+                    continue
+                turn.stamp(m, x, y)
+
+
+def railing_turned(bd, turn, u0, v_end, z, height=11, spacing=13, width=3):
+    """Chapter 03's ``railing``, running up v instead of y."""
+    post, dark = BOOK.index(RAIL_RED_03), BOOK.index(RAIL_DARK_03)
+    band = (turn.u >= u0) & (turn.u < u0 + width) & (turn.v < v_end)
+    posts = band & (np.mod(turn.v, spacing) < 2.0)
+    far = posts & (np.mod(turn.v, spacing) >= 1.0)
+    for zz in range(z - 4, z + height):
+        bd.a[posts, zz] = post
+        bd.a[far, zz] = dark
+    for dz in (height - 2, height - 6):
+        bd.a[band, z + dz] = post
+        bd.a[band, z + dz - 1] = post
+        bd.a[band, z + dz - 2] = dark
+
+
+# --------------------------------------------------------------------------- #
 # chapter 17 -- the ice island                                                #
 # --------------------------------------------------------------------------- #
 
@@ -2234,11 +2323,12 @@ WATER_Z_17 = GROUND_Z - 5
 HILL_17 = (116.0, 214.0)               # centre of the rings, behind the model
 RING_R_17 = (78.0, 96.0)               # the ring road's inner and outer radius
 HILL_R_17 = (66.0, 50.0)               # where each terrace step begins
-CAUSEWAY_HW_17 = 22
+CAUSEWAY_HW_17 = 30
 
 
 def recipe_17(bd):
-    xs, ys = _grid(bd)
+    turn = Turn(bd)
+    xs, ys = turn.u, turn.v                # the design, laid out turned
     d = np.hypot(xs - HILL_17[0], ys - HILL_17[1])
     causeway = (np.abs(xs - HILL_17[0]) < CAUSEWAY_HW_17) & (d > RING_R_17[1] - 4)
     ring = (d >= RING_R_17[0]) & (d < RING_R_17[1])
@@ -2260,15 +2350,21 @@ def recipe_17(bd):
     sink_colour(bd, ~land)
 
     # The pines in pairs down the causeway, the way the map lines its south
-    # approach, and a few up on the terraces either side of the stair.
-    for y in range(50, 120, 22):
+    # approach, and a few up on the terraces either side of the stair. None
+    # goes where the fighters are drawn.
+    pine = obstacle('pine_snow', 2)
+    for y in range(-40, 120, 22):
         for x in (HILL_17[0] - CAUSEWAY_HW_17 + 2, HILL_17[0] + CAUSEWAY_HW_17 - 8):
             if abs(math.hypot(x + 3 - HILL_17[0], y + 3 - HILL_17[1])
                    - (RING_R_17[0] + RING_R_17[1]) / 2) < 12:
                 continue
-            bd.stamp(obstacle('pine_snow', 2), int(x), y)
+            wx, wy = turn.world(x + 3, y + 3)
+            if (not turn.inside(x + 3, y + 3)
+                    or (FIGHTER_ZONE[0] - 10 <= wx <= FIGHTER_ZONE[1] and wy < 110)):
+                continue
+            turn.stamp(pine, int(x), y)
     for x, y in ((76, 158), (146, 158), (88, 170), (134, 170)):
-        bd.stamp(obstacle('pine_snow', 2), x, y)
+        turn.stamp(pine, x, y)
 
 
 # --------------------------------------------------------------------------- #
@@ -2301,13 +2397,14 @@ def _cliff_18(xs):
 
 
 def recipe_18(bd):
-    xs, ys = _grid(bd)
+    turn = Turn(bd)
+    xs, ys = turn.u, turn.v                # the design, laid out turned
     land = ys >= _cliff_18(xs)
     bd.undulate(amplitude=1.5, wavelength=70.0, seed=18)
-    bd.rise(y0=CLIFF_Y_18, height=6)
+    t = np.clip((ys - CLIFF_Y_18) / float(bd.size[1] - CLIFF_Y_18), 0, 1)
+    bd.ground = (bd.ground + t ** 2 * 6).astype(np.int16)      # ``rise``, turned
     bd.ground[~land] = CHASM_Z_18
     bd.lay_ground(_pick(GRASS_18, 18), '18')
-    tx, ty = xs / TILE_OUT, ys / TILE_OUT
     head = land & (np.abs(xs - 116) < 30) & (ys < CLIFF_Y_18 + 22)
     lay_where(bd, lambda tx, ty: EARTH_18, '18', head)
     lay_where(bd, lambda tx, ty: VOID_18, '18', ~land)
@@ -2317,22 +2414,24 @@ def recipe_18(bd):
     # The deck, plank by plank across its width, with a dark gap between each.
     x0, x1 = BRIDGE_X_18
     end = int(CLIFF_Y_18 + 8)
-    gap = BOOK.index(PLANK_GAP_18)
-    planks = [BOOK.index(c) for c in PLANK_18]
-    for y in range(0, end):
-        c = gap if y % 4 == 3 else planks[random.Random(y // 4).randrange(len(planks))]
-        bd.a[x0:x1, y, GROUND_Z - 1:GROUND_Z + 1] = c
-    railing(bd, x0 - 3, 0, end, GROUND_Z + 1)
-    railing(bd, x1, 0, end, GROUND_Z + 1)
+    deck = (xs >= x0) & (xs < x1) & (ys < end)
+    vi = np.floor(ys).astype(int)
+    planks = np.array([BOOK.index(c) for c in PLANK_18], np.uint16)
+    plank = planks[np.mod((vi // 4) * 7 + 3, len(planks))]
+    colour = np.where(np.mod(vi, 4) == 3, BOOK.index(PLANK_GAP_18), plank)
+    for z in (GROUND_Z - 1, GROUND_Z):
+        bd.a[deck, z] = colour[deck]
+    railing_turned(bd, turn, x0 - 3, end, GROUND_Z + 1)
+    railing_turned(bd, turn, x1, end, GROUND_Z + 1)
 
     def on_top(cx, cy):
         return cy > _cliff_18(np.array(cx, dtype=np.float64)) + 6
-    scatter_trees(
-        bd, ('tree_blue', 'tree_blue', 'tree_dark_green'),
+    scatter_turned(
+        bd, turn, ('tree_blue', 'tree_blue', 'tree_dark_green'),
         boxes=[
-            (0, 84, 136, 178, 0.8),      # the heights either side of the bridge head
-            (148, 256, 136, 178, 0.8),
-            (84, 148, 158, 178, 0.7),    # and closing the far side
+            (-90, 84, 136, 270, 0.8),    # the heights either side of the bridge head
+            (148, 330, 136, 270, 0.8),
+            (84, 148, 158, 270, 0.7),    # and closing the far side
         ],
         spacing=9, seed=28, where=on_top)
 
@@ -2593,7 +2692,8 @@ ORBS_22 = ('orb_pillar_red', 'orb_pillar_orange', 'orb_pillar_yellow',
 
 
 def recipe_22(bd):
-    xs, ys = _grid(bd)
+    turn = Turn(bd)
+    xs, ys = turn.u, turn.v                # the design, laid out turned
     cx, cy, r = RING_22
     d = np.hypot((xs - cx) / 1.25, ys - cy)
     bd.ground[:, :] = GROUND_Z
@@ -2610,15 +2710,15 @@ def recipe_22(bd):
     rock_faces(bd, '22', RAMPART_FACE_22, min_rise=3)
     enclose(bd, VOID, back=174, sides=4, seed=22)
 
-    bd.stamp(obstacle('stone_shrine_2', 2), int(cx) - 30, DAIS_Y_22 + 24)
+    turn.stamp(obstacle('stone_shrine_2', 2), int(cx) - 30, DAIS_Y_22 + 24)
     for i, key in enumerate(ORBS_22):
         a = math.radians(200 + i * 28)
-        bd.stamp(obstacle(key, 2), int(cx + 62 * math.cos(a)) - 4,
+        turn.stamp(obstacle(key, 2), int(cx + 62 * math.cos(a)) - 4,
                  int(DAIS_Y_22 + 18 - 30 * math.sin(a)))
     for x, y in ((40, 96), (186, 96), (60, 124), (166, 124)):
-        bd.stamp(obstacle('stone_statue_1', 2), x, y)
+        turn.stamp(obstacle('stone_statue_1', 2), x, y)
     for x, y in ((84, 96), (142, 96)):
-        bd.stamp(obstacle('stone_column_2', 2), x, y)
+        turn.stamp(obstacle('stone_column_2', 2), x, y)
 
 
 # --------------------------------------------------------------------------- #
@@ -2646,7 +2746,8 @@ TERRACE_H_23 = 5
 
 def recipe_23(bd):
     bd.undulate(amplitude=1.0, wavelength=90.0, seed=23)
-    xs, ys = _grid(bd)
+    turn = Turn(bd)
+    xs, ys = turn.u, turn.v                # the design, laid out turned
     tx, ty = xs / TILE_OUT, ys / TILE_OUT
     # The hills: rock climbing away at both sides, steepening as it goes.
     off = np.abs(xs - 116) - 80 - 10.0 * np.sin(ys / 23.0 + 0.5) + np.clip(ys - 150, 0, None) * 2.0
@@ -2673,11 +2774,11 @@ def recipe_23(bd):
 
     for x in (62, 160):                       # the wings' posts and statues
         for y in (78, 100):
-            bd.stamp(obstacle('stone_column_1', 2), x, y)
+            turn.stamp(obstacle('stone_column_1', 2), x, y)
     for x, y in ((92, 96), (130, 96)):
-        bd.stamp(obstacle('stone_statue_1', 2), x, y)
+        turn.stamp(obstacle('stone_statue_1', 2), x, y)
     for i, x in enumerate(range(86, 150, 16)):  # the ring of posts on the mound
-        bd.stamp(obstacle(('stone_pillar_1', 'stone_column_2')[i % 2], 2), x,
+        turn.stamp(obstacle(('stone_pillar_1', 'stone_column_2')[i % 2], 2), x,
                  TERRACE_Y_23 + 26 + (6 if i in (1, 2) else 0))
 
 
@@ -2831,7 +2932,8 @@ SHAFT_Z_26 = 1
 
 
 def recipe_26(bd):
-    xs, ys = _grid(bd)
+    turn = Turn(bd)
+    xs, ys = turn.u, turn.v                # the design, laid out turned
     bd.ground[:, :] = GROUND_Z
     # The diamond behind the fight, and a shaft either side of the walkway.
     diamond = (np.abs(xs - 116) / 46.0 + np.abs(ys - 146) / 26.0) < 1.0
@@ -3000,7 +3102,8 @@ CAUSEWAY_HW_29 = 26
 
 
 def recipe_29(bd):
-    xs, ys = np.broadcast_arrays(*_grid(bd))
+    turn = Turn(bd)
+    xs, ys = turn.u, turn.v                # the design, laid out turned
     bd.ground[:, :] = GROUND_Z
     off = np.abs(xs - 116)
     kerb = (off >= CAUSEWAY_HW_29) & (off < CAUSEWAY_HW_29 + 12)
@@ -3011,7 +3114,12 @@ def recipe_29(bd):
     bd.ground[water1 & ~dais] = GROUND_Z - 3
     bd.ground[water2 & ~dais] = GROUND_Z - 6
     bd.ground[ledge & ~dais] = GROUND_Z - 1
-    stair = step_up(bd, dais, 6, axis_x=116, stair_hw=CAUSEWAY_HW_29)
+    # The dais, and a stair up its front the width of the causeway
+    # (``step_up`` finds the front along y, which is not the way up here).
+    raise_where(bd, dais, 6)
+    stair = (off < CAUSEWAY_HW_29) & (ys >= 140) & (ys < 150)
+    t = np.clip((ys - 140) / 10.0, 0, 1)
+    bd.ground[stair] = (GROUND_Z + 2 * np.round(t * 3)).astype(np.int16)[stair]
 
     bd.lay_ground(_pick(GRATE_29, 29), '29', contrast=0.8)
     lay_where(bd, _pick(STONE_29, 129), '29', ((kerb | ledge) & ~dais) | (dais & ~stair))
@@ -3022,8 +3130,12 @@ def recipe_29(bd):
     enclose(bd, VOID, back=176, sides=3, seed=29)
 
     keys = ('light_pillar_1', 'light_pillar_2')
-    pillar_rows(bd, keys, (116 - CAUSEWAY_HW_29 - 11, 116 + CAUSEWAY_HW_29 + 1), 40, 150, 26)
-    bd.stamp(obstacle('stone_stele_1', 2), 106, 160)
+    for i, y in enumerate(range(-40, 150, 26)):
+        for k, x in enumerate((116 - CAUSEWAY_HW_29 - 11, 116 + CAUSEWAY_HW_29 + 1)):
+            m = obstacle(keys[(i + k) % 2], 2)
+            if turn.inside(x + m.shape[0] / 2.0, y + m.shape[1] / 2.0):
+                turn.stamp(m, x, y)
+    turn.stamp(obstacle('stone_stele_1', 2), 106, 160)
 
 
 # --------------------------------------------------------------------------- #
