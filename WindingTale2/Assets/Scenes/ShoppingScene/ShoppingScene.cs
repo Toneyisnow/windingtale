@@ -61,6 +61,12 @@ public class ShoppingScene : MonoBehaviour
     /// <summary>CommonStrings "Confirm-54" asked before a buy: "这个{名字}，#{价格}元，要不要啊？".</summary>
     private const int BuyConfirmId = 54;
 
+    /// <summary>CommonStrings "Confirm-55" asked before a sale: "这个{名字}，#{价格}元，卖不卖啊？".</summary>
+    private const int SellConfirmId = 55;
+
+    /// <summary>The line under the sold item in the sold flourish. No message string carries it.</summary>
+    private const string SoldBannerText = "卖出成功！";
+
     /// <summary>CommonStrings "Confirm-56" asked after buying an equippable item: "要装备上去吗？".</summary>
     private const int EquipConfirmId = 56;
 
@@ -164,6 +170,13 @@ public class ShoppingScene : MonoBehaviour
     /// through the "buy it?" confirm, to the creature picker that finally receives it.
     /// </summary>
     private ItemDefinition pendingBuyItem = null;
+
+    /// <summary>The Sell picker, kept so the flow can bring the creature's item page back up.</summary>
+    private ShoppingCreaturesDialog sellCreaturesDialog = null;
+
+    /// <summary>The creature and pack slot the "sell it?" confirm is asking about.</summary>
+    private FDCreature pendingSellCreature = null;
+    private int pendingSellItemIndex = -1;
 
     /// <summary>
     /// The creature the pending item is about to be bought for, carried across the "equip it?"
@@ -492,8 +505,105 @@ public class ShoppingScene : MonoBehaviour
 
         dialog.OnInfoDialogOpened = HideMoneyBar;
         dialog.OnInfoDialogClosed = ShowMoneyBar;
-        dialog.Init(record, ShoppingCreaturesDialog.CreatureSelectType.All, CreatureInfoType.SelectAllItem, PopDialog);
+        dialog.Init(record, ShoppingCreaturesDialog.CreatureSelectType.All, CreatureInfoType.SelectAllItem,
+            PopDialog, null, OnSellItemChosen);
+        sellCreaturesDialog = dialog;
         PushDialog(dialogObject);
+    }
+
+    /// <summary>
+    /// Sell: the creature and the item to sell are picked (the info dialog has closed). The
+    /// "这个{名字}，NN 元，卖不卖啊？" confirm (Confirm-55, at the item's sell price) is asked over
+    /// the picker; the answer comes back to OnSellConfirmed.
+    /// </summary>
+    private void OnSellItemChosen(FDCreature creature, int itemIndex)
+    {
+        ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(creature.GetItemAt(itemIndex));
+        if (item == null)
+        {
+            return;
+        }
+
+        pendingSellCreature = creature;
+        pendingSellItemIndex = itemIndex;
+
+        FDMessage confirm = FDMessage.Create(
+            FDMessage.MessageTypes.Confirm, SellConfirmId, item.SellPrice, 0, item.Name ?? string.Empty);
+        OpenConfirmDialog(confirm, OnSellConfirmed);
+    }
+
+    /// <summary>
+    /// The "sell it?" confirm has closed and is popped. No goes straight back to the
+    /// creature's item page. Yes sells -- the sell price goes into the purse and the item
+    /// leaves the pack -- plays the "卖出成功！" flourish, and then goes back to the item page.
+    /// A pack the sale has emptied leaves the player on the creature picker instead.
+    /// </summary>
+    private void OnSellConfirmed(bool yes)
+    {
+        PopDialog();
+
+        FDCreature creature = pendingSellCreature;
+        int itemIndex = pendingSellItemIndex;
+        pendingSellCreature = null;
+        pendingSellItemIndex = -1;
+        if (creature == null)
+        {
+            return;
+        }
+
+        if (!yes)
+        {
+            ReopenSellItems(creature);
+            return;
+        }
+
+        ItemDefinition item = ExecuteSell(creature, itemIndex);
+        if (item == null)
+        {
+            ReopenSellItems(creature);
+            return;
+        }
+
+        GameObject animationObject = new GameObject("SoldItemAnimation");
+        BoughtItemAnimationDialog animation = animationObject.AddComponent<BoughtItemAnimationDialog>();
+        animation.Init(item, BoughtAnimationSeconds, () =>
+        {
+            PopDialog(); // the animation, back to the creature picker
+            ReopenSellItems(creature);
+        }, SoldBannerText);
+        PushDialog(animationObject);
+    }
+
+    /// <summary>
+    /// Takes the item out of the creature's pack and pays its sell price into the purse. The
+    /// pack and the shifted equip indices are written back to the party record, as a buy does.
+    /// Returns the item sold, or null when there was nothing at that slot.
+    /// </summary>
+    private ItemDefinition ExecuteSell(FDCreature creature, int itemIndex)
+    {
+        CreatureMapRecord friend = FindFriendById(creature.Id);
+        ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(creature.GetItemAt(itemIndex));
+        if (friend == null || item == null)
+        {
+            return null;
+        }
+
+        creature.RemoveItemAt(itemIndex);
+        WriteBackItems(friend, creature);
+
+        record.TotalMoney += item.SellPrice;
+        RefreshMoneyBar();
+
+        return item;
+    }
+
+    /// <summary>Back to the creature's item page in the Sell picker, if it still has anything to sell.</summary>
+    private void ReopenSellItems(FDCreature creature)
+    {
+        if (sellCreaturesDialog != null && creature.HasAnyItem())
+        {
+            sellCreaturesDialog.ReopenInfoDialog(creature);
+        }
     }
 
     /// <summary>
@@ -666,7 +776,8 @@ public class ShoppingScene : MonoBehaviour
             return;
         }
 
-        if (pendingBuyItem.IsEquipment())
+        // Equipment the buyer may not wear (a bow for a non-archer) is just bought.
+        if (pendingBuyItem.IsEquipment() && (live.Definition == null || live.Definition.CanEquip(pendingBuyItem)))
         {
             // "要装备上去吗？" -- the purchase itself waits on the answer, then buys (No) or
             // buys and equips (Yes) in the one step.
@@ -713,7 +824,7 @@ public class ShoppingScene : MonoBehaviour
 
         FDCreature live = GameMapRecordManager.CreateCreatureFromRecord(friend);
         live.AddItem(pendingBuyItem.ItemId);
-        if (equip)
+        if (equip && (live.Definition == null || live.Definition.CanEquip(pendingBuyItem)))
         {
             live.EquipItemAt(live.Items.Count - 1);
         }

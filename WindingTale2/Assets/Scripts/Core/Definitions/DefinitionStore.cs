@@ -23,6 +23,14 @@ namespace WindingTale.Core.Definitions
         private Dictionary<int, CreatureDefinition> creatureBaseDefinitions = null;
         private Dictionary<int, CreatureDefinition> creatureChapterDefinitions = null;
 
+        /// <summary>
+        /// Every loaded chapter's own creature definitions, by chapter id. LoadChapter caches the
+        /// chapter itself, so the creatures have to be cached alongside it: a cache hit used to
+        /// leave creatureChapterDefinitions on whichever chapter was read last, and a Continue
+        /// into a chapter loaded before that one found none of its enemies' definitions.
+        /// </summary>
+        private Dictionary<int, Dictionary<int, CreatureDefinition>> creatureDefinitionsByChapter = new Dictionary<int, Dictionary<int, CreatureDefinition>>();
+
         private Dictionary<int, MagicDefinition> magicDefinitions = null;
 
         private Dictionary<int, ItemDefinition> itemDefinitions = null;
@@ -318,6 +326,11 @@ namespace WindingTale.Core.Definitions
 
             if (chapterDefinitions.ContainsKey(chapterId))
             {
+                // Bring this chapter's creatures back to the front along with it.
+                if (creatureDefinitionsByChapter.TryGetValue(chapterId, out Dictionary<int, CreatureDefinition> cached))
+                {
+                    creatureChapterDefinitions = cached;
+                }
                 return chapterDefinitions[chapterId];
             }
 
@@ -340,6 +353,7 @@ namespace WindingTale.Core.Definitions
                 creatureChapterDefinitions[def.DefinitionId] = def;
             }
 
+            creatureDefinitionsByChapter[chapterId] = creatureChapterDefinitions;
             chapterDefinitions[chapterId] = chapter;
             return chapter;
         }
@@ -351,9 +365,19 @@ namespace WindingTale.Core.Definitions
                 return creatureDefinitions[creatureDefId];
             }
 
-            if (creatureChapterDefinitions.ContainsKey(creatureDefId))
+            if (creatureChapterDefinitions != null && creatureChapterDefinitions.ContainsKey(creatureDefId))
             {
                 return creatureChapterDefinitions[creatureDefId];
+            }
+
+            // Not the chapter read last (something looked another chapter up in between):
+            // any chapter loaded so far may hold it.
+            foreach (Dictionary<int, CreatureDefinition> chapterCreatures in creatureDefinitionsByChapter.Values)
+            {
+                if (chapterCreatures.TryGetValue(creatureDefId, out CreatureDefinition definition))
+                {
+                    return definition;
+                }
             }
 
             return null;

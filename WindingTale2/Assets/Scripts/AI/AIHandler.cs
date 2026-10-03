@@ -87,6 +87,27 @@ namespace WindingTale.AI
         /// The lowest-id creature still to act, among those that have deferred their turn or
         /// among those that have not, according to pending.
         /// </summary>
+        /// <summary>Whether a living member of the party stands within distance tiles (|dx| + |dy|).</summary>
+        private bool IsFriendWithin(FDCreature creature, int distance)
+        {
+            foreach (FDCreature friend in gameMain.gameMap.Map.Friends)
+            {
+                if (friend.IsDead() || friend.Position == null || creature.Position == null)
+                {
+                    continue;
+                }
+
+                int dx = Math.Abs(friend.Position.X - creature.Position.X);
+                int dy = Math.Abs(friend.Position.Y - creature.Position.Y);
+                if (dx + dy <= distance)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private static FDCreature SelectNextCreature(List<FDCreature> creatures, bool pending)
         {
             FDCreature selectedCreature = null;
@@ -113,9 +134,21 @@ namespace WindingTale.AI
             return selectedCreature;
         }
 
+        /// <summary>
+        /// How close (tiles, walking distance) one of the party may come to an enemy lying
+        /// in wait before it notices and wakes, instead of waiting for its chapter's turn.
+        /// </summary>
+        private const int StandByWakeDistance = 2;
+
         private void RunAIDelegate(FDAICreature creature)
         {
             AIDelegate aiDelegate = null;
+
+            if (creature.AIType == AITypes.AIType_StandBy && creature.Faction == CreatureFaction.Enemy
+                && IsFriendWithin(creature, StandByWakeDistance))
+            {
+                creature.AIType = AITypes.AIType_Aggressive;
+            }
 
             // A creature that only passes its turn is not worth panning the camera to --
             // and an UnNoticable one is a marker the player is not meant to be shown at all.

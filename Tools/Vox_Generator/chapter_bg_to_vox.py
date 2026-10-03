@@ -2189,7 +2189,13 @@ def recipe_16(bd):
     lay_where(bd, lambda tx, ty: THIN_16, '16',
               (_blob(tx, ty, THIN_PATCH_16, wob=0.3, seed=3.6) < 1.0) & ~ridge)
     lay_where(bd, lambda tx, ty: WATER_16, '16', pool)
-    rock_faces(bd, '16', ROCK_16, min_rise=3)
+    # The ridge step stays snow all the way down. Dressed in the rock tile
+    # (rock_faces) its dark speckle came out as two dotted black lines across
+    # the ground behind the fighters.
+    g = bd.ground.astype(np.int32)
+    p = np.pad(g, 1, mode='edge')
+    low = np.minimum.reduce([p[2:, 1:-1], p[:-2, 1:-1], p[1:-1, 2:], p[1:-1, :-2]])
+    sink_colour(bd, (g - low >= 3) & ~pool)
 
     def off_the_edge(cx, cy):
         edge = RIDGE_Y_16 + 9.0 * math.sin(cx / 27.0 + 0.6) + 4.0 * math.sin(cx / 8.0)
@@ -3195,6 +3201,15 @@ RECIPES = {'02': recipe_02, '03': recipe_03, '04': recipe_04, '05': recipe_05,
 # CLI                                                                         #
 # --------------------------------------------------------------------------- #
 
+# Unity's OBJ importer negates X (right-handed OBJ into left-handed Unity), so a
+# backdrop shows in the battle scene as the left-right mirror of what
+# bg_preview.py used to draw. These chapters were laid out against those old
+# previews and are written pre-mirrored (x -> 255 - x), so the game shows the
+# composition exactly as designed. bg_preview.py now applies the importer's
+# flip itself, so it draws any backdrop the way the game does.
+MIRROR_FOR_GAME = {'16', '17', '18', '22', '23', '26', '29'}
+
+
 def build(chapter, out_dir=None):
     nn = voxlib.nn(chapter)
     if nn not in RECIPES:
@@ -3202,6 +3217,8 @@ def build(chapter, out_dir=None):
                          % (nn, ', '.join(sorted(RECIPES))))
     bd = Backdrop()
     RECIPES[nn](bd)
+    if nn in MIRROR_FOR_GAME:
+        bd.a = bd.a[::-1, :, :].copy()
     out_dir = out_dir or os.path.join(ROOT, 'Resources', 'Remastered', 'BG')
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)

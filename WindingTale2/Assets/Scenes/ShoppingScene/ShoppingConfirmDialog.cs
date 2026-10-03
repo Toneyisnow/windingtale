@@ -7,7 +7,8 @@ using WindingTale.Core.Common;
 /// <summary>
 /// A yes / no question pushed over the shop's dialog stack -- "确定要读取游戏吗？" before a
 /// load, for one. It shows a single CommonStrings "Confirm-NN" line and a Yes / No pair;
-/// Left / Right move between them, Space / Enter answers with whichever is selected. The
+/// Left / Right move between them, Space / Enter answers with whichever is selected, and the
+/// cancel key (Esc / Backspace) always answers No. The
 /// answer goes back through onSelected(true|false); the shop scene decides what it means.
 ///
 /// Some questions carry parameters -- "这个{StrParam1}，#{IntParam1}元，要不要啊？" names the
@@ -114,6 +115,11 @@ public class ShoppingConfirmDialog : MonoBehaviour
             || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             Answer(yesSelected);
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace))
+        {
+            // Cancel is No, for every question the shop asks.
+            Answer(false);
         }
 
         AnimateSelectedButton();

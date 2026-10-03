@@ -171,6 +171,12 @@ namespace WindingTale.Core.Algorithms
                 return null;
             }
 
+            if (creature.IsAtMaxLevel())
+            {
+                // Level 40 (99 for the robots) is the top: no more experience at all.
+                return null;
+            }
+
             creature.Exp += experience;
             if (creature.Exp >= 100)
             {

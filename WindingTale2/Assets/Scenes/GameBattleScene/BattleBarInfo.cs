@@ -131,7 +131,7 @@ namespace WindingTale.Scenes.GameBattleScene
             if (hpLabel != null && creature != null)
             {
                 //// hpLabel.text = StringUtils.Digit3(current) + " / " + StringUtils.Digit3(creature.HpMax);
-                hpLabel.text = StringUtils.Digit3(current);
+                hpLabel.text = StringUtils.Digit3Max(current);
             }
 
             if (creature != null)
@@ -145,7 +145,7 @@ namespace WindingTale.Scenes.GameBattleScene
             if (mpLabel != null && creature != null)
             {
                 //// mpLabel.text = StringUtils.Digit3(current) + " / " + StringUtils.Digit3(creature.MpMax);
-                mpLabel.text = StringUtils.Digit3(current);
+                mpLabel.text = StringUtils.Digit3Max(current);
             }
 
             if (creature != null)

@@ -239,6 +239,7 @@ namespace WindingTale.Core.Files
             gameMapRecord.DeadCreatures = map.DeadCreatures.Select(creature => ConvertCreatureToRecord(creature)).ToList();
             gameMapRecord.Treasures = map.Treasures.Select(treasure => ConvertTreasureToRecord(treasure)).ToList();
             gameMapRecord.TriggeredEvents = triggeredEvents;
+            gameMapRecord.CarriedParty = gameMain.PartyRecord;
 
             return gameMapRecord;
         }

@@ -131,6 +131,12 @@ public class ShoppingRecordDialog : MonoBehaviour
         initialized = true;
     }
 
+    // Holding Up / Down keeps stepping: wait this long after the first step, then step
+    // once every RepeatInterval seconds until released.
+    private const float RepeatInitialDelay = 0.3f;
+    private const float RepeatInterval = 0.1f;
+    private float repeatTimer = 0f;
+
     void Update()
     {
         if (!initialized)
@@ -148,10 +154,22 @@ public class ShoppingRecordDialog : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             MoveSelection(-1);
+            repeatTimer = RepeatInitialDelay;
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             MoveSelection(1);
+            repeatTimer = RepeatInitialDelay;
+        }
+        else if (Input.GetKey(KeyCode.UpArrow) != Input.GetKey(KeyCode.DownArrow))
+        {
+            // Held: after RepeatInitialDelay, one more row every RepeatInterval.
+            repeatTimer -= Time.deltaTime;
+            if (repeatTimer <= 0f)
+            {
+                repeatTimer = RepeatInterval;
+                MoveSelection(Input.GetKey(KeyCode.UpArrow) ? -1 : 1);
+            }
         }
         else if (Input.GetKeyDown(KeyCode.Space)
             || Input.GetKeyDown(KeyCode.Return)

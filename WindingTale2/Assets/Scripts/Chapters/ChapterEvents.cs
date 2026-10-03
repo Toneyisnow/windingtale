@@ -499,16 +499,20 @@ namespace WindingTale.Chapters
         /// Turns an NPC standing on the map into a party member where it stands -- the guest
         /// who joins at the end of a battle. Only Friend-faction creatures are carried to the
         /// next chapter, and an NPC cannot change faction in place, so it is swapped for a
-        /// friend of the same id. <paramref name="fallback"/> is where the friend appears
-        /// when the NPC is no longer on the map.
+        /// friend. The friend takes the definition's id, as the original's
+        /// [FDFriend initWithDefinition:N Id:N] did: a friend's id is its definition id, and
+        /// later chapters look the party member up by it. The NPC's own id may differ
+        /// (chapter 15's Saikebangle is NPC 201, friend 17) -- keeping it made him join as
+        /// friend 201, whom no later chapter ever settles. <paramref name="fallback"/> is
+        /// where the friend appears when the NPC is no longer on the map.
         /// </summary>
-        protected static FDCreature RecruitNpc(GameMain gameMain, int creatureId, int definitionId, FDPosition fallback)
+        protected static FDCreature RecruitNpc(GameMain gameMain, int npcId, int definitionId, FDPosition fallback)
         {
-            FDCreature npc = gameMain.gameMap.Map.GetCreatureById(creatureId);
+            FDCreature npc = gameMain.gameMap.Map.GetCreatureById(npcId);
             FDPosition position = npc != null ? npc.Position : fallback;
 
-            gameMain.gameMap.RemoveCreature(creatureId);
-            return AddCreatureToMap(gameMain, CreatureFaction.Friend, creatureId, definitionId, position);
+            gameMain.gameMap.RemoveCreature(npcId);
+            return AddCreatureToMap(gameMain, CreatureFaction.Friend, definitionId, definitionId, position);
         }
 
 

@@ -294,10 +294,12 @@ public class MainCamera : MonoBehaviour
     private float yawAlignApplied = 0f;             // how much of it has been turned so far
     private float yawAlignElapsed = 0f;
 
-    // And it slides across the map until the cursor (the creature the menu is for) sits in
-    // the middle of the screen: the ground point the zoom pins to the screen centre glides
-    // from where it is to the cursor, over the same time. A pure translation -- the pitch
-    // and the player's tilt are left exactly as they are. Manual panning takes it back.
+    // And it slides across the map until the cursor (the creature the menu is for) sits at
+    // MenuFocusScreenY -- the middle of the screen, a fifth of its height lower: the ground
+    // point under that spot glides from where it is to the cursor, over the same time. A
+    // pure translation -- the pitch and the player's tilt are left exactly as they are.
+    // Manual panning takes it back.
+    private const float MenuFocusScreenY = 0.3f;    // share of the screen height, from the bottom
     private bool menuPanActive = false;
     private Vector3 menuPanStart = Vector3.zero;
     private Vector3 menuPanTarget = Vector3.zero;
@@ -311,10 +313,9 @@ public class MainCamera : MonoBehaviour
     /// </summary>
     public void ZoomToTop(Vector3 focus)
     {
-        Vector3 screenCenter = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
-        if (TryGetGroundPoint(screenCenter, out Vector3 centre))
+        if (TryGetGroundPoint(MenuFocusScreenPoint(), out Vector3 under))
         {
-            menuPanStart = centre;
+            menuPanStart = under;
             menuPanTarget = new Vector3(focus.x, 0f, focus.z);
             menuPanElapsed = 0f;
             menuPanActive = true;
@@ -715,28 +716,13 @@ public class MainCamera : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(newAngle, yaw, 0);
         float distance = zoomHeight / Mathf.Sin(basePitch * Mathf.Deg2Rad);
 
-        // While the menu slide runs, the point to pin is the one gliding to the cursor.
-        Vector3 zoomAnchor;
-        bool hasAnchor;
         if (menuPanActive)
         {
-            menuPanElapsed += Time.deltaTime;
-            float panT = Mathf.Clamp01(menuPanElapsed / ZoomToTopDuration);
-            zoomAnchor = Vector3.Lerp(menuPanStart, menuPanTarget, Mathf.SmoothStep(0f, 1f, panT));
-            hasAnchor = true;
             reframe = true;
-            if (panT >= 1f)
-            {
-                menuPanActive = false;
-            }
-        }
-        else
-        {
-            Vector3 screenCenter = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
-            hasAnchor = TryGetGroundPoint(screenCenter, out zoomAnchor) && reframe;
         }
 
-        if (reframe && hasAnchor)
+        Vector3 screenCenter = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
+        if (reframe && TryGetGroundPoint(screenCenter, out Vector3 zoomAnchor))
         {
             transform.rotation = rotation;
             transform.position = zoomAnchor - (rotation * Vector3.forward) * distance;
@@ -745,6 +731,23 @@ public class MainCamera : MonoBehaviour
         {
             transform.rotation = rotation;
             transform.position = new Vector3(transform.position.x, distance * Mathf.Sin(newAngle * Mathf.Deg2Rad), transform.position.z);
+        }
+
+        // While the menu slide runs, the framing above is slid along the ground until the
+        // point gliding to the cursor sits under MenuFocusScreenPoint.
+        if (menuPanActive)
+        {
+            menuPanElapsed += Time.deltaTime;
+            float panT = Mathf.Clamp01(menuPanElapsed / ZoomToTopDuration);
+            Vector3 glide = Vector3.Lerp(menuPanStart, menuPanTarget, Mathf.SmoothStep(0f, 1f, panT));
+            if (TryGetGroundPoint(MenuFocusScreenPoint(), out Vector3 under))
+            {
+                transform.position += new Vector3(glide.x - under.x, 0f, glide.z - under.z);
+            }
+            if (panT >= 1f)
+            {
+                menuPanActive = false;
+            }
         }
 
         lastAppliedHeight = transform.position.y;
@@ -838,6 +841,11 @@ public class MainCamera : MonoBehaviour
     {
         Vector3 groundForward = GetGroundForward();
         return Mathf.Atan2(groundForward.x, groundForward.z) * Mathf.Rad2Deg;
+    }
+
+    private static Vector3 MenuFocusScreenPoint()
+    {
+        return new Vector3(Screen.width * 0.5f, Screen.height * MenuFocusScreenY, 0f);
     }
 
     // Farthest the A/D orbit pivot may sit in front of the camera, in world units.

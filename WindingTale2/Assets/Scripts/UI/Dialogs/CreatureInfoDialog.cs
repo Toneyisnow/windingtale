@@ -308,7 +308,7 @@ namespace WindingTale.UI.Dialogs
         /// <summary>
         /// Whether the item at <paramref name="itemIndex"/> can be confirmed in this dialog:
         /// a use dialog only accepts usable items, an equip dialog only accepts equipment
-        /// that is not already worn.
+        /// that is not already worn and that the creature may wear (CreatureDefinition.CanEquip).
         /// </summary>
         private bool isItemSelectable(int itemIndex, ItemDefinition item)
         {
@@ -324,6 +324,7 @@ namespace WindingTale.UI.Dialogs
 
                 case CreatureInfoType.SelectEquipItem:
                     return item.IsEquipment()
+                        && (creature.Definition == null || creature.Definition.CanEquip(item))
                         && itemIndex != creature.AttackItemIndex
                         && itemIndex != creature.DefendItemIndex;
 
@@ -441,6 +442,16 @@ namespace WindingTale.UI.Dialogs
         }
 
         /// <summary>
+        /// A stat as the detail box shows it: two digits, zero-padded, and every digit past
+        /// that once it reaches 100. StringUtils.Digit2 builds resource keys and turns 100+
+        /// into "??" -- which is what AP / DP / HIT read as by the mid chapters.
+        /// </summary>
+        private static string StatText(int value)
+        {
+            return value >= 100 ? value.ToString() : StringUtils.Digit2(Math.Max(value, 0));
+        }
+
+        /// <summary>
         /// Shows the item's type icon (attack / defend / usable) before its name, the same face
         /// the shop's Buy list uses (see ItemIconHelper). The icon is created once per slot and
         /// reused -- the dialog is a scene object reused across opens, so a fresh one each time
@@ -547,12 +558,12 @@ namespace WindingTale.UI.Dialogs
             OccupationDefinition occupation = DefinitionStore.Instance.GetOccupationDefinition(occupationId);
             this.occupationLabel.GetComponent<TextMeshProUGUI>().text = occupation.Name;
 
-            this.hpCurrentLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.Hp);
-            this.hpMaxLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.HpMax);
+            this.hpCurrentLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3Max(creature.Hp);
+            this.hpMaxLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3Max(creature.HpMax);
             this.hpBar.transform.localScale = new Vector3((float)creature.Hp / creature.HpMax, 1, 1);
 
-            this.mpCurrentLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.Mp);
-            this.mpMaxLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.MpMax);
+            this.mpCurrentLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3Max(creature.Mp);
+            this.mpMaxLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3Max(creature.MpMax);
             this.mpBar.transform.localScale = new Vector3(creature.MpMax > 0 ? (float)creature.Mp / creature.MpMax : 0, 1, 1);
 
             // Details information
@@ -563,14 +574,14 @@ namespace WindingTale.UI.Dialogs
             int creatureHit = CreatureFormula.GetCalculatedHit(creature, map);
             int creatureEv = CreatureFormula.GetCalculatedEv(creature, map);
 
-            this.levelLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creature.Level);
+            this.levelLabel.GetComponent<TextMeshProUGUI>().text = StatText(creature.Level);
             this.expLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.Exp);
-            this.mvLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creature.Mv);
-            this.apLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creatureAp);
-            this.dpLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creatureDp);
-            this.dxLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creatureDx);
-            this.hitLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creatureHit);
-            this.evLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2(creatureEv);
+            this.mvLabel.GetComponent<TextMeshProUGUI>().text = StatText(creature.Mv);
+            this.apLabel.GetComponent<TextMeshProUGUI>().text = StatText(creatureAp);
+            this.dpLabel.GetComponent<TextMeshProUGUI>().text = StatText(creatureDp);
+            this.dxLabel.GetComponent<TextMeshProUGUI>().text = StatText(creatureDx);
+            this.hitLabel.GetComponent<TextMeshProUGUI>().text = StatText(creatureHit);
+            this.evLabel.GetComponent<TextMeshProUGUI>().text = StatText(creatureEv);
 
 
             isMagicPage = isMagic;

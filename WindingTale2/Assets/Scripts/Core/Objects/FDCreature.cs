@@ -655,6 +655,15 @@ namespace WindingTale.Core.Objects
             }
         }
 
+        /// <summary>
+        /// At the level cap -- 40, or 99 for the robots (CreatureDefinition.GetMaxLevel) --
+        /// where experience stops being gained.
+        /// </summary>
+        public bool IsAtMaxLevel()
+        {
+            return this.Definition != null && this.Level >= this.Definition.GetMaxLevel();
+        }
+
         public bool HasMoved()
         {
             return this.PrePosition != null && !this.PrePosition.AreSame(this.Position);

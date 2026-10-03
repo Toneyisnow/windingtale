@@ -116,9 +116,14 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 return;
             }
 
-            // Selete Target Friend
-            //SelectItemExchangeTargetState exchangeTargetState = new SelectItemExchangeTargetState(gameMain, stateHandler, this.Creature.Id, index);
-            //stateHandler.HandlePushState(exchangeTargetState);
+            if (this.Creature.GetItemAt(index) <= 0)
+            {
+                return;
+            }
+
+            // Select the friend / NPC next to the holder to hand the item to.
+            SelectItemExchangeTargetState exchangeTargetState = new SelectItemExchangeTargetState(gameMain, this.Creature.Id, index, this.backState);
+            PlayerInterface.getDefault().onUpdateState(exchangeTargetState);
         }
 
         private void OnSelectedUseItem(int index)
@@ -155,6 +160,13 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             if (index < 0)
             {
                 // Cancel the selection
+                return;
+            }
+
+            ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(this.Creature.GetItemAt(index));
+            if (this.Creature.Definition != null && !this.Creature.Definition.CanEquip(item))
+            {
+                // Not for this creature (a bow on a non-archer): the dialog should not offer it.
                 return;
             }
 

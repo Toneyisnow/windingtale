@@ -249,8 +249,12 @@ namespace WindingTale.MapObjects.GameMap
         /// the height and angle the player left it, and lets go when it lands. Otherwise
         /// the camera takes the conversation framing and returns to where it was once the
         /// activity queue runs dry (see MainCamera.SlideFocusTo / ReturnToGameplay).
+        ///
+        /// moveCamera false leaves the camera where it is and only the cursor glides (a
+        /// target state parking on a target that is already in view). The keyboard
+        /// edge-follow still pulls the camera along if the cursor ever ends up near the edge.
         /// </summary>
-        public void SlideCursorTo(FDPosition position, GameCanvas.DialogPosition dialogPosition, bool keepCameraFraming = false)
+        public void SlideCursorTo(FDPosition position, GameCanvas.DialogPosition dialogPosition, bool keepCameraFraming = false, bool moveCamera = true)
         {
             if (cursor == null || cursorObject == null || position == null)
             {
@@ -261,10 +265,10 @@ namespace WindingTale.MapObjects.GameMap
             {
                 StopCoroutine(cursorSlideCoroutine);
             }
-            cursorSlideCoroutine = StartCoroutine(CursorSlideCoroutine(position, dialogPosition, keepCameraFraming));
+            cursorSlideCoroutine = StartCoroutine(CursorSlideCoroutine(position, dialogPosition, keepCameraFraming, moveCamera));
         }
 
-        private IEnumerator CursorSlideCoroutine(FDPosition target, GameCanvas.DialogPosition dialogPosition, bool keepCameraFraming)
+        private IEnumerator CursorSlideCoroutine(FDPosition target, GameCanvas.DialogPosition dialogPosition, bool keepCameraFraming, bool moveCamera)
         {
             FDPosition from = cursor.Position;
 
@@ -284,7 +288,11 @@ namespace WindingTale.MapObjects.GameMap
             int tileDistance = Mathf.Abs(target.X - from.X) + Mathf.Abs(target.Y - from.Y);
             float slideDuration = tileDistance / CursorSlideTilesPerSecond;
             EnsureMainCamera();
-            if (mainCamera != null && keepCameraFraming)
+            if (!moveCamera)
+            {
+                // The camera stays put.
+            }
+            else if (mainCamera != null && keepCameraFraming)
             {
                 mainCamera.PanFocusTo(MapCoordinate.ConvertPosToVec3(target), slideDuration);
             }

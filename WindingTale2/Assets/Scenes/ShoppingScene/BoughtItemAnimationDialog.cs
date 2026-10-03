@@ -7,8 +7,9 @@ using WindingTale.Core.Definitions;
 /// <summary>
 /// The short flourish shown right after a purchase is made -- the item drops into the
 /// creature's pack. A placeholder for now: it puts the bought item's icon and name up on a
-/// dimmed backdrop with a "购买成功！" line, holds for a couple of seconds, then reports done
-/// so the shop can carry on. No input; it dismisses itself on a timer.
+/// dimmed backdrop with a "购买成功！" line (or "卖出成功！" for a sale), holds for a couple of
+/// seconds, then reports done so the shop can carry on. Any key or mouse button dismisses it
+/// early.
 ///
 /// Unlike the other shop dialogs it carries no authored prefab -- the shop adds this component
 /// to a bare GameObject and it builds its own overlay canvas in code, so nothing has to be
@@ -24,18 +25,29 @@ public class BoughtItemAnimationDialog : MonoBehaviour
     private Action onDone = null;
     private bool running = false;
 
+    // The frame Init ran on: the key that confirmed the buy / sell is still down then and
+    // must not dismiss the flourish the moment it appears.
+    private int openedFrame = -1;
+
+    // Set by a key / click: onDone is raised on the following frame, so the dialog revealed
+    // beneath does not read that same key-down as its own input.
+    private bool dismissRequested = false;
+
     /// <summary>
     /// Shows the bought item's icon and name for <paramref name="duration"/> seconds, then
     /// raises <paramref name="onDone"/> once. A null item still shows the banner, just without
-    /// an icon or name.
+    /// an icon or name. <paramref name="banner"/> is the line under the name -- "卖出成功！"
+    /// when the shop reuses this flourish for a sale.
     /// </summary>
-    public void Init(ItemDefinition item, float duration, Action onDone)
+    public void Init(ItemDefinition item, float duration, Action onDone, string banner = "购买成功！")
     {
         this.duration = Mathf.Max(0f, duration);
         this.onDone = onDone;
         this.elapsed = 0f;
+        this.openedFrame = Time.frameCount;
+        this.dismissRequested = false;
 
-        BuildOverlay(item);
+        BuildOverlay(item, banner);
 
         running = true;
     }
@@ -47,19 +59,37 @@ public class BoughtItemAnimationDialog : MonoBehaviour
             return;
         }
 
+        if (dismissRequested)
+        {
+            Finish();
+            return;
+        }
+
+        if (Time.frameCount != openedFrame && (Input.anyKeyDown
+            || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2)))
+        {
+            dismissRequested = true;
+            return;
+        }
+
         elapsed += Time.deltaTime;
         if (elapsed >= duration)
         {
-            running = false; // fire once, even if the callback does not tear us down at once
-            onDone?.Invoke();
+            Finish();
         }
+    }
+
+    private void Finish()
+    {
+        running = false; // fire once, even if the callback does not tear us down at once
+        onDone?.Invoke();
     }
 
     /// <summary>
     /// Builds the whole placeholder in code: an overlay canvas, a dimmed full-screen backdrop,
     /// and a centred column of the item's icon, its name and a "购买成功！" line.
     /// </summary>
-    private void BuildOverlay(ItemDefinition item)
+    private void BuildOverlay(ItemDefinition item, string banner)
     {
         Canvas canvas = gameObject.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -80,7 +110,7 @@ public class BoughtItemAnimationDialog : MonoBehaviour
             CreateLabel(transform, "ItemName", itemName, 40f, new Vector2(0f, -40f));
         }
 
-        CreateLabel(transform, "BoughtBanner", "购买成功！", 28f, new Vector2(0f, -100f));
+        CreateLabel(transform, "BoughtBanner", banner, 28f, new Vector2(0f, -100f));
     }
 
     private static void CreateBackdrop(Transform parent)

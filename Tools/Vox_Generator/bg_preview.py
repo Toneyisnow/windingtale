@@ -12,9 +12,11 @@ in so you can see what they will be read against.
 
 The camera comes from the prefab transform in GameBattleScene.unity, worked back
 into the model's own voxel coordinates: standing at (109, 0, 62), looking up +Y,
-tilted about 23 degrees down, 60 degrees of vertical field. Note the frame is
-mirrored against the model -- screen right is -X -- so a thing at a large X
-appears on the LEFT of the picture.
+tilted about 23 degrees down, 60 degrees of vertical field. Those were worked
+out without Unity's OBJ importer, which negates X on import; the render applies
+that flip to the model first (x -> W-1-x), so the picture is what the battle
+scene really shows. In the file's own coordinates a thing at a large X appears
+on the RIGHT of the picture.
 
 Every voxel is splatted as a square the size it subtends, through a z-buffer.
 Both halves matter: without the square the near ground is a dot screen you can
@@ -67,6 +69,9 @@ def render(path, out, marks=True):
     W, H = OUT_W * SS, OUT_H * SS
     m = voxlib.read_vox(path)
     v = np.asarray(m.voxels, np.int32)
+    # Unity's OBJ importer negates X, so the battle scene shows the model
+    # mirrored: draw it that way, or the preview is the game's mirror image.
+    v[:, 0] = m.size[0] - 1 - v[:, 0]
     # Drop everything buried: only voxels with an empty neighbour have a face,
     # and that is what the OBJ exporter meshes too. Splatting the interior as
     # well lets a far soil voxel land between two nearer grass ones and stripe

@@ -64,6 +64,8 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         /// tile when the range holds nobody worth targeting. Each select-target state finds
         /// its own recommendation (see FDMap.GetPreferredAttackTargetInRange /
         /// GetPreferredFriendOrNpcTargetInRange); this only moves the cursor there.
+        /// The camera does not move: the target is in range, so already in view, and a
+        /// pan here fought the menu's own camera slide -- the view jumped off and back.
         /// </summary>
         protected void SlideCursorToTarget(FDCreature actionCreature, FDCreature target)
         {
@@ -73,7 +75,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 return;
             }
 
-            gameMain.gameMap.SlideCursorTo(position, GameCanvas.DialogPosition.Bottom, true);
+            gameMain.gameMap.SlideCursorTo(position, GameCanvas.DialogPosition.Bottom, true, false);
         }
 
         /// <summary>

@@ -18,6 +18,17 @@ namespace WindingTale.Core.Common
             return number.ToString("D3");
         }
 
+        /// <summary>
+        /// A number for display in a three-digit box (HP / MP on the bars and the detail
+        /// dialog): zero-padded like Digit3, but never more than three digits -- anything
+        /// above 999 shows as 999. Digit3 itself is also used to build resource keys
+        /// (definition ids run to five digits), so it must keep printing the whole number.
+        /// </summary>
+        public static string Digit3Max(int number)
+        {
+            return Digit3(System.Math.Min(System.Math.Max(number, 0), 999));
+        }
+
         public static string Digit2(int number)
         {
             if (number < 10)

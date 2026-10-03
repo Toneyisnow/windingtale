@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Files;
+using WindingTale.Core.Definitions.Items;
 
 namespace WindingTale.Core.Definitions
 {
@@ -234,6 +235,34 @@ namespace WindingTale.Core.Definitions
         public bool IsHealer()
         {
             return Occupation == 154 || Occupation == 155;
+        }
+
+        /// <summary>
+        /// Archers, snipers and marksmen (occupations 141..143).
+        /// </summary>
+        public bool IsArcher()
+        {
+            return Occupation == 141 || Occupation == 142 || Occupation == 143;
+        }
+
+        /// <summary>
+        /// Whether a creature of this definition may put the item on. Anything that is not
+        /// equipment never can. Rule 1: a ranged weapon -- one that cannot reach the next
+        /// tile (AttackScope.Min >= 2, i.e. the bows) -- is for archers only.
+        /// </summary>
+        public bool CanEquip(ItemDefinition item)
+        {
+            if (item == null || !item.IsEquipment())
+            {
+                return false;
+            }
+
+            if (item is AttackItemDefinition attackItem && attackItem.AttackScope.Min >= 2 && !IsArcher())
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public bool CanFly()

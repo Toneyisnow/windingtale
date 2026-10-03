@@ -42,7 +42,7 @@ namespace WindingTale.Scenes.GameFieldScene
 
         // Auto-repeat while an arrow key is held: wait this long after the first move,
         // then move one tile every RepeatInterval seconds until released.
-        private const float RepeatInitialDelay = 0.35f;
+        private const float RepeatInitialDelay = 0.175f;
         private const float RepeatInterval = 0.08f;
 
         private InputDirection? heldDirection = null;

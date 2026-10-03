@@ -219,6 +219,9 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     // one item and moves on).
     private bool reopenInfoAfterSelect = false;
 
+    /// <summary>How much larger the shop draws the CreatureInfoDialog than its prefab size.</summary>
+    private const float InfoDialogScale = 1.15f;
+
     // Per-cell built pieces, rebuilt each time the page turns: the three idle-frame holders
     // whose visibility AnimateIcons cycles, and the world-space name label, both parented
     // under the slot so a cell is one GameObject carrying everything it shows.
@@ -895,6 +898,10 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         Transform parent = canvas != null ? canvas.transform : this.transform;
         GameObject dialogObject = Instantiate(creatureInfoDialogPrefab, parent, false);
 
+        // The shop shows the dialog 15% larger than the battlefield does. The root is centred
+        // on the canvas with a centred pivot, so the three panels grow about the screen centre.
+        dialogObject.transform.localScale = Vector3.one * InfoDialogScale;
+
         CreatureInfoDialog dialog = dialogObject.GetComponent<CreatureInfoDialog>();
         if (dialog == null)
         {
@@ -940,6 +947,21 @@ public class ShoppingCreaturesDialog : MonoBehaviour
             SetGridActive(true);
             OnInfoDialogClosed?.Invoke();
         });
+    }
+
+    /// <summary>
+    /// Opens the info dialog for <paramref name="creature"/> again, on the shop's say-so: the
+    /// Sell flow comes back to the creature's item page once its confirm (and, after a sale,
+    /// the sold flourish) has been dealt with. The picker must be back on top of the stack.
+    /// </summary>
+    public void ReopenInfoDialog(FDCreature creature)
+    {
+        if (creature == null || infoDialogOpen)
+        {
+            return;
+        }
+
+        OpenInfoDialog(creature);
     }
 
     /// <summary>The up / down buttons turn the page the same way stepping off an edge does.</summary>

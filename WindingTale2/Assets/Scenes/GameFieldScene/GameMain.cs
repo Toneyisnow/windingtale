@@ -154,6 +154,10 @@ namespace WindingTale.Scenes.GameFieldScene
                 return;
             }
 
+            // The party that walked into the saved battle: the win reads the members this
+            // chapter never put on the field back out of it.
+            this.PartyRecord = record.CarriedParty;
+
             LoadChapter(record.ChapterId);
 
             GameMapRecordManager manager = new GameMapRecordManager();
@@ -852,6 +856,44 @@ namespace WindingTale.Scenes.GameFieldScene
             });
         }
 
+        /// <summary>
+        /// Exchange Item onto a target with room in its bag: the item moves across, as the
+        /// original's giveItem. The turn goes on -- the holder is back on its item menu.
+        /// RemoveItemAt keeps the holder's equip indices right if it was wearing the item.
+        /// </summary>
+        public void creatureGiveItem(FDCreature creature, int itemIndex, FDCreature target)
+        {
+            int itemId = creature.GetItemAt(itemIndex);
+            if (itemId <= 0 || target.IsItemsFull())
+            {
+                return;
+            }
+
+            creature.RemoveItemAt(itemIndex);
+            target.AddItem(itemId);
+        }
+
+        /// <summary>
+        /// Exchange Item onto a target with a full bag: the two picked items swap owners, as
+        /// the original's exchangeItem -- each is taken out, then each lands at the end of the
+        /// other's bag. The turn goes on.
+        /// </summary>
+        public void creatureExchangeItem(FDCreature creature, int itemIndex, FDCreature target, int backItemIndex)
+        {
+            int itemId = creature.GetItemAt(itemIndex);
+            int backItemId = target.GetItemAt(backItemIndex);
+            if (itemId <= 0 || backItemId <= 0)
+            {
+                return;
+            }
+
+            creature.RemoveItemAt(itemIndex);
+            target.RemoveItemAt(backItemIndex);
+
+            target.AddItem(itemId);
+            creature.AddItem(backItemId);
+        }
+
         public void creatureRest(FDCreature creature)
         {
             // Note: Don't check treature here.
@@ -1433,8 +1475,9 @@ namespace WindingTale.Scenes.GameFieldScene
         /// </summary>
         private void applyExperienceAndLevelUp(FDCreature creature, int experience)
         {
-            // A creature that died in the battle earns nothing from it.
-            if (creature.IsDead())
+            // A creature that died in the battle earns nothing from it, and one at the
+            // level cap (40, robots 99) earns no experience any more -- not even the line.
+            if (creature.IsDead() || creature.IsAtMaxLevel())
             {
                 return;
             }

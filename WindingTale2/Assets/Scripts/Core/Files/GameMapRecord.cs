@@ -44,6 +44,15 @@ namespace WindingTale.Core.Files
         /// </summary>
         public List<int> TriggeredEvents;
 
+        /// <summary>
+        /// The party that walked into the battle (GameMain.PartyRecord). A resumed battle
+        /// needs it back: the win reads the members the chapter never put on the field out
+        /// of it (GameRecordManager.CreateFromMapRecord), and without it they left the party
+        /// for good. Null in saves written before it was carried, and for a battle started
+        /// without a party (New Game).
+        /// </summary>
+        public GameRecord CarriedParty;
+
 
 
 
