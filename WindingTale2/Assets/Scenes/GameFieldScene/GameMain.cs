@@ -494,6 +494,23 @@ namespace WindingTale.Scenes.GameFieldScene
                 }
             });
 
+            // Drop items: a target that fell leaves its drop to the attacker, and an attacker
+            // that fell to the counter-attack leaves its own to the target.
+            this.PushActivity((gameMain) =>
+            {
+                List<KeyValuePair<FDCreature, FDCreature>> kills = new List<KeyValuePair<FDCreature, FDCreature>>();
+                if (target.IsDead())
+                {
+                    kills.Add(new KeyValuePair<FDCreature, FDCreature>(target, creature));
+                }
+                if (creature.IsDead())
+                {
+                    kills.Add(new KeyValuePair<FDCreature, FDCreature>(creature, target));
+                }
+
+                grantDropItems(kills, getDropTalker(creature, target, result.BackExperience > 0));
+            });
+
 
             this.PushActivity((gameMain) =>
             {
@@ -632,11 +649,106 @@ namespace WindingTale.Scenes.GameFieldScene
                 }
             });
 
+            // Drop items: every target the spell killed leaves its drop to the caster.
+            this.PushActivity((gameMain) =>
+            {
+                List<KeyValuePair<FDCreature, FDCreature>> kills = new List<KeyValuePair<FDCreature, FDCreature>>();
+                foreach (FDCreature target in targetList)
+                {
+                    if (result.Results.ContainsKey(target.Id) && target.IsDead())
+                    {
+                        kills.Add(new KeyValuePair<FDCreature, FDCreature>(target, creature));
+                    }
+                }
+
+                FDCreature firstTarget = targetList.Count > 0 ? targetList[0] : null;
+                grantDropItems(kills, getDropTalker(creature, firstTarget, false));
+            });
 
             this.PushActivity((gameMain) =>
             {
                 onCreatureEndTurn(creature);
             });
+        }
+
+        /// <summary>
+        /// Who announces the drops, as the original's talkerFriend: the acting creature if it
+        /// is a living friend, otherwise the first target if it is a living friend that earned
+        /// experience (a counter-attack). Null when neither is -- the drops are still handed
+        /// over, just without a word.
+        /// </summary>
+        private static FDCreature getDropTalker(FDCreature creature, FDCreature target, bool targetGainedExperience)
+        {
+            if (creature != null && creature.Faction == CreatureFaction.Friend && !creature.IsDead())
+            {
+                return creature;
+            }
+            if (target != null && target.Faction == CreatureFaction.Friend && targetGainedExperience && !target.IsDead())
+            {
+                return target;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Hands each fallen enemy's drop item to the creature that killed it, as the
+        /// original's attack/magic wrap-up did: money goes into the purse, anything else into
+        /// the killer's bag -- or is lost if the bag is full. Each drop gets a "从敌人身上获得X！"
+        /// line (message 21) and a full bag a "道具满了！" (message 22), said by the talker.
+        /// </summary>
+        /// <param name="kills">(the fallen creature, the one that killed it) pairs.</param>
+        private void grantDropItems(List<KeyValuePair<FDCreature, FDCreature>> kills, FDCreature talker)
+        {
+            List<ItemDefinition> dropped = new List<ItemDefinition>();
+            bool cannotCarryMore = false;
+
+            foreach (KeyValuePair<FDCreature, FDCreature> kill in kills)
+            {
+                FDAICreature fallen = kill.Key as FDAICreature;
+                FDCreature receiver = kill.Value;
+                if (fallen == null || fallen.Faction != CreatureFaction.Enemy || fallen.DropItemId <= 0 || receiver == null)
+                {
+                    continue;
+                }
+
+                ItemDefinition item = DefinitionStore.Instance.GetItemDefinition(fallen.DropItemId);
+                fallen.DropItemId = 0;
+                if (item == null)
+                {
+                    continue;
+                }
+
+                dropped.Add(item);
+                if (item is MoneyItemDefinition money)
+                {
+                    gameMap.Map.TotalMoney += money.Amount;
+                }
+                else if (receiver.IsItemsFull())
+                {
+                    cannotCarryMore = true;
+                }
+                else
+                {
+                    receiver.AddItem(item.ItemId);
+                }
+            }
+
+            if (talker == null)
+            {
+                return;
+            }
+
+            // InsertActivity puts each one at the front of the queue, so go in reverse to
+            // have them play in order: every drop, then the full-bag line.
+            if (cannotCarryMore)
+            {
+                this.InsertActivity(new TalkActivity(FDMessage.Create(FDMessage.MessageTypes.Information, 22), talker));
+            }
+            for (int i = dropped.Count - 1; i >= 0; i--)
+            {
+                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 21, strParam1: dropped[i].Name);
+                this.InsertActivity(new TalkActivity(message, talker));
+            }
         }
 
         /// <summary>

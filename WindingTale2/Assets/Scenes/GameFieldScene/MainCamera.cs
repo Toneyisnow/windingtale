@@ -294,13 +294,32 @@ public class MainCamera : MonoBehaviour
     private float yawAlignApplied = 0f;             // how much of it has been turned so far
     private float yawAlignElapsed = 0f;
 
+    // And it slides across the map until the cursor (the creature the menu is for) sits in
+    // the middle of the screen: the ground point the zoom pins to the screen centre glides
+    // from where it is to the cursor, over the same time. A pure translation -- the pitch
+    // and the player's tilt are left exactly as they are. Manual panning takes it back.
+    private bool menuPanActive = false;
+    private Vector3 menuPanStart = Vector3.zero;
+    private Vector3 menuPanTarget = Vector3.zero;
+    private float menuPanElapsed = 0f;
+
     /// <summary>
-    /// Eases the camera up to its highest, most top-down framing, and turns its heading
-    /// back to face the map square on. Any manual zoom hands the height back to the
-    /// player, and any manual rotation hands the heading back.
+    /// Eases the camera up to its highest, most top-down framing, turns its heading back
+    /// to face the map square on, and slides it to centre the given ground point. Any
+    /// manual zoom hands the height back to the player, any manual rotation the heading,
+    /// and any manual pan the slide.
     /// </summary>
-    public void ZoomToTop()
+    public void ZoomToTop(Vector3 focus)
     {
+        Vector3 screenCenter = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
+        if (TryGetGroundPoint(screenCenter, out Vector3 centre))
+        {
+            menuPanStart = centre;
+            menuPanTarget = new Vector3(focus.x, 0f, focus.z);
+            menuPanElapsed = 0f;
+            menuPanActive = true;
+        }
+
         SyncZoomHeight();
         zoomToTopStartHeight = zoomHeight;
         zoomToTopElapsed = 0f;
@@ -571,6 +590,11 @@ public class MainCamera : MonoBehaviour
         }
 
 
+        if (targetVelocity.sqrMagnitude > 0.0001f)
+        {
+            menuPanActive = false; // the player is panning: abandon the menu slide
+        }
+
         // No manual pan this frame: let the field cursor pull the camera along when it
         // reaches the screen margins (keyboard control).
         bool followingCursor = targetVelocity.sqrMagnitude < 0.0001f
@@ -691,8 +715,28 @@ public class MainCamera : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(newAngle, yaw, 0);
         float distance = zoomHeight / Mathf.Sin(basePitch * Mathf.Deg2Rad);
 
-        Vector3 screenCenter = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
-        if (reframe && TryGetGroundPoint(screenCenter, out Vector3 zoomAnchor))
+        // While the menu slide runs, the point to pin is the one gliding to the cursor.
+        Vector3 zoomAnchor;
+        bool hasAnchor;
+        if (menuPanActive)
+        {
+            menuPanElapsed += Time.deltaTime;
+            float panT = Mathf.Clamp01(menuPanElapsed / ZoomToTopDuration);
+            zoomAnchor = Vector3.Lerp(menuPanStart, menuPanTarget, Mathf.SmoothStep(0f, 1f, panT));
+            hasAnchor = true;
+            reframe = true;
+            if (panT >= 1f)
+            {
+                menuPanActive = false;
+            }
+        }
+        else
+        {
+            Vector3 screenCenter = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
+            hasAnchor = TryGetGroundPoint(screenCenter, out zoomAnchor) && reframe;
+        }
+
+        if (reframe && hasAnchor)
         {
             transform.rotation = rotation;
             transform.position = zoomAnchor - (rotation * Vector3.forward) * distance;

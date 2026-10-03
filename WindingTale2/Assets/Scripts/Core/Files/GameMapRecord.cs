@@ -108,6 +108,10 @@ namespace WindingTale.Core.Files
         public FDPosition AIEscapePosition;
         public FDPosition AITreasurePosition;
 
+        // What the creature drops when it is killed (FDAICreature.DropItemId), 0 for none.
+        // Records written before drops were carried decode it as 0: those enemies drop nothing.
+        public int DropItemId;
+
         /// <summary>
         /// A copy that shares nothing mutable with this one. The lists a record is built
         /// from are the live creature's own (see GameMapRecordManager.ConvertCreatureToRecord),

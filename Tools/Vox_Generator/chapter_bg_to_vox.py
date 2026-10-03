@@ -59,7 +59,43 @@ What each chapter picked, and why:
 * 13, the enemy camp -- trodden earth among pale pines, tents either side,
   sharpened log barricades, a timbered well and stumps;
 * 14, the dry riverbed -- a bed of bare earth crossing the frame on the slant,
-  pale pines along its banks, green groves and a terrace beyond.
+  pale pines along its banks, green groves and a terrace beyond;
+* 15, the lakeshore -- trodden earth on the shore, the lake open to screen
+  right with a wooded island, green and pale pines behind;
+* 16, the snowfield -- white plain, an open pool, a rock-edged ridge across
+  the back with snow trees on it;
+* 17, the ice island -- an ice causeway up the camera axis between sea, the
+  ring road across, the terraced hill and its stair ahead;
+* 18, the chasm bridge -- a plank deck over black nothing, red rails
+  converging on a clifftop of blue spruce;
+* 19, the red and blue wood -- a grass lane between belts of red and blue
+  pines, a sandy patch, grey gravel;
+* 20, the blue heights -- blue rock, grey-green terraces with a stair, a black
+  gulf to screen right;
+* 21, the forest temple -- an earth road between stone posts to a dark
+  platform and its stair, slabs either side, pale pines;
+* 22, the sanctum of the orbs -- a lawn ringed by black ramparts, the altar,
+  six orb pillars, statues, darkness overhead;
+* 23, the temple in the hills -- a paved way between the temple's wings,
+  statues and posts, brown rock climbing into the dark;
+* 24, the floating rock -- brown rock breaking off into a void, statues on
+  black flagstones, pillars of light standing up out of the dark;
+* 25, the lava caves -- a lava river crossing behind the fight, a black pit,
+  fires, cave rock all round;
+* 26, the pit hall -- iron grating between black shafts, a great diamond
+  shaft behind the fighters;
+* 27, the temple of light -- brown rock at the foot of pale terraces, a stair,
+  a pool with steles, pillars of light down both flanks;
+* 28, the water palace -- grating, a pale walkway, a channel, a row of pools
+  with steles and pillars of light;
+* 29, the dragons' sanctum -- the grating causeway between stepped channels
+  and rows of light, up to the dais;
+* 30, the last hall -- pale floor, channels wrapping round a raised hall and
+  its stair, black rock jagged all round.
+
+Chapters 20 on use ``enclose`` to wall the back and sides off: the battle
+scene's sky is the same bright day for every chapter, and a temple or a void
+with blue sky over it is wrong.
 
 Usage
 ~~~~~
@@ -1598,6 +1634,21 @@ def rock_faces(bd, nn, tile_id, min_rise=4, lip=TURF):
                 bd.a[x, y, z] = c
 
 
+def sink_colour(bd, mask):
+    """Carry each masked column's surface colour all the way down.
+
+    Open water and bottomless dark are one colour right through: packed with
+    soil under a skin of blue, the sea shows a brown band wherever the battle
+    camera catches the side of the model, and a pit shows brown walls.
+    """
+    top = np.clip(bd.ground.astype(np.int32), 0, bd.size[2] - 1)
+    xs, ys = np.nonzero(mask)
+    cols = bd.a[xs, ys, top[xs, ys]]
+    for x, y, c, z in zip(xs, ys, cols, top[xs, ys]):
+        if c:
+            bd.a[x, y, :z + 1] = c
+
+
 # --------------------------------------------------------------------------- #
 # chapter 11 -- the terraced wood                                             #
 # --------------------------------------------------------------------------- #
@@ -2018,10 +2069,1014 @@ def recipe_14(bd):
     bd.stamp(obstacle('tree_light_green', 2), 174, 64)
 
 
+# --------------------------------------------------------------------------- #
+# chapter 15 -- the lakeshore                                                 #
+# --------------------------------------------------------------------------- #
+
+# Chapter 15 is a great lake filling the left of the map, its shore a broad band
+# of bare brown earth, with green pines in woods along the right and the pale,
+# brown-barked pines massed in the far corners. A wooded island sits out in the
+# water and plank bridges cross to it.
+#
+# The fight stands on the trodden shore. The lake opens out to screen right,
+# brought forward the way chapter 06's basin was so it reads as water and not a
+# thread, with the wooded island out in it; the green wood runs down screen left
+# and the pale pines bank up behind.
+
+GRASS_15 = (174, 174, 41, 37, 43, 30, 31)
+LUSH_15 = (35, 175, 47, 44, 32)        # the darker turf in drifts
+DIRT_15 = 177
+DIRT_EDGE_15 = (9, 5, 10, 6, 2, 1, 7)  # grass with the earth showing through
+WATER_15 = 173
+WATER_Z_15 = GROUND_Z - 4
+
+LAKE_15 = (1.5, 11.5, 10.5, 7.5)       # centre tx, ty, radius tx, ty
+SHORE_15 = (15.0, 10.0, 5.0, 4.2)      # the trodden earth under the fight
+ISLE_15 = (3.0, 10.5, 2.4, 1.8)        # the wooded island out in the water
+
+
+def recipe_15(bd):
+    bd.undulate(amplitude=2.0, wavelength=80.0, seed=15)
+    bd.rise(y0=130, height=6)
+    xs, ys = _grid(bd)
+    tx, ty = xs / TILE_OUT, ys / TILE_OUT
+    lake = _blob(tx, ty, LAKE_15, wob=0.15, seed=1.5)
+    isle = _blob(tx, ty, ISLE_15, wob=0.2, seed=4.0)
+    water = (lake < 1.0) & (isle >= 1.0)
+    bd.ground[water] = WATER_Z_15
+    bd.lay_ground(_pick(GRASS_15, 15), '15')
+
+    lay_where(bd, _pick(LUSH_15, 115), '15', (_patchy(tx, ty, 15) > 0.7) & ~water)
+    shore = _blob(tx, ty, SHORE_15, wob=0.3, seed=2.5)
+    earth = ((lake < 1.25) | (shore < 1.0)) & ~water
+    lay_where(bd, _pick(DIRT_EDGE_15, 215), '15',
+              ((lake < 1.45) | (shore < 1.25)) & ~water & ~earth)
+    lay_where(bd, lambda tx, ty: DIRT_15, '15', earth & (isle >= 0.75))
+    lay_where(bd, lambda tx, ty: WATER_15, '15', water)
+
+    def dry(cx, cy):
+        l = _blob(cx / TILE_OUT, cy / TILE_OUT, LAKE_15, wob=0.15, seed=1.5)
+        i = _blob(cx / TILE_OUT, cy / TILE_OUT, ISLE_15, wob=0.2, seed=4.0)
+        return l > 1.35 or i < 0.7
+
+    greens = ('tree_dark_green', 'tree_light_green')
+    pale = ('tree_dark_gray', 'tree_light_gray')
+    scatter_trees(bd, greens, boxes=[(10, 40, 76, 100, 0.9)],
+                  spacing=8, jitter=2, seed=25, where=dry)       # the island
+    scatter_trees(
+        bd, greens,
+        boxes=[
+            (176, 256, 40, 140, 0.85),   # the green wood down screen left
+            (0, 100, 146, 178, 0.85),    # the far shore, past the lake
+            (150, 200, 120, 160, 0.5),
+        ],
+        spacing=8, seed=35, avoid=(FIGHTER_ZONE,), where=dry)
+    scatter_trees(
+        bd, pale,
+        boxes=[
+            (196, 256, 130, 178, 0.9),   # the pale pines massed in the far corner
+            (92, 196, 160, 178, 0.8),    # and along the back
+        ],
+        spacing=9, seed=45, where=dry)
+    bd.stamp(obstacle('tree_dark_green', 2), 196, 52)
+    bd.stamp(obstacle('tree_light_gray', 2), 226, 108)
+
+
+# --------------------------------------------------------------------------- #
+# chapter 16 -- the snowfield                                                 #
+# --------------------------------------------------------------------------- #
+
+# Chapter 16 is the first snow: a white plain broken by ridges, each one a step
+# with a ragged brown edge of rock along it, snow-laden trees in woods along
+# the ridges, and in the middle a hollow of rough frozen ground with dark pools
+# of open water in it and drifts of grey-green where the snow has blown thin.
+#
+# Chapter 11 already stepped a terrace across the back, so here the ridge does
+# that job in snow and rock: the fight is out on the white, a pool lies open to
+# screen right, the rough ice of the hollow round it, and the snow trees stand
+# along the ridge top and down screen left.
+
+SNOW_16 = (104, 104, 104, 41, 38, 42)
+ICE_16 = (102,)                        # the rough frozen ground of the hollow
+THIN_16 = 101                          # grey-green where the snow lies thin
+WATER_16 = 105
+ROCK_16 = 86
+WATER_Z_16 = GROUND_Z - 3
+
+POOL_16 = (5.0, 9.0, 4.6, 3.2)
+HOLLOW_16 = (9.0, 10.0, 9.5, 6.0)
+THIN_PATCH_16 = (26.0, 9.0, 3.0, 2.0)
+RIDGE_Y_16 = 132
+RIDGE_H_16 = 9
+
+
+def _ridge_16(xs):
+    return RIDGE_Y_16 + 9.0 * np.sin(xs / 27.0 + 0.6) + 4.0 * np.sin(xs / 8.0)
+
+
+def recipe_16(bd):
+    bd.undulate(amplitude=1.5, wavelength=90.0, seed=16)
+    xs, ys = _grid(bd)
+    tx, ty = xs / TILE_OUT, ys / TILE_OUT
+    raise_where(bd, ys >= _ridge_16(xs), RIDGE_H_16)
+    pool = _blob(tx, ty, POOL_16, wob=0.25, seed=1.6) < 1.0
+    bd.ground[pool] = WATER_Z_16
+    bd.lay_ground(_pick(SNOW_16, 16), '16')
+
+    ridge = ys >= _ridge_16(xs) - 1
+    hollow = _blob(tx, ty, HOLLOW_16, wob=0.35, seed=2.6)
+    lay_where(bd, _pick(ICE_16, 116), '16', (hollow < 1.0) & ~pool & ~ridge)
+    lay_where(bd, lambda tx, ty: THIN_16, '16',
+              (_blob(tx, ty, THIN_PATCH_16, wob=0.3, seed=3.6) < 1.0) & ~ridge)
+    lay_where(bd, lambda tx, ty: WATER_16, '16', pool)
+    rock_faces(bd, '16', ROCK_16, min_rise=3)
+
+    def off_the_edge(cx, cy):
+        edge = RIDGE_Y_16 + 9.0 * math.sin(cx / 27.0 + 0.6) + 4.0 * math.sin(cx / 8.0)
+        return (abs(cy - edge) > 7
+                and _blob(cx / TILE_OUT, cy / TILE_OUT, POOL_16, wob=0.25, seed=1.6) > 1.2)
+
+    snowy = ('tree_snow_red', 'tree_snow_blue')
+    scatter_trees(
+        bd, snowy,
+        boxes=[
+            (0, 256, 140, 178, 0.8),     # along the ridge top
+            (180, 256, 40, 130, 0.7),    # the wood down screen left
+            (0, 30, 40, 130, 0.5),       # past the pool, screen right
+        ],
+        spacing=9, seed=26, avoid=(FIGHTER_ZONE,), where=off_the_edge)
+    bd.stamp(obstacle('tree_snow_blue', 2), 194, 54)
+    bd.stamp(obstacle('tree_snow_red', 2), 30, 116)
+
+
+# --------------------------------------------------------------------------- #
+# chapter 17 -- the ice island                                                #
+# --------------------------------------------------------------------------- #
+
+# Chapter 17 is an island of ice in a dark sea, laid out like a target: a ring
+# road of ice round the outside, open water inside it, and in the middle a hill
+# stepped up in terraces with a stone stair climbing to the top. Four causeways
+# cross the water to the ring from the edges of the map, the south one lined
+# with snow-laden pines in pairs.
+#
+# The backdrop stands on the south causeway and looks up it: ice under the
+# fighters, sea opening on both sides, the ring road crossing the frame, more
+# water, and the terraced hill with its stair dead ahead. Like chapter 03's
+# bridge, the converging rows -- here the pines -- carry the eye to it.
+
+ICE_17 = (102,)
+SEA_17 = 105
+STAIR_17 = 196                         # the middle of the stair's three-by-three
+TERRACE_17 = (48, 49, 50, 102)
+TERRACE_ROCK_17 = 103
+WATER_Z_17 = GROUND_Z - 5
+
+HILL_17 = (116.0, 214.0)               # centre of the rings, behind the model
+RING_R_17 = (78.0, 96.0)               # the ring road's inner and outer radius
+HILL_R_17 = (66.0, 50.0)               # where each terrace step begins
+CAUSEWAY_HW_17 = 22
+
+
+def recipe_17(bd):
+    xs, ys = _grid(bd)
+    d = np.hypot(xs - HILL_17[0], ys - HILL_17[1])
+    causeway = (np.abs(xs - HILL_17[0]) < CAUSEWAY_HW_17) & (d > RING_R_17[1] - 4)
+    ring = (d >= RING_R_17[0]) & (d < RING_R_17[1])
+    hill = d < HILL_R_17[0]
+    land = causeway | ring | hill
+    bd.ground[:, :] = GROUND_Z
+    bd.ground[~land] = WATER_Z_17
+    bd.ground[hill] += 5
+    bd.ground[d < HILL_R_17[1]] += 5
+    stair = hill & (np.abs(xs - HILL_17[0]) < 13)
+    t = np.clip((HILL_R_17[0] + 2 - d) / 20.0, 0, 1)
+    bd.ground[stair] = (GROUND_Z + 2 * np.round(t * 5)).astype(np.int16)[stair]
+
+    bd.lay_ground(lambda tx, ty: SEA_17, '17')
+    lay_where(bd, _pick(ICE_17, 17), '17', land)
+    lay_where(bd, _pick(TERRACE_17, 117), '17', hill & (d >= HILL_R_17[1]) & ~stair)
+    lay_where(bd, lambda tx, ty: STAIR_17, '17', stair)
+    rock_faces(bd, '17', TERRACE_ROCK_17, min_rise=3)
+    sink_colour(bd, ~land)
+
+    # The pines in pairs down the causeway, the way the map lines its south
+    # approach, and a few up on the terraces either side of the stair.
+    for y in range(50, 120, 22):
+        for x in (HILL_17[0] - CAUSEWAY_HW_17 + 2, HILL_17[0] + CAUSEWAY_HW_17 - 8):
+            if abs(math.hypot(x + 3 - HILL_17[0], y + 3 - HILL_17[1])
+                   - (RING_R_17[0] + RING_R_17[1]) / 2) < 12:
+                continue
+            bd.stamp(obstacle('pine_snow', 2), int(x), y)
+    for x, y in ((76, 158), (146, 158), (88, 170), (134, 170)):
+        bd.stamp(obstacle('pine_snow', 2), x, y)
+
+
+# --------------------------------------------------------------------------- #
+# chapter 18 -- the chasm bridge                                              #
+# --------------------------------------------------------------------------- #
+
+# Chapter 18 is a single plank bridge slung across a bottomless black chasm,
+# from one grassy clifftop to another, with blue spruce on the heights and a
+# wooden stair cut down each cliff face.
+#
+# So the fight happens on the bridge itself, the way chapter 03's does -- but
+# where 03 has water under the deck this has nothing: black, all the way down.
+# The deck runs away from the camera to the far cliff, its red rails
+# converging on the clifftop, and the spruce stand along the edge over the drop.
+
+GRASS_18 = (168, 169, 165, 164, 144, 146)
+EARTH_18 = 177
+VOID_18 = 247
+CLIFF_ROCK_18 = 33
+CHASM_Z_18 = 1
+
+BRIDGE_X_18 = (92, 140)                # the deck, on the camera axis
+CLIFF_Y_18 = 132                       # where the far clifftop begins
+PLANK_18 = ((128, 92, 52), (112, 78, 42), (98, 68, 36))
+PLANK_GAP_18 = (52, 34, 18)
+
+
+def _cliff_18(xs):
+    return CLIFF_Y_18 + 6.0 * np.sin(xs / 21.0 + 0.3) + 3.0 * np.sin(xs / 7.0)
+
+
+def recipe_18(bd):
+    xs, ys = _grid(bd)
+    land = ys >= _cliff_18(xs)
+    bd.undulate(amplitude=1.5, wavelength=70.0, seed=18)
+    bd.rise(y0=CLIFF_Y_18, height=6)
+    bd.ground[~land] = CHASM_Z_18
+    bd.lay_ground(_pick(GRASS_18, 18), '18')
+    tx, ty = xs / TILE_OUT, ys / TILE_OUT
+    head = land & (np.abs(xs - 116) < 30) & (ys < CLIFF_Y_18 + 22)
+    lay_where(bd, lambda tx, ty: EARTH_18, '18', head)
+    lay_where(bd, lambda tx, ty: VOID_18, '18', ~land)
+    sink_colour(bd, ~land)
+    rock_faces(bd, '18', CLIFF_ROCK_18, min_rise=4)
+
+    # The deck, plank by plank across its width, with a dark gap between each.
+    x0, x1 = BRIDGE_X_18
+    end = int(CLIFF_Y_18 + 8)
+    gap = BOOK.index(PLANK_GAP_18)
+    planks = [BOOK.index(c) for c in PLANK_18]
+    for y in range(0, end):
+        c = gap if y % 4 == 3 else planks[random.Random(y // 4).randrange(len(planks))]
+        bd.a[x0:x1, y, GROUND_Z - 1:GROUND_Z + 1] = c
+    railing(bd, x0 - 3, 0, end, GROUND_Z + 1)
+    railing(bd, x1, 0, end, GROUND_Z + 1)
+
+    def on_top(cx, cy):
+        return cy > _cliff_18(np.array(cx, dtype=np.float64)) + 6
+    scatter_trees(
+        bd, ('tree_blue', 'tree_blue', 'tree_dark_green'),
+        boxes=[
+            (0, 84, 136, 178, 0.8),      # the heights either side of the bridge head
+            (148, 256, 136, 178, 0.8),
+            (84, 148, 158, 178, 0.7),    # and closing the far side
+        ],
+        spacing=9, seed=28, where=on_top)
+
+
+# --------------------------------------------------------------------------- #
+# chapter 19 -- the red and blue wood                                         #
+# --------------------------------------------------------------------------- #
+
+# Chapter 19 is a wood planted in belts: thick bands of pines, red and blue
+# mixed together, lying across the map with lanes of open grass between them,
+# dark turf in their shade, pale sandy tracks worn across the lanes and two
+# patches of grey gravel.
+#
+# The fight is in one of the lanes. A belt of trees comes in from screen left,
+# another stands off to screen right beyond a patch of gravel, and the next
+# belt closes the far side; a sandy track is worn across the lane where the
+# fighters stand.
+
+GRASS_19 = (61, 61, 80, 83, 92, 84, 88)
+SHADE_19 = (62, 62, 0, 12, 15, 3, 1)
+SAND_19 = 63
+GRAVEL_19 = 60
+
+SAND_PATCH_19 = (16.0, 11.0, 4.2, 1.8)
+GRAVEL_PATCH_19 = (5.0, 13.0, 2.6, 3.4)
+REDBLUE_19 = ('tree_dark_red', 'tree_blue', 'tree_light_red', 'tree_blue')
+
+
+def recipe_19(bd):
+    bd.undulate(amplitude=1.5, wavelength=80.0, seed=19)
+    bd.rise(y0=140, height=5)
+    bd.lay_ground(_pick(GRASS_19, 19), '19')
+    xs, ys = _grid(bd)
+    tx, ty = xs / TILE_OUT, ys / TILE_OUT
+
+    # The shade the belts throw: dark turf under and just out from each one,
+    # its edge ragged rather than ruled.
+    w = 10.0 * (_vnoise(xs, ys, 9.0, 191) - 0.5)
+    shade = (((xs + w > 156) & (ys + w < 128)) | ((xs + w < 76) & (ys - w > 52))
+             | (ys + w > 136))
+    lay_where(bd, _pick(SHADE_19, 119), '19', shade | (_patchy(tx, ty, 19) > 0.78))
+    lay_where(bd, lambda tx, ty: SAND_19, '19',
+              _blob(tx, ty, SAND_PATCH_19, wob=0.35, seed=1.9) < 1.0)
+    gravel = _blob(tx, ty, GRAVEL_PATCH_19, wob=0.35, seed=2.9) < 1.0
+    lay_where(bd, lambda tx, ty: GRAVEL_19, '19', gravel)
+
+    def off_gravel(cx, cy):
+        return _blob(cx / TILE_OUT, cy / TILE_OUT, GRAVEL_PATCH_19, wob=0.35, seed=2.9) > 1.5
+    scatter_trees(
+        bd, REDBLUE_19,
+        boxes=[
+            (172, 256, 36, 116, 0.85),   # the belt coming in from screen left
+            (0, 60, 64, 140, 0.85),      # the one standing off to screen right
+            (0, 256, 150, 178, 0.9),     # and the next belt, closing the far side
+        ],
+        spacing=8, jitter=3, seed=29, avoid=(FIGHTER_ZONE,), where=off_gravel)
+    bd.stamp(obstacle('tree_dark_red', 2), 186, 50)
+    bd.stamp(obstacle('tree_blue', 2), 210, 70)
+
+
+# --------------------------------------------------------------------------- #
+# shared by 20..30 -- closing the picture in                                  #
+# --------------------------------------------------------------------------- #
+
+# The battle scene's sky is the same bright day for every chapter, and from
+# chapter 22 on the game is fought indoors, or underground, or on rock hanging
+# in a void: a blue sky over any of those is wrong. Chapter 10 closed its cave
+# with a tunnel; these close theirs with a wall -- across the back, high enough
+# that its top is over the top of the frame, and down both sides where the
+# frame looks past the edge of the model.
+
+ENCLOSE_TOP = 89                       # the frame's top edge is about z 84 at the back
+VOID = ((8, 8, 12),)                   # nothing at all: the black the maps are cut from
+
+
+def enclose(bd, tones, back=168, sides=0, side_from=70, top=ENCLOSE_TOP,
+            ragged=5.0, seed=0):
+    """Wall the back of the model off, and its sides if ``sides`` is non-zero.
+
+    ``tones`` are the RGB colours the wall is laid in, as strata across it --
+    one colour for a void, a few greys or browns for rock. ``back`` is the y it
+    rises at and ``sides`` how thick the side walls are; both wander by
+    ``ragged`` voxels so the foot of the wall is not ruled. Returns the mask of
+    the columns it took, for anything that should keep off them.
+    """
+    xs, ys = _grid(bd)
+    # The wander only ever brings the wall forward, so the back row and the
+    # outer columns are always wall: a wall that wanders back off the edge of
+    # the model leaves a slot of sky down it.
+    aw = ragged * np.abs(2.0 * (_vnoise(xs, ys + 7.0, 13.0, seed) - 0.5))
+    wall = ys + aw >= back
+    if sides:
+        wall |= ((xs < sides + aw) | (xs >= bd.size[0] - sides - aw)) & (ys >= side_from)
+    bd.ground[wall] = top
+    idx = np.array([BOOK.index(t) for t in tones], np.uint16)
+    along = xs * 0.7 + ys * 0.7
+    for z in range(0, top + 1):
+        band = _vnoise(along, np.full_like(along, z * 1.0), 6.0, seed + 31)
+        pick = np.clip((band * len(idx)).astype(int), 0, len(idx) - 1)
+        layer = bd.a[:, :, z]
+        layer[wall] = idx[pick][wall]
+    return wall
+
+
+# --------------------------------------------------------------------------- #
+# chapter 20 -- the blue heights                                              #
+# --------------------------------------------------------------------------- #
+
+# Chapter 20 is fought by night on a mountain: blue rock underfoot, grey-green
+# terraces stepping up in rings to a summit, stone stairs between them, and a
+# great black gulf curling round the whole of it. Blue spruce and the tall
+# blue pines stand about the edges.
+#
+# The fight is on the blue rock below the first terrace. The terraces step up
+# across the back, a stair climbing them on the camera axis, and the gulf
+# opens black to screen right.
+
+ROCK_20 = (21, 21, 21, 0, 3, 1)
+TERRACE_20 = (22, 22, 22, 67, 65, 66)
+STAIR_TOP_20, STAIR_LOW_20 = 81, 90
+GULF_20 = 20
+TERRACE_FACE_20 = 13
+GULF_Z_20 = 1
+
+GULF_SPEC_20 = (1.5, 9.0, 6.0, 5.0)     # centre tx, ty, radius tx, ty
+STEPS_20 = ((112, 7), (146, 7))         # y each terrace starts at, and its rise
+
+
+def recipe_20(bd):
+    bd.undulate(amplitude=1.5, wavelength=80.0, seed=20)
+    xs, ys = _grid(bd)
+    tx, ty = xs / TILE_OUT, ys / TILE_OUT
+    edge = 6.0 * np.sin(xs / 19.0 + 0.4) + 3.0 * np.sin(xs / 7.0)
+    stair = (np.abs(xs - 118) < 14) & (ys >= 0)
+    for y0, h in STEPS_20:
+        raise_where(bd, (ys >= y0 + edge) & ~stair, h)
+    # The stair itself climbs in two-voxel treads instead of a step.
+    total = sum(h for _y, h in STEPS_20)
+    t = np.clip((ys - STEPS_20[0][0] + 6) / float(STEPS_20[-1][0] - STEPS_20[0][0] + 6), 0, 1)
+    bd.ground[stair] = (bd.ground + 2 * np.round(t * total / 2.0)).astype(np.int16)[stair]
+    gulf = _blob(tx, ty, GULF_SPEC_20, wob=0.3, seed=2.0) < 1.0
+    bd.ground[gulf] = GULF_Z_20
+
+    bd.lay_ground(_pick(ROCK_20, 20), '20')
+    lay_where(bd, _pick(TERRACE_20, 120), '20', (ys >= STEPS_20[0][0] + edge - 1) & ~stair)
+    lay_where(bd, lambda tx, ty: STAIR_TOP_20 if int(ty) % 2 else STAIR_LOW_20,
+              '20', stair & (ys >= STEPS_20[0][0] - 8), contrast=1.0)
+    lay_where(bd, lambda tx, ty: GULF_20, '20', gulf)
+    sink_colour(bd, gulf)
+    rock_faces(bd, '20', TERRACE_FACE_20, min_rise=4)
+
+    def placed(cx, cy):
+        e = 6.0 * math.sin(cx / 19.0 + 0.4) + 3.0 * math.sin(cx / 7.0)
+        return (all(abs(cy - (y0 + e)) > 6 for y0, _h in STEPS_20)
+                and abs(cx - 118) > 18
+                and _blob(cx / TILE_OUT, cy / TILE_OUT, GULF_SPEC_20, wob=0.3, seed=2.0) > 1.2)
+    scatter_trees(
+        bd, ('tree_blue', 'tree_blue', 'pine_blue'),
+        boxes=[
+            (0, 256, 156, 178, 0.75),    # up on the summit
+            (176, 256, 40, 150, 0.6),    # down screen left
+            (60, 96, 118, 150, 0.5),     # on the first terrace, screen right
+        ],
+        spacing=10, seed=30, avoid=(FIGHTER_ZONE,), where=placed)
+    bd.stamp(obstacle('pine_blue', 2), 200, 60)
+
+
+# --------------------------------------------------------------------------- #
+# chapter 21 -- the forest temple                                             #
+# --------------------------------------------------------------------------- #
+
+# Chapter 21 is a great platform of dark stone standing in a clearing of
+# trodden earth, deep in a wood of pale brown-barked pines. Earthen roads come
+# in to it from all four sides between rows of stone posts, big stone slabs
+# stand at the corners of the clearing, and wide stairs climb the platform.
+#
+# The backdrop comes in along one of those roads: earth under the fighters, the
+# posts lining it either side, and at its end the platform rising across the
+# back with its great stair on the camera axis, a slab off to each side and the
+# pale wood crowding in at both edges.
+
+GRASS_21 = (34, 34, 34, 108, 109, 112, 115)
+EARTH_21 = 33
+PLATFORM_21 = (32, 32, 32, 98, 96, 100, 101)
+PLATFORM_FACE_21 = 53
+STAIR_21 = (260, 266)
+
+ROAD_HW_21 = 22                        # the road's half-width, about the camera axis
+PLATFORM_Y_21 = 128
+PLATFORM_H_21 = 7
+CLEARING_21 = (14.5, 17.0, 11.0, 8.0)
+
+
+def recipe_21(bd):
+    bd.undulate(amplitude=1.0, wavelength=90.0, seed=21)
+    xs, ys = _grid(bd)
+    tx, ty = xs / TILE_OUT, ys / TILE_OUT
+    stair = (np.abs(xs - 118) < 18) & (ys >= PLATFORM_Y_21 - 10) & (ys < PLATFORM_Y_21 + 2)
+    platform = (ys >= PLATFORM_Y_21) & (np.abs(xs - 118) < 104)
+    bd.terrace(0, bd.size[0], PLATFORM_Y_21 - 30, bd.size[1], GROUND_Z)
+    raise_where(bd, platform, PLATFORM_H_21)
+    t = np.clip((ys - (PLATFORM_Y_21 - 10)) / 12.0, 0, 1)
+    bd.ground[stair] = (GROUND_Z + np.round(t * PLATFORM_H_21) + 0 * xs).astype(np.int16)[stair]
+
+    bd.lay_ground(_pick(GRASS_21, 21), '21')
+    clearing = _blob(tx, ty, CLEARING_21, wob=0.25, seed=2.1) < 1.0
+    road = np.abs(xs - 118) < ROAD_HW_21
+    lay_where(bd, lambda tx, ty: EARTH_21, '21', (clearing | road) & ~platform)
+    lay_where(bd, _pick(PLATFORM_21, 121), '21', platform & ~stair)
+    lay_where(bd, lambda tx, ty: STAIR_21[int(ty * 2) % 2], '21', stair, contrast=1.0)
+    rock_faces(bd, '21', PLATFORM_FACE_21, min_rise=3)
+
+    # The posts along the road, in alternating pairs, the way chapter 09's
+    # avenue is set out; then a slab either side of the stair.
+    for i, y in enumerate(range(50, PLATFORM_Y_21 - 18, 22)):
+        key = ('stone_column_1', 'stone_column_2')[i % 2]
+        bd.stamp(obstacle(key, 2), 118 - ROAD_HW_21 - 10, y)
+        bd.stamp(obstacle(key, 2), 118 + ROAD_HW_21 + 2, y)
+    bd.stamp(obstacle('stone_shrine_1', 2), 40, PLATFORM_Y_21 + 10)
+    bd.stamp(obstacle('stone_shrine_1', 2), 168, PLATFORM_Y_21 + 10)
+
+    scatter_trees(
+        bd, ('tree_dark_gray', 'tree_light_gray'),
+        boxes=[
+            (0, 76, 20, PLATFORM_Y_21 - 8, 0.85),     # the pale wood, screen right
+            (164, 256, 20, PLATFORM_Y_21 - 8, 0.85),  # and screen left
+            (0, 30, PLATFORM_Y_21 + 8, 178, 0.8),     # round the platform's ends
+            (220, 256, PLATFORM_Y_21 + 8, 178, 0.8),
+        ],
+        spacing=8, jitter=3, seed=31, avoid=(FIGHTER_ZONE, (70, 168, 0, 180)),
+        where=lambda cx, cy: not (_blob(cx / TILE_OUT, cy / TILE_OUT, CLEARING_21,
+                                        wob=0.25, seed=2.1) < 1.05))
+
+
+# --------------------------------------------------------------------------- #
+# chapter 22 -- the sanctum of the orbs                                       #
+# --------------------------------------------------------------------------- #
+
+# Chapter 22 is a round sanctum out in the dark: a lawn ringed by ramparts of
+# black stone that step up and up to its rim, a raised floor of dark flagstones
+# in the middle with a great altar slab on it, six pillars each holding up an
+# orb of a different colour, and armoured statues keeping watch.
+#
+# The fight is on the lawn. The flagstones and the altar are behind it, the six
+# orbs standing in an arc round them, and the ramparts close in at the back and
+# both sides -- and past their rim there is nothing, so the wall behind is the
+# black the map is cut from, not sky.
+
+LAWN_22 = (74, 74, 74, 20, 21, 22)
+FLAGS_22 = (76, 76, 76, 103, 100, 101)
+RAMPART_22 = (75, 75, 13)
+RAMPART_FACE_22 = 49
+
+DAIS_Y_22 = 108
+RING_22 = (116.0, 64.0, 104.0)         # centre x, y of the sanctum, and its radius
+ORBS_22 = ('orb_pillar_red', 'orb_pillar_orange', 'orb_pillar_yellow',
+           'orb_pillar_green', 'orb_pillar_blue', 'orb_pillar_purple')
+
+
+def recipe_22(bd):
+    xs, ys = _grid(bd)
+    cx, cy, r = RING_22
+    d = np.hypot((xs - cx) / 1.25, ys - cy)
+    bd.ground[:, :] = GROUND_Z
+    rampart = d >= r * 0.82
+    raise_where(bd, rampart, 6)
+    raise_where(bd, d >= r * 0.92, 6)
+    dais = (ys >= DAIS_Y_22) & (np.abs(xs - cx) < 52) & ~rampart
+    raise_where(bd, dais, 3)
+
+    bd.lay_ground(_pick(LAWN_22, 22), '22')
+    lay_where(bd, _pick(FLAGS_22, 122), '22',
+              dais | ((np.abs(xs - cx) < 14) & (ys < DAIS_Y_22)))
+    lay_where(bd, _pick(RAMPART_22, 222), '22', rampart)
+    rock_faces(bd, '22', RAMPART_FACE_22, min_rise=3)
+    enclose(bd, VOID, back=174, sides=4, seed=22)
+
+    bd.stamp(obstacle('stone_shrine_2', 2), int(cx) - 30, DAIS_Y_22 + 24)
+    for i, key in enumerate(ORBS_22):
+        a = math.radians(200 + i * 28)
+        bd.stamp(obstacle(key, 2), int(cx + 62 * math.cos(a)) - 4,
+                 int(DAIS_Y_22 + 18 - 30 * math.sin(a)))
+    for x, y in ((40, 96), (186, 96), (60, 124), (166, 124)):
+        bd.stamp(obstacle('stone_statue_1', 2), x, y)
+    for x, y in ((84, 96), (142, 96)):
+        bd.stamp(obstacle('stone_column_2', 2), x, y)
+
+
+# --------------------------------------------------------------------------- #
+# chapter 23 -- the temple in the hills                                       #
+# --------------------------------------------------------------------------- #
+
+# Chapter 23 is a temple of black stone laid out on a green hilltop, ringed by
+# brown rock that climbs away into the dark on every side. Its two wings
+# reach forward either side of a stair, posts and pillars stand along its
+# terraces, armoured statues guard the approach, and in its heart is a mound of
+# bare earth with a ring of stone posts on it.
+#
+# The fight is on the turf of the approach, on the paved way up between the
+# wings. The temple's terrace runs across the back with its posts and statues,
+# the brown rock rises steeply at both sides, and over all of it is the dark.
+
+TURF_23 = (74, 74, 74, 20, 21, 22, 29)
+PAVE_23 = (76, 76, 76)
+ROCK_23 = 34
+EARTH_23 = 17
+
+TERRACE_Y_23 = 118
+TERRACE_H_23 = 5
+
+
+def recipe_23(bd):
+    bd.undulate(amplitude=1.0, wavelength=90.0, seed=23)
+    xs, ys = _grid(bd)
+    tx, ty = xs / TILE_OUT, ys / TILE_OUT
+    # The hills: rock climbing away at both sides, steepening as it goes.
+    off = np.abs(xs - 116) - 80 - 10.0 * np.sin(ys / 23.0 + 0.5) + np.clip(ys - 150, 0, None) * 2.0
+    hills = np.clip(off, 0, None) ** 1.2 * 0.45
+    hills = hills + 6.0 * _vnoise(xs, ys, 8.0, 230) * (hills > 0)
+    bd.ground = np.minimum(bd.ground + hills, ENCLOSE_TOP - 4).astype(np.int16)
+    rocky = hills > 1.5
+    terrace = (ys >= TERRACE_Y_23) & ~rocky
+    raise_where(bd, terrace, TERRACE_H_23)
+    stair = (np.abs(xs - 116) < 14) & (ys >= TERRACE_Y_23 - 8) & (ys < TERRACE_Y_23 + 2)
+    t = np.clip((ys - (TERRACE_Y_23 - 8)) / 10.0, 0, 1)
+    bd.ground[stair] = (GROUND_Z + np.round(t * TERRACE_H_23) + 0 * xs).astype(np.int16)[stair]
+
+    bd.lay_ground(_pick(TURF_23, 23), '23')
+    way = (np.abs(xs - 116) < 16) & (ys < TERRACE_Y_23)
+    wings = ((np.abs(xs - 116) > 34) & (np.abs(xs - 116) < 54)
+             & (ys > TERRACE_Y_23 - 46) & ~rocky)
+    lay_where(bd, _pick(PAVE_23, 123), '23', way | wings | terrace)
+    mound = _blob(tx, ty, (14.5, 19.5, 4.0, 2.2), wob=0.3, seed=2.3) < 1.0
+    lay_where(bd, lambda tx, ty: EARTH_23, '23', mound & terrace)
+    lay_where(bd, lambda tx, ty: ROCK_23, '23', rocky)
+    rock_faces(bd, '23', ROCK_23, min_rise=3)
+    enclose(bd, VOID, back=176, sides=3, seed=23)
+
+    for x in (62, 160):                       # the wings' posts and statues
+        for y in (78, 100):
+            bd.stamp(obstacle('stone_column_1', 2), x, y)
+    for x, y in ((92, 96), (130, 96)):
+        bd.stamp(obstacle('stone_statue_1', 2), x, y)
+    for i, x in enumerate(range(86, 150, 16)):  # the ring of posts on the mound
+        bd.stamp(obstacle(('stone_pillar_1', 'stone_column_2')[i % 2], 2), x,
+                 TERRACE_Y_23 + 26 + (6 if i in (1, 2) else 0))
+
+
+# --------------------------------------------------------------------------- #
+# chapter 24 -- the floating rock                                             #
+# --------------------------------------------------------------------------- #
+
+# Chapter 24 is a single island of brown rock hanging in black nothing, held up
+# on pillars of pale light that fall away beneath it. On top is a patch of
+# black flagstones with three statues on it, ringed by stone posts.
+#
+# The fight is out on the rock. The flagstones and their statues are behind,
+# the island's edge breaks off into the void a little beyond them and down
+# both sides, and the pillars of light stand up out of the dark past the edge.
+
+EARTH_24 = (43, 43, 22, 21, 25, 26)
+FLAGS_24 = 72
+CLIFF_24 = 27
+VOID_24 = 42
+VOID_Z_24 = 1
+ISLE_24 = (116.0, 76.0, 96.0, 86.0)    # centre x, y, radius x, y in voxels
+FLAGS_SPEC_24 = (14.5, 14.5, 4.0, 2.6)
+BEAM_24 = ((255, 255, 236), (252, 248, 204), (248, 226, 150))
+BEAMS_24 = ((24, 152, 6), (210, 150, 6), (150, 170, 9))
+
+
+def light_beam(bd, cx, cy, r, tones):
+    """A column of light standing up out of the void: white-hot in the core,
+    burning orange at the rim, from the floor of the model to its top."""
+    core, mid, rim = [BOOK.index(t) for t in tones]
+    for x in range(int(cx - r) - 1, int(cx + r) + 2):
+        for y in range(int(cy - r) - 1, int(cy + r) + 2):
+            if not (0 <= x < bd.size[0] and 0 <= y < bd.size[1]):
+                continue
+            d = math.hypot(x + 0.5 - cx, y + 0.5 - cy) / r
+            if d > 1.0:
+                continue
+            bd.a[x, y, :] = core if d < 0.55 else mid if d < 0.85 else rim
+
+
+def recipe_24(bd):
+    xs, ys = _grid(bd)
+    tx, ty = xs / TILE_OUT, ys / TILE_OUT
+    cx, cy, rx, ry = ISLE_24
+    e = np.hypot((xs - cx) / rx, (ys - cy) / ry)
+    e = e + 0.08 * np.sin(np.arctan2(ys - cy, xs - cx) * 7.0) + 0.1 * (_vnoise(xs, ys, 6.0, 240) - 0.5)
+    isle = e < 1.0
+    bd.undulate(amplitude=1.0, wavelength=60.0, seed=24)
+    bd.ground[~isle] = VOID_Z_24
+    bd.lay_ground(_pick(EARTH_24, 24), '24')
+    flags = (_blob(tx, ty, FLAGS_SPEC_24, wob=0.35, seed=2.4) < 1.0) & isle
+    lay_where(bd, lambda tx, ty: FLAGS_24, '24', flags)
+    lay_where(bd, lambda tx, ty: VOID_24, '24', ~isle)
+    sink_colour(bd, ~isle)
+    rock_faces(bd, '24', CLIFF_24, min_rise=4)
+    enclose(bd, VOID, back=176, sides=3, seed=24)
+    for x, y, r in BEAMS_24:
+        light_beam(bd, x, y, r, BEAM_24)
+
+    for x, y in ((100, 118), (118, 124), (136, 118)):
+        bd.stamp(obstacle('stone_statue_1', 2), x - 6, y)
+    for x, y in ((70, 108), (162, 108), (84, 132), (148, 132)):
+        bd.stamp(obstacle('stone_column_2', 2), x - 6, y)
+
+
+# --------------------------------------------------------------------------- #
+# chapter 25 -- the lava caves                                                #
+# --------------------------------------------------------------------------- #
+
+# Chapter 25 is the second fire cavern, and nothing like chapter 10's tunnel:
+# a broad floor of brown rock riddled with black pits, rivers of white-hot lava
+# running down through it in long falls, and fire everywhere -- pillars of it,
+# bowls of it, gouts of it on the brink of every pit.
+#
+# The fight is on the open rock. A lava river crosses behind it on the slant,
+# a pit opens black to screen right, the fires stand about the floor, and the
+# cave rock closes the picture in where 10's arched over it.
+
+FLOOR_25 = (66, 66, 66, 83, 88, 77, 80)
+PIT_25 = 51
+PIT_FACE_25 = 40
+PIT_Z_25 = 1
+CAVE_TONES_25 = ((70, 48, 26), (90, 62, 32), (54, 37, 20), (104, 73, 40), (62, 42, 22))
+
+PIT_SPEC_25 = (2.5, 8.0, 4.6, 3.4)
+RIVER_HW_25 = 30.0     # across x; the river runs at a slant, so it is about 10 wide
+
+
+def _river_cx_25(ys):
+    """The lava river's middle: in from the far screen-left corner, crossing
+    the frame behind the fighters, and away off the screen-right side."""
+    return 116.0 + 3.0 * (ys - 140.0) + 10.0 * np.sin(ys / 9.0)
+
+
+def recipe_25(bd):
+    bd.undulate(amplitude=2.0, wavelength=60.0, seed=25)
+    xs, ys = _grid(bd)
+    tx, ty = xs / TILE_OUT, ys / TILE_OUT
+    pit = _blob(tx, ty, PIT_SPEC_25, wob=0.3, seed=2.5) < 1.0
+    river_d = np.abs(xs - _river_cx_25(ys)) / RIVER_HW_25
+    river = (river_d < 1.0) & ~pit
+    bd.ground[pit] = PIT_Z_25
+    bd.ground[river] -= 1
+
+    bd.lay_ground(_pick(FLOOR_25, 25), '25', contrast=0.7)
+    lay_where(bd, lambda tx, ty: PIT_25, '25', pit)
+    sink_colour(bd, pit)
+    rock_faces(bd, '25', PIT_FACE_25, min_rise=4)
+
+    # The river is painted the way chapter 10's lava is, so the two caves burn
+    # with the same fire: hottest down the middle, a black crust at the banks.
+    crust = [BOOK.index(c) for c in CRUST_10]
+    bank = (river_d >= 1.0) & (river_d < 1.35) & ~pit
+    for x, y in zip(*np.nonzero(bank)):
+        top = int(bd.ground[x, y])
+        bd.a[x, y, max(0, top - 1):top + 1] = crust[(x + y) % 2]
+    rx, ry = np.nonzero(river)
+    _lava_paint(bd, rx, ry, 25, depth=2, core_bias=1.0 - river_d[rx, ry])
+    enclose(bd, CAVE_TONES_25, back=170, sides=5, seed=25, ragged=8.0)
+
+    def on_rock(cx, cy):
+        return (abs(cx - _river_cx_25(np.float64(cy))) > RIVER_HW_25 * 1.8
+                and _blob(cx / TILE_OUT, cy / TILE_OUT, PIT_SPEC_25, wob=0.3, seed=2.5) > 1.25)
+    scatter_trees(bd, ('fire_pillar_2', 'fire_pillar_3', 'fire_pillar_4'),
+                  boxes=[(170, 240, 60, 160, 0.5), (20, 90, 120, 160, 0.5)],
+                  spacing=24, seed=35, scale=2, avoid=(FIGHTER_ZONE,), where=on_rock)
+    scatter_trees(bd, ('fire_pillar_1',),
+                  boxes=[(150, 250, 30, 150, 0.4), (10, 90, 30, 160, 0.4)],
+                  spacing=26, seed=45, scale=2, avoid=(FIGHTER_ZONE,), where=on_rock)
+    bd.stamp(obstacle('fire_pillar_3', 2), 196, 44)
+
+
+# --------------------------------------------------------------------------- #
+# chapter 26 -- the pit hall                                                  #
+# --------------------------------------------------------------------------- #
+
+# Chapter 26 is a hall floored with dark iron grating, cut through with black
+# shafts so the floor is only a lattice of walkways between them -- broad ones
+# down the middle and round the edges, a great diamond-shaped shaft at the
+# heart of it, with raw brown rock showing in the corners.
+#
+# The fight is on the grating of the central walkway. Shafts drop away black
+# on either side of it, the diamond yawns behind the fighters, and the rock of
+# the corners rises at the back of the frame into the dark.
+
+GRATE_26 = (75, 75, 75, 39, 4, 13, 6, 14)
+SHAFT_26 = 73
+SHAFT_FACE_26 = 5
+ROCK_26 = (72, 74, 61, 62)
+SHAFT_Z_26 = 1
+
+
+def recipe_26(bd):
+    xs, ys = _grid(bd)
+    bd.ground[:, :] = GROUND_Z
+    # The diamond behind the fight, and a shaft either side of the walkway.
+    diamond = (np.abs(xs - 116) / 46.0 + np.abs(ys - 146) / 26.0) < 1.0
+    sides = (((xs < 70) | (xs > 166)) & (ys > 40) & (ys < 112)
+             & ((np.abs(xs - 116) / 1.0 + (ys - 40) * 0.4) > 56))
+    shaft = diamond | sides
+    rock = ((np.abs(xs - 116) > 86) & (ys > 132)) & ~shaft
+    raise_where(bd, rock, 12)
+    bd.ground[shaft] = SHAFT_Z_26
+
+    bd.lay_ground(_pick(GRATE_26, 26), '26', contrast=0.8)
+    lay_where(bd, _pick(ROCK_26, 126), '26', rock)
+    lay_where(bd, lambda tx, ty: SHAFT_26, '26', shaft)
+    sink_colour(bd, shaft)
+    rock_faces(bd, '26', SHAFT_FACE_26, min_rise=4)
+    enclose(bd, VOID, back=172, sides=3, seed=26)
+
+
+# --------------------------------------------------------------------------- #
+# shared by 27..30 -- the palace of light                                     #
+# --------------------------------------------------------------------------- #
+
+def step_up(bd, mask, height, axis_x=None, stair_hw=0, ramp=10):
+    """Raise ``mask`` by ``height`` as a terrace, leaving a stair up its front
+    on ``axis_x``: two-voxel treads over ``ramp`` rows instead of a step.
+
+    Returns the stair's mask so the caller can lay stair tiles on it.
+    """
+    xs, ys = _grid(bd)
+    m = np.broadcast_to(mask, bd.ground.shape)
+    bd.ground = bd.ground + np.where(m, height, 0).astype(np.int16)
+    if axis_x is None:
+        return np.zeros(bd.ground.shape, bool)
+    # The front of the terrace on the axis: the first masked row per column.
+    front = np.argmax(m, axis=1).astype(np.float64)[:, None]
+    lane = (np.abs(xs - axis_x) < stair_hw) & (ys >= front - ramp) & (ys < front) & m.any(axis=1)[:, None]
+    t = np.clip((ys - (front - ramp)) / float(ramp), 0, 1)
+    rise = (2 * np.round(t * height / 2.0)).astype(np.int16)
+    bd.ground = np.where(lane, bd.ground + rise, bd.ground).astype(np.int16)
+    return lane
+
+
+def pillar_rows(bd, keys, xs_, y0, y1, spacing, scale=2):
+    """Pillars standing in rows down the sides, alternating ``keys``."""
+    for i, y in enumerate(range(y0, y1, spacing)):
+        for j, x in enumerate(xs_):
+            bd.stamp(obstacle(keys[(i + j) % len(keys)], scale), x, y)
+
+
+# --------------------------------------------------------------------------- #
+# chapter 27 -- the temple of light                                           #
+# --------------------------------------------------------------------------- #
+
+# Chapter 27 is the great temple: terraces of pale stone stepping up out of a
+# floor of brown rock, posts and statues standing along every terrace, pillars
+# of cold blue-white light burning down both flanks, and at its head a square
+# pool of blue water with two carved steles standing in it.
+#
+# The fight is on the brown rock at the temple's foot. The pale terraces climb
+# behind, a stair on the axis; the pillars of light line both sides, statues
+# flank the stair, and the pool opens on the top terrace with its steles.
+
+FLOOR_27 = (74, 74, 69, 52, 51, 48)
+STONE_27 = (111, 111, 111, 117, 116)
+STONE_FACE_27 = 132
+POOL_27 = 75
+STAIR_27 = 119
+WATER_Z_27 = 2                          # how far the pool sits below its terrace
+
+
+def recipe_27(bd):
+    bd.undulate(amplitude=1.0, wavelength=70.0, seed=27)
+    xs, ys = np.broadcast_arrays(*_grid(bd))
+    tier1 = (ys >= 104) & (np.abs(xs - 116) < 108)
+    tier2 = (ys >= 134) & (np.abs(xs - 116) < 84)
+    bd.terrace(0, bd.size[0], 96, bd.size[1], GROUND_Z)
+    s1 = step_up(bd, tier1, 4, axis_x=116, stair_hw=20)
+    s2 = step_up(bd, tier2, 4, axis_x=116, stair_hw=16)
+    pool = (np.abs(xs - 116) < 30) & (ys >= 146) & (ys < 172)
+    bd.ground[pool] -= WATER_Z_27
+
+    bd.lay_ground(_pick(FLOOR_27, 27), '27')
+    lay_where(bd, _pick(STONE_27, 127), '27', tier1 | s1)
+    lay_where(bd, lambda tx, ty: STAIR_27, '27', s1 | s2, contrast=1.0)
+    lay_where(bd, lambda tx, ty: POOL_27, '27', pool)
+    rock_faces(bd, '27', STONE_FACE_27, min_rise=3)
+    enclose(bd, VOID, back=176, sides=3, seed=27)
+
+    bd.stamp(obstacle('stone_stele_1', 2), 98, 152)
+    bd.stamp(obstacle('stone_stele_1', 2), 122, 152)
+    pillar_rows(bd, ('light_pillar_1', 'light_pillar_2'), (20, 202), 40, 170, 20)
+    for x, y in ((84, 114), (138, 114)):
+        bd.stamp(obstacle('stone_statue_1', 2), x, y)
+    pillar_rows(bd, ('stone_column_3', 'stone_pillar_1'), (60, 160), 108, 132, 22)
+
+
+# --------------------------------------------------------------------------- #
+# chapter 28 -- the water palace                                              #
+# --------------------------------------------------------------------------- #
+
+# Chapter 28 is a palace built on water: walkways of pale stone between deep
+# blue channels, a hall floored with dark iron grating, a row of square pools
+# each with a carved stele and a pillar of light at either side, and the whole
+# of it ringed by the moat and the brown rock beyond.
+#
+# The fight is on the grating. A pale walkway crosses the frame behind it, a
+# channel of blue water behind that, and then the row of pools on the far
+# terrace with their pillars of light, closing off into the dark.
+
+GRATE_28 = (124, 124, 124, 125)
+STONE_28 = (121,)
+WATER_28 = 122
+POOL_28 = 207
+STONE_FACE_28 = 13
+WATER_Z_28 = GROUND_Z - 4
+
+
+def recipe_28(bd):
+    xs, ys = np.broadcast_arrays(*_grid(bd))
+    bd.ground[:, :] = GROUND_Z
+    walk = (ys >= 96) & (ys < 112)
+    channel = (ys >= 112) & (ys < 132)
+    far = ys >= 132
+    side = (xs < 36) & (ys >= 40) & (ys < 96)      # the moat opening to screen right
+    bd.ground[channel | side] = WATER_Z_28
+    raise_where(bd, far, 3)
+    pools = np.zeros(bd.ground.shape, bool)
+    for cx in (40, 92, 144, 196):
+        pools |= (np.abs(xs - cx) < 18) & (ys >= 142) & (ys < 166)
+    bd.ground[pools] -= 3
+
+    bd.lay_ground(_pick(GRATE_28, 28), '28', contrast=0.8)
+    lay_where(bd, _pick(STONE_28, 128), '28', walk | far)
+    lay_where(bd, lambda tx, ty: WATER_28, '28', channel | side)
+    lay_where(bd, lambda tx, ty: POOL_28, '28', pools)
+    sink_colour(bd, channel | side)
+    rock_faces(bd, '28', STONE_FACE_28, min_rise=3)
+    enclose(bd, VOID, back=176, sides=3, seed=28)
+
+    for cx in (40, 92, 144, 196):
+        bd.stamp(obstacle('stone_stele_1', 2), cx - 10, 150)
+        bd.stamp(obstacle('light_pillar_1', 2), cx + 18, 140)
+    bd.stamp(obstacle('light_pillar_2', 2), 6, 136)
+    for x in (60, 160):
+        bd.stamp(obstacle('stone_pillar_1', 2), x, 98)
+
+
+# --------------------------------------------------------------------------- #
+# chapter 29 -- the dragons' sanctum                                          #
+# --------------------------------------------------------------------------- #
+
+# Chapter 29 is the approach to the three dragons: a long causeway of iron
+# grating running up the middle of a dark hall, edged in pale stone, with
+# stepped channels of blue water falling away either side and pillars of light
+# standing along the stone, up to a raised dais at its head.
+#
+# The backdrop looks up the causeway: grating under the fighters, its pale
+# kerbs converging on the dais, the water stepping down in channels to both
+# sides and the pillars of light marching away along them.
+
+GRATE_29 = (231, 231, 196, 198)
+STONE_29 = (145,)
+WATER_29 = 163
+STONE_FACE_29 = 24
+CAUSEWAY_HW_29 = 26
+
+
+def recipe_29(bd):
+    xs, ys = np.broadcast_arrays(*_grid(bd))
+    bd.ground[:, :] = GROUND_Z
+    off = np.abs(xs - 116)
+    kerb = (off >= CAUSEWAY_HW_29) & (off < CAUSEWAY_HW_29 + 12)
+    water1 = (off >= CAUSEWAY_HW_29 + 12) & (off < CAUSEWAY_HW_29 + 40)
+    ledge = (off >= CAUSEWAY_HW_29 + 40) & (off < CAUSEWAY_HW_29 + 52)
+    water2 = off >= CAUSEWAY_HW_29 + 52
+    dais = (ys >= 150) & (off < CAUSEWAY_HW_29 + 52)
+    bd.ground[water1 & ~dais] = GROUND_Z - 3
+    bd.ground[water2 & ~dais] = GROUND_Z - 6
+    bd.ground[ledge & ~dais] = GROUND_Z - 1
+    stair = step_up(bd, dais, 6, axis_x=116, stair_hw=CAUSEWAY_HW_29)
+
+    bd.lay_ground(_pick(GRATE_29, 29), '29', contrast=0.8)
+    lay_where(bd, _pick(STONE_29, 129), '29', ((kerb | ledge) & ~dais) | (dais & ~stair))
+    wet = (water1 | water2) & ~dais
+    lay_where(bd, lambda tx, ty: WATER_29, '29', wet)
+    sink_colour(bd, wet)
+    rock_faces(bd, '29', STONE_FACE_29, min_rise=3)
+    enclose(bd, VOID, back=176, sides=3, seed=29)
+
+    keys = ('light_pillar_1', 'light_pillar_2')
+    pillar_rows(bd, keys, (116 - CAUSEWAY_HW_29 - 11, 116 + CAUSEWAY_HW_29 + 1), 40, 150, 26)
+    bd.stamp(obstacle('stone_stele_1', 2), 106, 160)
+
+
+# --------------------------------------------------------------------------- #
+# chapter 30 -- the last hall                                                 #
+# --------------------------------------------------------------------------- #
+
+# Chapter 30 is the end of the game: a floor of pale stone in a cavern of black
+# rock, a broad stair climbing to a raised hall at its centre, and channels of
+# blue water running round it in squared-off bends, with pillars of light
+# standing on the stone between them and the dark rock jagged all round.
+#
+# The fight is on the pale floor at the foot of the stair. The channels wrap
+# round behind it, the stair climbs on the axis, the pillars of light stand at
+# the bends, and the black rock rises jagged on every side.
+
+FLOOR_30 = (145, 145, 3)
+WATER_30 = 163
+STAIR_30 = 192
+STONE_FACE_30 = 223                    # the hall's walls, in the dark grating
+WORN_30 = (88, 91)                     # the blue-grey wear in the stone
+ROCK_TONES_30 = ((20, 26, 24), (12, 15, 14), (27, 35, 33), (6, 8, 7))
+
+
+def recipe_30(bd):
+    xs, ys = np.broadcast_arrays(*_grid(bd))
+    bd.ground[:, :] = GROUND_Z
+    off = np.abs(xs - 116)
+    # The squared-off U of the channels, wrapping round behind the fighters.
+    inner = (off < 70) & (ys >= 108)
+    outer = (off < 90) & (ys >= 92)
+    channel = outer & ~inner & ~((off < 18) & (ys < 128))
+    hall = (off < 50) & (ys >= 128)
+    bd.ground[channel] = GROUND_Z - 4
+    stair = step_up(bd, hall, 8, axis_x=116, stair_hw=18, ramp=14)
+
+    bd.lay_ground(_pick(FLOOR_30, 30), '30')
+    lay_where(bd, _pick(WORN_30, 130), '30',
+              (_patchy(xs / TILE_OUT, ys / TILE_OUT, 30) > 0.6) & ~hall)
+    lay_where(bd, lambda tx, ty: WATER_30, '30', channel)
+    lay_where(bd, lambda tx, ty: STAIR_30, '30', stair, contrast=1.0)
+    sink_colour(bd, channel)
+    rock_faces(bd, '30', STONE_FACE_30, min_rise=3)
+    enclose(bd, ROCK_TONES_30, back=168, sides=24, side_from=40, seed=30, ragged=10.0)
+
+    for x, y in ((18, 88), (206, 88), (40, 120), (184, 120), (62, 150), (162, 150)):
+        bd.stamp(obstacle(('light_pillar_1', 'light_pillar_2')[(x // 10) % 2], 2), x, y)
+
+
 RECIPES = {'02': recipe_02, '03': recipe_03, '04': recipe_04, '05': recipe_05,
            '06': recipe_06, '07': recipe_07, '08': recipe_08, '09': recipe_09,
            '10': recipe_10, '11': recipe_11, '12': recipe_12, '13': recipe_13,
-           '14': recipe_14}
+           '14': recipe_14, '15': recipe_15, '16': recipe_16, '17': recipe_17, '18': recipe_18, '19': recipe_19, '20': recipe_20, '21': recipe_21, '22': recipe_22, '23': recipe_23, '24': recipe_24, '25': recipe_25, '26': recipe_26,
+           '27': recipe_27, '28': recipe_28, '29': recipe_29, '30': recipe_30}
 
 
 # --------------------------------------------------------------------------- #

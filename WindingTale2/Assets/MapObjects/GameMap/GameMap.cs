@@ -342,14 +342,16 @@ namespace WindingTale.MapObjects.GameMap
 
         /// <summary>
         /// Lifts the camera to its highest, most top-down framing, so the board still reads
-        /// while a menu covers part of it. The player's next zoom takes control back.
+        /// while a menu covers part of it, and slides it across the map to put the cursor
+        /// (the creature the menu is for) in the middle of the screen. The player's next
+        /// zoom takes control back.
         /// </summary>
         public void ZoomCameraToTop()
         {
             EnsureMainCamera();
             if (mainCamera != null)
             {
-                mainCamera.ZoomToTop();
+                mainCamera.ZoomToTop(MapCoordinate.ConvertPosToVec3(GetCursorPosition()));
             }
         }
 

@@ -81,6 +81,12 @@ namespace WindingTale.Core.Objects
         /// </summary>
         public bool PendingAction { get; set; }
 
+        /// <summary>
+        /// The item an enemy leaves to whoever kills it (the original's dropItemId); 0 for
+        /// none. A money item goes into the purse instead of a bag. See GameMain.grantDropItems.
+        /// </summary>
+        public int DropItemId { get; set; }
+
         protected FDAICreature(int creatureId, CreatureFaction faction) : base(creatureId, faction)
         {
         }
@@ -375,8 +381,11 @@ namespace WindingTale.Core.Objects
             this.Mv = definition.InitialMv;
             this.Exp = definition.InitialEx;
 
-            this.Items = definition.Items;
-            this.Magics = definition.Magics;
+            // Copies: the definition's lists are shared by every creature made from it, so
+            // giving one of them an item (Chapter 15's thieves each carry their own
+            // treasure) or a magic would hand it to all of them.
+            this.Items = definition.Items != null ? new List<int>(definition.Items) : new List<int>();
+            this.Magics = definition.Magics != null ? new List<int>(definition.Magics) : new List<int>();
 
             // Get Equiped items
             this.AttackItemIndex = -1;

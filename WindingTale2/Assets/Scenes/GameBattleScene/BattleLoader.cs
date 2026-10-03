@@ -90,8 +90,23 @@ namespace WindingTale.Scenes.GameBattleScene
 
             string taiPath = string.Format("Tais/{0:D2}/Tai_{0:D2}", taiId);
             GameObject taiPrefab = Resources.Load<GameObject>(taiPath);
-            if (taiPrefab != null)
-                Instantiate(taiPrefab, localTai.transform);
+            if (taiPrefab == null) return;
+
+            GameObject tai = Instantiate(taiPrefab, localTai.transform);
+
+            // At the authored spot the Tai's top edge covers our fighter's feet. Drop it by
+            // its own height. LocalTai is tipped towards the camera, so a world-space bound
+            // would measure the slab's slanted depth too -- take the mesh's own thickness
+            // and move along the Tai's own up axis instead.
+            float height = 0f;
+            foreach (MeshFilter filter in tai.GetComponentsInChildren<MeshFilter>())
+            {
+                if (filter.sharedMesh != null)
+                {
+                    height = Mathf.Max(height, filter.sharedMesh.bounds.size.y * filter.transform.localScale.y);
+                }
+            }
+            tai.transform.localPosition -= Vector3.up * height;
         }
 
         // Start is called before the first frame update

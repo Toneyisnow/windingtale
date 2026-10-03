@@ -155,7 +155,8 @@ namespace WindingTale.Scenes.GameBattleScene
                 && subjectFightAnimation.RemoteAttackFrame > 0;
 
             // The subject's bar/tai are hidden once the attack reaches RemoteAttackFrame
-            // (Tai is a local-only object), and re-shown before the next attack round.
+            // (the bar on either side; Tai is a local-only object), and re-shown before
+            // the next attack round.
             subjectIsLocal = (subjectObject == localBody);
             subjectBar = (subjectHpBar != null && subjectHpBar.transform.parent != null)
                 ? subjectHpBar.transform.parent.gameObject
@@ -396,12 +397,10 @@ namespace WindingTale.Scenes.GameBattleScene
             }
         }
 
+        // The bar goes for either side's ranged attacker, on the same frame; subjectTai is
+        // only ever set for our side (the Tai is a local-only object).
         private void SetSubjectExtrasActive(bool active)
         {
-            if (!subjectIsLocal)
-            {
-                return;
-            }
             if (subjectBar != null)
             {
                 subjectBar.SetActive(active);

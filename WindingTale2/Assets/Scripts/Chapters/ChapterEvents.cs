@@ -162,6 +162,11 @@ namespace WindingTale.Chapters
                 creature = faction == CreatureFaction.Friend ?
                      new FDCreature(creatureId, definition, faction) :
                      new FDAICreature(creatureId, definition, faction, aiType ?? GetDefaultAiType(definition));
+
+                if (creature is FDAICreature aiCreature)
+                {
+                    aiCreature.DropItemId = dropItemId;
+                }
             }
 
             gameMain.gameMap.AddCreature(creature, position);

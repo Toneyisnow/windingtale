@@ -294,6 +294,7 @@ namespace WindingTale.Core.Files
                 record.AIType = aiCreature.AIType;
                 record.AIEscapePosition = aiCreature.EscapePosition;
                 record.AITreasurePosition = aiCreature.TreasurePosition;
+                record.DropItemId = aiCreature.DropItemId;
             }
 
             return record;
@@ -321,6 +322,7 @@ namespace WindingTale.Core.Files
             {
                 restoredAiCreature.EscapePosition = record.AIEscapePosition;
                 restoredAiCreature.TreasurePosition = record.AITreasurePosition;
+                restoredAiCreature.DropItemId = record.DropItemId;
             }
 
             creature.Level = record.Level;
