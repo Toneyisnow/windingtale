@@ -2402,8 +2402,12 @@ def _cliff_18(xs):
     return CLIFF_Y_18 + 6.0 * np.sin(xs / 21.0 + 0.3) + 3.0 * np.sin(xs / 7.0)
 
 
+TURN_DEG_18 = TURN_DEG - 15.0          # 15 degrees further round, so the enemy
+                                       # (screen left) stands on the deck too
+
+
 def recipe_18(bd):
-    turn = Turn(bd)
+    turn = Turn(bd, deg=TURN_DEG_18)
     xs, ys = turn.u, turn.v                # the design, laid out turned
     land = ys >= _cliff_18(xs)
     bd.undulate(amplitude=1.5, wavelength=70.0, seed=18)

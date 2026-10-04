@@ -13,6 +13,17 @@ namespace WindingTale.MapObjects.CreatureIcon
     {
         private static float StepLength = 0.08f;
 
+        // The walk is timed, not counted in frames: StepLength used to be added once per
+        // frame, so the pace followed the frame rate and a creature crawled whenever frames
+        // were slow -- which is how some walks came out visibly slower than others. This is
+        // the old pace at 60 frames a second (2.4 tiles a second).
+        private static float WalkSpeed = StepLength * 60f;
+
+        // Distance covered along the current segment, and what overshot the last one (carried
+        // on, so a path with corners keeps an even pace instead of losing a frame at each).
+        private float travelled = 0f;
+        private float carried = 0f;
+
         private FDMovePath movePath = null;
 
         private Animator animator = null;
@@ -25,11 +36,6 @@ namespace WindingTale.MapObjects.CreatureIcon
         private Vector3 nextVector = Vector3.zero;
 
         private int pathIndex = 0;
-        private int stepCount = 0;
-
-        private int signX = 0;
-        private int signY = 0;
-        private int signZ = 0;
 
         private Quaternion desiredRotation = Quaternion.identity;
 
@@ -107,30 +113,16 @@ namespace WindingTale.MapObjects.CreatureIcon
 
         private bool TakeStep()
         {
-            stepCount++;
-            float deltaX = signX * StepLength * stepCount;
-            float deltaY = signY * StepLength * stepCount;
-            float deltaZ = signZ * StepLength * stepCount;
+            float length = Vector3.Distance(currentVector, nextVector);
+            travelled += WalkSpeed * Time.deltaTime;
 
-            Vector3 nowVector = new Vector3(currentVector.x + deltaX, currentVector.y + deltaY, currentVector.z + deltaZ);
-           
-            ///transform.rotation = Quaternion.RotateTowards(transform.rotation, desiredRotation, 1.5f);
+            bool reached = travelled >= length;
+            Vector3 nowVector = reached ? nextVector : Vector3.MoveTowards(currentVector, nextVector, travelled);
             this.transform.SetPositionAndRotation(nowVector, desiredRotation);
-            //// this.transform.position = nowVector;
 
-            // Check if reached the next position
-            bool reached = false;
-            if (signX != 0 && (nowVector.x == nextVector.x || Math.Sign(nowVector.x - nextVector.x) * signX > 0))
+            if (reached)
             {
-                reached = true;
-            }
-            if (signY != 0 && (nowVector.y == nextVector.y || Math.Sign(nowVector.y - nextVector.y) * signY > 0))
-            {
-                reached = true;
-            }
-            if (signZ != 0 && (nowVector.z == nextVector.z || Math.Sign(nowVector.z - nextVector.z) * signZ > 0))
-            {
-                reached = true;
+                carried = travelled - length;
             }
 
             return reached;
@@ -140,11 +132,8 @@ namespace WindingTale.MapObjects.CreatureIcon
         {
             currentVector = MapCoordinate.ConvertCreaturePosToVec3(curPos);
             nextVector = MapCoordinate.ConvertCreaturePosToVec3(nextPos);
-            stepCount = 0;
-
-            signX = Math.Sign(nextVector.x - currentVector.x);
-            signY = Math.Sign(nextVector.y - currentVector.y);
-            signZ = Math.Sign(nextVector.z - currentVector.z);
+            travelled = carried;
+            carried = 0f;
 
             //Vector3 relativeVect = nextVector - currentVector;
             //Quaternion desiredRotation = Quaternion.LookRotation(Vector3.forward, relativeVect);

@@ -550,6 +550,9 @@ namespace WindingTale.Scenes.GameFieldScene
             {
                 c.SetActioned(true);
 
+                // An AI cast showed the blast outline on the cursor; back to the single tile.
+                gameMap.SetCursorScope(0);
+
                 // Pay the MP for the spell. The battle scene draws its MP drain from
                 // MagicResult.MpBefore, so it does not matter whether this lands before or
                 // after the animation gets there.
@@ -697,13 +700,18 @@ namespace WindingTale.Scenes.GameFieldScene
         /// <summary>
         /// Hands each fallen enemy's drop item to the creature that killed it, as the
         /// original's attack/magic wrap-up did: money goes into the purse, anything else into
-        /// the killer's bag -- or is lost if the bag is full. Each drop gets a "从敌人身上获得X！"
-        /// line (message 21) and a full bag a "道具满了！" (message 22), said by the talker.
+        /// the killer's bag. Each drop gets a "从敌人身上获得X！" line (message 21), said by the
+        /// talker. A friend whose bag is full is asked "身上的物品满了，要交换吗？" (Confirm-07):
+        /// yes opens the bag (CreatureInfoDialog, SelectAllItem) and the item picked is
+        /// swapped for the drop without another word; no, or closing the bag without picking,
+        /// gets "是吗？那么就不要了。" (Information-02) and the drop is lost. Anyone else with a
+        /// full bag loses the drop with a "道具满了！" (message 22).
         /// </summary>
         /// <param name="kills">(the fallen creature, the one that killed it) pairs.</param>
         private void grantDropItems(List<KeyValuePair<FDCreature, FDCreature>> kills, FDCreature talker)
         {
-            List<ItemDefinition> dropped = new List<ItemDefinition>();
+            // Built in playing order, then inserted at the front of the queue.
+            List<ActivityBase> activities = new List<ActivityBase>();
             bool cannotCarryMore = false;
 
             foreach (KeyValuePair<FDCreature, FDCreature> kill in kills)
@@ -722,37 +730,77 @@ namespace WindingTale.Scenes.GameFieldScene
                     continue;
                 }
 
-                dropped.Add(item);
+                if (talker != null)
+                {
+                    FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 21, strParam1: item.Name);
+                    activities.Add(new TalkActivity(message, talker));
+                }
+
                 if (item is MoneyItemDefinition money)
                 {
                     gameMap.Map.TotalMoney += money.Amount;
                 }
-                else if (receiver.IsItemsFull())
-                {
-                    cannotCarryMore = true;
-                }
-                else
+                else if (!receiver.IsItemsFull())
                 {
                     receiver.AddItem(item.ItemId);
                 }
+                else if (receiver.Faction == CreatureFaction.Friend && !receiver.IsDead())
+                {
+                    activities.Add(createDropExchangeActivity(receiver, item.ItemId));
+                }
+                else
+                {
+                    cannotCarryMore = true;
+                }
             }
 
-            if (talker == null)
+            if (cannotCarryMore && talker != null)
             {
-                return;
+                activities.Add(new TalkActivity(FDMessage.Create(FDMessage.MessageTypes.Information, 22), talker));
             }
 
             // InsertActivity puts each one at the front of the queue, so go in reverse to
-            // have them play in order: every drop, then the full-bag line.
-            if (cannotCarryMore)
+            // have them play in order.
+            for (int i = activities.Count - 1; i >= 0; i--)
             {
-                this.InsertActivity(new TalkActivity(FDMessage.Create(FDMessage.MessageTypes.Information, 22), talker));
+                this.InsertActivity(activities[i]);
             }
-            for (int i = dropped.Count - 1; i >= 0; i--)
+        }
+
+        /// <summary>
+        /// A drop the receiver has no room for: Confirm-07, then the bag to pick the item
+        /// to give up. The same exchange as a full-bag treasure chest (MenuActionState),
+        /// except that the item given up is simply left behind.
+        /// </summary>
+        private ActivityBase createDropExchangeActivity(FDCreature receiver, int dropItemId)
+        {
+            return new TalkActivity(FDMessage.Create(FDMessage.MessageTypes.Confirm, 7), receiver, (confirmExchange) =>
             {
-                FDMessage message = FDMessage.Create(FDMessage.MessageTypes.Information, 21, strParam1: dropped[i].Name);
-                this.InsertActivity(new TalkActivity(message, talker));
-            }
+                if (confirmExchange != 1)
+                {
+                    this.InsertActivity(new TalkActivity(FDMessage.Create(FDMessage.MessageTypes.Information, 2), receiver));
+                    return;
+                }
+
+                // The bag stays open until a pick is made or it is closed; the wrap-up waits.
+                bool closed = false;
+                this.InsertActivity(new DurationActivity(gameMain =>
+                {
+                    gameCanvas.ShowCreatureDialog(receiver, CreatureInfoType.SelectAllItem, (selectedIndex) =>
+                    {
+                        closed = true;
+                        if (selectedIndex < 0 || selectedIndex >= receiver.Items.Count)
+                        {
+                            this.InsertActivity(new TalkActivity(FDMessage.Create(FDMessage.MessageTypes.Information, 2), receiver));
+                            return;
+                        }
+
+                        receiver.RemoveItemAt(selectedIndex);
+                        receiver.AddItem(dropItemId);
+                    });
+                },
+                gameMain => closed));
+            });
         }
 
         /// <summary>

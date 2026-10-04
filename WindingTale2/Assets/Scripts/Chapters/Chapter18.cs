@@ -18,7 +18,9 @@ namespace WindingTale.Chapters
     /// party on the western cliff.
     ///
     /// There is no need to clear the field: the chapter is won when the commander
-    /// falls, and Lan and Yue join the party where they stand.
+    /// falls, and Lan and Yue join the party where they stand. The commander -- a dark
+    /// knight -- lies in wait (StandBy) for the first nine turns and takes the field on
+    /// turn 10; the original had him fight from the start.
     ///
     /// Two departures from the original: it settled only friends 1..16, which would
     /// drop Saikebangle (17), Midi (18) and Ailan (19) from the party in this port, so
@@ -102,6 +104,9 @@ namespace WindingTale.Chapters
         private const int BossDefinitionId = 51801;
         private static readonly FDPosition BossPost = FDPosition.At(49, 9);
 
+        /// <summary>The commander, the dark knight, lies in wait until turn 10 (not in the original).</summary>
+        private const int BossWakeTurn = 10;
+
         /// <summary>Lan (20) and Yue (21), caught on the bridge, and where they run to.</summary>
         private const int LanId = 20;
         private const int YueId = 21;
@@ -148,6 +153,7 @@ namespace WindingTale.Chapters
             LoadTurnEvent(++eventId, 1, CreatureFaction.Friend, turn1);
             LoadTurnEvent(++eventId, NpcFightTurn, CreatureFaction.Npc, npcFightBack);
             LoadTurnEvent(++eventId, ReinforcementTurn, CreatureFaction.Npc, reinforcement);
+            LoadTurnEvent(++eventId, BossWakeTurn, CreatureFaction.Npc, bossWake);
 
             LoadDeadEvent(++eventId, 1, (gameMain) => gameMain.OnGameOver());
             LoadDeadEvent(++eventId, LanId, (gameMain) => gameMain.OnGameOver());
@@ -171,7 +177,8 @@ namespace WindingTale.Chapters
                     FDPosition.At(Picket[i, 2], Picket[i, 3]), Picket[i, 4], AITypes.AIType_StandBy);
             }
 
-            AddCreatureToMap(gameMain, CreatureFaction.Enemy, BossId, BossDefinitionId, BossPost);
+            AddCreatureToMap(gameMain, CreatureFaction.Enemy, BossId, BossDefinitionId, BossPost, 0,
+                AITypes.AIType_StandBy);
 
             AddCreatureToMap(gameMain, CreatureFaction.Npc, LanId, LanId, LanEntry);
             AddCreatureToMap(gameMain, CreatureFaction.Npc, YueId, YueId, YueEntry);
@@ -211,6 +218,12 @@ namespace WindingTale.Chapters
 
             // Talking
             PushConversationsActivities(gameMain, 18, 2, 1, 4);
+        };
+
+        /// <summary>Turn 10: the dark knight stirs and joins the fight.</summary>
+        private Action<GameMain> bossWake = (gameMain) =>
+        {
+            SetCreatureAiType(gameMain, BossId, AITypes.AIType_Aggressive);
         };
 
         /// <summary>The commander falls: Lan and Yue join the party where they stand, and the chapter is won.</summary>

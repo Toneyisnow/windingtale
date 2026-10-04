@@ -64,10 +64,10 @@
       "ItemId": 312
     }
   ],
-  "Sky": "SKY_01",
+  "Sky": "SKY_04",
   "Tai": 18,
   "BackgroundMusic": {
-    "Field": "Battle_3_HD_Final",
+    "Field": "Battle_2_HD_Final_V2",
     "Enemy": "Battle_Enemy_Turn_1",
     "Village": "Village_2_HD_Final"
   },

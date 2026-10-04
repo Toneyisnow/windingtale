@@ -338,6 +338,17 @@ namespace WindingTale.Core.Files
             creature.Exp = record.Exp;
             creature.Items = record.ItemIds;
             creature.Magics = record.MagicIds;
+
+            // A magic a friend is born with (Creature.txt) that was added after the save
+            // was written -- Midi's 音速刃 -- is topped up here; magics are never lost.
+            if (record.Faction == CreatureFaction.Friend && definition?.Magics != null)
+            {
+                foreach (int magicId in definition.Magics)
+                {
+                    creature.AddMagic(magicId);
+                }
+            }
+
             creature.Position = record.Position;
             creature.IsUnrevived = record.IsUnrevived;
 

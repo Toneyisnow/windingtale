@@ -98,6 +98,10 @@ namespace WindingTale.AI.Delegates
             Debug.Log(string.Format("AI Magical: creature={0} spells magic={1} at {2} targeting creature={3}",
                 creature.Id, selectedMagic.MagicId, magicPosition, selectedCandidate.Id));
 
+            // The cursor takes the spell's blast shape (Cursor_2/3/4) on its way to the target,
+            // as it does for the player's own casts; creatureMagic puts it back afterwards.
+            int effectScope = selectedMagic.EffectScope;
+            gameMain.PushActivity((game) => game.gameMap.SetCursorScope(effectScope));
             gameMain.PushActivity(new SlideCursorActivity(magicPosition));
             gameMain.PushActivity((game) => game.creatureMagic(this.creature, magicPosition, selectedMagic.MagicId));
         }

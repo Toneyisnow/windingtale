@@ -21,7 +21,8 @@ namespace WindingTale.Chapters
     /// Midi (18) matters to the story here. If she joined in chapter 16 she is in the
     /// party and fights; if not, the original still put her on the field for this one
     /// battle -- her farewell is the ending -- and took her out of the party again after
-    /// the win. Both cases stand her at (24, 35). The original left a Midi carried in
+    /// the win; here that guest Midi fights as an NPC, not under the player's control.
+    /// Both cases stand her at (24, 35). The original left a Midi carried in
     /// the party off the field (settleFriend was only called for 1..16), which in this
     /// port would drop her from the party, so she is settled at the same tile instead.
     ///
@@ -155,7 +156,8 @@ namespace WindingTale.Chapters
             // Midi: from the party if she joined in chapter 16, otherwise a guest for
             // this battle only.
             midiLeavesAfterWin = !PartyCarries(gameMain, MidiId);
-            AddCreatureToMap(gameMain, CreatureFaction.Friend, MidiId, MidiId, MidiPost);
+            AddCreatureToMap(gameMain, midiLeavesAfterWin ? CreatureFaction.Npc : CreatureFaction.Friend,
+                MidiId, MidiId, MidiPost);
 
             for (int i = 0; i < Enemies.GetLength(0); i++)
             {
