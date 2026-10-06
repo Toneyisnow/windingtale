@@ -113,51 +113,24 @@ public class VillageScene : MonoBehaviour
     private const int SecretSpotIndex = 5;
 
     /// <summary>
-    /// Where the cursor may stand in each village, in world coordinates on the cursor
-    /// plane. One entry per village (1-3), each holding six spots by position index: index
-    /// 0 is the way on to the next chapter (see OnProceed), indices 1-5 are the shops,
-    /// each matched to the shop of the same index. Index 5 is only reachable by a special
-    /// route, not the left/right walk. Replaces the spots that used to be scattered at
-    /// random.
+    /// Where the cursor may stand in each village (1-3), six spots by position index. Read
+    /// from the VillageSpotLayout asset so it can be tuned in the editor; see there.
     /// </summary>
-    private static readonly Dictionary<int, Vector2[]> VillageSpotMaps = new Dictionary<int, Vector2[]>
-    {
-        {
-            1, new[]
-            {
-                new Vector2(-6.4f, -5.2f), // pos 0 -- proceed to next chapter
-                new Vector2(-8.2f, -1.8f), // pos 1 -- shop 1
-                new Vector2(-8.9f, 3.3f),  // pos 2 -- shop 2
-                new Vector2(3.2f, 1.8f),   // pos 3 -- shop 3
-                new Vector2(1.2f, -3.6f),  // pos 4 -- shop 4
-                new Vector2(-1.8f, 5.7f),  // pos 5 -- shop 5, special route
-            }
-        },
-        // Villages 2 and 3 reuse village 1's layout as a placeholder; retune once their
-        // own pictures are drawn.
-        {
-            2, new[]
-            {
-                new Vector2(-6.4f, -5.2f),
-                new Vector2(-8.2f, -1.8f),
-                new Vector2(-8.9f, 3.3f),
-                new Vector2(3.2f, 1.8f),
-                new Vector2(1.2f, -3.6f),
-                new Vector2(-1.8f, 5.7f),
-            }
-        },
-        {
-            3, new[]
-            {
-                new Vector2(-6.4f, -5.2f),
-                new Vector2(-8.2f, -1.8f),
-                new Vector2(-8.9f, 3.3f),
-                new Vector2(3.2f, 1.8f),
-                new Vector2(1.2f, -3.6f),
-                new Vector2(-1.8f, 5.7f),
-            }
-        },
-    };
+    private VillageSpotLayout spotLayout = null;
+
+    /// <summary>
+    /// Editor only: tune the six spots against a village picture. Play the scene with this
+    /// on and it shows previewVillageId's picture whatever the record says, with a numbered
+    /// marker on every spot. Drag a marker ("Spot N" under VillageSpotMarkers) or type into
+    /// the VillageSpotLayout asset -- each follows the other live, and the asset keeps the
+    /// change after play mode ends. Changing previewVillageId while playing swaps villages.
+    /// </summary>
+    [Header("Spot tuning (editor only)")]
+    public bool spotTuningMode = false;
+
+    /// <summary>The village (1-3) spot tuning shows. Ignored unless spotTuningMode is on.</summary>
+    [Range(1, 3)]
+    public int previewVillageId = 1;
 
     /// <summary>
     /// How much further out than the cursor the background sits. The canvas fills the
@@ -252,6 +225,13 @@ public class VillageScene : MonoBehaviour
 
         this.Record = record;
         this.villageId = GetVillageId(record.ChapterId);
+        this.spotLayout = VillageSpotLayout.Load();
+        if (IsTuningSpots)
+        {
+            this.villageId = Mathf.Clamp(previewVillageId, 1, 3);
+            Debug.Log("Village spot tuning is on: showing village " + villageId + ".");
+        }
+
         this.secretSequence = DefinitionStore.Instance.GetSecretSequenceDefinition(record.ChapterId);
 
         ShowBackground(this.villageId);
@@ -290,6 +270,11 @@ public class VillageScene : MonoBehaviour
         if (infoBar != null && spots != null)
         {
             infoBar.SetSpot(spotIndex);
+        }
+
+        if (IsTuningSpots)
+        {
+            UpdateSpotTuning();
         }
     }
 
@@ -540,11 +525,7 @@ public class VillageScene : MonoBehaviour
             return;
         }
 
-        if (!VillageSpotMaps.TryGetValue(villageId, out Vector2[] map))
-        {
-            Debug.LogWarning("No spot map for village " + villageId + "; using village 1's.");
-            map = VillageSpotMaps[1];
-        }
+        Vector2[] map = spotLayout.GetSpots(villageId);
 
         //// The map is world x/y on the cursor plane; take that plane's depth from the
         //// camera so every spot sits the same distance out, whatever the resolution.
@@ -868,4 +849,144 @@ public class VillageScene : MonoBehaviour
 
         camera.transform.position = to;
     }
+
+    #region Spot tuning (editor only)
+
+    private bool IsTuningSpots => spotTuningMode && Application.isEditor;
+
+    /// <summary>One marker per spot, under VillageSpotMarkers; its world x/y is the spot.</summary>
+    private Transform[] spotMarkers = null;
+
+    /// <summary>
+    /// The last value each marker and the layout asset agreed on. Whichever side has moved
+    /// off it since was edited, and the other side is brought along.
+    /// </summary>
+    private Vector2[] agreedSpots = null;
+
+    /// <summary>The village the markers are showing, so a preview switch can reload them.</summary>
+    private int markedVillageId = 0;
+
+    /// <summary>
+    /// Keeps the markers, the layout asset and the cursor's round in step every frame, and
+    /// swaps the village picture when previewVillageId is changed in the inspector.
+    /// </summary>
+    private void UpdateSpotTuning()
+    {
+        if (spots == null || spots.Count != VillageSpotLayout.SpotCount || cursor == null || transitioning)
+        {
+            return;
+        }
+
+        int wantedVillageId = Mathf.Clamp(previewVillageId, 1, 3);
+        if (wantedVillageId != villageId)
+        {
+            villageId = wantedVillageId;
+            ShowBackground(villageId);
+            RefreshBackground();
+        }
+
+        if (spotMarkers == null)
+        {
+            CreateSpotMarkers();
+        }
+
+        Vector2[] layoutSpots = spotLayout.GetSpots(villageId);
+        float planeZ = spots[0].z;
+
+        if (markedVillageId != villageId)
+        {
+            markedVillageId = villageId;
+            for (int i = 0; i < spotMarkers.Length; i++)
+            {
+                agreedSpots[i] = layoutSpots[i];
+                spotMarkers[i].position = new Vector3(layoutSpots[i].x, layoutSpots[i].y, planeZ);
+            }
+        }
+
+        for (int i = 0; i < spotMarkers.Length; i++)
+        {
+            Vector2 marker = spotMarkers[i].position;
+            if (marker != agreedSpots[i])
+            {
+                // The marker was dragged: write it into the asset.
+                agreedSpots[i] = marker;
+                layoutSpots[i] = marker;
+                MarkSpotLayoutDirty();
+            }
+            else if (layoutSpots[i] != agreedSpots[i])
+            {
+                // The asset was edited: bring the marker along.
+                agreedSpots[i] = layoutSpots[i];
+            }
+
+            spotMarkers[i].position = new Vector3(agreedSpots[i].x, agreedSpots[i].y, planeZ);
+            spots[i] = spotMarkers[i].position;
+        }
+
+        cursor.position = spots[spotIndex];
+    }
+
+    private void CreateSpotMarkers()
+    {
+        Transform root = new GameObject("VillageSpotMarkers").transform;
+        Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        Camera camera = Camera.main;
+        Quaternion facing = camera != null ? camera.transform.rotation : Quaternion.identity;
+
+        spotMarkers = new Transform[VillageSpotLayout.SpotCount];
+        agreedSpots = new Vector2[VillageSpotLayout.SpotCount];
+        for (int i = 0; i < spotMarkers.Length; i++)
+        {
+            GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            marker.name = "Spot " + i;
+            Destroy(marker.GetComponent<Collider>());
+            marker.transform.SetParent(root, false);
+            marker.transform.localScale = Vector3.one * 0.4f;
+            // Pos 0 (the way on) red, the shops yellow, the secret pos 5 cyan.
+            marker.GetComponent<Renderer>().material.color =
+                i == 0 ? Color.red : (i == SecretSpotIndex ? Color.cyan : Color.yellow);
+
+            GameObject label = new GameObject("Label");
+            label.transform.SetParent(marker.transform, false);
+            label.transform.localPosition = Vector3.up * 2.0f;
+            label.transform.rotation = facing;
+            TextMesh text = label.AddComponent<TextMesh>();
+            text.text = i.ToString();
+            text.font = font;
+            text.fontSize = 64;
+            text.characterSize = 0.3f;
+            text.anchor = TextAnchor.MiddleCenter;
+            text.color = marker.GetComponent<Renderer>().material.color;
+            label.GetComponent<MeshRenderer>().sharedMaterial = font.material;
+
+            spotMarkers[i] = marker.transform;
+        }
+    }
+
+    private void MarkSpotLayoutDirty()
+    {
+#if UNITY_EDITOR
+        if (!UnityEditor.AssetDatabase.Contains(spotLayout))
+        {
+            Debug.LogWarning("The village spot layout is not an asset (Resources/" + VillageSpotLayout.ResourcePath
+                + " is missing), so tuned spots will not be kept.");
+            return;
+        }
+
+        UnityEditor.EditorUtility.SetDirty(spotLayout);
+#endif
+    }
+
+    private void OnDestroy()
+    {
+#if UNITY_EDITOR
+        // Write the tuned spots to disk when play mode ends, so they survive without a save.
+        if (spotLayout != null && UnityEditor.AssetDatabase.Contains(spotLayout))
+        {
+            UnityEditor.AssetDatabase.SaveAssetIfDirty(spotLayout);
+        }
+#endif
+    }
+
+    #endregion
 }

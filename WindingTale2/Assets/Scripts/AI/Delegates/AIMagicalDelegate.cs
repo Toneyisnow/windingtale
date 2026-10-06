@@ -157,6 +157,12 @@ namespace WindingTale.AI.Delegates
                     continue;
                 }
 
+                // 封咒术 only seals magic: wasted on anyone with no MP to cast with.
+                if (magic.MagicId == SealMagicId && c.Mp <= 0)
+                {
+                    continue;
+                }
+
                 if (candidate == null || c.Hp < candidate.Hp)
                 {
                     candidate = c;
@@ -165,6 +171,9 @@ namespace WindingTale.AI.Delegates
 
             return candidate;
         }
+
+        /// <summary>封咒术 (封魔): forbids the target's magic.</summary>
+        private const int SealMagicId = 301;
 
         /// <summary>
         /// Who to aim a healing or buffing spell at: of its own side within reach, the one the

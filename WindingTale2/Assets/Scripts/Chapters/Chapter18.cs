@@ -20,14 +20,17 @@ namespace WindingTale.Chapters
     /// There is no need to clear the field: the chapter is won when the commander
     /// falls, and Lan and Yue join the party where they stand. The commander -- a dark
     /// knight -- lies in wait (StandBy) for the first nine turns and takes the field on
-    /// turn 10; the original had him fight from the start.
+    /// turn 10; the original had him fight from the start. Likewise not in the original:
+    /// the army within 6 tiles of him waits until turn 7, and the six demons (106..111) at
+    /// the top and bottom of the screen until turn 3.
     ///
     /// Two departures from the original: it settled only friends 1..16, which would
     /// drop Saikebangle (17), Midi (18) and Ailan (19) from the party in this port, so
     /// they are settled on free tiles inside the formation when the party carries them;
     /// and the force landing behind the party was placed exactly on the party's start
     /// tiles, stacking on anyone still standing there, so here each takes the first
-    /// free tile at or next to the one named.
+    /// free tile at or next to the one named. Likewise the original put enemy 125 on the
+    /// commander's own tile (49,9); here it stands just north of him, at (49,8).
     /// </summary>
     public class Chapter18 : ChapterEvents
     {
@@ -83,7 +86,7 @@ namespace WindingTale.Chapters
             { 122, 51805, 39,  7, 106 },
             { 123, 51805, 39,  9,   0 },
             { 124, 51805, 49,  7,   0 },
-            { 125, 51805, 49,  9,   0 },
+            { 125, 51805, 49,  8,   0 },
             { 126, 51806, 40,  8,   0 },
             { 127, 51806, 44,  6,   0 },
             { 128, 51806, 44, 11, 103 },
@@ -106,6 +109,20 @@ namespace WindingTale.Chapters
 
         /// <summary>The commander, the dark knight, lies in wait until turn 10 (not in the original).</summary>
         private const int BossWakeTurn = 10;
+
+        /// <summary>
+        /// The army within this many tiles (|dx|+|dy|) of the dark knight sleeps with him
+        /// and starts to act on turn 7 (not in the original).
+        /// </summary>
+        private const int GuardRadius = 6;
+        private const int GuardWakeTurn = 7;
+
+        /// <summary>
+        /// The six demons (51803) at the top and bottom of the screen sleep until turn 3
+        /// (not in the original).
+        /// </summary>
+        private const int DemonDefinitionId = 51803;
+        private const int DemonWakeTurn = 3;
 
         /// <summary>Lan (20) and Yue (21), caught on the bridge, and where they run to.</summary>
         private const int LanId = 20;
@@ -151,7 +168,9 @@ namespace WindingTale.Chapters
             // "TurnType_Friend Turn:N" for the rest, which fired once the last friend
             // had acted in turn N, i.e. that turn's Npc phase here. See LoadTurnEvent.
             LoadTurnEvent(++eventId, 1, CreatureFaction.Friend, turn1);
+            LoadTurnEvent(++eventId, DemonWakeTurn, CreatureFaction.Npc, demonsWake);
             LoadTurnEvent(++eventId, NpcFightTurn, CreatureFaction.Npc, npcFightBack);
+            LoadTurnEvent(++eventId, GuardWakeTurn, CreatureFaction.Npc, guardsWake);
             LoadTurnEvent(++eventId, ReinforcementTurn, CreatureFaction.Npc, reinforcement);
             LoadTurnEvent(++eventId, BossWakeTurn, CreatureFaction.Npc, bossWake);
 
@@ -167,8 +186,9 @@ namespace WindingTale.Chapters
 
             for (int i = 0; i < Enemies.GetLength(0); i++)
             {
+                AITypes? aiType = IsDemon(i) || IsGuard(i) ? AITypes.AIType_StandBy : (AITypes?)null;
                 AddCreatureToMap(gameMain, CreatureFaction.Enemy, Enemies[i, 0], Enemies[i, 1],
-                    FDPosition.At(Enemies[i, 2], Enemies[i, 3]), Enemies[i, 4]);
+                    FDPosition.At(Enemies[i, 2], Enemies[i, 3]), Enemies[i, 4], aiType);
             }
 
             for (int i = 0; i < Picket.GetLength(0); i++)
@@ -193,6 +213,42 @@ namespace WindingTale.Chapters
                 // Play background music
                 gameMain.PlayBackgroundMusic();
             });
+        };
+
+        private static bool IsDemon(int i)
+        {
+            return Enemies[i, 1] == DemonDefinitionId;
+        }
+
+        /// <summary>One of the army close enough to the dark knight to wait with him.</summary>
+        private static bool IsGuard(int i)
+        {
+            int distance = Math.Abs(Enemies[i, 2] - BossPost.X) + Math.Abs(Enemies[i, 3] - BossPost.Y);
+            return !IsDemon(i) && distance <= GuardRadius;
+        }
+
+        /// <summary>Turn 3: the demons at the top and bottom of the screen take to the air.</summary>
+        private Action<GameMain> demonsWake = (gameMain) =>
+        {
+            for (int i = 0; i < Enemies.GetLength(0); i++)
+            {
+                if (IsDemon(i))
+                {
+                    SetCreatureAiType(gameMain, Enemies[i, 0], AITypes.AIType_Aggressive);
+                }
+            }
+        };
+
+        /// <summary>Turn 7: the army around the dark knight starts to move; he waits on until turn 10.</summary>
+        private Action<GameMain> guardsWake = (gameMain) =>
+        {
+            for (int i = 0; i < Enemies.GetLength(0); i++)
+            {
+                if (IsGuard(i))
+                {
+                    SetCreatureAiType(gameMain, Enemies[i, 0], AITypes.AIType_Aggressive);
+                }
+            }
         };
 
         /// <summary>Turn 5: Lan and Yue stop running and fight.</summary>

@@ -304,6 +304,25 @@ namespace WindingTale.Core.Definitions
             return this.Magics.Count > 0;
         }
 
+        /// <summary>
+        /// The occupations only reached by a transfer (转职): 剑圣/英雄, 圣战士/魔战士,
+        /// 圣骑士/龙骑士, 狙击手/神射手, 大法师/召唤师/祭师/圣者, 斗士/武圣, 龙剑士. A creature in
+        /// one of them counts its level as a Heritage level; every other occupation is Low.
+        /// 龙剑士 (171) counts even for those who start in it (19, 22, 30).
+        /// </summary>
+        private static readonly HashSet<int> HeritageOccupations = new HashSet<int>
+        {
+            112, 113, 122, 123, 132, 133, 142, 143, 152, 153, 155, 156, 162, 163, 171,
+        };
+
+        /// <summary>A Heritage level is worth this many Low levels.</summary>
+        public const int HeritageLevelBonus = 20;
+
+        public bool IsHeritage()
+        {
+            return HeritageOccupations.Contains(Occupation);
+        }
+
         public int GetMaxLevel()
         {
             if (Race == 7)

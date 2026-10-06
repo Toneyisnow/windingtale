@@ -52,28 +52,27 @@ namespace WindingTale.MapObjects.CreatureIcon
 
         public void SetGreyout(bool greyout)
         {
-            GameObject obj1 = gameObject.transform.Find("Clip_01").GetChild(0).Find("default").gameObject;
-            GameObject obj2 = gameObject.transform.Find("Clip_02").GetChild(0).Find("default").gameObject;
-            GameObject obj3 = gameObject.transform.Find("Clip_03").GetChild(0).Find("default").gameObject;
+            // Some icons are deliberately empty (the hidden swamp creatures 758..761 have
+            // fully transparent originals), so their OBJ imports without a "default" child.
+            MeshRenderer r1 = GetClipRenderer("Clip_01");
+            MeshRenderer r2 = GetClipRenderer("Clip_02");
+            MeshRenderer r3 = GetClipRenderer("Clip_03");
 
             if (greyout)
             {
-                MeshRenderer r1 = obj1.GetComponent<MeshRenderer>();
-                MeshRenderer r2 = obj2.GetComponent<MeshRenderer>();
-                MeshRenderer r3 = obj3.GetComponent<MeshRenderer>();
                 // Save shared material references before greying out; guard against double-call overwriting originals
                 if (originalMaterials1 == null && r1 != null) originalMaterials1 = r1.sharedMaterials;
                 if (originalMaterials2 == null && r2 != null) originalMaterials2 = r2.sharedMaterials;
                 if (originalMaterials3 == null && r3 != null) originalMaterials3 = r3.sharedMaterials;
-                GameRenderer.Instance.ApplyDefaultGreyMaterial(obj1);
-                GameRenderer.Instance.ApplyDefaultGreyMaterial(obj2);
-                GameRenderer.Instance.ApplyDefaultGreyMaterial(obj3);
+                if (r1 != null) GameRenderer.Instance.ApplyDefaultGreyMaterial(r1.gameObject);
+                if (r2 != null) GameRenderer.Instance.ApplyDefaultGreyMaterial(r2.gameObject);
+                if (r3 != null) GameRenderer.Instance.ApplyDefaultGreyMaterial(r3.gameObject);
             }
             else
             {
-                if (originalMaterials1 != null) { obj1.GetComponent<MeshRenderer>().sharedMaterials = originalMaterials1; originalMaterials1 = null; }
-                if (originalMaterials2 != null) { obj2.GetComponent<MeshRenderer>().sharedMaterials = originalMaterials2; originalMaterials2 = null; }
-                if (originalMaterials3 != null) { obj3.GetComponent<MeshRenderer>().sharedMaterials = originalMaterials3; originalMaterials3 = null; }
+                if (originalMaterials1 != null && r1 != null) { r1.sharedMaterials = originalMaterials1; originalMaterials1 = null; }
+                if (originalMaterials2 != null && r2 != null) { r2.sharedMaterials = originalMaterials2; originalMaterials2 = null; }
+                if (originalMaterials3 != null && r3 != null) { r3.sharedMaterials = originalMaterials3; originalMaterials3 = null; }
             }
         }
 

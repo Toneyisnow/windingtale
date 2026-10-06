@@ -349,7 +349,7 @@ namespace WindingTale.Core.Algorithms
                 calculatedHp = damage.HpBefore - damage.HpAfter;
             }
 
-            float result = calculatedHp * target.Level * target.Exp / (float)subject.Level / (float)target.HpMax;
+            float result = calculatedHp * target.ExperienceLevel * target.Exp / (float)subject.ExperienceLevel / (float)target.HpMax;
             return (int)result;
         }
 
@@ -364,7 +364,7 @@ namespace WindingTale.Core.Algorithms
             {
                 // Recover
                 int calculatedHp = recoverResult.Amount;
-                return (int)(calculatedHp * 100 * target.Level * 0.7 / subject.Level / target.HpMax);
+                return (int)(calculatedHp * 100 * target.ExperienceLevel * 0.7 / subject.ExperienceLevel / target.HpMax);
             }
             else
             {
@@ -395,7 +395,7 @@ namespace WindingTale.Core.Algorithms
             }
 
             // Other effects magic
-            return magic.GetBaseExperience() * target.Level / subject.Level;
+            return magic.GetBaseExperience() * target.ExperienceLevel / subject.ExperienceLevel;
         }
 
         /// <summary>

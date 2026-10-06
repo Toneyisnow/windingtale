@@ -16,12 +16,12 @@ namespace WindingTale.Chapters
     /// men (201..208) around him, and the enemy (101..136) closing in; twenty swamp
     /// creatures (51..70) lurk along the causeways and hold their ground until
     /// someone comes near. Losing Sol (1) or Lieba, or the last of Lieba's men, ends
-    /// the chapter. Dakesai (24) waits at the bottom edge of the map.
+    /// the chapter.
     ///
     /// The chapter is won when the last enemy falls. If that takes no more than
-    /// fifteen turns Dakesai walks up to the party and has something to say; past
-    /// that he says nothing. Lieba and Dakesai are both friends -- the original added
-    /// them with addFriend -- so both are carried on to the next chapter. Friends
+    /// fifteen turns Dakesai (24) appears at the bottom edge, walks up to the party
+    /// and joins; past that he never shows up. Lieba and Dakesai are both friends --
+    /// the original added them with addFriend -- so both are carried on. Friends
     /// 17..22, which the original never settled, take free tiles in the formation
     /// when the party carries them, since the save keeps only friends on the map.
     /// </summary>
@@ -142,7 +142,7 @@ namespace WindingTale.Chapters
             { 208, 24, 13 },
         };
 
-        /// <summary>Dakesai (24), at the bottom edge, and where he walks to at the end.</summary>
+        /// <summary>Dakesai (24): where he appears at the bottom edge at the end, and where he walks to.</summary>
         private const int DakesaiId = 24;
         private static readonly FDPosition DakesaiPost = FDPosition.At(26, 40);
         private static readonly FDPosition DakesaiStop = FDPosition.At(26, 37);
@@ -189,8 +189,6 @@ namespace WindingTale.Chapters
                     FDPosition.At(Guards[i, 1], Guards[i, 2]));
             }
 
-            AddCreatureToMap(gameMain, CreatureFaction.Friend, DakesaiId, DakesaiId, DakesaiPost);
-
             // Talking
             PushConversationsActivities(gameMain, 20, 1, 1, 17);
 
@@ -202,8 +200,8 @@ namespace WindingTale.Chapters
         };
 
         /// <summary>
-        /// The last enemy falls. If it took fifteen turns or fewer, Dakesai walks up from
-        /// the bottom edge and speaks -- the original chained this as enemyClear2 -- and
+        /// The last enemy falls. If it took fifteen turns or fewer, Dakesai appears at the
+        /// bottom edge, walks up and speaks -- the original chained this as enemyClear2 -- and
         /// either way the chapter is won.
         /// </summary>
         private Action<GameMain> enemyClear = (gameMain) =>
@@ -215,12 +213,9 @@ namespace WindingTale.Chapters
             {
                 if (gameMain.gameMap.Map.TurnNo <= LastTurnForDakesai)
                 {
-                    FDCreature dakesai = gameMain.gameMap.Map.GetCreatureById(DakesaiId);
-                    if (dakesai != null && dakesai.Position.AreSame(DakesaiPost))
-                    {
-                        gameMain.PushActivity(ActivityFactory.CreatureWalkActivity(DakesaiId,
-                            FDMovePath.Create(DakesaiPost, DakesaiStop)));
-                    }
+                    AddCreatureToMap(gameMain, CreatureFaction.Friend, DakesaiId, DakesaiId, DakesaiPost);
+                    gameMain.PushActivity(ActivityFactory.CreatureWalkActivity(DakesaiId,
+                        FDMovePath.Create(DakesaiPost, DakesaiStop)));
 
                     // Talking
                     PushConversationsActivities(gameMain, 20, 3, 1, 16);

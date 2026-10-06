@@ -72,6 +72,22 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             return text;
         }
 
+        /// <summary>
+        /// The line for an attack spell shown on the field rather than in the battle scene:
+        /// the HP it took, "HP-72", in red, or "无效" in grey when it missed.
+        /// </summary>
+        public static string ForDamage(DamageResult damage, out Color color)
+        {
+            if (damage == null || damage.HasMissed)
+            {
+                color = NoneColor;
+                return NothingText;
+            }
+
+            color = DebuffColor;
+            return "HP-" + (damage.HpBefore - damage.HpAfter);
+        }
+
         /// <summary>The line for a status spell (buff, cure, debuff, extra action).</summary>
         public static string ForEffect(EffectResult effect, out Color color)
         {

@@ -81,6 +81,42 @@ namespace WindingTale.Scenes.GameBattleScene
             instance.transform.localScale = backdrop.transform.localScale;
 
             backdrop.SetActive(false);
+
+            ShiftBackdrop(instance, chapterId);
+        }
+
+        /// <summary>
+        /// Per-chapter sideways nudge of the backdrop, as a fraction of the screen width
+        /// (negative = to the left). Chapter 18: the whole scene sits 15% further left.
+        /// </summary>
+        private static readonly Dictionary<int, float> BackdropScreenShift = new Dictionary<int, float>
+        {
+            { 18, -0.15f },
+        };
+
+        /// <summary>
+        /// Moves the backdrop along the camera's right axis by its chapter's share of the
+        /// screen width. The backdrop has depth, so the shift is measured at the depth of
+        /// its middle: nearer parts move a little more on screen, farther ones a little less.
+        /// </summary>
+        private void ShiftBackdrop(GameObject instance, int chapterId)
+        {
+            if (!BackdropScreenShift.TryGetValue(chapterId, out float fraction)) return;
+
+            Camera camera = MagicEffect.FindSceneCamera(gameObject.scene);
+            if (camera == null) return;
+
+            Renderer[] renderers = instance.GetComponentsInChildren<Renderer>();
+            if (renderers.Length == 0) return;
+            Bounds bounds = renderers[0].bounds;
+            foreach (Renderer renderer in renderers)
+            {
+                bounds.Encapsulate(renderer.bounds);
+            }
+
+            float depth = Vector3.Dot(bounds.center - camera.transform.position, camera.transform.forward);
+            float screenWidth = 2f * depth * Mathf.Tan(camera.fieldOfView * 0.5f * Mathf.Deg2Rad) * camera.aspect;
+            instance.transform.position += camera.transform.right * (fraction * screenWidth);
         }
 
         private void LoadLocalTai()
@@ -107,6 +143,38 @@ namespace WindingTale.Scenes.GameBattleScene
                 }
             }
             tai.transform.localPosition -= Vector3.up * height;
+
+            ShiftLocalTai(tai);
+        }
+
+        /// <summary>
+        /// Chapters whose Tai sits a twelfth of its width to the left and a twelfth of its
+        /// width further into the scene, away from the camera.
+        /// </summary>
+        private static readonly HashSet<int> TaiNudgeBackLeftChapters = new HashSet<int> { 19 };
+
+        private void ShiftLocalTai(GameObject tai)
+        {
+            int chapterId = GlobalVariables.Get<int>(ChapterIdVariableName);
+            if (!TaiNudgeBackLeftChapters.Contains(chapterId)) return;
+
+            Camera camera = MagicEffect.FindSceneCamera(gameObject.scene);
+            if (camera == null) return;
+
+            // The slab's width along its own x axis, in world units.
+            float width = 0f;
+            foreach (MeshFilter filter in tai.GetComponentsInChildren<MeshFilter>())
+            {
+                if (filter.sharedMesh != null)
+                {
+                    width = Mathf.Max(width, filter.transform.TransformVector(Vector3.right * filter.sharedMesh.bounds.size.x).magnitude);
+                }
+            }
+
+            // Left and "in" are taken level with the ground, so the Tai doesn't rise or sink.
+            Vector3 left = Vector3.ProjectOnPlane(-camera.transform.right, Vector3.up).normalized;
+            Vector3 inward = Vector3.ProjectOnPlane(camera.transform.forward, Vector3.up).normalized;
+            tai.transform.position += (left + inward) * (width / 12f);
         }
 
         // Start is called before the first frame update

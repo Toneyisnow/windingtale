@@ -559,7 +559,8 @@ namespace WindingTale.Scenes.GameFieldScene
                 creature.UpdateMp(-result.MpCost);
 
                 // What each recovery / status spell did to its targets, floated over them
-                // once every result is in. Attack spells show theirs in the battle scene.
+                // once every result is in. Attack spells show theirs in the battle scene,
+                // except those with no battle scene (碎岩术、地震术、裂地术), whose damage floats here too.
                 List<ActivityBase> floatingTexts = new List<ActivityBase>();
 
                 foreach (var resultPair in result.Results)
@@ -575,6 +576,14 @@ namespace WindingTale.Scenes.GameFieldScene
                         (target as FDAICreature)?.WakeUpByAttack();
 
                         BattleHandler.ApplyDamage(target, damageResult);
+
+                        // An attack spell with no battle scene (碎岩术、地震术、裂地术) shows its damage here.
+                        if (!magic.hasAnimaion())
+                        {
+                            Color textColor;
+                            string text = MagicResultText.ForDamage(damageResult, out textColor);
+                            floatingTexts.Add(ActivityFactory.CreatureFloatingTextActivity(target, text, textColor));
+                        }
                     }
                     else if (soleResult.ResultType == SoloResultType.Recover)
                     {

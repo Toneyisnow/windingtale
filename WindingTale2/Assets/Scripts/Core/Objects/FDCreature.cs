@@ -664,6 +664,19 @@ namespace WindingTale.Core.Objects
             return this.Definition != null && this.Level >= this.Definition.GetMaxLevel();
         }
 
+        /// <summary>
+        /// The level the experience formulas use: the Low level as shown, plus 20 when the
+        /// occupation is a Heritage one (reached by transfer). Same for every faction.
+        /// </summary>
+        public int ExperienceLevel
+        {
+            get
+            {
+                bool heritage = this.Definition != null && this.Definition.IsHeritage();
+                return this.Level + (heritage ? CreatureDefinition.HeritageLevelBonus : 0);
+            }
+        }
+
         public bool HasMoved()
         {
             return this.PrePosition != null && !this.PrePosition.AreSame(this.Position);

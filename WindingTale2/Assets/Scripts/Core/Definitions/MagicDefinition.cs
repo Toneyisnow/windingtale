@@ -91,12 +91,16 @@ namespace WindingTale.Core.Definitions
         /// <summary>
         /// Whether casting this spell plays the battle scene. As in the original
         /// (MagicDefinition hasAnimation), only attack spells do; recovery, status and
-        /// support spells resolve straight on the field.
+        /// support spells resolve straight on the field. The earth spells 碎岩术 (110), 地震术
+        /// (111) and 裂地术 (112) are the exception: attack spells with no battle scene, their
+        /// HP loss floated over each target instead.
         /// </summary>
         public bool hasAnimaion()
         {
-            return this.MagicId != 0 && this.Type == MagicType.Attack;
+            return this.MagicId != 0 && this.Type == MagicType.Attack && !FieldOnlyAttackMagicIds.Contains(this.MagicId);
         }
+
+        private static readonly HashSet<int> FieldOnlyAttackMagicIds = new HashSet<int> { 110, 111, 112 };
 
 
         public MagicDefinition()
