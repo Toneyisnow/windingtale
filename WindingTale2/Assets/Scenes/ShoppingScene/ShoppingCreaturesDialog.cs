@@ -9,6 +9,7 @@ using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.UI.Dialogs;
+using WindingTale.UI.Audio;
 
 /// <summary>
 /// The shop's creature picker, pushed over the home dialog when the player chooses Sell.
@@ -440,19 +441,19 @@ public class ShoppingCreaturesDialog : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            MoveSelection(0, -1);
+            MoveSelectionWithSound(0, -1);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            MoveSelection(0, 1);
+            MoveSelectionWithSound(0, 1);
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            MoveSelection(-1, 0);
+            MoveSelectionWithSound(-1, 0);
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            MoveSelection(1, 0);
+            MoveSelectionWithSound(1, 0);
         }
         else if (Input.GetKeyDown(KeyCode.Space)
             || Input.GetKeyDown(KeyCode.Return)
@@ -472,6 +473,18 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     /// (cursor to the top of the same column), up off the first row turns back a page (cursor
     /// to the bottom of the same column); neither wraps past the ends of the party.
     /// </summary>
+    /// <summary>MoveSelection, with the cursor sound when the highlight (or page) actually moved.</summary>
+    private void MoveSelectionWithSound(int deltaColumn, int deltaRow)
+    {
+        int pageBefore = currentPage;
+        int indexBefore = selectedIndex;
+        MoveSelection(deltaColumn, deltaRow);
+        if (pageBefore != currentPage || indexBefore != selectedIndex)
+        {
+            SoundEffects.Play(SoundEffect.DialogCursorMove);
+        }
+    }
+
     private void MoveSelection(int deltaColumn, int deltaRow)
     {
         int column = selectedIndex % Columns;
@@ -859,6 +872,8 @@ public class ShoppingCreaturesDialog : MonoBehaviour
             return;
         }
 
+        SoundEffects.Play(SoundEffect.DialogConfirm);
+
         FDCreature creature = creatures[creatureIndex];
 
         // Buy flow: hand the chosen creature back to the shop, which drops the bought item
@@ -876,6 +891,7 @@ public class ShoppingCreaturesDialog : MonoBehaviour
 
     private void Cancel()
     {
+        SoundEffects.Play(SoundEffect.DialogCancel);
         OnClosed?.Invoke();
     }
 

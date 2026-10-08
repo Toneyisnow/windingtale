@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using WindingTale.Core.Definitions;
+using WindingTale.UI.Audio;
 
 /// <summary>
 /// The shop's item picker (Buy), a flat canvas dialog pushed over the home dialog. It reads
@@ -227,19 +228,19 @@ public class ShoppingItemsDialog : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            MoveSelection(0, -1);
+            MoveSelectionWithSound(0, -1);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            MoveSelection(0, 1);
+            MoveSelectionWithSound(0, 1);
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            MoveSelection(-1, 0);
+            MoveSelectionWithSound(-1, 0);
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            MoveSelection(1, 0);
+            MoveSelectionWithSound(1, 0);
         }
         else if (Input.GetKeyDown(KeyCode.Space)
             || Input.GetKeyDown(KeyCode.Return)
@@ -259,6 +260,18 @@ public class ShoppingItemsDialog : MonoBehaviour
     /// (cursor to the top of the same column), up off the first row turns back a page (cursor
     /// to the bottom of the same column); neither wraps past the ends of the stock.
     /// </summary>
+    /// <summary>MoveSelection, with the cursor sound when the highlight (or page) actually moved.</summary>
+    private void MoveSelectionWithSound(int deltaColumn, int deltaRow)
+    {
+        int pageBefore = currentPage;
+        int indexBefore = selectedIndex;
+        MoveSelection(deltaColumn, deltaRow);
+        if (pageBefore != currentPage || indexBefore != selectedIndex)
+        {
+            SoundEffects.Play(SoundEffect.DialogCursorMove);
+        }
+    }
+
     private void MoveSelection(int deltaColumn, int deltaRow)
     {
         int column = selectedIndex % Columns;
@@ -589,6 +602,8 @@ public class ShoppingItemsDialog : MonoBehaviour
             return;
         }
 
+        SoundEffects.Play(SoundEffect.DialogConfirm);
+
         int itemId = items[itemIndex].ItemId;
         Debug.Log("ShoppingItemsDialog: selected item " + itemId);
         OnItemSelected?.Invoke(itemId);
@@ -596,6 +611,7 @@ public class ShoppingItemsDialog : MonoBehaviour
 
     private void Cancel()
     {
+        SoundEffects.Play(SoundEffect.DialogCancel);
         OnClosed?.Invoke();
     }
 

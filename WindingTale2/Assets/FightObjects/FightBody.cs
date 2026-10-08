@@ -6,6 +6,7 @@ using UnityEngine;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.UI.Utils;
+using WindingTale.UI.Audio;
 
 namespace WindingTale.FightObjects
 {
@@ -19,6 +20,12 @@ namespace WindingTale.FightObjects
         private Action<int> onHit = null;
         private Action onFinish = null;
 
+        // The wind-up sound plays once per attack, when the clip reaches its second frame.
+        // It re-arms only once the animator has left the attack state, so a double attack
+        // (the clip played again) winds up twice but a clip lingering on its last frame does not.
+        private const int WindUpFrame = 1;
+        private bool windUpPlayed = false;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -28,7 +35,29 @@ namespace WindingTale.FightObjects
         // Update is called once per frame
         void Update()
         {
+            if (fightAnimation == null || fightAnimation.AttackFrameCount <= WindUpFrame)
+            {
+                return;
+            }
 
+            Animator animator = this.GetComponent<Animator>();
+            if (animator == null || animator.runtimeAnimatorController == null)
+            {
+                return;
+            }
+
+            AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+            if (!state.IsName("attack"))
+            {
+                windUpPlayed = false;
+                return;
+            }
+
+            if (!windUpPlayed && state.normalizedTime * fightAnimation.AttackFrameCount >= WindUpFrame)
+            {
+                windUpPlayed = true;
+                SoundEffects.PlayBattleWindUp(animationId);
+            }
         }
 
         public void Initialize(int animationId, Action<int> onHit, Action onFinish)

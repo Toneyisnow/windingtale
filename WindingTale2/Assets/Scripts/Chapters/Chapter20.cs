@@ -18,7 +18,8 @@ namespace WindingTale.Chapters
     /// someone comes near. Losing Sol (1) or Lieba, or the last of Lieba's men, ends
     /// the chapter.
     ///
-    /// The chapter is won when the last enemy falls. If that takes no more than
+    /// The chapter is won when the last enemy falls, not counting the swamp creatures
+    /// (the original counted them too; changed at the user's request). If that takes no more than
     /// fifteen turns Dakesai (24) appears at the bottom edge, walks up to the party
     /// and joins; past that he never shows up. Lieba and Dakesai are both friends --
     /// the original added them with addFriend -- so both are carried on. Friends
@@ -56,7 +57,7 @@ namespace WindingTale.Chapters
         private const int FirstOptionalFriendId = 10;
 
         /// <summary>The swamp creatures along the causeways, as (id, x, y, drop item): they guard their posts.</summary>
-        private const int LurkerDefinitionId = 52001;
+        private const int LurkerDefinitionId = CreatureDefinition.SwampLurkerDefinitionId;
         private static readonly int[,] Lurkers = new int[,]
         {
             { 51,  4, 23,   0 },
@@ -158,7 +159,9 @@ namespace WindingTale.Chapters
             LoadDeadEvent(++eventId, 1, (gameMain) => gameMain.OnGameOver());
             LoadDeadEvent(++eventId, LiebaId, (gameMain) => gameMain.OnGameOver());
             LoadTeamEvent(++eventId, CreatureFaction.Npc, (gameMain) => gameMain.OnGameOver());
-            LoadTeamEvent(++eventId, CreatureFaction.Enemy, enemyClear);
+            // Won when the last enemy falls -- the swamp lurkers do not count; they never leave
+            // the marsh, so the party need not dig them all out.
+            LoadTeamEvent(++eventId, CreatureFaction.Enemy, enemyClear, LurkerDefinitionId);
         }
 
         private Action<GameMain> turn1 = (gameMain) =>
@@ -206,6 +209,9 @@ namespace WindingTale.Chapters
         /// </summary>
         private Action<GameMain> enemyClear = (gameMain) =>
         {
+            // The battle music goes now, before the talk; OnGameWin only comes after it.
+            gameMain.FadeOutMusicForVictory();
+
             // Talking
             PushConversationsActivities(gameMain, 20, 2, 1, 13);
 

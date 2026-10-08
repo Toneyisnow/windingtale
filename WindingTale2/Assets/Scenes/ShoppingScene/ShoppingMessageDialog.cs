@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using WindingTale.Core.Common;
+using WindingTale.UI.Audio;
 
 /// <summary>
 /// A one-line notice pushed over the shop's dialog stack -- "记录存储完毕！" after a save,
@@ -71,6 +72,7 @@ public class ShoppingMessageDialog : MonoBehaviour
         if (Input.anyKeyDown)
         {
             initialized = false; // fire once, even if the callback does not tear us down at once
+            SoundEffects.Play(SoundEffect.DialogConfirm);
             if (OnClosed != null)
             {
                 OnClosed();

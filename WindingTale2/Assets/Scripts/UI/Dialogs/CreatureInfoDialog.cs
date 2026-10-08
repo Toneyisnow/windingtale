@@ -13,6 +13,7 @@ using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.UI.Audio;
 
 namespace WindingTale.UI.Dialogs
 {
@@ -253,8 +254,14 @@ namespace WindingTale.UI.Dialogs
                 return;
             }
 
+            if (target == selectedSlotIndex)
+            {
+                return;
+            }
+
             selectedSlotIndex = target;
             refreshHighlight();
+            SoundEffects.Play(SoundEffect.DialogCursorMove);
         }
 
         private int getSlotColumn(int index)
@@ -289,6 +296,8 @@ namespace WindingTale.UI.Dialogs
             {
                 return;
             }
+
+            SoundEffects.Play(SoundEffect.DialogConfirm);
 
             Action<int> callback = this.onSelected;
             this.onSelected = null;
@@ -543,6 +552,8 @@ namespace WindingTale.UI.Dialogs
             this.onSelected = onSelected;
             this.openedFrame = Time.frameCount;
 
+            SoundEffects.Play(SoundEffect.CreatureDialogOpen);
+
             bool isMagic = infoType == CreatureInfoType.SelectMagic || infoType == CreatureInfoType.ViewMagic;
             itemsContainer.SetActive(!isMagic);
             magicContainer.SetActive(isMagic);
@@ -668,6 +679,8 @@ namespace WindingTale.UI.Dialogs
                 return;
             }
 
+            SoundEffects.Play(SoundEffect.DialogCancel);
+
             // The callback is cleared first: closing deactivates the GameObject, but a
             // second onCancel in the same frame (button click plus key press) would
             // otherwise report the cancellation twice.
@@ -687,6 +700,7 @@ namespace WindingTale.UI.Dialogs
         private void closeWithAnimation(Action onClosed)
         {
             isClosing = true;
+            SoundEffects.Play(SoundEffect.CreatureDialogClose);
 
             startSlide(false, () =>
             {

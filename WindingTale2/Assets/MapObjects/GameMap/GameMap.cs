@@ -11,6 +11,7 @@ using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.UI.Audio;
 
 namespace WindingTale.MapObjects.GameMap
 {
@@ -433,6 +434,8 @@ namespace WindingTale.MapObjects.GameMap
 
             currentMenuComponent = menuComponent;
 
+            SoundEffects.Play(SoundEffect.MapMenuOpen);
+
             // Dim the tiles the menu covers, and the creatures standing on them, so the
             // menu reads clearly (same treatment as the move/target indicators).
             setMenuTilesFaded(menu, true);
@@ -451,6 +454,9 @@ namespace WindingTale.MapObjects.GameMap
                 currentMenuComponent.gameObject.name = "menu_closing";
                 currentMenuComponent.CloseMenu();
                 currentMenuComponent = null;
+
+                // Held back briefly: a menu opening in its place plays only the open.
+                SoundEffects.Play(SoundEffect.MapMenuClose);
             }
 
             // Restore the tiles and creatures dimmed by ShowMenu.

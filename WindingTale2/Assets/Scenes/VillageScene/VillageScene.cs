@@ -7,6 +7,7 @@ using WindingTale.Core.Definitions;
 using WindingTale.Core.Files;
 using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.UI.Utils;
+using WindingTale.UI.Audio;
 
 /// <summary>
 /// The village between two chapters. It is handed over on black by the field scene's
@@ -587,6 +588,7 @@ public class VillageScene : MonoBehaviour
             {
                 MoveToSpot(spotIndex + 1);
             }
+            SoundEffects.Play(SoundEffect.DialogCursorMove);
 
             // A press may have started, advanced, broken or finished the sequence; put the
             // right picture up for wherever that left things.
@@ -598,11 +600,13 @@ public class VillageScene : MonoBehaviour
             {
                 MoveToSpot(spotIndex - 1);
             }
+            SoundEffects.Play(SoundEffect.DialogCursorMove);
 
             RefreshBackground();
         }
         else if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
+            SoundEffects.Play(SoundEffect.DialogConfirm);
             if (spotIndex == 0)
             {
                 //// Pos 0 is the way on to the next chapter, not a shop.

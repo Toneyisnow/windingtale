@@ -290,6 +290,18 @@ namespace WindingTale.Core.Definitions
             return false;
         }
 
+        /// <summary>Chapter 20's swamp creatures (icon 761, drawn empty: they lurk under the water).</summary>
+        public const int SwampLurkerDefinitionId = 52001;
+
+        /// <summary>
+        /// A swamp lurker: it never leaves the marsh (MoveRangeFinder.GetMoveCost) and
+        /// selecting it on the map does nothing (IdleState) -- it is hidden in the water.
+        /// </summary>
+        public bool IsSwampLurker()
+        {
+            return DefinitionId == SwampLurkerDefinitionId;
+        }
+
         /// <summary>
         /// Mounted knights, occupations 131 and 132 as in the original's CreatureDefinition.m
         /// (133 is the flying knight -- see CanFly).

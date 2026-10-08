@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using WindingTale.Core.Common;
+using WindingTale.UI.Audio;
 
 /// <summary>
 /// A yes / no question pushed over the shop's dialog stack -- "确定要读取游戏吗？" before a
@@ -104,21 +105,31 @@ public class ShoppingConfirmDialog : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
+            if (yesSelected)
+            {
+                SoundEffects.Play(SoundEffect.DialogCursorMove);
+            }
             yesSelected = false;
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
+            if (!yesSelected)
+            {
+                SoundEffects.Play(SoundEffect.DialogCursorMove);
+            }
             yesSelected = true;
         }
         else if (Input.GetKeyDown(KeyCode.Space)
             || Input.GetKeyDown(KeyCode.Return)
             || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
+            SoundEffects.Play(yesSelected ? SoundEffect.DialogConfirm : SoundEffect.DialogCancel);
             Answer(yesSelected);
         }
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace))
         {
             // Cancel is No, for every question the shop asks.
+            SoundEffects.Play(SoundEffect.DialogCancel);
             Answer(false);
         }
 

@@ -67,9 +67,14 @@ namespace WindingTale.Chapters
             return dead;
         }
 
-        protected FDEvent LoadTeamEvent(int eventId, CreatureFaction faction, Action<GameMain> action)
+        /// <summary>
+        /// Fires when the faction has nobody left on the map. For the enemy team, any
+        /// definition ids passed in do not count -- Chapter 20 is won with its swamp
+        /// lurkers still in the water.
+        /// </summary>
+        protected FDEvent LoadTeamEvent(int eventId, CreatureFaction faction, Action<GameMain> action, params int[] ignoredDefinitionIds)
         {
-            TeamEliminatedEvent condition = new TeamEliminatedEvent(eventId, faction, () => action(gameMain));
+            TeamEliminatedEvent condition = new TeamEliminatedEvent(eventId, faction, () => action(gameMain), ignoredDefinitionIds);
             this.AllEvents.Add(condition);
             return condition;
         }

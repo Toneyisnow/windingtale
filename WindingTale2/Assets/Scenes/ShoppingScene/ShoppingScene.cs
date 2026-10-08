@@ -8,6 +8,7 @@ using WindingTale.Core.Files;
 using WindingTale.Core.Objects;
 using WindingTale.UI.Dialogs;
 using WindingTale.UI.Utils;
+using WindingTale.UI.Audio;
 
 /// <summary>
 /// A single shop, reached from the village by walking the cursor onto its spot and
@@ -350,6 +351,7 @@ public class ShoppingScene : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace))
         {
+            SoundEffects.Play(SoundEffect.DialogCancel);
             LeaveShop();
         }
     }
@@ -832,6 +834,7 @@ public class ShoppingScene : MonoBehaviour
 
         record.TotalMoney -= pendingBuyItem.Price;
         RefreshMoneyBar();
+        SoundEffects.Play(SoundEffect.ShopPurchase);
 
         ShowBoughtAnimation();
     }
@@ -1185,6 +1188,7 @@ public class ShoppingScene : MonoBehaviour
         }
 
         RefreshMoneyBar();
+        SoundEffects.Play(SoundEffect.Revive);
     }
 
     /// <summary>

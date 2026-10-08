@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WindingTale.UI.Audio;
 
 
 namespace WindingTale.MapObjects.CreatureIcon
@@ -41,6 +42,8 @@ namespace WindingTale.MapObjects.CreatureIcon
 
         private void SpawnExplosion()
         {
+            SoundEffects.Play(SoundEffect.CreatureDeath);
+
             // Measure creature bounds before hiding, then hide renderers
             Bounds creatureBounds = new();
             bool first = true;

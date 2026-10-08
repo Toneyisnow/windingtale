@@ -9,6 +9,7 @@ using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
 using WindingTale.FightObjects;
 using WindingTale.UI.Utils;
+using WindingTale.UI.Audio;
 
 namespace WindingTale.Scenes.GameBattleScene
 {
@@ -202,6 +203,8 @@ namespace WindingTale.Scenes.GameBattleScene
                 return;
             }
             spellStarted = true;
+
+            SoundEffects.PlayMagicStart(DefinitionStore.Instance.GetMagicDefinition(magicResult.MagicId));
 
             // Both creatures hold their pose while the magic plays; the caster finishes its
             // animation (and so moves the battle on) only once every target has taken it.

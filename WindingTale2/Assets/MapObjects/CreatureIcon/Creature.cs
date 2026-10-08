@@ -73,10 +73,49 @@ namespace WindingTale.MapObjects.CreatureIcon
                 if (originalMaterials1 != null && r1 != null) { r1.sharedMaterials = originalMaterials1; originalMaterials1 = null; }
                 if (originalMaterials2 != null && r2 != null) { r2.sharedMaterials = originalMaterials2; originalMaterials2 = null; }
                 if (originalMaterials3 != null && r3 != null) { r3.sharedMaterials = originalMaterials3; originalMaterials3 = null; }
+
+                // The saved "originals" may be the faded copies a menu put on while it covered
+                // this creature (greyed out under an open menu, e.g. by 结束回合): bring the
+                // restored materials back to the opacity the creature should have now.
+                if (transparencyAlpha < 1f)
+                {
+                    SetTransparency(transparencyAlpha);
+                }
+                else if (HasFadedMaterial())
+                {
+                    ResetTransparency();
+                }
             }
         }
 
+        /// <summary>Whether any clip still renders with a see-through material.</summary>
+        private bool HasFadedMaterial()
+        {
+            foreach (string clip in ClipNames)
+            {
+                MeshRenderer renderer = GetClipRenderer(clip);
+                if (renderer == null)
+                {
+                    continue;
+                }
+
+                foreach (Material m in renderer.sharedMaterials)
+                {
+                    if (m != null && m.HasProperty("_Color") && m.color.a < 1f)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         private static readonly string[] ClipNames = { "Clip_01", "Clip_02", "Clip_03" };
+
+        // The opacity SetTransparency last asked for (1 = opaque), so a material swap
+        // (greyout) can put it back on whatever materials it restores.
+        private float transparencyAlpha = 1f;
 
         // Materials saved while the white recovering flash is up. Kept separate from the
         // greyout originals: a creature flashes first and is greyed out afterwards, and
@@ -135,6 +174,8 @@ namespace WindingTale.MapObjects.CreatureIcon
         /// </summary>
         public void SetTransparency(float alpha)
         {
+            transparencyAlpha = alpha;
+
             foreach (string clip in ClipNames)
             {
                 MeshRenderer renderer = GetClipRenderer(clip);
@@ -160,6 +201,8 @@ namespace WindingTale.MapObjects.CreatureIcon
         /// </summary>
         public void ResetTransparency()
         {
+            transparencyAlpha = 1f;
+
             foreach (string clip in ClipNames)
             {
                 MeshRenderer renderer = GetClipRenderer(clip);

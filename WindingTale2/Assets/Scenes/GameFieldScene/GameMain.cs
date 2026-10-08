@@ -20,6 +20,7 @@ using WindingTale.Scenes.GameBattleScene;
 using WindingTale.Scenes.GameFieldScene.Activities;
 using WindingTale.UI.Dialogs;
 using WindingTale.UI.Utils;
+using WindingTale.UI.Audio;
 
 namespace WindingTale.Scenes.GameFieldScene
 {
@@ -275,8 +276,10 @@ namespace WindingTale.Scenes.GameFieldScene
         /// conversation, instead of playing on until the field fades to the next scene.
         /// Common to every chapter -- they all end through OnGameWin / OnGameEnding. The flag
         /// keeps the turn cycle, which may still have steps queued, from starting a track again.
+        /// A chapter that only calls OnGameWin once a later scene has played (17, 20) calls
+        /// this itself as soon as the battle is won, so the music still goes before the talk.
         /// </summary>
-        private void FadeOutMusicForVictory()
+        public void FadeOutMusicForVictory()
         {
             victoryReached = true;
             StopBackgroundMusic();
@@ -543,6 +546,11 @@ namespace WindingTale.Scenes.GameFieldScene
                 GlobalVariables.Set("LocalTaiId", GetLocalTaiId(creature));
                 GlobalVariables.Set("MagicResult", result);
                 SceneManager.LoadScene("GameBattleScene", LoadSceneMode.Additive);
+            }
+            else
+            {
+                // No battle scene: the spell is heard on the map instead.
+                SoundEffects.PlayFieldMagic(magicId);
             }
 
             // Apply the results
@@ -888,6 +896,11 @@ namespace WindingTale.Scenes.GameFieldScene
             // What a restorative did, floated over the target the same way a healing
             // spell's is: the amount really gained, clamped to the maximum.
             ConsumableItemDefinition consumable = DefinitionStore.Instance.GetItemDefinition(itemId) as ConsumableItemDefinition;
+            if (consumable != null)
+            {
+                SoundEffects.PlayItemUse(SoundEffectTable.KindOf(consumable.UseType));
+            }
+
             if (consumable != null && (consumable.UseType == ItemUseType.Hp || consumable.UseType == ItemUseType.Mp))
             {
                 RecoverType recoverType = consumable.UseType == ItemUseType.Mp ? RecoverType.Mp : RecoverType.Hp;

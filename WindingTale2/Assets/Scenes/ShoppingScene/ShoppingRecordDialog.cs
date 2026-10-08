@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using WindingTale.Core.Files;
+using WindingTale.UI.Audio;
 
 /// <summary>
 /// The save / load slot picker, pushed over the shop's home dialog when the player
@@ -153,12 +154,12 @@ public class ShoppingRecordDialog : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            MoveSelection(-1);
+            MoveSelectionWithSound(-1);
             repeatTimer = RepeatInitialDelay;
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            MoveSelection(1);
+            MoveSelectionWithSound(1);
             repeatTimer = RepeatInitialDelay;
         }
         else if (Input.GetKey(KeyCode.UpArrow) != Input.GetKey(KeyCode.DownArrow))
@@ -168,7 +169,7 @@ public class ShoppingRecordDialog : MonoBehaviour
             if (repeatTimer <= 0f)
             {
                 repeatTimer = RepeatInterval;
-                MoveSelection(Input.GetKey(KeyCode.UpArrow) ? -1 : 1);
+                MoveSelectionWithSound(Input.GetKey(KeyCode.UpArrow) ? -1 : 1);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Space)
@@ -192,6 +193,18 @@ public class ShoppingRecordDialog : MonoBehaviour
     /// bottom. At the first and last of the twenty slots the step is simply refused -- there
     /// is no wrap from slot 20 back to slot 1.
     /// </summary>
+    /// <summary>MoveSelection, with the cursor sound when the highlight (or page) actually moved.</summary>
+    private void MoveSelectionWithSound(int delta)
+    {
+        int pageBefore = currentPage;
+        int indexBefore = selectedIndex;
+        MoveSelection(delta);
+        if (pageBefore != currentPage || indexBefore != selectedIndex)
+        {
+            SoundEffects.Play(SoundEffect.DialogCursorMove);
+        }
+    }
+
     private void MoveSelection(int delta)
     {
         int next = selectedIndex + delta;
@@ -335,6 +348,7 @@ public class ShoppingRecordDialog : MonoBehaviour
         }
 
         Debug.Log("ShoppingRecordDialog: selected slot " + slotIndex);
+        SoundEffects.Play(SoundEffect.DialogConfirm);
 
         if (OnSlotSelected != null)
         {
@@ -351,6 +365,7 @@ public class ShoppingRecordDialog : MonoBehaviour
 
     private void Cancel()
     {
+        SoundEffects.Play(SoundEffect.DialogCancel);
         if (OnSlotSelected != null)
         {
             OnSlotSelected(-1);

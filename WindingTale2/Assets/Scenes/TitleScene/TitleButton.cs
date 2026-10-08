@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using WindingTale.UI.Audio;
 
 public class TitleButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
@@ -28,6 +29,7 @@ public class TitleButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        SoundEffects.Play(SoundEffect.DialogCursorMove);
         StopAllCoroutines();
         StartCoroutine(ScaleTo(originalScale * hoverScaleFactor));
         StartCoroutine(ChangeColor(hoverColor));
@@ -42,6 +44,7 @@ public class TitleButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        SoundEffects.Play(SoundEffect.DialogConfirm);
         StopAllCoroutines();
         StartCoroutine(ScaleTo(originalScale * clickScaleFactor));
         StartCoroutine(ChangeColor(clickColor));

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -144,6 +145,12 @@ namespace WindingTale.Core.Algorithms
                 return -1;
             }
 
+            // The swamp lurkers live in the marsh and never come up onto anything else.
+            if (creature.Definition.IsSwampLurker() && targetShape.Type != ShapeType.Marsh)
+            {
+                return -1;
+            }
+
             int moveCost = 0;
             if (creature.Definition.CanFly())
             {
@@ -163,6 +170,16 @@ namespace WindingTale.Core.Algorithms
             else
             {
                 moveCost = targetShape.MoveCost;
+            }
+
+            // Marsh never costs more than CalculatedMv - 1, so even the slowest walker
+            // (Sophia, MV 3, against a marsh cost of 3) gets two tiles a turn through it:
+            // the first step is paid at plain cost from the tile it stands on, and the
+            // second needs only this much left over. Anyone who already managed two tiles
+            // has MV - 1 >= the cost and is unaffected; other ground is untouched.
+            if (targetShape.Type == ShapeType.Marsh && moveCost > 0)
+            {
+                moveCost = Math.Min(moveCost, Math.Max(PlainMoveCost, creature.CalculatedMv - PlainMoveCost));
             }
 
             return moveCost;

@@ -27,6 +27,12 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             FDCreature creature = this.fdMap.GetCreatureAt(position);
             if (creature != null)
             {
+                if (creature.Definition != null && creature.Definition.IsSwampLurker())
+                {
+                    // Hidden in the water: selecting it does nothing at all.
+                    return this;
+                }
+
                 if (creature.Faction == CreatureFaction.Friend && creature.CanTakeAction())
                 {
                     return new ShowMoveRangeState(gameMain, creature);

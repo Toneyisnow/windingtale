@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using WindingTale.Core.Files;
+using WindingTale.UI.Audio;
 
 /// <summary>
 /// The first thing shown when the player walks into a shop: a one-line greeting and four
@@ -162,15 +163,18 @@ public class ShoppingHomeDialog : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             MoveSelection(-1);
+            SoundEffects.Play(SoundEffect.DialogCursorMove);
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             MoveSelection(1);
+            SoundEffects.Play(SoundEffect.DialogCursorMove);
         }
         else if (Input.GetKeyDown(KeyCode.Space)
             || Input.GetKeyDown(KeyCode.Return)
             || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
+            SoundEffects.Play(SoundEffect.DialogConfirm);
             SelectAction(selectedIndex);
         }
 

@@ -116,6 +116,7 @@
     <Compile Include="Assets\Scenes\ShoppingScene\ShoppingRecordDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\BattleResults.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\SelectAttackTargetState.cs" />
+    <Compile Include="Assets\Scripts\UI\Audio\SoundEffects.cs" />
     <Compile Include="Assets\MapObjects\Menus\MenuItemBlink.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureIdleSyned.cs" />
     <Compile Include="Assets\Scripts\Core\Algorithms\CreatureFormula.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Assets\Resources\Animations\exploration\ExplosionPlayer.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\TalkActivity.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActivityQueue.cs" />
+    <Compile Include="Assets\Scripts\UI\Audio\SoundEffectTable.cs" />
     <Compile Include="Assets\Scripts\AI\AIHandler.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\SelectItemExchangeTargetState.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\ShowMoveRangeState.cs" />

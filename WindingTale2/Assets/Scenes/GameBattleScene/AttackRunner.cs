@@ -10,6 +10,7 @@ using WindingTale.Core.Objects;
 using WindingTale.FightObjects;
 using WindingTale.UI.Utils;
 using UnityEngine.UI;
+using WindingTale.UI.Audio;
 
 namespace WindingTale.Scenes.GameBattleScene
 {
@@ -70,13 +71,6 @@ namespace WindingTale.Scenes.GameBattleScene
 
         private bool animationFinished = false;
         private DateTime animationFinishTime;
-
-        private const string HitSoundClip = "Audios/Effects/sfx_fight_hit";
-        private const string MissSoundClip = "Audios/Effects/sfx_flight_miss";
-
-        private AudioSource soundSource = null;
-        private AudioClip hitSound = null;
-        private AudioClip missSound = null;
 
 
         // Start is called before the first frame update
@@ -274,7 +268,9 @@ namespace WindingTale.Scenes.GameBattleScene
             bool applyKnockback = hitDamage != null && !hitDamage.HasMissed;
 
             // Every strike is heard: a thwack when it lands, a swish through the air when it misses.
-            playStrikeSound(applyKnockback);
+            // The striker is whoever is not taking this hit: the subject, or the target countering.
+            FDCreature striker = (hitObject == targetObject) ? attackResult.Subject : attackResult.Target;
+            playStrikeSound(applyKnockback, striker);
 
             // A critical hit flashes the screen edge white, once, on its first hit frame.
             if (applyKnockback && hitDamage.IsCritical && criticalFlashedIndex != currentAnimationIndex)
@@ -344,21 +340,15 @@ namespace WindingTale.Scenes.GameBattleScene
             Destroy(ring);
         }
 
-        private void playStrikeSound(bool landed)
+        private void playStrikeSound(bool landed, FDCreature striker)
         {
-            if (soundSource == null)
+            if (landed)
             {
-                soundSource = gameObject.AddComponent<AudioSource>();
-                soundSource.playOnAwake = false;
-                soundSource.spatialBlend = 0f;
-                hitSound = Resources.Load<AudioClip>(HitSoundClip);
-                missSound = Resources.Load<AudioClip>(MissSoundClip);
+                SoundEffects.PlayBattleHit(striker?.GetAttackItem());
             }
-
-            AudioClip clip = landed ? hitSound : missSound;
-            if (clip != null)
+            else
             {
-                soundSource.PlayOneShot(clip);
+                SoundEffects.Play(SoundEffect.BattleMiss);
             }
         }
 

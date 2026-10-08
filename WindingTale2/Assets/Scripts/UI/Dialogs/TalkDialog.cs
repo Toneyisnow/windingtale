@@ -10,6 +10,7 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.UI.Audio;
 
 public class TalkDialog : MonoBehaviour
 {
@@ -157,6 +158,7 @@ public class TalkDialog : MonoBehaviour
         else if (!needConfirm)
         {
             // Show only: pressing any keyboard or mouse button dismisses the dialog.
+            SoundEffects.Play(SoundEffect.DialogConfirm);
             onConfirm();
         }
         else
@@ -165,14 +167,23 @@ public class TalkDialog : MonoBehaviour
             // Space / Enter triggers whichever is selected; Esc / Backspace cancels, i.e. picks No.
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace))
             {
+                SoundEffects.Play(SoundEffect.DialogCancel);
                 onCancel();
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
+                if (confirmSelected)
+                {
+                    SoundEffects.Play(SoundEffect.DialogCursorMove);
+                }
                 confirmSelected = false;
             }
             else if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
+                if (!confirmSelected)
+                {
+                    SoundEffects.Play(SoundEffect.DialogCursorMove);
+                }
                 confirmSelected = true;
             }
             else if (Input.GetKeyDown(KeyCode.Space)
@@ -181,10 +192,12 @@ public class TalkDialog : MonoBehaviour
             {
                 if (confirmSelected)
                 {
+                    SoundEffects.Play(SoundEffect.DialogConfirm);
                     onConfirm();
                 }
                 else
                 {
+                    SoundEffects.Play(SoundEffect.DialogCancel);
                     onCancel();
                 }
             }
@@ -563,6 +576,7 @@ public class TalkDialog : MonoBehaviour
             
             String nowText = fullText.Substring(0, i + 1);
             activeTextObj.GetComponent<TextMeshProUGUI>().text = nowText;
+            PlayTypingSound(fullText[i]);
 
             //Wait a certain amount of time, then continue with the for loop
             yield return new WaitForSeconds(0.05f);
@@ -644,6 +658,7 @@ public class TalkDialog : MonoBehaviour
                 }
 
                 text.text = above + lines[line].Substring(0, i);
+                PlayTypingSound(lines[line][i - 1]);
                 yield return new WaitForSeconds(0.05f);
             }
 
@@ -654,6 +669,15 @@ public class TalkDialog : MonoBehaviour
                 SetAnchoredY(rect, baseY);
                 yield break;
             }
+        }
+    }
+
+    /// <summary>The typing tick for one character put on screen; spaces and line breaks are silent.</summary>
+    private static void PlayTypingSound(char typed)
+    {
+        if (!char.IsWhiteSpace(typed))
+        {
+            SoundEffects.Play(SoundEffect.TalkTyping);
         }
     }
 

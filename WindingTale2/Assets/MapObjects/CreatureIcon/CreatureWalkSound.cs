@@ -1,35 +1,35 @@
 using System.Collections;
 using UnityEngine;
 using WindingTale.Core.Definitions;
+using WindingTale.UI.Audio;
 
 namespace WindingTale.MapObjects.CreatureIcon
 {
     /// <summary>
-    /// The footstep sound of a creature walking on the map: loops the clip that fits how the
-    /// creature moves -- wings for a flyer, feet for everyone else (knights included) --
-    /// for as long as the walk lasts, then fades it out briefly so the loop is never cut off
-    /// mid-step. Lives on its own child object, which removes itself once the fade is done.
+    /// The footstep sound of a creature walking on the map: loops the clip for what it walks
+    /// on (SoundEffectTable.Walks -- wings for a flyer, else normal / snow / stone / marsh
+    /// by the tile) for as long as the walk lasts, switching as the ground changes, then
+    /// fades it out briefly so the loop is never cut off mid-step. Lives on its own child
+    /// object, which removes itself once the fade is done.
     /// </summary>
     public class CreatureWalkSound : MonoBehaviour
     {
-        private const string NormalClip = "Audios/Effects/sfx_move_normal";
-        private const string FlyClip = "Audios/Effects/sfx_move_fly";
-
         private const float Volume = 0.8f;
         private const float FadeOutDuration = 0.15f;
 
         private AudioSource audioSource;
 
+        private WalkSurface surface;
+
         /// <summary>
-        /// Starts the walking sound for <paramref name="definition"/> under
-        /// <paramref name="creatureIcon"/>; returns null when the clip cannot be loaded.
+        /// Starts the walking sound for <paramref name="surface"/> under
+        /// <paramref name="creatureIcon"/>; returns null when there is no clip for it.
         /// </summary>
-        public static CreatureWalkSound Play(Transform creatureIcon, CreatureDefinition definition)
+        public static CreatureWalkSound Play(Transform creatureIcon, WalkSurface surface)
         {
-            AudioClip clip = Resources.Load<AudioClip>(ClipNameFor(definition));
+            AudioClip clip = SoundEffects.GetWalkClip(surface);
             if (clip == null)
             {
-                Debug.LogWarning("Cannot load walk sound: " + ClipNameFor(definition));
                 return null;
             }
 
@@ -37,6 +37,7 @@ namespace WindingTale.MapObjects.CreatureIcon
             holder.transform.SetParent(creatureIcon, false);
 
             CreatureWalkSound sound = holder.AddComponent<CreatureWalkSound>();
+            sound.surface = surface;
             sound.audioSource = holder.AddComponent<AudioSource>();
             sound.audioSource.clip = clip;
             sound.audioSource.loop = true;
@@ -48,15 +49,23 @@ namespace WindingTale.MapObjects.CreatureIcon
             return sound;
         }
 
-        /// <summary>Knights walk with the normal footsteps; only flyers sound different.</summary>
-        private static string ClipNameFor(CreatureDefinition definition)
+        /// <summary>The walker has stepped onto different ground: switch to its loop.</summary>
+        public void SetSurface(WalkSurface newSurface)
         {
-            if (definition.CanFly())
+            if (newSurface == surface)
             {
-                return FlyClip;
+                return;
+            }
+            surface = newSurface;
+
+            AudioClip clip = SoundEffects.GetWalkClip(newSurface);
+            if (clip == null || clip == audioSource.clip)
+            {
+                return;
             }
 
-            return NormalClip;
+            audioSource.clip = clip;
+            audioSource.Play();
         }
 
         /// <summary>Fades the loop out and removes the sound object.</summary>

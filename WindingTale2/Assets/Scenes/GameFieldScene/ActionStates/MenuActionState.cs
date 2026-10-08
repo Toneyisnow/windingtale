@@ -175,6 +175,11 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                                         this.playerInterface.onUpdateState(new IdleState(gameMain));
                                     }
                                 }));
+
+                                // The chest is opened and what is inside said first, then the
+                                // full bag. Inserted after the prompt so that it plays before it.
+                                FDMessage found = FDMessage.Create(FDMessage.MessageTypes.Information, 3, strParam1: treasureItem.Name);
+                                gameMain.InsertActivity(new TalkActivity(found, creature));
                             };
                         }
                         else

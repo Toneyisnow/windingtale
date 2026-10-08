@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using WindingTale.Core.Common;
 using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
+using WindingTale.UI.Audio;
 
 namespace WindingTale.Scenes.GameFieldScene
 {
@@ -178,6 +179,8 @@ namespace WindingTale.Scenes.GameFieldScene
 
             if (Input.anyKeyDown && Time.frameCount != openedFrame)
             {
+                SoundEffects.Play(SoundEffect.DialogConfirm);
+
                 // Hidden at once, released next frame: PlayerInterface reads the same key
                 // press this frame, and must still find the map blocked.
                 closing = true;

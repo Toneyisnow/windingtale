@@ -7,6 +7,7 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene.ActionStates;
+using WindingTale.UI.Audio;
 
 namespace WindingTale.Scenes.GameFieldScene
 {
@@ -204,6 +205,7 @@ namespace WindingTale.Scenes.GameFieldScene
             if (!next.AreSame(cursor))
             {
                 gameMain.gameMap.SetCursorTo(next);
+                SoundEffects.Play(SoundEffect.MapCursorMove);
             }
 
             gameMain.gameMap.BeginCursorEdgeFollow();
@@ -271,6 +273,7 @@ namespace WindingTale.Scenes.GameFieldScene
             if (!cursorPos.AreSame(position))
             {
                 gameMain.gameMap.SetCursorTo(position);
+                SoundEffects.Play(SoundEffect.MapCursorMove);
                 return;
             }
 

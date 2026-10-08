@@ -6,6 +6,9 @@ using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.GameMap;
+using WindingTale.Core.Definitions;
+using WindingTale.Scenes.GameFieldScene;
+using WindingTale.UI.Audio;
 
 namespace WindingTale.MapObjects.CreatureIcon
 {
@@ -41,6 +44,10 @@ namespace WindingTale.MapObjects.CreatureIcon
 
         private CreatureWalkSound walkSound = null;
 
+        // The tile the walker is over, for the footsteps: the one it is nearer to along the
+        // current segment (path vertexes are only the corners).
+        private FDPosition soundTile = null;
+
         public void Init(FDMovePath path)
         {
             this.movePath = path;
@@ -52,7 +59,8 @@ namespace WindingTale.MapObjects.CreatureIcon
             {
                 pathIndex = 1;
                 StartMove(path.Vertexes[0], path.Vertexes[1]);
-                walkSound = CreatureWalkSound.Play(this.transform, this.creature.Definition);
+                soundTile = path.Vertexes[0];
+                walkSound = CreatureWalkSound.Play(this.transform, GetWalkSurface(soundTile));
             }
         }
 
@@ -78,6 +86,7 @@ namespace WindingTale.MapObjects.CreatureIcon
 
 
             bool reached = TakeStep();
+            UpdateWalkSurface();
             if (reached)
             {
                 if (pathIndex < movePath.Vertexes.Count - 1)
@@ -109,6 +118,43 @@ namespace WindingTale.MapObjects.CreatureIcon
             {
                 walkSound.Stop();
             }
+        }
+
+        /// <summary>Switches the footsteps when the walker crosses onto a tile of other ground.</summary>
+        private void UpdateWalkSurface()
+        {
+            if (walkSound == null || pathIndex <= 0 || pathIndex >= movePath.Vertexes.Count)
+            {
+                return;
+            }
+
+            FDPosition from = movePath.Vertexes[pathIndex - 1];
+            FDPosition to = movePath.Vertexes[pathIndex];
+            int dx = to.X - from.X;
+            int dy = to.Y - from.Y;
+            int steps = Math.Abs(dx) + Math.Abs(dy);
+            float length = Vector3.Distance(currentVector, nextVector);
+            if (steps == 0 || length <= 0f)
+            {
+                return;
+            }
+
+            int step = Mathf.Clamp(Mathf.RoundToInt(travelled / length * steps), 0, steps);
+            FDPosition tile = FDPosition.At(from.X + Math.Sign(dx) * step, from.Y + Math.Sign(dy) * step);
+            if (soundTile != null && soundTile.AreSame(tile))
+            {
+                return;
+            }
+
+            soundTile = tile;
+            walkSound.SetSurface(GetWalkSurface(tile));
+        }
+
+        private WalkSurface GetWalkSurface(FDPosition tile)
+        {
+            GameMain gameMain = GameMain.getDefault();
+            ShapeDefinition shape = gameMain?.gameMap?.Map?.Field?.GetShapeAt(tile);
+            return SoundEffects.GetWalkSurface(this.creature.Definition, shape);
         }
 
         private bool TakeStep()

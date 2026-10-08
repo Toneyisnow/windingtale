@@ -225,6 +225,9 @@ namespace WindingTale.Chapters
         /// </summary>
         private void EnemyClear(GameMain gameMain)
         {
+            // The battle music goes now, before the talk; OnGameWin only comes after it.
+            gameMain.FadeOutMusicForVictory();
+
             // Talking
             if (!midiLeavesAfterWin)
             {
