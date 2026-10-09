@@ -122,11 +122,17 @@ namespace WindingTale.UI.Audio
         }
 
         /// <summary>
-        /// A strike that lands, by the striker's weapon: its own clip, else its category's,
-        /// else the common BattleHit.
+        /// A strike that lands: the striker's own clip by fight animation id, else its weapon's
+        /// own, else the weapon category's, else the common BattleHit.
         /// </summary>
-        public static void PlayBattleHit(AttackItemDefinition weapon)
+        public static void PlayBattleHit(int strikerAnimationId, AttackItemDefinition weapon)
         {
+            if (SoundEffectTable.HitByAnimationId.TryGetValue(strikerAnimationId, out string ownClip))
+            {
+                PlayClip(ownClip);
+                return;
+            }
+
             if (weapon != null
                 && (SoundEffectTable.HitByItemId.TryGetValue(weapon.ItemId, out string clipName)
                     || SoundEffectTable.HitByWeaponCategory.TryGetValue((int)weapon.Category, out clipName)))
@@ -286,6 +292,7 @@ namespace WindingTale.UI.Audio
             names.AddRange(SoundEffectTable.WindUpByAnimationId.Values);
             names.AddRange(SoundEffectTable.HitByWeaponCategory.Values);
             names.AddRange(SoundEffectTable.HitByItemId.Values);
+            names.AddRange(SoundEffectTable.HitByAnimationId.Values);
             names.AddRange(SoundEffectTable.MagicStartByType.Values);
             names.AddRange(SoundEffectTable.MagicStartById.Values);
             names.AddRange(SoundEffectTable.FieldMagicById.Values);

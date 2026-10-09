@@ -230,31 +230,16 @@ namespace WindingTale.UI.Dialogs
         /// <summary>
         /// Moves the highlight by one grid step. A step that would leave the grid, or land on
         /// a slot with nothing in it, is ignored - the highlight simply stays where it is.
+        /// On the item page the highlight only ever rests on an item this dialog can pick:
+        /// see findItemTarget.
         /// </summary>
         private void moveSelection(int deltaColumn, int deltaRow)
         {
-            int columns = isMagicPage ? MagicColumns : ItemColumns;
-            int column = getSlotColumn(selectedSlotIndex) + deltaColumn;
-            int row = getSlotRow(selectedSlotIndex) + deltaRow;
+            int target = isMagicPage
+                ? findMagicTarget(deltaColumn, deltaRow)
+                : findItemTarget(deltaColumn, deltaRow);
 
-            // The item grid grows downwards with the item count, so only its columns are
-            // bounded here; the magic grid is a fixed 3 x 4.
-            if (column < 0 || column >= columns || row < 0)
-            {
-                return;
-            }
-            if (isMagicPage && row >= MagicRows)
-            {
-                return;
-            }
-
-            int target = isMagicPage ? column * MagicRows + row : row * ItemColumns + column;
-            if (target >= slotCount)
-            {
-                return;
-            }
-
-            if (target == selectedSlotIndex)
+            if (target < 0 || target == selectedSlotIndex)
             {
                 return;
             }
@@ -262,6 +247,74 @@ namespace WindingTale.UI.Dialogs
             selectedSlotIndex = target;
             refreshHighlight();
             SoundEffects.Play(SoundEffect.DialogCursorMove);
+        }
+
+        /// <summary>One step on the fixed 3 x 4 magic grid, or -1 when it leads nowhere.</summary>
+        private int findMagicTarget(int deltaColumn, int deltaRow)
+        {
+            int column = getSlotColumn(selectedSlotIndex) + deltaColumn;
+            int row = getSlotRow(selectedSlotIndex) + deltaRow;
+
+            if (column < 0 || column >= MagicColumns || row < 0 || row >= MagicRows)
+            {
+                return -1;
+            }
+
+            int target = column * MagicRows + row;
+            return target < slotCount ? target : -1;
+        }
+
+        /// <summary>
+        /// The item the arrow lands on, skipping every item this dialog cannot pick (a use
+        /// dialog's equipment, an equip dialog's potions ...), or -1 when there is none that
+        /// way. Left / right only look across the same row. Up / down walk row by row in that
+        /// direction and take the first row with a pickable item, preferring the current
+        /// column -- so an item in the other column is still reachable when the one straight
+        /// above / below cannot be picked.
+        /// </summary>
+        private int findItemTarget(int deltaColumn, int deltaRow)
+        {
+            int column = getSlotColumn(selectedSlotIndex);
+            int row = getSlotRow(selectedSlotIndex);
+
+            if (deltaRow == 0)
+            {
+                int targetColumn = column + deltaColumn;
+                if (targetColumn < 0 || targetColumn >= ItemColumns)
+                {
+                    return -1;
+                }
+
+                int target = row * ItemColumns + targetColumn;
+                return isPickableSlot(target) ? target : -1;
+            }
+
+            // The item grid grows downwards with the item count.
+            int rowCount = (slotCount + ItemColumns - 1) / ItemColumns;
+            for (int targetRow = row + deltaRow; targetRow >= 0 && targetRow < rowCount; targetRow += deltaRow)
+            {
+                int sameColumn = targetRow * ItemColumns + column;
+                if (isPickableSlot(sameColumn))
+                {
+                    return sameColumn;
+                }
+
+                for (int otherColumn = 0; otherColumn < ItemColumns; otherColumn++)
+                {
+                    int other = targetRow * ItemColumns + otherColumn;
+                    if (otherColumn != column && isPickableSlot(other))
+                    {
+                        return other;
+                    }
+                }
+            }
+
+            return -1;
+        }
+
+        private bool isPickableSlot(int index)
+        {
+            return index >= 0 && index < slotCount && slotSelectable[index];
         }
 
         private int getSlotColumn(int index)
@@ -276,12 +329,18 @@ namespace WindingTale.UI.Dialogs
 
         /// <summary>
         /// Confirms the entry at <paramref name="index"/>. A click also moves the highlight
-        /// there first, so clicking an unselectable entry leaves it highlighted but does
-        /// nothing else - the same outcome as walking onto it with the arrow keys.
+        /// there first, so clicking an unselectable magic leaves it highlighted but does
+        /// nothing else - the same outcome as walking onto it with the arrow keys. An
+        /// unselectable item cannot be highlighted at all, so clicking one does nothing.
         /// </summary>
         private void onSlotActivated(int index, bool moveHighlight)
         {
             if (isClosing || isViewOnly() || index < 0 || index >= slotCount)
+            {
+                return;
+            }
+
+            if (!isMagicPage && !slotSelectable[index])
             {
                 return;
             }
@@ -362,9 +421,11 @@ namespace WindingTale.UI.Dialogs
         }
 
         /// <summary>
-        /// The entry to open on: the first one that can actually be picked, falling back to
-        /// the first entry so something is always highlighted. View-only dialogs pass -1 to
-        /// leave the grid unhighlighted instead of calling this.
+        /// The entry to open on: the first one that can actually be picked. With nothing
+        /// pickable the magic page still highlights its first entry; the item page, whose
+        /// highlight never rests on an unpickable item, highlights nothing (-1), which also
+        /// leaves the keys with nothing to do but close. View-only dialogs pass -1 to leave
+        /// the grid unhighlighted instead of calling this.
         /// </summary>
         private int getFirstSelectableIndex()
         {
@@ -381,7 +442,7 @@ namespace WindingTale.UI.Dialogs
                 }
             }
 
-            return 0;
+            return isMagicPage ? 0 : -1;
         }
 
         /// <summary>
@@ -467,7 +528,7 @@ namespace WindingTale.UI.Dialogs
         /// would stack -- and appended after the name / attribute labels so getChild(0) / (1)
         /// keep pointing at them.
         /// </summary>
-        private void setupItemIcon(GameObject slot, ItemDefinition item)
+        private void setupItemIcon(GameObject slot, ItemDefinition item, bool equipped)
         {
             Image icon = ensureItemIcon(slot);
             if (icon == null)
@@ -475,7 +536,7 @@ namespace WindingTale.UI.Dialogs
                 return;
             }
 
-            Sprite sprite = ItemIconHelper.LoadIcon(item);
+            Sprite sprite = ItemIconHelper.LoadIcon(item, equipped);
             icon.sprite = sprite;
             icon.enabled = sprite != null;
             icon.gameObject.SetActive(true);
@@ -586,13 +647,13 @@ namespace WindingTale.UI.Dialogs
             int creatureEv = CreatureFormula.GetCalculatedEv(creature, map);
 
             this.levelLabel.GetComponent<TextMeshProUGUI>().text = StatText(creature.Level);
-            this.expLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit3(creature.Exp);
+            this.expLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2Max(creature.Exp);
             this.mvLabel.GetComponent<TextMeshProUGUI>().text = StatText(creature.Mv);
-            this.apLabel.GetComponent<TextMeshProUGUI>().text = StatText(creatureAp);
-            this.dpLabel.GetComponent<TextMeshProUGUI>().text = StatText(creatureDp);
+            this.apLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2Max(creatureAp);
+            this.dpLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2Max(creatureDp);
             this.dxLabel.GetComponent<TextMeshProUGUI>().text = StatText(creatureDx);
-            this.hitLabel.GetComponent<TextMeshProUGUI>().text = StatText(creatureHit);
-            this.evLabel.GetComponent<TextMeshProUGUI>().text = StatText(creatureEv);
+            this.hitLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2Max(creatureHit);
+            this.evLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2Max(creatureEv);
 
 
             isMagicPage = isMagic;
@@ -616,10 +677,16 @@ namespace WindingTale.UI.Dialogs
                     selectableAttr.text = item.ToAttributeString();
 
                     // The type icon (attack / defend / usable) before the name, the same face
-                    // the shop's Buy list shows.
-                    setupItemIcon(selectable, item);
+                    // the shop's Buy list shows -- red-backed for the weapon / armour worn.
+                    bool equipped = itemIndex == creature.AttackItemIndex || itemIndex == creature.DefendItemIndex;
+                    setupItemIcon(selectable, item, equipped);
 
-                    setupSlot(selectable, itemIndex, isItemSelectable(itemIndex, item), selectableText, selectableAttr);
+                    // Items are all written in white: what can be picked is shown by where
+                    // the highlight is allowed to go (findItemTarget), and what is worn by
+                    // the icon, not by red text.
+                    setupSlot(selectable, itemIndex, isItemSelectable(itemIndex, item));
+                    selectableText.color = SelectableTextColor;
+                    selectableAttr.color = SelectableTextColor;
                 }
                 for (int itemIndex = slotCount; itemIndex < MaxItemCount; itemIndex++)
                 {

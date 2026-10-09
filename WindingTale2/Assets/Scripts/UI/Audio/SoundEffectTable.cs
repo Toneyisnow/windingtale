@@ -43,9 +43,10 @@ namespace WindingTale.UI.Audio
         };
 
         /// <summary>
-        /// A landed strike by the attacker's weapon: the weapon's own clip (HitByItemId), else
-        /// its category's (HitByWeaponCategory, AttackItemDefinition.Category), else
-        /// SoundEffect.BattleHit -- also what an attacker with no weapon gets.
+        /// A landed strike: the attacker's own clip by fight animation id (HitByAnimationId),
+        /// else its weapon's own (HitByItemId), else the weapon category's (HitByWeaponCategory,
+        /// AttackItemDefinition.Category), else SoundEffect.BattleHit -- also what an attacker
+        /// with no weapon gets.
         /// </summary>
         public static readonly Dictionary<int, string> HitByWeaponCategory = new Dictionary<int, string>
         {
@@ -73,6 +74,17 @@ namespace WindingTale.UI.Audio
         };
 
         /// <summary>
+        /// One attacker's own landed-strike clip, by its fight animation id
+        /// (CreatureDefinition.AnimationId), overriding its weapon's.
+        /// </summary>
+        public static readonly Dictionary<int, string> HitByAnimationId = new Dictionary<int, string>
+        {
+            // 武术家 (chapter 21): its blows should land like punches, not like its claw (碎岩爪, category 6);
+            // the same clip as 拳头 (282).
+            { 726, "sfx_fight_hit_staff_2" },
+        };
+
+        /// <summary>
         /// One attacker's own wind-up, by its fight animation id (CreatureDefinition.AnimationId),
         /// overriding SoundEffect.BattleWindUp.
         /// </summary>
@@ -80,6 +92,9 @@ namespace WindingTale.UI.Audio
         {
             // The whip-wielding enemy (chapter 21).
             { 751, "sfx_fight_whip" },
+
+            // 精灵 (chapter 21): its crossbow charging.
+            { 717, "sfx_fight_prepare_canon" },
         };
 
         /// <summary>The footsteps looped while a creature walks, by what it walks on.</summary>
@@ -217,5 +232,11 @@ namespace WindingTale.UI.Audio
         /// menu to open the next plays just the open.
         /// </summary>
         public static float MenuCloseGraceSeconds = 0.15f;
+
+        /// <summary>
+        /// A strike's hit / miss sound is started this many seconds before the hit frame, to
+        /// make up for the delay between starting a sound and hearing it.
+        /// </summary>
+        public static float BattleHitLeadSeconds = 0.1f;
     }
 }

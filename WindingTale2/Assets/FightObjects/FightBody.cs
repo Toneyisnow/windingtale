@@ -20,6 +20,15 @@ namespace WindingTale.FightObjects
         private Action<int> onHit = null;
         private Action onFinish = null;
 
+        // The strike sound cue: called with the hit's index a little before each hit event
+        // (SoundEffectTable.BattleHitLeadSeconds), so the sound -- which the audio output
+        // delays -- is heard on the hit frame rather than after it. hitEventTimes are the
+        // attack clip's onAttackHit events as fractions of the clip; hitCuesFired counts the
+        // cues given this play of the clip, and re-arms with the wind-up below.
+        private Action<int> onHitCue = null;
+        private readonly List<float> hitEventTimes = new List<float>();
+        private int hitCuesFired = 0;
+
         // The wind-up sound plays once per attack, when the clip reaches its second frame.
         // It re-arms only once the animator has left the attack state, so a double attack
         // (the clip played again) winds up twice but a clip lingering on its last frame does not.
@@ -35,7 +44,7 @@ namespace WindingTale.FightObjects
         // Update is called once per frame
         void Update()
         {
-            if (fightAnimation == null || fightAnimation.AttackFrameCount <= WindUpFrame)
+            if (fightAnimation == null)
             {
                 return;
             }
@@ -50,17 +59,34 @@ namespace WindingTale.FightObjects
             if (!state.IsName("attack"))
             {
                 windUpPlayed = false;
+                hitCuesFired = 0;
                 return;
             }
 
-            if (!windUpPlayed && state.normalizedTime * fightAnimation.AttackFrameCount >= WindUpFrame)
+            if (!windUpPlayed && fightAnimation.AttackFrameCount > WindUpFrame
+                && state.normalizedTime * fightAnimation.AttackFrameCount >= WindUpFrame)
             {
                 windUpPlayed = true;
                 SoundEffects.PlayBattleWindUp(animationId);
             }
+
+            // Cue every hit whose event is now less than the lead away.
+            float lead = state.length > 0f ? SoundEffectTable.BattleHitLeadSeconds / state.length : 0f;
+            // (Only as many as there are hit points: onAttackHit ignores any events past them.)
+            int cueCount = Math.Min(hitEventTimes.Count, animationHitPoints.Count);
+            while (hitCuesFired < cueCount && state.normalizedTime >= hitEventTimes[hitCuesFired] - lead)
+            {
+                fireHitCue();
+            }
         }
 
-        public void Initialize(int animationId, Action<int> onHit, Action onFinish)
+        private void fireHitCue()
+        {
+            int index = hitCuesFired++;
+            onHitCue?.Invoke(index);
+        }
+
+        public void Initialize(int animationId, Action<int> onHit, Action onFinish, Action<int> onHitCue = null)
         {
             this.animationId = animationId;
             this.fightAnimation = DefinitionStore.Instance.GetFightAnimation(animationId);
@@ -69,6 +95,10 @@ namespace WindingTale.FightObjects
 
             this.onHit = onHit;
             this.onFinish = onFinish;
+
+            this.onHitCue = onHitCue;
+            this.hitCuesFired = 0;
+            readHitEventTimes();
 
             // Show the 3D models built from this animation's frames, when there are any.
             FightModel3D.Attach(gameObject, animationId);
@@ -82,6 +112,13 @@ namespace WindingTale.FightObjects
             if (this.animationHitIndex >= this.animationHitPoints.Count)
             {
                 return;
+            }
+
+            // A hit whose cue the Update loop has not given yet (no clip events were found,
+            // or the frame skipped past the lead) is cued now, before the hit itself.
+            while (hitCuesFired <= this.animationHitIndex)
+            {
+                fireHitCue();
             }
 
             var hitPoint = this.animationHitPoints[this.animationHitIndex++];
@@ -111,6 +148,39 @@ namespace WindingTale.FightObjects
             });
 
             this.onFinish?.Invoke();
+        }
+
+        /// <summary>
+        /// When each onAttackHit event of the attack clip fires, as a fraction of the clip --
+        /// the same unit as AnimatorStateInfo.normalizedTime.
+        /// </summary>
+        private void readHitEventTimes()
+        {
+            hitEventTimes.Clear();
+
+            Animator animator = this.GetComponent<Animator>();
+            if (animator == null || animator.runtimeAnimatorController == null)
+            {
+                return;
+            }
+
+            foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+            {
+                if (clip == null || clip.length <= 0f || !clip.name.StartsWith("attack"))
+                {
+                    continue;
+                }
+
+                foreach (AnimationEvent animationEvent in clip.events)
+                {
+                    if (animationEvent.functionName == "onAttackHit")
+                    {
+                        hitEventTimes.Add(animationEvent.time / clip.length);
+                    }
+                }
+                hitEventTimes.Sort();
+                return;
+            }
         }
 
         /// <summary>

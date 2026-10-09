@@ -134,7 +134,7 @@ namespace WindingTale.Scenes.GameBattleScene
             subjectAnimator = subjectObject.GetComponent<Animator>();
             subjectAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(
                 string.Format("Fights/{0}/animator_{0}", StringUtils.Digit3(subjectAniId)));
-            subjectObject.GetComponent<FightBody>().Initialize(subjectAniId, onAnimationHit, onAnimationFinish);
+            subjectObject.GetComponent<FightBody>().Initialize(subjectAniId, onAnimationHit, onAnimationFinish, onAnimationHitCue);
 
             // Remote (ranged) attack setup. The Target is hidden during the windup, the
             // Subject is hidden after the attack — works in both directions.
@@ -168,7 +168,7 @@ namespace WindingTale.Scenes.GameBattleScene
             targetAnimator = targetObject.GetComponent<Animator>();
             targetAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(
                 string.Format("Fights/{0}/animator_{0}", StringUtils.Digit3(targetAniId)));
-            targetAnimator.GetComponent<FightBody>().Initialize(targetAniId, onAnimationHit, onAnimationFinish);
+            targetAnimator.GetComponent<FightBody>().Initialize(targetAniId, onAnimationHit, onAnimationFinish, onAnimationHitCue);
 
             var targetInitialHp = attackResult.Damages.Count > 0
                 ? attackResult.Damages[0].HpBefore : attackResult.Target.Hp;
@@ -245,20 +245,7 @@ namespace WindingTale.Scenes.GameBattleScene
 
             // Determine which body is being hit in this animation round, and the damage
             // being applied to it, so a miss (hit value 0) can skip the knockback.
-            GameObject hitObject;
-            DamageResult hitDamage;
-            if (currentAnimationIndex < attackResult.Damages.Count)
-            {
-                hitObject = targetObject;   // subject is attacking, target takes the hit
-                hitDamage = attackResult.Damages[currentAnimationIndex];
-            }
-            else
-            {
-                hitObject = subjectObject;  // counter-attack, subject takes the hit
-                int backHitIndex = currentAnimationIndex - attackResult.Damages.Count;
-                hitDamage = backHitIndex < attackResult.BackDamages.Count
-                    ? attackResult.BackDamages[backHitIndex] : null;
-            }
+            GameObject hitObject = getRoundHitObject(out DamageResult hitDamage);
 
             // Camera orientation maps world -X to screen-right.
             // localBody steps back to screen-right (-X world), foreignBody steps back to screen-left (+X world).
@@ -267,10 +254,7 @@ namespace WindingTale.Scenes.GameBattleScene
             // A miss (no HP change) plays no knockback animation.
             bool applyKnockback = hitDamage != null && !hitDamage.HasMissed;
 
-            // Every strike is heard: a thwack when it lands, a swish through the air when it misses.
-            // The striker is whoever is not taking this hit: the subject, or the target countering.
-            FDCreature striker = (hitObject == targetObject) ? attackResult.Subject : attackResult.Target;
-            playStrikeSound(applyKnockback, striker);
+            // The strike sound was already started, a moment ahead: see onAnimationHitCue.
 
             // A critical hit flashes the screen edge white, once, on its first hit frame.
             if (applyKnockback && hitDamage.IsCritical && criticalFlashedIndex != currentAnimationIndex)
@@ -340,11 +324,45 @@ namespace WindingTale.Scenes.GameBattleScene
             Destroy(ring);
         }
 
+        /// <summary>
+        /// The body taking this animation round's hits, and the damage it takes: the target
+        /// while the subject attacks, the subject while the target counters.
+        /// </summary>
+        private GameObject getRoundHitObject(out DamageResult hitDamage)
+        {
+            if (currentAnimationIndex < attackResult.Damages.Count)
+            {
+                hitDamage = attackResult.Damages[currentAnimationIndex];
+                return targetObject;
+            }
+
+            int backHitIndex = currentAnimationIndex - attackResult.Damages.Count;
+            hitDamage = backHitIndex < attackResult.BackDamages.Count
+                ? attackResult.BackDamages[backHitIndex] : null;
+            return subjectObject;
+        }
+
+        /// <summary>
+        /// Every strike is heard: a thwack when it lands, a swish through the air when it
+        /// misses. FightBody calls this SoundEffectTable.BattleHitLeadSeconds ahead of each
+        /// hit (onAnimationHit), so the sound is heard on the hit frame and not after it.
+        /// </summary>
+        private void onAnimationHitCue(int hitIndex)
+        {
+            GameObject hitObject = getRoundHitObject(out DamageResult hitDamage);
+            bool landed = hitDamage != null && !hitDamage.HasMissed;
+
+            // The striker is whoever is not taking this hit: the subject, or the target countering.
+            FDCreature striker = (hitObject == targetObject) ? attackResult.Subject : attackResult.Target;
+            playStrikeSound(landed, striker);
+        }
+
         private void playStrikeSound(bool landed, FDCreature striker)
         {
             if (landed)
             {
-                SoundEffects.PlayBattleHit(striker?.GetAttackItem());
+                int strikerAnimationId = striker?.Definition != null ? striker.Definition.AnimationId : 0;
+                SoundEffects.PlayBattleHit(strikerAnimationId, striker?.GetAttackItem());
             }
             else
             {

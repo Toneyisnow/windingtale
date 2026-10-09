@@ -309,6 +309,10 @@ namespace WindingTale.Core.Algorithms
 
                 case MagicType.Recover:
                     changedHp = isHit ? Math.Max(0, FDRandom.IntFromSpan(magic.Span)) : 0;
+
+                    // Only what the target is missing is really healed, and that is what the
+                    // experience is counted from: healing four full-HP friends earns nothing.
+                    changedHp = Math.Min(changedHp, Math.Max(0, target.HpMax - target.Hp));
                     return new RecoverResult(RecoverType.Hp, changedHp);
 
                 case MagicType.Offensive:

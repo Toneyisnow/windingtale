@@ -15,8 +15,14 @@ public static class ItemIconHelper
     private const string DefendIcon = "ItemDefendIcon_0";
     private const string UsableIcon = "ItemUsableIcon_0";
 
+    // The red-backed faces of a weapon / armour that is currently worn.
+    private const string EquippedAttackIcon = "ItemAttackIcon_1";
+    private const string EquippedDefendIcon = "ItemDefendIcon_1";
+
     /// <summary>The Resources sub-path (under Dialogs) of the face for this item's type.</summary>
-    public static string GetIconName(ItemDefinition item)
+    /// <param name="equipped">The item is the one the creature has on: attack and defend
+    /// items then take their red-backed face. Ignored for usable items.</param>
+    public static string GetIconName(ItemDefinition item, bool equipped = false)
     {
         if (item == null)
         {
@@ -26,18 +32,18 @@ public static class ItemIconHelper
         switch (item.GetItemType())
         {
             case ItemDefinition.ItemType.Attack:
-                return AttackIcon;
+                return equipped ? EquippedAttackIcon : AttackIcon;
             case ItemDefinition.ItemType.Defend:
-                return DefendIcon;
+                return equipped ? EquippedDefendIcon : DefendIcon;
             default:
                 return UsableIcon;
         }
     }
 
     /// <summary>Loads the type face sprite for an item, or null (logged) when it is missing.</summary>
-    public static Sprite LoadIcon(ItemDefinition item)
+    public static Sprite LoadIcon(ItemDefinition item, bool equipped = false)
     {
-        string path = IconFolder + GetIconName(item);
+        string path = IconFolder + GetIconName(item, equipped);
         Sprite sprite = Resources.Load<Sprite>(path);
         if (sprite == null)
         {

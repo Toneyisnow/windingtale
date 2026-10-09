@@ -29,6 +29,16 @@ namespace WindingTale.Core.Common
             return Digit3(System.Math.Min(System.Math.Max(number, 0), 999));
         }
 
+        /// <summary>
+        /// A number for display in a two-digit box (EX / AP / DP / HIT / EV in the detail
+        /// dialog): zero-padded like Digit2, but never more than two digits -- anything above
+        /// 99 shows as 99. Digit2 itself turns 100+ into "??" and also builds resource keys.
+        /// </summary>
+        public static string Digit2Max(int number)
+        {
+            return Digit2(System.Math.Min(System.Math.Max(number, 0), 99));
+        }
+
         public static string Digit2(int number)
         {
             if (number < 10)
