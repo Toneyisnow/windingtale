@@ -60,8 +60,19 @@ namespace WindingTale.MapObjects.CreatureIcon
             }
         }
 
-        private static Material ForPalette(Texture palette)
+        /// <summary>The shared creature material for <paramref name="palette"/>, for models
+        /// built in code rather than instantiated from an imported prefab.</summary>
+        public static Material ForPalette(Texture palette)
         {
+            if (shader == null)
+            {
+                shader = Shader.Find("Custom/VoxelCreature");
+                if (shader == null)
+                {
+                    Debug.LogError("[CreatureMaterial] Shader 'Custom/VoxelCreature' not found!");
+                    return null;
+                }
+            }
             if (palette == null)
             {
                 return new Material(shader);

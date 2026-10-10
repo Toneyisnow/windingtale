@@ -78,6 +78,7 @@
     <Compile Include="Assets\FightObjects\FightModel3D.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuSystemState.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter26.cs" />
+    <Compile Include="Assets\FightObjects\FightMeshPack.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\LevelUpDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ActivityBase.cs" />
     <Compile Include="Assets\MapObjects\Cursors\MoveIndicator.cs" />

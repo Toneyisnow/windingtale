@@ -80,6 +80,8 @@ namespace WindingTale.FightObjects
 
         private int animationId = -1;
         private Manifest manifest;
+        // Fight_NNN_mesh.bytes when the creature has one; its frame OBJs otherwise.
+        private FightMeshPack pack;
         private Transform root;
         private readonly Dictionary<string, FrameModel> frames = new Dictionary<string, FrameModel>();
         private FrameModel shown;
@@ -150,6 +152,8 @@ namespace WindingTale.FightObjects
                 manifest.objScale = 0.1f;
             }
 
+            pack = FightMeshPack.Acquire(animationId, folder, StringUtils.Digit3(animationId));
+
             root = new GameObject("Model3D").transform;
             root.SetParent(transform, false);
 
@@ -205,29 +209,42 @@ namespace WindingTale.FightObjects
             {
                 return null;
             }
-            GameObject prefab = Resources.Load<GameObject>(folder + System.IO.Path.GetFileNameWithoutExtension(file));
-            if (prefab == null)
+            GameObject instance;
+            Mesh packed = pack != null ? pack.Get(file) : null;
+            if (packed != null)
             {
-                Debug.LogWarning("[FightModel3D] missing model " + folder + file);
-                return null;
+                instance = new GameObject(packed.name);
+                instance.transform.SetParent(root, false);
+                instance.AddComponent<MeshFilter>().sharedMesh = packed;
+                instance.AddComponent<MeshRenderer>().sharedMaterial = isFx
+                    ? FxMaterialFor(pack.Palette)
+                    : CreatureMaterial.ForPalette(pack.Palette);
+            }
+            else
+            {
+                GameObject prefab = Resources.Load<GameObject>(folder + System.IO.Path.GetFileNameWithoutExtension(file));
+                if (prefab == null)
+                {
+                    Debug.LogWarning("[FightModel3D] missing model " + folder + file);
+                    return null;
+                }
+                instance = Instantiate(prefab, root, false);
+                if (isFx)
+                {
+                    ApplyFxMaterial(instance);
+                }
+                else
+                {
+                    CreatureMaterial.Apply(instance);
+                }
             }
 
-            GameObject instance = Instantiate(prefab, root, false);
             instance.transform.localPosition = Vector3.zero;
             instance.transform.localRotation = Quaternion.identity;
             instance.transform.localScale = Vector3.one;
             foreach (Transform part in instance.GetComponentsInChildren<Transform>(true))
             {
                 part.gameObject.layer = gameObject.layer;
-            }
-
-            if (isFx)
-            {
-                ApplyFxMaterial(instance);
-            }
-            else
-            {
-                CreatureMaterial.Apply(instance);
             }
             foreach (Renderer renderer in instance.GetComponentsInChildren<Renderer>(true))
             {
@@ -240,35 +257,45 @@ namespace WindingTale.FightObjects
 
         private static void ApplyFxMaterial(GameObject instance)
         {
+            foreach (MeshRenderer renderer in instance.GetComponentsInChildren<MeshRenderer>(true))
+            {
+                Material original = renderer.sharedMaterial;
+                Texture palette = original != null && original.HasProperty("_MainTex") ? original.GetTexture("_MainTex") : null;
+                Material material = FxMaterialFor(palette);
+                if (material == null)
+                {
+                    return;
+                }
+                renderer.sharedMaterial = material;
+            }
+        }
+
+        private static Material FxMaterialFor(Texture palette)
+        {
             if (fxShader == null)
             {
                 fxShader = Shader.Find("Custom/FightFx");
                 if (fxShader == null)
                 {
                     Debug.LogError("[FightModel3D] Shader 'Custom/FightFx' not found!");
-                    return;
+                    return null;
                 }
             }
-            foreach (MeshRenderer renderer in instance.GetComponentsInChildren<MeshRenderer>(true))
+            Material material = null;
+            if (palette != null)
             {
-                Material original = renderer.sharedMaterial;
-                Texture palette = original != null && original.HasProperty("_MainTex") ? original.GetTexture("_MainTex") : null;
-                Material material = null;
+                fxMaterials.TryGetValue(palette, out material);
+            }
+            if (material == null || material.mainTexture == null)
+            {
+                material = new Material(fxShader);
+                material.mainTexture = palette;
                 if (palette != null)
                 {
-                    fxMaterials.TryGetValue(palette, out material);
+                    fxMaterials[palette] = material;
                 }
-                if (material == null || material.mainTexture == null)
-                {
-                    material = new Material(fxShader);
-                    material.mainTexture = palette;
-                    if (palette != null)
-                    {
-                        fxMaterials[palette] = material;
-                    }
-                }
-                renderer.sharedMaterial = material;
             }
+            return material;
         }
 
         /// <summary>
@@ -340,6 +367,8 @@ namespace WindingTale.FightObjects
             frames.Clear();
             shown = null;
             manifest = null;
+            FightMeshPack.Release(animationId, pack);
+            pack = null;
             if (root != null)
             {
                 if (Application.isPlaying)
@@ -510,6 +539,8 @@ namespace WindingTale.FightObjects
 
         void OnDestroy()
         {
+            FightMeshPack.Release(animationId, pack);
+            pack = null;
             if (spriteRenderer != null)
             {
                 spriteRenderer.enabled = true;
