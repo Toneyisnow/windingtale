@@ -56,6 +56,22 @@ public class ShoppingMessageDialog : MonoBehaviour
         initialized = true;
     }
 
+    /// <summary>
+    /// Shows a literal line rather than a CommonStrings one, drawn in the dynamic record font
+    /// (ShoppingRecordDialog.GetRecordFont) -- for a notice no message string carries, such as
+    /// "转职成功！", whose glyphs the baked FZB_Message atlas may not hold. onClosed fires once,
+    /// on the first key after this frame.
+    /// </summary>
+    public void InitLiteral(string text, Action onClosed)
+    {
+        this.OnClosed = onClosed;
+
+        ShowText(text, useRecordFont: true);
+
+        firstFrame = true;
+        initialized = true;
+    }
+
     void Update()
     {
         if (!initialized)
@@ -85,7 +101,7 @@ public class ShoppingMessageDialog : MonoBehaviour
     /// LiberationSans (no Chinese glyphs), so the whole FZB_Message font asset is assigned
     /// rather than only its material -- the fix the field dialogs use.
     /// </summary>
-    private void ShowText(string text)
+    private void ShowText(string text, bool useRecordFont = false)
     {
         TextMeshProUGUI textMesh = MessageText != null ? MessageText.GetComponent<TextMeshProUGUI>() : null;
         if (textMesh == null)
@@ -93,7 +109,9 @@ public class ShoppingMessageDialog : MonoBehaviour
             return;
         }
 
-        TMP_FontAsset messageFont = Resources.Load<TMP_FontAsset>(@"Fonts/FontAssets/zh/FZB_Message");
+        TMP_FontAsset messageFont = useRecordFont
+            ? ShoppingRecordDialog.GetRecordFont()
+            : Resources.Load<TMP_FontAsset>(@"Fonts/FontAssets/zh/FZB_Message");
         if (messageFont != null)
         {
             textMesh.font = messageFont;

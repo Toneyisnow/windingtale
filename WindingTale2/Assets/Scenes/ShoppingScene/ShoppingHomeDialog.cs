@@ -332,7 +332,6 @@ public class ShoppingHomeDialog : MonoBehaviour
         }
 
         ShopAction action = actions[index];
-        Debug.Log(string.Format("ShoppingHomeDialog: selected {0} in {1}", action, shopType));
 
         if (OnActionSelected != null)
         {

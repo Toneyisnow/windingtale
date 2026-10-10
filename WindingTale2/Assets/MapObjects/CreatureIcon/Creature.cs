@@ -459,8 +459,6 @@ namespace WindingTale.MapObjects.CreatureIcon
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log("OnPointerClick " + this.creature.Position.ToString());
-
             PlayerInterface.getDefault().onSelectedPosition(this.creature.Position);
         }
 

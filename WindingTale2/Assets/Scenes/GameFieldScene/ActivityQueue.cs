@@ -115,7 +115,6 @@ namespace WindingTale.Scenes.GameFieldScene
                 {
                     if (currentActivity != null)
                     {
-                        Debug.LogFormat("ActivityManager: Finished activity. type={0}", currentActivity.GetType());
                         currentActivity = null;
                     }
 
@@ -123,7 +122,6 @@ namespace WindingTale.Scenes.GameFieldScene
                     {
                         currentActivity = activityList[0];
                         activityList.RemoveAt(0);
-                        Debug.LogFormat("ActivityManager: Starting activity. type={0}", currentActivity.GetType());
 
                         currentActivity.Start(gameMain);
                     }

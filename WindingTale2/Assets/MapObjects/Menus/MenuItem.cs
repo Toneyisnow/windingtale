@@ -44,7 +44,6 @@ public class MenuItem : MonoBehaviour
 
     public void OnPointerDownDelegate(PointerEventData data)
     {
-        Debug.Log("MenuItem: OnPointerDownDelegate called. " + fDMenuItem.Position.ToString());
         PlayerInterface.getDefault().onSelectedPosition(fDMenuItem.Position);
     }
 }

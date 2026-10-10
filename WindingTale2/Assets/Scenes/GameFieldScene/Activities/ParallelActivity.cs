@@ -45,8 +45,6 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         // Update is called once per frame
         public override void Update(GameMain gameMain)
         {
-            Debug.Log("ParallelActivity Update ======");
-
             bool allFinished = true;
             foreach (ActivityBase activity in activities)
             {

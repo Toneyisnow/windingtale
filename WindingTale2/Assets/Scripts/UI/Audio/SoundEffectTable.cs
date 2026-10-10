@@ -10,6 +10,19 @@ namespace WindingTale.UI.Audio
     /// extension ("sfx_control_cursor"). A hook left at null -- or naming a clip that does not
     /// exist -- is simply silent, so hooks can be filled in one at a time.
     /// </summary>
+    /// <summary>A wind-up clip and the attack animation frame (counted from 1) it starts on.</summary>
+    public struct WindUpSound
+    {
+        public string Clip;
+        public int Frame;
+
+        public WindUpSound(string clip, int frame)
+        {
+            Clip = clip;
+            Frame = frame;
+        }
+    }
+
     public static class SoundEffectTable
     {
         /// <summary>Where the clips live, under Resources.</summary>
@@ -36,7 +49,7 @@ namespace WindingTale.UI.Audio
             { SoundEffect.MapMenuClose, "sfx_control_close" },
             { SoundEffect.CreatureDialogOpen, "sfx_menu_snap" },
             { SoundEffect.CreatureDialogClose, "sfx_control_close" },
-            { SoundEffect.TalkTyping, "sfx_control_typing" },
+            { SoundEffect.TalkTyping, "sfx_field_speak_3" },
             { SoundEffect.DialogCursorMove, "sfx_control_cursor_2" },
             { SoundEffect.DialogConfirm, "sfx_control_confirm" },
             { SoundEffect.DialogCancel, "sfx_control_cancel" },
@@ -86,16 +99,23 @@ namespace WindingTale.UI.Audio
 
         /// <summary>
         /// One attacker's own wind-up, by its fight animation id (CreatureDefinition.AnimationId),
-        /// overriding SoundEffect.BattleWindUp.
+        /// overriding SoundEffect.BattleWindUp: which clip, and on which frame of its attack
+        /// animation it starts (counted from 1, the first frame).
         /// </summary>
-        public static readonly Dictionary<int, string> WindUpByAnimationId = new Dictionary<int, string>
+        public static readonly Dictionary<int, WindUpSound> WindUpByAnimationId = new Dictionary<int, WindUpSound>
         {
             // The whip-wielding enemy (chapter 21).
-            { 751, "sfx_fight_whip" },
+            { 751, new WindUpSound("sfx_fight_whip", 2) },
 
             // 精灵 (chapter 21): its crossbow charging.
-            { 717, "sfx_fight_prepare_canon" },
+            { 717, new WindUpSound("sfx_fight_prepare_canon", 4) },
         };
+
+        /// <summary>
+        /// The attack animation frame (counted from 1) SoundEffect.BattleWindUp starts on, for
+        /// every attacker not in WindUpByAnimationId.
+        /// </summary>
+        public static int DefaultWindUpFrame = 2;
 
         /// <summary>The footsteps looped while a creature walks, by what it walks on.</summary>
         public static readonly Dictionary<WalkSurface, string> Walks = new Dictionary<WalkSurface, string>
@@ -223,9 +243,10 @@ namespace WindingTale.UI.Audio
 
         /// <summary>
         /// The typing "嘟嘟" ticks at most this often (seconds), however fast the text runs;
-        /// spaces and line breaks never tick.
+        /// spaces and line breaks never tick. Shorter than the clip itself on purpose: the
+        /// ticks overlap (each is its own one-shot), which makes the talking sound quicker.
         /// </summary>
-        public static float TalkTypingMinInterval = 0.16f;
+        public static float TalkTypingMinInterval = 0.08f;
 
         /// <summary>
         /// A menu closing sounds only if no menu opens within this many seconds: closing one
@@ -237,6 +258,6 @@ namespace WindingTale.UI.Audio
         /// A strike's hit / miss sound is started this many seconds before the hit frame, to
         /// make up for the delay between starting a sound and hearing it.
         /// </summary>
-        public static float BattleHitLeadSeconds = 0.1f;
+        public static float BattleHitLeadSeconds = 0f;
     }
 }

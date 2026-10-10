@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using WindingTale.Core.Files;
+using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.UI.Audio;
 
 /// <summary>
@@ -21,6 +22,13 @@ using WindingTale.UI.Audio;
 /// It does not itself save or load -- it only reports which slot the player picked. The
 /// caller owns what happens next (write the record, or read it), which is why the same
 /// dialog serves Save, the shop's Load, and the title screen's Load alike.
+///
+/// InitRows turns it into a general picker over the caller's own rows (the church's
+/// transfer list): each row a creature's voxel icon and a line, then a second icon and line,
+/// laid out on the slot label. The icons are the same 3D models, idle loop and facing the
+/// shop's creature list (ShoppingCreaturesDialog) shows, so the canvas is drawn through the
+/// camera behind them, as that list does. Paging, the cursor and its sounds are the same; a
+/// row's index is what OnSlotSelected reports.
 /// </summary>
 public class ShoppingRecordDialog : MonoBehaviour
 {
@@ -81,6 +89,78 @@ public class ShoppingRecordDialog : MonoBehaviour
     // The saves that exist, keyed by slot index. Read once in Init.
     private Dictionary<int, GameRecord> records = null;
 
+    /// <summary>
+    /// One row of an InitRows picker: <LeftIcon> <LeftText> -> <RightIcon> <RightText>, the
+    /// arrow held at the middle of the screen whatever the left side's length. An icon
+    /// is a creature's fight animation id (CreatureDefinition.AnimationId), whose voxel icon
+    /// Icons/NNN/Icon_NNN_01..03 is shown; 0 leaves its space empty.
+    /// </summary>
+    public class ListRow
+    {
+        public int LeftIconAnimationId;
+        public string LeftText;
+        public int RightIconAnimationId;
+        public string RightText;
+    }
+
+    // The caller's rows when opened through InitRows; null for the save / load picker.
+    private List<ListRow> customRows = null;
+
+    // Row layout for InitRows: an icon's space is this many times the label's font size, with
+    // this gap (canvas units) between an icon and the text beside it.
+    private const float RowIconScale = 1.6f;
+    private const float RowGap = 6f;
+    private const string RowContentName = "RowContent";
+
+    /// <summary>InitRows: how far in front of the camera the voxel icons stand, in world units.</summary>
+    public float RowIconDistance = 12f;
+
+    /// <summary>
+    /// InitRows: how far behind the icons the canvas is drawn, so the frame and the text sit
+    /// behind the voxels (an overlay canvas would paint over them). Kept well in front of the
+    /// shop background (plane 32), as ShoppingCreaturesDialog.PanelDistanceBehindIcons is.
+    /// </summary>
+    public float RowPanelDistanceBehindIcons = 6f;
+
+    /// <summary>InitRows: the icons' yaw once squared up to the camera -- ShoppingCreaturesDialog.IconYaw.</summary>
+    public float RowIconYaw = 13.3f;
+
+    /// <summary>InitRows: an icon's height as a share of its space in the row (1 = fills it).</summary>
+    public float RowIconFill = 1f;
+
+    /// <summary>
+    /// InitRows: how far the icons are dropped below the line's top, as a share of the row
+    /// pitch (the gap between two rows' cursor positions, IndicatorRowY).
+    /// </summary>
+    public float RowIconDrop = 0.5f;
+
+    /// <summary>InitRows: the separator drawn at the middle of the screen between the two halves.</summary>
+    private const string RowArrowText = "->";
+
+    // Hundredths of a second each idle frame is held for -- the creature list's value.
+    private const int IdleAnimationSpeed = 30;
+
+    /// <summary>One voxel icon of an InitRows row: where it goes in the row and what is shown.</summary>
+    private class RowIcon
+    {
+        public RectTransform Anchor;
+        public Transform Holder;
+        public GameObject[] Clips;
+        public int AnimationId;
+
+        // The model's height at scale 1, measured once it is built, to fit it to its space.
+        public float ModelHeight;
+    }
+
+    // The icons of the four rows, two to a row; null for the save / load picker.
+    private RowIcon[] rowIcons = null;
+
+    // The world-space parent of every row icon. Not under the canvas, so the canvas scale does
+    // not reach the models; shown and hidden with this dialog (OnEnable / OnDisable).
+    private Transform rowIconRoot = null;
+
+    private Camera rowCamera = null;
+
     // How many slots there are in all, and how many pages that comes to.
     private int slotCount = 0;
     private int pageCount = 0;
@@ -108,14 +188,213 @@ public class ShoppingRecordDialog : MonoBehaviour
         this.OnSlotSelected = onSlotSelected;
         this.allowEmptySlots = allowEmpty;
 
+        records = GameRecordManager.GetAllFiles();
+        customRows = null;
+
+        Open(GameRecordManager.RecordSlotCount);
+    }
+
+    /// <summary>
+    /// Opens the picker over the caller's own rows instead of the save slots, with the same
+    /// cursor, paging and sounds. <paramref name="onRowSelected"/> gets the chosen row's index,
+    /// or -1 when the picker is backed out of with Esc.
+    /// </summary>
+    public void InitRows(IList<ListRow> rows, Action<int> onRowSelected)
+    {
+        this.OnSlotSelected = onRowSelected;
+        this.allowEmptySlots = true;
+
+        records = null;
+        customRows = rows != null ? new List<ListRow>(rows) : new List<ListRow>();
+
+        SetupRowIcons();
+        Open(customRows.Count);
+    }
+
+    /// <summary>
+    /// Readies the InitRows voxel icons: the canvas is switched to Screen Space - Camera behind
+    /// the icon plane, and the world-space root the models are built under is made.
+    /// </summary>
+    private void SetupRowIcons()
+    {
+        rowCamera = Camera.main;
+
+        Canvas canvas = GetComponentInChildren<Canvas>(true);
+        if (canvas != null && rowCamera != null)
+        {
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = rowCamera;
+            canvas.planeDistance = Mathf.Max(0.1f, RowIconDistance) + Mathf.Max(0f, RowPanelDistanceBehindIcons);
+        }
+
+        if (rowIconRoot == null)
+        {
+            rowIconRoot = new GameObject("RowIcons").transform;
+        }
+
+        rowIcons = new RowIcon[RowsPerPage * 2];
+    }
+
+    void OnEnable()
+    {
+        if (rowIconRoot != null)
+        {
+            rowIconRoot.gameObject.SetActive(true);
+        }
+    }
+
+    void OnDisable()
+    {
+        if (rowIconRoot != null)
+        {
+            rowIconRoot.gameObject.SetActive(false);
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (rowIconRoot != null)
+        {
+            Destroy(rowIconRoot.gameObject);
+        }
+    }
+
+    /// <summary>
+    /// Stands every shown row icon on its space in the row, sized to it and turned like the
+    /// creature list's, and steps the idle loop. After the canvas has laid out (LateUpdate), so
+    /// the spaces are where they are drawn this frame.
+    /// </summary>
+    void LateUpdate()
+    {
+        if (rowIcons == null || rowCamera == null)
+        {
+            return;
+        }
+
+        // Laid out again every frame: the arrow follows the screen's middle, which the canvas
+        // only settles on once it has been drawn through the camera.
+        if (labels != null)
+        {
+            foreach (GameObject label in labels)
+            {
+                LayoutRowContent(label);
+            }
+        }
+
+        int frame = ((int)(Time.fixedTime * 100) / IdleAnimationSpeed) % 4;
+        Quaternion rotation = rowCamera.transform.rotation * Quaternion.Euler(0f, 180f + RowIconYaw, 0f);
+        float distance = Mathf.Max(0.1f, RowIconDistance);
+
+        foreach (RowIcon icon in rowIcons)
+        {
+            if (icon == null || icon.Holder == null || !icon.Holder.gameObject.activeSelf || icon.Anchor == null)
+            {
+                continue;
+            }
+
+            Vector3[] corners = new Vector3[4];
+            icon.Anchor.GetWorldCorners(corners);
+            Vector3 bottom = rowCamera.WorldToScreenPoint((corners[0] + corners[3]) * 0.5f);
+            Vector3 top = rowCamera.WorldToScreenPoint((corners[1] + corners[2]) * 0.5f);
+
+            Vector3 worldBottom = rowCamera.ScreenToWorldPoint(new Vector3(bottom.x, bottom.y, distance));
+            Vector3 worldTop = rowCamera.ScreenToWorldPoint(new Vector3(top.x, top.y, distance));
+
+            icon.Holder.position = (worldBottom + worldTop) * 0.5f;
+            icon.Holder.rotation = rotation;
+
+            float height = (worldTop - worldBottom).magnitude * Mathf.Max(0f, RowIconFill);
+            float scale = icon.ModelHeight > 0.0001f ? height / icon.ModelHeight : 1f;
+            icon.Holder.localScale = Vector3.one * scale;
+
+            for (int c = 0; c < icon.Clips.Length; c++)
+            {
+                bool visible = c == 1 ? (frame == 1 || frame == 3) : frame == c;
+                if (icon.Clips[c] != null && icon.Clips[c].activeSelf != visible)
+                {
+                    icon.Clips[c].SetActive(visible);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Shows <paramref name="animationId"/>'s voxel icon on row icon <paramref name="slot"/>,
+    /// standing on <paramref name="anchor"/>: the three idle frames, built again only when the
+    /// creature changes. 0 hides it.
+    /// </summary>
+    private void ShowRowIcon(int slot, RectTransform anchor, int animationId)
+    {
+        if (rowIcons == null || slot < 0 || slot >= rowIcons.Length)
+        {
+            return;
+        }
+
+        RowIcon icon = rowIcons[slot];
+        if (icon == null)
+        {
+            icon = new RowIcon();
+            icon.Holder = new GameObject("RowIcon" + slot).transform;
+            icon.Holder.SetParent(rowIconRoot, false);
+            rowIcons[slot] = icon;
+        }
+
+        icon.Anchor = anchor;
+        icon.Holder.gameObject.SetActive(animationId > 0);
+        if (animationId <= 0 || icon.AnimationId == animationId)
+        {
+            return;
+        }
+
+        for (int c = icon.Holder.childCount - 1; c >= 0; c--)
+        {
+            Destroy(icon.Holder.GetChild(c).gameObject);
+        }
+
+        // Built at scale 1 and unturned, so the measured height is the model's own.
+        icon.Holder.localScale = Vector3.one;
+        icon.Holder.rotation = Quaternion.identity;
+
+        icon.Clips = new GameObject[3];
+        icon.ModelHeight = 0f;
+        for (int frame = 0; frame < 3; frame++)
+        {
+            GameObject clip = new GameObject("clip" + (frame + 1));
+            clip.transform.SetParent(icon.Holder, false);
+
+            string iconPath = string.Format("Icons/{0:D3}/Icon_{0:D3}_{1:D2}", animationId, frame + 1);
+            GameObject prefab = Resources.Load<GameObject>(iconPath);
+            if (prefab != null)
+            {
+                GameObject model = Instantiate(prefab);
+                CreatureMaterial.Apply(model);
+                model.transform.SetParent(clip.transform, false);
+                model.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+
+                foreach (Renderer renderer in model.GetComponentsInChildren<Renderer>())
+                {
+                    icon.ModelHeight = Mathf.Max(icon.ModelHeight, renderer.bounds.size.y);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("ShoppingRecordDialog: cannot load creature icon " + iconPath);
+            }
+
+            icon.Clips[frame] = clip;
+        }
+
+        icon.AnimationId = animationId;
+    }
+
+    private void Open(int count)
+    {
         labels = new GameObject[] { RecordLabel1, RecordLabel2, RecordLabel3, RecordLabel4 };
 
         indicatorImage = Indicator != null ? Indicator.GetComponent<Image>() : null;
         indicatorRect = Indicator != null ? Indicator.GetComponent<RectTransform>() : null;
 
-        records = GameRecordManager.GetAllFiles();
-
-        slotCount = GameRecordManager.RecordSlotCount;
+        slotCount = count;
         pageCount = Mathf.Max(1, (slotCount + RowsPerPage - 1) / RowsPerPage);
 
         WireNavButtons();
@@ -227,8 +506,9 @@ public class ShoppingRecordDialog : MonoBehaviour
                 RefreshPage();
             }
         }
-        else
+        else if (currentPage * RowsPerPage + next < slotCount)
         {
+            // A part-filled last page (the InitRows lists) stops on its last row.
             selectedIndex = next;
         }
     }
@@ -259,7 +539,15 @@ public class ShoppingRecordDialog : MonoBehaviour
         for (int i = 0; i < labels.Length; i++)
         {
             int slotIndex = currentPage * RowsPerPage + i;
-            SetLabelText(labels[i], slotIndex < slotCount ? DescribeSlot(slotIndex) : string.Empty);
+            if (customRows != null)
+            {
+                SetLabelText(labels[i], string.Empty);
+                SetRowContent(i, labels[i], slotIndex < slotCount ? customRows[slotIndex] : null);
+            }
+            else
+            {
+                SetLabelText(labels[i], slotIndex < slotCount ? DescribeSlot(slotIndex) : string.Empty);
+            }
         }
 
         if (ButtonUp != null)
@@ -347,7 +635,6 @@ public class ShoppingRecordDialog : MonoBehaviour
             return;
         }
 
-        Debug.Log("ShoppingRecordDialog: selected slot " + slotIndex);
         SoundEffects.Play(SoundEffect.DialogConfirm);
 
         if (OnSlotSelected != null)
@@ -501,5 +788,201 @@ public class ShoppingRecordDialog : MonoBehaviour
 
         textMesh.text = text;
         textMesh.ForceMeshUpdate();
+    }
+
+    /// <summary>
+    /// Lays an InitRows row out on slot label <paramref name="rowIndex"/>: icon, line, icon,
+    /// line, left to right from the label's top-left corner, each line in the record font at
+    /// the label's own size and colour, each icon a space the voxel model is stood on
+    /// (ShowRowIcon / LateUpdate). The pieces are built once per label and reused as the pages
+    /// turn; a null row hides them.
+    /// </summary>
+    private void SetRowContent(int rowIndex, GameObject labelObject, ListRow row)
+    {
+        TextMeshProUGUI labelText = labelObject != null ? labelObject.GetComponent<TextMeshProUGUI>() : null;
+        if (labelText == null)
+        {
+            return;
+        }
+
+        Transform content = labelObject.transform.Find(RowContentName);
+        if (content == null && row != null)
+        {
+            content = BuildRowContent(labelObject.transform);
+        }
+
+        if (content != null)
+        {
+            content.gameObject.SetActive(row != null);
+        }
+
+        RectTransform leftSpace = content != null ? content.Find("LeftIcon") as RectTransform : null;
+        RectTransform rightSpace = content != null ? content.Find("RightIcon") as RectTransform : null;
+        ShowRowIcon(rowIndex * 2, leftSpace, row != null ? row.LeftIconAnimationId : 0);
+        ShowRowIcon(rowIndex * 2 + 1, rightSpace, row != null ? row.RightIconAnimationId : 0);
+
+        if (row == null)
+        {
+            return;
+        }
+
+        SetRowText(content.Find("LeftText"), row.LeftText, labelText);
+        SetRowText(content.Find("Arrow"), RowArrowText, labelText);
+        SetRowText(content.Find("RightText"), row.RightText, labelText);
+
+        LayoutRowContent(labelObject);
+    }
+
+    /// <summary>
+    /// Places a shown row's pieces: the left icon and line from the label's left edge, the
+    /// arrow centred on the middle of the screen (or just after the left line, should that run
+    /// past it), and the right icon and line after the arrow. The icons' spaces sit RowIconDrop
+    /// of a row pitch below the line's top.
+    /// </summary>
+    private void LayoutRowContent(GameObject labelObject)
+    {
+        TextMeshProUGUI labelText = labelObject != null ? labelObject.GetComponent<TextMeshProUGUI>() : null;
+        Transform content = labelObject != null ? labelObject.transform.Find(RowContentName) : null;
+        if (labelText == null || content == null || !content.gameObject.activeSelf)
+        {
+            return;
+        }
+
+        float iconSize = Mathf.Round(labelText.fontSize * RowIconScale);
+        float iconY = iconSize * 0.1f - RowIconDrop * GetRowPitch(labelText);
+
+        float x = PlaceRowIconSpace(content.Find("LeftIcon") as RectTransform, iconSize, 0f, iconY);
+        x = PlaceRowText(content.Find("LeftText"), x);
+
+        RectTransform arrow = content.Find("Arrow") as RectTransform;
+        float arrowWidth = arrow != null ? arrow.sizeDelta.x : 0f;
+        float arrowX = Mathf.Max(x, GetScreenMiddleX(content as RectTransform) - arrowWidth * 0.5f);
+        x = PlaceRowText(arrow, arrowX);
+
+        x = PlaceRowIconSpace(content.Find("RightIcon") as RectTransform, iconSize, x, iconY);
+        PlaceRowText(content.Find("RightText"), x);
+    }
+
+    /// <summary>The distance between two rows (IndicatorRowY), or the label's height when there is no table.</summary>
+    private float GetRowPitch(TextMeshProUGUI labelText)
+    {
+        if (IndicatorRowY != null && IndicatorRowY.Length > 1)
+        {
+            return Mathf.Abs(IndicatorRowY[1] - IndicatorRowY[0]);
+        }
+        return labelText.rectTransform.rect.height;
+    }
+
+    /// <summary>The middle of the screen, as an x from the left edge of <paramref name="content"/>.</summary>
+    private float GetScreenMiddleX(RectTransform content)
+    {
+        if (content == null)
+        {
+            return 0f;
+        }
+
+        Canvas canvas = content.GetComponentInParent<Canvas>();
+        Camera eventCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
+
+        Vector2 middle = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(content, middle, eventCamera, out Vector2 local))
+        {
+            return 0f;
+        }
+
+        return local.x - content.rect.xMin;
+    }
+
+    private static Transform BuildRowContent(Transform label)
+    {
+        GameObject content = new GameObject(RowContentName, typeof(RectTransform));
+        RectTransform rect = content.GetComponent<RectTransform>();
+        rect.SetParent(label, false);
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        // The icons' spaces: empty rects the voxel models are stood on.
+        foreach (string name in new[] { "LeftIcon", "RightIcon" })
+        {
+            GameObject icon = new GameObject(name, typeof(RectTransform));
+            SetTopLeft(icon.GetComponent<RectTransform>(), content.transform);
+        }
+
+        foreach (string name in new[] { "LeftText", "Arrow", "RightText" })
+        {
+            GameObject text = new GameObject(name, typeof(RectTransform), typeof(TextMeshProUGUI));
+            SetTopLeft(text.GetComponent<RectTransform>(), content.transform);
+
+            TextMeshProUGUI textMesh = text.GetComponent<TextMeshProUGUI>();
+            textMesh.raycastTarget = false;
+            textMesh.alignment = TextAlignmentOptions.TopLeft;
+            textMesh.textWrappingMode = TextWrappingModes.NoWrap;
+            textMesh.overflowMode = TextOverflowModes.Overflow;
+        }
+
+        return content.transform;
+    }
+
+    private static void SetTopLeft(RectTransform rect, Transform parent)
+    {
+        rect.SetParent(parent, false);
+        rect.anchorMin = new Vector2(0f, 1f);
+        rect.anchorMax = new Vector2(0f, 1f);
+        rect.pivot = new Vector2(0f, 1f);
+    }
+
+    /// <summary>Puts an icon's space at (<paramref name="x"/>, <paramref name="y"/>) and returns where the next piece starts.</summary>
+    private static float PlaceRowIconSpace(RectTransform rect, float size, float x, float y)
+    {
+        if (rect == null)
+        {
+            return x;
+        }
+
+        rect.sizeDelta = new Vector2(size, size);
+        rect.anchoredPosition = new Vector2(x, y);
+
+        return x + size + RowGap;
+    }
+
+    /// <summary>
+    /// Fills one of a row's lines in the record font at the label's size and colour, and sizes
+    /// its rect to the text (LayoutRowContent places it).
+    /// </summary>
+    private static void SetRowText(Transform textTransform, string text, TextMeshProUGUI style)
+    {
+        TextMeshProUGUI textMesh = textTransform != null ? textTransform.GetComponent<TextMeshProUGUI>() : null;
+        if (textMesh == null)
+        {
+            return;
+        }
+
+        TMP_FontAsset font = GetRecordFont();
+        if (font != null)
+        {
+            textMesh.font = font;
+        }
+        textMesh.fontSize = style.fontSize;
+        textMesh.color = style.color;
+        textMesh.text = text ?? string.Empty;
+
+        Vector2 size = textMesh.GetPreferredValues(textMesh.text);
+        textMesh.rectTransform.sizeDelta = new Vector2(size.x, Mathf.Max(size.y, style.fontSize));
+        textMesh.ForceMeshUpdate();
+    }
+
+    /// <summary>Puts a line at <paramref name="x"/> and returns where the next piece starts.</summary>
+    private static float PlaceRowText(Transform textTransform, float x)
+    {
+        RectTransform rect = textTransform as RectTransform;
+        if (rect == null)
+        {
+            return x;
+        }
+
+        rect.anchoredPosition = new Vector2(x, 0f);
+        return x + rect.sizeDelta.x + RowGap;
     }
 }

@@ -112,7 +112,6 @@ namespace WindingTale.Core.Map
 
         public static FDMap LoadFromChapter(int chapterId)
         {
-            Debug.Log("FDMap loadFromChapter");
             var map = new FDMap();
             map.ChapterId = chapterId;
             map.TurnNo = 0;

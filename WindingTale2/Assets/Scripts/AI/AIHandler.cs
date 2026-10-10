@@ -39,8 +39,6 @@ namespace WindingTale.AI
         /// <returns>Returning false means there is nothing to handle </returns>
         public bool Notified()
         {
-            UnityEngine.Debug.Log(this.Faction + " AIHandler Notified");
-
             List<FDCreature> creatures = null;
             if (this.Faction == CreatureFaction.Enemy)
             {
@@ -66,7 +64,6 @@ namespace WindingTale.AI
                 return false;
             }
 
-            Debug.Log("AIHandler Found creature");
 
             if (selectedCreature is FDAICreature aiCreature)
             {
@@ -205,7 +202,12 @@ namespace WindingTale.AI
 
             lastOperatedCreatureId = creature.Id;
 
-            if (!isIdle)
+            // A caster that is only going to defer its turn to the end of the round is not
+            // visited now either: the cursor goes straight on to the next creature to act,
+            // and comes to this one when it returns to act.
+            bool defers = aiDelegate is AIMagicalDelegate magical && magical.WillDeferTurn();
+
+            if (!isIdle && !defers)
             {
                 // Before the AI operates on this creature, slide the cursor (and the
                 // follow camera) to the tile under the creature, matching the same

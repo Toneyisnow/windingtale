@@ -29,10 +29,11 @@ namespace WindingTale.FightObjects
         private readonly List<float> hitEventTimes = new List<float>();
         private int hitCuesFired = 0;
 
-        // The wind-up sound plays once per attack, when the clip reaches its second frame.
+        // The wind-up sound plays once per attack, when the clip reaches its wind-up frame
+        // (per attacker, see SoundEffectTable.WindUpByAnimationId; the second frame by default).
         // It re-arms only once the animator has left the attack state, so a double attack
         // (the clip played again) winds up twice but a clip lingering on its last frame does not.
-        private const int WindUpFrame = 1;
+        private int windUpFrame = 1;
         private bool windUpPlayed = false;
 
         // Start is called before the first frame update
@@ -63,8 +64,8 @@ namespace WindingTale.FightObjects
                 return;
             }
 
-            if (!windUpPlayed && fightAnimation.AttackFrameCount > WindUpFrame
-                && state.normalizedTime * fightAnimation.AttackFrameCount >= WindUpFrame)
+            if (!windUpPlayed && fightAnimation.AttackFrameCount > windUpFrame
+                && state.normalizedTime * fightAnimation.AttackFrameCount >= windUpFrame)
             {
                 windUpPlayed = true;
                 SoundEffects.PlayBattleWindUp(animationId);
@@ -96,6 +97,8 @@ namespace WindingTale.FightObjects
             this.onHit = onHit;
             this.onFinish = onFinish;
 
+            this.windUpFrame = SoundEffects.GetBattleWindUpFrameIndex(animationId);
+
             this.onHitCue = onHitCue;
             this.hitCuesFired = 0;
             readHitEventTimes();
@@ -123,7 +126,6 @@ namespace WindingTale.FightObjects
 
             var hitPoint = this.animationHitPoints[this.animationHitIndex++];
 
-            Debug.Log("=== onAttackHit === " + hitPoint.ToString());
 
             this.onHit?.Invoke(hitPoint);
 
@@ -134,8 +136,6 @@ namespace WindingTale.FightObjects
         /// </summary>
         public void onAttackFinish()
         {
-            Debug.Log("=== onAttackFinish ===");
-
             // A double attack plays the same clip again: its hit points start over, or the
             // second strike's hits are all swallowed and the HP bar never moves.
             this.animationHitIndex = 0;

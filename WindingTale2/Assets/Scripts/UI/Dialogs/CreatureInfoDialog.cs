@@ -149,11 +149,9 @@ namespace WindingTale.UI.Dialogs
         private const float ItemIconInset = 0f;
         private const float ItemNameShiftX = 36f;
 
-        private static readonly Color SelectableTextColor = Color.white;
-
-        // Softened rather than pure red: pure red on the dark panel is hard to read at the
-        // small size the attribute line is rendered at.
-        private static readonly Color UnselectableTextColor = new Color(1f, 0.35f, 0.35f);
+        // Every entry is written in white: what can be picked is shown by where the highlight
+        // is allowed to go (findTarget), and what is worn by the item icon, not by red text.
+        private static readonly Color TextColor = Color.white;
 
         private static readonly Color HighlightColor = new Color(1f, 1f, 1f, 0.3f);
         private static readonly Color TransparentColor = new Color(1f, 1f, 1f, 0f);
@@ -228,16 +226,13 @@ namespace WindingTale.UI.Dialogs
         }
 
         /// <summary>
-        /// Moves the highlight by one grid step. A step that would leave the grid, or land on
-        /// a slot with nothing in it, is ignored - the highlight simply stays where it is.
-        /// On the item page the highlight only ever rests on an item this dialog can pick:
-        /// see findItemTarget.
+        /// Moves the highlight by one grid step. The highlight only ever rests on an entry
+        /// this dialog can pick (see findTarget); a step that finds none that way is ignored
+        /// - the highlight simply stays where it is.
         /// </summary>
         private void moveSelection(int deltaColumn, int deltaRow)
         {
-            int target = isMagicPage
-                ? findMagicTarget(deltaColumn, deltaRow)
-                : findItemTarget(deltaColumn, deltaRow);
+            int target = findTarget(deltaColumn, deltaRow);
 
             if (target < 0 || target == selectedSlotIndex)
             {
@@ -249,67 +244,55 @@ namespace WindingTale.UI.Dialogs
             SoundEffects.Play(SoundEffect.DialogCursorMove);
         }
 
-        /// <summary>One step on the fixed 3 x 4 magic grid, or -1 when it leads nowhere.</summary>
-        private int findMagicTarget(int deltaColumn, int deltaRow)
-        {
-            int column = getSlotColumn(selectedSlotIndex) + deltaColumn;
-            int row = getSlotRow(selectedSlotIndex) + deltaRow;
-
-            if (column < 0 || column >= MagicColumns || row < 0 || row >= MagicRows)
-            {
-                return -1;
-            }
-
-            int target = column * MagicRows + row;
-            return target < slotCount ? target : -1;
-        }
-
         /// <summary>
-        /// The item the arrow lands on, skipping every item this dialog cannot pick (a use
-        /// dialog's equipment, an equip dialog's potions ...), or -1 when there is none that
-        /// way. Left / right only look across the same row. Up / down walk row by row in that
-        /// direction and take the first row with a pickable item, preferring the current
-        /// column -- so an item in the other column is still reachable when the one straight
-        /// above / below cannot be picked.
+        /// The entry the arrow lands on, skipping every entry this dialog cannot pick (a use
+        /// dialog's equipment, an equip dialog's potions, a magic the MP will not pay for), or
+        /// -1 when there is none that way. It walks line by line in the arrow's direction --
+        /// rows for up / down, columns for left / right -- and takes the first line holding a
+        /// pickable entry, the one nearest the current position across that line. So an entry
+        /// is still reachable when the one straight ahead cannot be picked.
         /// </summary>
-        private int findItemTarget(int deltaColumn, int deltaRow)
+        private int findTarget(int deltaColumn, int deltaRow)
         {
+            // The item grid grows downwards with the item count; the magic grid is a fixed 3 x 4.
+            int columns = isMagicPage ? MagicColumns : ItemColumns;
+            int rows = isMagicPage ? MagicRows : (slotCount + ItemColumns - 1) / ItemColumns;
+
             int column = getSlotColumn(selectedSlotIndex);
             int row = getSlotRow(selectedSlotIndex);
 
-            if (deltaRow == 0)
+            bool vertical = deltaRow != 0;
+            int step = vertical ? deltaRow : deltaColumn;
+            int lineCount = vertical ? rows : columns;
+            int lineLength = vertical ? columns : rows;
+            int along = vertical ? column : row;
+
+            for (int line = (vertical ? row : column) + step; line >= 0 && line < lineCount; line += step)
             {
-                int targetColumn = column + deltaColumn;
-                if (targetColumn < 0 || targetColumn >= ItemColumns)
+                for (int offset = 0; offset < lineLength; offset++)
                 {
-                    return -1;
-                }
-
-                int target = row * ItemColumns + targetColumn;
-                return isPickableSlot(target) ? target : -1;
-            }
-
-            // The item grid grows downwards with the item count.
-            int rowCount = (slotCount + ItemColumns - 1) / ItemColumns;
-            for (int targetRow = row + deltaRow; targetRow >= 0 && targetRow < rowCount; targetRow += deltaRow)
-            {
-                int sameColumn = targetRow * ItemColumns + column;
-                if (isPickableSlot(sameColumn))
-                {
-                    return sameColumn;
-                }
-
-                for (int otherColumn = 0; otherColumn < ItemColumns; otherColumn++)
-                {
-                    int other = targetRow * ItemColumns + otherColumn;
-                    if (otherColumn != column && isPickableSlot(other))
+                    foreach (int position in new[] { along - offset, along + offset })
                     {
-                        return other;
+                        if (position < 0 || position >= lineLength)
+                        {
+                            continue;
+                        }
+
+                        int target = vertical ? getSlotIndex(position, line) : getSlotIndex(line, position);
+                        if (isPickableSlot(target))
+                        {
+                            return target;
+                        }
                     }
                 }
             }
 
             return -1;
+        }
+
+        private int getSlotIndex(int column, int row)
+        {
+            return isMagicPage ? column * MagicRows + row : row * ItemColumns + column;
         }
 
         private bool isPickableSlot(int index)
@@ -328,10 +311,9 @@ namespace WindingTale.UI.Dialogs
         }
 
         /// <summary>
-        /// Confirms the entry at <paramref name="index"/>. A click also moves the highlight
-        /// there first, so clicking an unselectable magic leaves it highlighted but does
-        /// nothing else - the same outcome as walking onto it with the arrow keys. An
-        /// unselectable item cannot be highlighted at all, so clicking one does nothing.
+        /// Confirms the entry at <paramref name="index"/>, moving the highlight there first for
+        /// a click. An unselectable entry cannot be highlighted at all, so clicking one does
+        /// nothing.
         /// </summary>
         private void onSlotActivated(int index, bool moveHighlight)
         {
@@ -340,7 +322,7 @@ namespace WindingTale.UI.Dialogs
                 return;
             }
 
-            if (!isMagicPage && !slotSelectable[index])
+            if (!slotSelectable[index])
             {
                 return;
             }
@@ -349,11 +331,6 @@ namespace WindingTale.UI.Dialogs
             {
                 selectedSlotIndex = index;
                 refreshHighlight();
-            }
-
-            if (!slotSelectable[index])
-            {
-                return;
             }
 
             SoundEffects.Play(SoundEffect.DialogConfirm);
@@ -422,10 +399,9 @@ namespace WindingTale.UI.Dialogs
 
         /// <summary>
         /// The entry to open on: the first one that can actually be picked. With nothing
-        /// pickable the magic page still highlights its first entry; the item page, whose
-        /// highlight never rests on an unpickable item, highlights nothing (-1), which also
-        /// leaves the keys with nothing to do but close. View-only dialogs pass -1 to leave
-        /// the grid unhighlighted instead of calling this.
+        /// pickable nothing is highlighted (-1) -- the highlight never rests on an unpickable
+        /// entry -- which also leaves the keys with nothing to do but close. View-only dialogs
+        /// pass -1 to leave the grid unhighlighted instead of calling this.
         /// </summary>
         private int getFirstSelectableIndex()
         {
@@ -442,7 +418,7 @@ namespace WindingTale.UI.Dialogs
                 }
             }
 
-            return isMagicPage ? 0 : -1;
+            return -1;
         }
 
         /// <summary>
@@ -476,21 +452,20 @@ namespace WindingTale.UI.Dialogs
         }
 
         /// <summary>
-        /// Wires one grid slot: colours its labels by selectability and points its button at
-        /// this open's callback. The dialog is a scene object that is reused rather than
-        /// re-instantiated, so the button is only added once and re-pointed on each open;
-        /// adding a second TaggedButton would fire onSelected twice.
+        /// Wires one grid slot: records whether it can be picked, paints its labels white and
+        /// points its button at this open's callback. The dialog is a scene object that is
+        /// reused rather than re-instantiated, so the button is only added once and re-pointed
+        /// on each open; adding a second TaggedButton would fire onSelected twice.
         /// </summary>
         private void setupSlot(GameObject slot, int index, bool selectable, params TextMeshProUGUI[] labels)
         {
             slotSelectable[index] = selectable;
 
-            Color textColor = selectable ? SelectableTextColor : UnselectableTextColor;
             foreach (TextMeshProUGUI label in labels)
             {
                 if (label != null)
                 {
-                    label.color = textColor;
+                    label.color = TextColor;
                 }
             }
 
@@ -681,12 +656,7 @@ namespace WindingTale.UI.Dialogs
                     bool equipped = itemIndex == creature.AttackItemIndex || itemIndex == creature.DefendItemIndex;
                     setupItemIcon(selectable, item, equipped);
 
-                    // Items are all written in white: what can be picked is shown by where
-                    // the highlight is allowed to go (findItemTarget), and what is worn by
-                    // the icon, not by red text.
-                    setupSlot(selectable, itemIndex, isItemSelectable(itemIndex, item));
-                    selectableText.color = SelectableTextColor;
-                    selectableAttr.color = SelectableTextColor;
+                    setupSlot(selectable, itemIndex, isItemSelectable(itemIndex, item), selectableText, selectableAttr);
                 }
                 for (int itemIndex = slotCount; itemIndex < MaxItemCount; itemIndex++)
                 {

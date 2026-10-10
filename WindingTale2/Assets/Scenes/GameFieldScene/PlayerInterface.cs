@@ -294,8 +294,6 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void onUpdateState(IActionState nextState)
         {
-            Debug.LogFormat("PlayerInterface.onUpdateState. [{0}] => [{1}]", actionState.GetType(), nextState.GetType());
-
             if (nextState != actionState)
             {
                 // Do onExit immediately

@@ -157,8 +157,7 @@ public class TalkDialog : MonoBehaviour
         }
         else if (!needConfirm)
         {
-            // Show only: pressing any keyboard or mouse button dismisses the dialog.
-            SoundEffects.Play(SoundEffect.DialogConfirm);
+            // Show only: pressing any keyboard or mouse button dismisses the dialog, silently.
             onConfirm();
         }
         else
@@ -276,7 +275,6 @@ public class TalkDialog : MonoBehaviour
         }
         SetDatoFrame(0);
 
-        Debug.Log("Talk Dialog Animation Id: " + creatureAnimationId);
 
         this.onSelected = onSelected;
         this.needConfirm = needConfirm;

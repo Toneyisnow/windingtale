@@ -47,6 +47,12 @@ public class ShoppingScene : MonoBehaviour
     /// </summary>
     private const string OverwriteConfirmText = "是否要覆盖存档？";
 
+    /// <summary>
+    /// Asked before the bar's Quit leaves for the title screen. No confirm string carries it,
+    /// so it is a literal drawn in the record font, like OverwriteConfirmText.
+    /// </summary>
+    private const string QuitConfirmText = "确认退出吗？";
+
     /// <summary>CommonStrings "Message-63" shown when the purse cannot cover an item: "钱不够！".</summary>
     private const int NotEnoughMoneyMessageId = 63;
 
@@ -76,6 +82,27 @@ public class ShoppingScene : MonoBehaviour
 
     /// <summary>CommonStrings "Message-60" shown when nobody has fallen: "队员中没有需要复活的！".</summary>
     private const int NoOneToReviveMessageId = 60;
+
+    /// <summary>CommonStrings "Message-61" shown when nobody can change career: "队员中没有可以转职的！".</summary>
+    private const int NoOneToTransferMessageId = 61;
+
+    /// <summary>CommonStrings "Confirm-58" asked before a transfer: "{名字}转职为{职业}，#需要{价格}元，确定要转职吗？".</summary>
+    private const int TransferConfirmId = 58;
+
+    /// <summary>Shown once a transfer is done. No message string carries it.</summary>
+    private const string TransferDoneText = "转职成功！";
+
+    /// <summary>What the church charges for a career change -- the original's transferFee.</summary>
+    private const int TransferFee = 300;
+
+    /// <summary>What a special career change costs: one that needs an item (2xx / 3xx).</summary>
+    private const int SpecialTransferFee = 500;
+
+    /// <summary>The level a party member has to reach before the church will change their career.</summary>
+    private const int TransferMinLevel = 20;
+
+    /// <summary>The level a party member starts again from in their new career, as in the original.</summary>
+    private const int TransferStartLevel = 1;
 
     /// <summary>
     /// What the church charges to bring a party member back, per level of that member. The
@@ -203,6 +230,16 @@ public class ShoppingScene : MonoBehaviour
     private CreatureMapRecord pendingReviveFriend = null;
 
     private int pendingRevivePrice = 0;
+
+    /// <summary>One line of the transfer list: who changes, and into what.</summary>
+    private class TransferOption
+    {
+        public CreatureMapRecord Friend;
+        public TransferDefinition Transfer;
+    }
+
+    /// <summary>The transfer the "确定要转职吗？" confirm is asking about.</summary>
+    private TransferOption pendingTransfer = null;
 
     void Start()
     {
@@ -432,6 +469,10 @@ public class ShoppingScene : MonoBehaviour
                 OpenRecordDialog(isSave: false);
                 break;
 
+            case ShoppingHomeDialog.ShopAction.QuitGame:
+                OpenQuitConfirmDialog();
+                break;
+
             case ShoppingHomeDialog.ShopAction.SellAny:
                 OpenCreaturesDialog();
                 break;
@@ -446,6 +487,10 @@ public class ShoppingScene : MonoBehaviour
 
             case ShoppingHomeDialog.ShopAction.Revive:
                 OpenReviveFlow();
+                break;
+
+            case ShoppingHomeDialog.ShopAction.Transfer:
+                OpenTransferFlow();
                 break;
 
             case ShoppingHomeDialog.ShopAction.BuyItem:
@@ -1212,6 +1257,244 @@ public class ShoppingScene : MonoBehaviour
     }
 
     /// <summary>
+    /// The church's Transfer flow (the original's Shopping2ChurchDialog onTransfer). With nobody
+    /// able to change career, "队员中没有可以转职的！" is shown over the home dialog. Otherwise the
+    /// transfer list opens -- one row per change open to someone, "<icon> 名字 职业 -> <icon>
+    /// 新职业" with the arrow at the middle of the screen, the icons the creature list's voxel ones -- on the record picker's cursor; a row confirmed there leads to the price
+    /// question (OnTransferChosen).
+    /// </summary>
+    private void OpenTransferFlow()
+    {
+        pendingTransfer = null;
+
+        List<TransferOption> options = GetTransferOptions();
+        if (options.Count == 0)
+        {
+            OpenMessageDialog(NoOneToTransferMessageId);
+            return;
+        }
+
+        if (shoppingRecordDialogPrefab == null)
+        {
+            Debug.LogWarning("Shopping scene has no record dialog prefab to show the transfer list on.");
+            return;
+        }
+
+        GameObject dialogObject = Instantiate(shoppingRecordDialogPrefab);
+        ShoppingRecordDialog dialog = dialogObject.GetComponent<ShoppingRecordDialog>();
+        if (dialog == null)
+        {
+            Debug.LogWarning("Record dialog prefab has no ShoppingRecordDialog component.");
+            Destroy(dialogObject);
+            return;
+        }
+
+        List<ShoppingRecordDialog.ListRow> rows = new List<ShoppingRecordDialog.ListRow>();
+        foreach (TransferOption option in options)
+        {
+            rows.Add(DescribeTransfer(option));
+        }
+
+        dialog.InitRows(rows, index => OnTransferChosen(options, index));
+        PushDialog(dialogObject);
+    }
+
+    /// <summary>
+    /// Every change open to the party, in party order: a member (fallen or not) of level
+    /// TransferMinLevel or more whose definition has transfers in Data/Transfer (the base
+    /// careers -- a changed career has none), one row per transfer, a special one (2xx / 3xx)
+    /// only while they carry the item it asks for.
+    /// </summary>
+    private List<TransferOption> GetTransferOptions()
+    {
+        List<TransferOption> options = new List<TransferOption>();
+        if (record == null || record.Friends == null)
+        {
+            return options;
+        }
+
+        foreach (CreatureMapRecord friend in record.Friends)
+        {
+            // A fallen member may change career too, as in the original. They stay fallen
+            // (ExecuteTransfer leaves 0 HP at 0) and still need the church's revive.
+            if (friend == null || friend.Level < TransferMinLevel)
+            {
+                continue;
+            }
+
+            TransfersDefinition transfers = DefinitionStore.Instance.GetTransfersDefinition(friend.DefinitionId);
+            if (transfers == null || transfers.Transfers == null)
+            {
+                continue;
+            }
+
+            foreach (TransferDefinition transfer in transfers.Transfers)
+            {
+                if (DefinitionStore.Instance.GetCreatureDefinition(transfer.ToDefinitionId) == null)
+                {
+                    continue;
+                }
+
+                if (transfer.RequireItemId != 0
+                    && (friend.ItemIds == null || !friend.ItemIds.Contains(transfer.RequireItemId)))
+                {
+                    continue;
+                }
+
+                options.Add(new TransferOption { Friend = friend, Transfer = transfer });
+            }
+        }
+
+        return options;
+    }
+
+    private static ShoppingRecordDialog.ListRow DescribeTransfer(TransferOption option)
+    {
+        CreatureDefinition from = DefinitionStore.Instance.GetCreatureDefinition(option.Friend.DefinitionId);
+        CreatureDefinition to = DefinitionStore.Instance.GetCreatureDefinition(option.Transfer.ToDefinitionId);
+
+        return new ShoppingRecordDialog.ListRow
+        {
+            LeftIconAnimationId = from != null ? from.AnimationId : 0,
+            LeftText = string.Format("{0} {1}", CreatureName(from), OccupationName(from)),
+            RightIconAnimationId = to != null ? to.AnimationId : 0,
+            RightText = OccupationName(to),
+        };
+    }
+
+    private static string CreatureName(CreatureDefinition definition)
+    {
+        return definition != null ? definition.Name : string.Empty;
+    }
+
+    private static string OccupationName(CreatureDefinition definition)
+    {
+        OccupationDefinition occupation = definition != null
+            ? DefinitionStore.Instance.GetOccupationDefinition(definition.Occupation)
+            : null;
+        return occupation != null ? occupation.Name : string.Empty;
+    }
+
+    /// <summary>
+    /// A row of the transfer list was confirmed (or the list backed out of, -1, which pops it
+    /// back to the home dialog). The "{名字}转职为{职业}，#需要{价格}元，确定要转职吗？" question
+    /// (Confirm-58) is asked over the list, in the record font since it names careers the baked
+    /// message atlas may not hold; the transfer waits on the answer (OnTransferConfirmed).
+    /// </summary>
+    private void OnTransferChosen(List<TransferOption> options, int index)
+    {
+        if (index < 0 || index >= options.Count)
+        {
+            PopDialog();
+            return;
+        }
+
+        TransferOption option = options[index];
+        pendingTransfer = option;
+
+        CreatureDefinition from = DefinitionStore.Instance.GetCreatureDefinition(option.Friend.DefinitionId);
+        CreatureDefinition to = DefinitionStore.Instance.GetCreatureDefinition(option.Transfer.ToDefinitionId);
+        FDMessage confirm = FDMessage.Create(
+            FDMessage.MessageTypes.Confirm, TransferConfirmId, TransferPrice(option), 0, CreatureName(from), OccupationName(to));
+
+        ShoppingConfirmDialog dialog = InstantiateConfirmDialog();
+        if (dialog == null)
+        {
+            return;
+        }
+
+        dialog.InitLiteral(LocalizationManager.GetFDMessageString(confirm).GetLocalizedString(), OnTransferConfirmed);
+        PushDialog(dialog.gameObject);
+    }
+
+    /// <summary>
+    /// The "确定要转职吗？" question has closed, and is popped either way; a No lands back on the
+    /// list. A Yes with too little money says "钱不够！" over the list. Otherwise the transfer is
+    /// made, the list is taken down, and "转职成功！" is shown; dismissing it brings the list back
+    /// rebuilt -- or lands on the home dialog when nobody is left who can change.
+    /// </summary>
+    private void OnTransferConfirmed(bool yes)
+    {
+        PopDialog();
+
+        TransferOption option = pendingTransfer;
+        pendingTransfer = null;
+        if (!yes || option == null)
+        {
+            return;
+        }
+
+        int money = record != null ? record.TotalMoney : 0;
+        if (money < TransferPrice(option))
+        {
+            OpenMessageDialog(FDMessage.Create(FDMessage.MessageTypes.Information, NotEnoughMoneyMessageId));
+            return;
+        }
+
+        ExecuteTransfer(option);
+
+        PopDialog(); // the transfer list, rebuilt once the notice is dismissed
+        OpenLiteralMessageDialog(TransferDoneText, () =>
+        {
+            if (GetTransferOptions().Count > 0)
+            {
+                OpenTransferFlow();
+            }
+        });
+    }
+
+    /// <summary>
+    /// Changes the party member's career, as the original's doTransfer does: the item a special
+    /// career asks for is used up, the fee is paid, the record takes the new definition at
+    /// TransferStartLevel, every stat gains a roll from the transfer's ranges, and HP / MP are
+    /// filled to the new maxima -- except a fallen member's HP, which stays at 0: changing
+    /// career does not revive them. Magic already learned is kept; the new career's own spells come
+    /// with its level-ups (Data/LevelUpMagic). The record is the party's own entry, so the change
+    /// travels home to the village with it.
+    /// </summary>
+    private void ExecuteTransfer(TransferOption option)
+    {
+        CreatureMapRecord friend = option.Friend;
+        TransferDefinition transfer = option.Transfer;
+
+        if (transfer.RequireItemId != 0)
+        {
+            FDCreature live = GameMapRecordManager.CreateCreatureFromRecord(friend);
+            int itemIndex = live.Items.IndexOf(transfer.RequireItemId);
+            if (itemIndex >= 0)
+            {
+                live.RemoveItemAt(itemIndex);
+                WriteBackItems(friend, live);
+            }
+        }
+
+        if (record != null)
+        {
+            record.TotalMoney -= TransferPrice(option);
+        }
+
+        friend.DefinitionId = transfer.ToDefinitionId;
+        friend.Level = TransferStartLevel;
+        friend.Ap += FDRandom.IntFromSpan(transfer.ApRange);
+        friend.Dp += FDRandom.IntFromSpan(transfer.DpRange);
+        friend.Dx += FDRandom.IntFromSpan(transfer.DxRange);
+        friend.HpMax += FDRandom.IntFromSpan(transfer.HpRange);
+        friend.MpMax += FDRandom.IntFromSpan(transfer.MpRange);
+        friend.Mv += FDRandom.IntFromSpan(transfer.MvRange);
+        friend.Hp = friend.Hp > 0 ? friend.HpMax : 0;
+        friend.Mp = friend.MpMax;
+
+        RefreshMoneyBar();
+        SoundEffects.Play(SoundEffect.ShopPurchase);
+    }
+
+    /// <summary>What this change costs: SpecialTransferFee for one that needs an item, else TransferFee.</summary>
+    private static int TransferPrice(TransferOption option)
+    {
+        return option.Transfer.RequireItemId != 0 ? SpecialTransferFee : TransferFee;
+    }
+
+    /// <summary>
     /// The Equip flow: opens the creature picker; a chosen creature opens the info dialog in
     /// its equip role (CreatureInfoType.SelectEquipItem). Picking an item there equips it and
     /// keeps the info dialog open on the now-updated creature (see the picker's
@@ -1372,6 +1655,46 @@ public class ShoppingScene : MonoBehaviour
         SceneManager.LoadScene("VillageScene", LoadSceneMode.Single);
     }
 
+    /// <summary>The bar's Quit: "确认退出吗？" over the home dialog; the answer lands in OnQuitConfirmed.</summary>
+    private void OpenQuitConfirmDialog()
+    {
+        ShoppingConfirmDialog dialog = InstantiateConfirmDialog();
+        if (dialog == null)
+        {
+            return;
+        }
+
+        dialog.InitLiteral(QuitConfirmText, OnQuitConfirmed);
+        PushDialog(dialog.gameObject);
+    }
+
+    /// <summary>
+    /// The quit question has closed. No pops back to the home dialog; Yes leaves for the title
+    /// screen the way the shop leaves for the village -- dialogs down, then the picture fades to
+    /// black and the title is loaded on it. Nothing is saved on the way out.
+    /// </summary>
+    private void OnQuitConfirmed(bool yes)
+    {
+        PopDialog();
+
+        if (!yes)
+        {
+            return;
+        }
+
+        leaving = true;
+        HideDialogs();
+
+        // The village left a "back from the shop" marker on the way in; going to the title
+        // instead, it must not be found by the next village a load opens.
+        GlobalVariables.Take<VillageScene.ShopReturnInfo>(VillageScene.ShopReturnVariableName);
+
+        fader.FadeTo(1.0f, fadeDuration, () =>
+        {
+            SceneManager.LoadScene("TitleScene", LoadSceneMode.Single);
+        });
+    }
+
     /// <summary>Pushes a one-line notice that any key dismisses, popping back to whatever is beneath.</summary>
     private void OpenMessageDialog(int messageId)
     {
@@ -1417,6 +1740,26 @@ public class ShoppingScene : MonoBehaviour
         }
 
         dialog.Init(message, PopDialog);
+        PushDialog(dialog.gameObject);
+    }
+
+    /// <summary>
+    /// Pushes a literal notice (drawn in the record font) that, on the first key, pops itself
+    /// and then runs <paramref name="onDismissed"/>.
+    /// </summary>
+    private void OpenLiteralMessageDialog(string text, System.Action onDismissed)
+    {
+        ShoppingMessageDialog dialog = InstantiateMessageDialog();
+        if (dialog == null)
+        {
+            return;
+        }
+
+        dialog.InitLiteral(text, () =>
+        {
+            PopDialog();
+            onDismissed?.Invoke();
+        });
         PushDialog(dialog.gameObject);
     }
 

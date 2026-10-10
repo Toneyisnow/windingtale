@@ -21,18 +21,35 @@ namespace WindingTale.AI.Delegates
 
         public override void TakeAction()
         {
+            if (this.IsAlerted())
+            {
+                base.TakeAction();
+                return;
+            }
+
+            this.EndTurn();
+        }
+
+        /// <summary>Only an alerted guard gets as far as the caster's turn, and so only it can defer.</summary>
+        public override bool WillDeferTurn()
+        {
+            return this.IsAlerted() && base.WillDeferTurn();
+        }
+
+        /// <summary>Whether an opponent stands within the reach of one of its spells.</summary>
+        private bool IsAlerted()
+        {
             int alertDistance = this.GetMaxMagicReach();
 
             foreach (FDCreature c in this.GetOppositeCreatures())
             {
                 if (GetDirectDistance(this.creature.Position, c.Position) <= alertDistance)
                 {
-                    base.TakeAction();
-                    return;
+                    return true;
                 }
             }
 
-            this.EndTurn();
+            return false;
         }
 
         /// <summary>

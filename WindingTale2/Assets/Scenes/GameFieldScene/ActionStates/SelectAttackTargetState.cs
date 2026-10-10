@@ -47,7 +47,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 }
 
                 FDSpan span = attackItem.AttackScope;
-                Debug.Log("AttackScope: " + span.Min + " " + span.Max);
 
 
                 DirectRangeFinder finder = new DirectRangeFinder(fdMap.Field, this.Creature.Position, span.Max, span.Min);

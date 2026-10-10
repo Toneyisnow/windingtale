@@ -147,13 +147,25 @@ namespace WindingTale.UI.Audio
         /// <summary>The attacker's wind-up: its own clip by fight animation id, else the common one.</summary>
         public static void PlayBattleWindUp(int animationId)
         {
-            if (SoundEffectTable.WindUpByAnimationId.TryGetValue(animationId, out string clipName))
+            if (SoundEffectTable.WindUpByAnimationId.TryGetValue(animationId, out WindUpSound own))
             {
-                PlayClip(clipName);
+                PlayClip(own.Clip);
                 return;
             }
 
             Play(SoundEffect.BattleWindUp);
+        }
+
+        /// <summary>
+        /// The attack animation frame the wind-up starts on, counted from 0 (the clip's first
+        /// frame): the attacker's own (WindUpByAnimationId), else DefaultWindUpFrame.
+        /// </summary>
+        public static int GetBattleWindUpFrameIndex(int animationId)
+        {
+            int frame = SoundEffectTable.WindUpByAnimationId.TryGetValue(animationId, out WindUpSound own)
+                ? own.Frame
+                : SoundEffectTable.DefaultWindUpFrame;
+            return Mathf.Max(0, frame - 1);
         }
 
         /// <summary>The start of a spell's battle animation: the spell's own clip, else its kind's.</summary>
@@ -289,7 +301,10 @@ namespace WindingTale.UI.Audio
             List<string> names = new List<string>();
             names.AddRange(SoundEffectTable.Effects.Values);
             names.AddRange(SoundEffectTable.Walks.Values);
-            names.AddRange(SoundEffectTable.WindUpByAnimationId.Values);
+            foreach (WindUpSound windUp in SoundEffectTable.WindUpByAnimationId.Values)
+            {
+                names.Add(windUp.Clip);
+            }
             names.AddRange(SoundEffectTable.HitByWeaponCategory.Values);
             names.AddRange(SoundEffectTable.HitByItemId.Values);
             names.AddRange(SoundEffectTable.HitByAnimationId.Values);

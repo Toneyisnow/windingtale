@@ -63,7 +63,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Attack
             this.SetMenu(1, MenuItemId.ActionAttack, IsMenuAttackEnabled(), () =>
             {
-                Debug.Log("Attack clicked");
                 return new SelectAttackTargetState(gameMain, creature);
             });
 
@@ -79,7 +78,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             // Rest
             this.SetMenu(3, MenuItemId.ActionRest, true, () =>
             {
-                Debug.Log("Rest action.");
                 IActionState nextState;
                 if (treasure == null || treasure.HasOpened)
                 {
@@ -231,7 +229,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
         private void OnMagicSelected(int index)
         {
-            Debug.Log("MenuActionState: OnMagicSelected. Index = " + index);
             if (index < 0 || index >= creature.Magics.Count)
             {
                 // Cancelled
@@ -356,7 +353,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         public override void onEnter()
         {
             // Show the Menu Buttons
-            Debug.Log("MenuActionState: onEnter");
 
             base.onEnter();
         }

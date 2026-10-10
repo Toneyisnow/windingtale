@@ -370,7 +370,6 @@ namespace WindingTale.Scenes.GameBattleScene
         {
             var target = magicResult.Targets[currentTargetIndex];
             var targetHpScale = getBarScale(current, target.HpMax);
-            Debug.Log("updateTargetHp: " + targetHpScale + ", " + current + ", " + target.HpMax);
             targetHpBar.transform.localScale = new Vector3(targetHpScale, 1, 1);
 
             if (targetBarInfo != null) targetBarInfo.SetHp(current);

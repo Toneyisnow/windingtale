@@ -196,7 +196,6 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void ContinueGame()
         {
-            Debug.Log("Continue Game...");
             GameFiledSceneParams.isContinue = true;
 
             Destroy(gameObject);
@@ -433,8 +432,6 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void creatureAttackAsync(FDCreature creature, FDCreature target)
         {
-            Debug.Log("creatureAttack!!!");
-
             Creature c = gameMap.GetCreature(creature);
 
             AttackResult result = BattleHandler.HandleCreatureAttack(creature, target, gameMap.Map.Field);
@@ -527,8 +524,6 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void creatureMagic(FDCreature creature, FDPosition position, int magicId)
         {
-            Debug.Log("creatureMagic!!!");
-
             Creature c = gameMap.GetCreature(creature);
             MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
 
@@ -866,8 +861,6 @@ namespace WindingTale.Scenes.GameFieldScene
         /// </summary>
         public void creaturePendAction(FDCreature creature)
         {
-            Debug.Log("creaturePendAction: creature=" + creature.Id);
-
             if (creature is FDAICreature aiCreature)
             {
                 aiCreature.PendingAction = true;
@@ -881,8 +874,6 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void creatureUseItem(FDCreature creature, int itemIndex, FDCreature target)
         {
-            Debug.Log("creatureUseItem!!!");
-
             int itemId = creature.Items[itemIndex];
             creature.RemoveItemAt(itemIndex);
 

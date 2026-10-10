@@ -45,7 +45,6 @@ namespace WindingTale.MapObjects.Blocks
 
         public void OnPointerDownDelegate(PointerEventData data)
         {
-            Debug.Log("OnPointerDownDelegate called. " + Position.ToString());
             PlayerInterface.getDefault().onSelectedPosition(this.Position);
         }
     }

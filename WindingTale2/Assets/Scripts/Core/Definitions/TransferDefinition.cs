@@ -7,6 +7,10 @@ using WindingTale.Core.Files;
 namespace WindingTale.Core.Definitions
 {
 
+    /// <summary>
+    /// Every career change open to one creature definition: a block of Data/Transfer, which
+    /// reads "<from definition> <count>" and then one TransferDefinition row per change.
+    /// </summary>
     public class TransfersDefinition
     {
         public int DefinitionId
@@ -31,12 +35,19 @@ namespace WindingTale.Core.Definitions
             {
                 TransferDefinition transfer = TransferDefinition.ReadFromFile(reader);
                 transfer.DefinitionId = def.DefinitionId;
+                def.Transfers.Add(transfer);
             }
 
             return def;
         }
     }
 
+    /// <summary>
+    /// One career change: "<to definition> <required item, 0 for none>" and then the six
+    /// ranges (AP DP DX HP MP MV) whose rolls are added to the creature's stats, as the
+    /// original's TransferDefinition reads it. DefinitionId -- the creature changing -- comes
+    /// from the enclosing TransfersDefinition block, not from the row.
+    /// </summary>
     public class TransferDefinition
     {
         public int DefinitionId
@@ -87,7 +98,6 @@ namespace WindingTale.Core.Definitions
         {
             TransferDefinition def = new TransferDefinition();
 
-            def.DefinitionId = reader.ReadInt();
             def.ToDefinitionId = reader.ReadInt();
             def.RequireItemId = reader.ReadInt();
             def.ApRange = reader.ReadSpan();

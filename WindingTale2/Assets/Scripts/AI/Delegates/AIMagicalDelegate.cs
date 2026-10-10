@@ -52,35 +52,35 @@ namespace WindingTale.AI.Delegates
         protected abstract void TakePendAction();
 
         /// <summary>
+        /// Whether TakeAction will only defer the turn (PendAction) this time round: a first
+        /// pass with no healing to drink and no spell worth casting. Asked before TakeAction so
+        /// the AI handler does not pan the cursor to a creature that is about to step aside --
+        /// it is shown when it comes back to act. Asks the same questions TakeAction does, and
+        /// changes nothing.
+        /// </summary>
+        public virtual bool WillDeferTurn()
+        {
+            bool pending = (this.creature as FDAICreature)?.PendingAction ?? false;
+            if (pending || this.NeedAndCanRecover())
+            {
+                return false;
+            }
+
+            List<MagicDefinition> castableMagics = new List<MagicDefinition>();
+            List<FDCreature> candidates = new List<FDCreature>();
+            this.CollectCastableMagics(castableMagics, candidates);
+
+            return castableMagics.Count == 0;
+        }
+
+        /// <summary>
         /// Casts the best spell available, or defers the turn when there is none.
         /// </summary>
         private void TakeMagicAction()
         {
-            List<MagicDefinition> magics = this.GetAvailableMagics();
-
-            // For each spell it could cast, who it would cast it on. A spell with nobody
-            // worth casting it on is dropped.
             List<MagicDefinition> castableMagics = new List<MagicDefinition>();
             List<FDCreature> candidates = new List<FDCreature>();
-
-            foreach (MagicDefinition magic in magics)
-            {
-                FDCreature candidate = null;
-                if (magic.Type == MagicType.Attack || magic.Type == MagicType.Offensive)
-                {
-                    candidate = this.FindOffensiveCandidate(magic);
-                }
-                else if (magic.Type == MagicType.Recover || magic.Type == MagicType.Defensive)
-                {
-                    candidate = this.FindDefensiveCandidate(magic);
-                }
-
-                if (candidate != null)
-                {
-                    castableMagics.Add(magic);
-                    candidates.Add(candidate);
-                }
-            }
+            this.CollectCastableMagics(castableMagics, candidates);
 
             if (castableMagics.Count == 0)
             {
@@ -104,6 +104,32 @@ namespace WindingTale.AI.Delegates
             gameMain.PushActivity((game) => game.gameMap.SetCursorScope(effectScope));
             gameMain.PushActivity(new SlideCursorActivity(magicPosition));
             gameMain.PushActivity((game) => game.creatureMagic(this.creature, magicPosition, selectedMagic.MagicId));
+        }
+
+        /// <summary>
+        /// For each spell the creature could cast, who it would cast it on, index for index. A
+        /// spell with nobody worth casting it on is dropped.
+        /// </summary>
+        private void CollectCastableMagics(List<MagicDefinition> castableMagics, List<FDCreature> candidates)
+        {
+            foreach (MagicDefinition magic in this.GetAvailableMagics())
+            {
+                FDCreature candidate = null;
+                if (magic.Type == MagicType.Attack || magic.Type == MagicType.Offensive)
+                {
+                    candidate = this.FindOffensiveCandidate(magic);
+                }
+                else if (magic.Type == MagicType.Recover || magic.Type == MagicType.Defensive)
+                {
+                    candidate = this.FindDefensiveCandidate(magic);
+                }
+
+                if (candidate != null)
+                {
+                    castableMagics.Add(magic);
+                    candidates.Add(candidate);
+                }
+            }
         }
 
         /// <summary>

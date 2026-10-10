@@ -80,8 +80,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         {
             if (index == 1)
             {
-                Debug.Log("Loading Continue Game...");
-
                 // Load Game
                 gameMain.ContinueGame();
 
@@ -99,8 +97,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         {
             if (index == 1)
             {
-                Debug.Log("Saving Game...");
-
                 // Save Game
                 gameMain.SaveGame();
                 gameMain.PushActivity(gameMain =>
@@ -131,8 +127,6 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         {
             if (index == 1)
             {
-                Debug.Log("Quiting Game...");
-
                 // Quit Game
                 gameMain.PushActivity(gameMain =>
                 {

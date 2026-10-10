@@ -605,7 +605,6 @@ public class ShoppingItemsDialog : MonoBehaviour
         SoundEffects.Play(SoundEffect.DialogConfirm);
 
         int itemId = items[itemIndex].ItemId;
-        Debug.Log("ShoppingItemsDialog: selected item " + itemId);
         OnItemSelected?.Invoke(itemId);
     }
 

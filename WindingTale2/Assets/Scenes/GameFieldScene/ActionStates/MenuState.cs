@@ -35,7 +35,6 @@ public class MenuState : IActionState
 
     public override void onEnter()
     {
-        Debug.Log("MenuState: onEnter");
         gameMain.gameMap.ShowMenu(fdMenu);
 
         // Lift the camera to look straight down while the menu is up, so the board around
@@ -80,7 +79,6 @@ public class MenuState : IActionState
 
     public override void onExit()
     {
-        Debug.Log("MenuState: onExit");
         // Close Action Menu
         gameMain.gameMap.CloseMenu(fdMenu);
 
@@ -88,8 +86,6 @@ public class MenuState : IActionState
 
     public override IActionState onSelectedPosition(FDPosition position)
     {
-        Debug.Log("MenuState: onSelectedPosition" + position.ToString());
-
         for (int index = 0; index < 4; index++)
         {
             FDMenuItem item = this.fdMenu.Items[index];

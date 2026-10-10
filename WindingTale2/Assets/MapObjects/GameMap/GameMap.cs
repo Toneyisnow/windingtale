@@ -527,8 +527,6 @@ namespace WindingTale.MapObjects.GameMap
 
         public void showMoveRange(FDCreature creature, FDMoveRange moveRange)
         {
-            Debug.Log("showMoveRange");
-
             ShapesLayer shapes = getShapesLayer();
             GameObject indicatorPrefab = Resources.Load<GameObject>("Others/Cursors/MoveIndicator");
             foreach (FDPosition position in moveRange.ToList())
@@ -547,8 +545,6 @@ namespace WindingTale.MapObjects.GameMap
 
         public void showActionTargetRange(FDCreature creature, FDRange targetRange)
         {
-            Debug.Log("showAttackRange");
-
             ShapesLayer shapes = getShapesLayer();
             GameObject indicatorPrefab = Resources.Load<GameObject>("Others/Cursors/MoveIndicator");
             foreach (FDPosition position in targetRange.ToList())
@@ -882,11 +878,6 @@ namespace WindingTale.MapObjects.GameMap
         {
             GameObject creatureIcon = Instantiate(creatureIconPrefab);
 
-            if (creature.Id == 11)
-            {
-                Debug.Log("Here");
-            }
-
             creatureIcon.name = string.Format("creature_{0}", StringUtils.Digit3(creature.Id));
             creatureIcon.transform.SetParent(creaturesLayer.transform);
             creatureIcon.transform.SetPositionAndRotation(MapCoordinate.ConvertCreaturePosToVec3(pos), Quaternion.identity);
@@ -902,8 +893,6 @@ namespace WindingTale.MapObjects.GameMap
 
         private void AttachIcon(string iconFilePath, Transform parent)
         {
-            Debug.Log("iconFilePath: " + iconFilePath);
-
             GameObject prefab = Resources.Load<GameObject>(iconFilePath);
             GameObject icon = Instantiate(prefab);
             CreatureMaterial.Apply(icon);
