@@ -303,7 +303,7 @@ namespace WindingTale.Scenes.GameBattleScene
                 targetHitEffect.OnMagicHit(effectDefinition != null ? effectDefinition.HitColor : null);
             }
 
-            if (landed)
+            if (landed || (effectDefinition != null && effectDefinition.HitSoundOnMiss))
             {
                 playHitSound();
             }
@@ -316,12 +316,17 @@ namespace WindingTale.Scenes.GameBattleScene
         }
 
         /// <summary>
-        /// Plays the magic's sound on the first hit that lands on the current target. The
-        /// clip carries the whole spell, so the later hits on the same target add nothing.
+        /// Plays the magic's sound on the first hit on the current target. The clip carries
+        /// the whole spell, so the later hits on the same target add nothing -- unless the
+        /// magic asks for it on every hit (HitSoundEveryHit).
         /// </summary>
         private void playHitSound()
         {
-            if (soundPlayedForTarget == currentTargetIndex || effectDefinition == null || string.IsNullOrEmpty(effectDefinition.HitSound))
+            if (effectDefinition == null || string.IsNullOrEmpty(effectDefinition.HitSound))
+            {
+                return;
+            }
+            if (soundPlayedForTarget == currentTargetIndex && !effectDefinition.HitSoundEveryHit)
             {
                 return;
             }

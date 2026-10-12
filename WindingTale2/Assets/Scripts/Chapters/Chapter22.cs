@@ -239,7 +239,12 @@ namespace WindingTale.Chapters
         /// <summary>Sala walks in from the bottom edge and joins the party.</summary>
         private Action<GameMain> salaAppear = (gameMain) =>
         {
-            AddCreatureToMap(gameMain, CreatureFaction.Friend, SalaId, SalaId, SalaEntry);
+            // The cursor goes to her feet first, then she appears there and walks up.
+            gameMain.PushActivity(new SlideCursorActivity(SalaEntry.X, SalaEntry.Y));
+            gameMain.PushActivity((gameMain) =>
+            {
+                AddCreatureToMap(gameMain, CreatureFaction.Friend, SalaId, SalaId, SalaEntry);
+            });
             gameMain.PushActivity(ActivityFactory.CreatureWalkActivity(SalaId,
                 FDMovePath.Create(SalaEntry, SalaStop)));
 

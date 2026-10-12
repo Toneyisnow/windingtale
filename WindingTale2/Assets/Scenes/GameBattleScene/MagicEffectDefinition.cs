@@ -130,6 +130,18 @@ namespace WindingTale.Scenes.GameBattleScene
         public float FrameDuration = 0.06f;
 
         /// <summary>
+        /// FrameDuration when an enemy casts it (the target is a friend), for a magic whose
+        /// enemy version plays at its own pace; 0 = the same as FrameDuration.
+        /// </summary>
+        public float EnemyCastFrameDuration = 0f;
+
+        /// <summary>Seconds per frame of phase 2 for this cast.</summary>
+        public float FrameDurationFor(bool targetIsFriend)
+        {
+            return targetIsFriend && EnemyCastFrameDuration > 0f ? EnemyCastFrameDuration : FrameDuration;
+        }
+
+        /// <summary>
         /// Seconds per frame of the opening screen flash (phase 1). The same for every magic, so
         /// a magic that plays its own frames faster or slower (FrameDuration) still opens on the
         /// usual flash.
@@ -159,6 +171,18 @@ namespace WindingTale.Scenes.GameBattleScene
         /// clip that does not exist, and stay silent until it is added.
         /// </summary>
         public string HitSound = null;
+
+        /// <summary>
+        /// Plays HitSound on every hit frame instead of once per target -- for a short impact
+        /// clip that should land with each blow (圣光弹's sandbag punches).
+        /// </summary>
+        public bool HitSoundEveryHit = false;
+
+        /// <summary>
+        /// Whether a miss plays HitSound too. On by default: hit or miss, the spell sounds the
+        /// same; only the red hit flash tells them apart.
+        /// </summary>
+        public bool HitSoundOnMiss = true;
 
         // How hard the magic sparks and lights up the scene. The defaults are the plain look
         // (圣光弹 keeps it); UseFireLook() and UseLightningLook() turn them up.
@@ -824,6 +848,8 @@ namespace WindingTale.Scenes.GameBattleScene
             {
                 MagicId = 107,
                 HitSound = "Audios/Effects/sfx_magic_holythunder",
+                // Half the GIF's speed (user's call), whoever casts it.
+                FrameDuration = 0.12f,
                 ScreenFlashColor = LightningFlash,
                 HitColor = LightningHit,
             }.UseLightningLook();
@@ -919,6 +945,8 @@ namespace WindingTale.Scenes.GameBattleScene
             {
                 MagicId = 108,
                 HitSound = "Audios/Effects/sfx_magic_holythunder",
+                // An enemy's 神雷术 plays at half speed (user's call); a friend's keeps the GIF's.
+                EnemyCastFrameDuration = 0.12f,
                 ScreenFlashColor = LightningFlash,
                 HitColor = LightningHit,
             }.UseLightningLook();
@@ -975,7 +1003,9 @@ namespace WindingTale.Scenes.GameBattleScene
             MagicEffectDefinition definition = new MagicEffectDefinition
             {
                 MagicId = 109,
-                HitSound = "Audios/Effects/sfx_effect_revive_2",
+                // A thump on every blow, like punches into a sandbag (user's call).
+                HitSound = "Audios/Effects/sfx_fight_hit_staff_2",
+                HitSoundEveryHit = true,
                 ScreenFlashColor = new Color(0.7f, 0.85f, 1f, 0.9f),
                 HitColor = new Color(0.45f, 0.65f, 1f),
             };

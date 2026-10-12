@@ -21,22 +21,27 @@ namespace WindingTale.Core.Common
         /// <summary>
         /// A number for display in a three-digit box (HP / MP on the bars and the detail
         /// dialog): zero-padded like Digit3, but never more than three digits -- anything
-        /// above 999 shows as 999. Digit3 itself is also used to build resource keys
+        /// above 999 shows as "???". Digit3 itself is also used to build resource keys
         /// (definition ids run to five digits), so it must keep printing the whole number.
         /// </summary>
         public static string Digit3Max(int number)
         {
-            return Digit3(System.Math.Min(System.Math.Max(number, 0), 999));
+            if (number > 999)
+            {
+                return "???";
+            }
+
+            return Digit3(System.Math.Max(number, 0));
         }
 
         /// <summary>
         /// A number for display in a two-digit box (EX / AP / DP / HIT / EV in the detail
         /// dialog): zero-padded like Digit2, but never more than two digits -- anything above
-        /// 99 shows as 99. Digit2 itself turns 100+ into "??" and also builds resource keys.
+        /// 99 shows as "??" (Digit2 already does that; it also builds resource keys).
         /// </summary>
         public static string Digit2Max(int number)
         {
-            return Digit2(System.Math.Min(System.Math.Max(number, 0), 99));
+            return Digit2(System.Math.Max(number, 0));
         }
 
         public static string Digit2(int number)

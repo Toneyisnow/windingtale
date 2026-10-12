@@ -2687,15 +2687,38 @@ def recipe_21(bd):
 #
 # The fight is on the lawn. The flagstones and the altar are behind it, the six
 # orbs standing in an arc round them, and the ramparts close in at the back and
-# both sides -- and past their rim there is nothing, so the wall behind is the
-# black the map is cut from, not sky.
+# both sides. Past their rim there is nothing: the whole sanctum is an island
+# hanging in the sky (the user's call, 2026-10-11 -- it used to be walled in with
+# the black void), so its edge is a ragged cliff of rampart stone that tucks in
+# underneath, and the battle sky shows behind and below it.
 
 LAWN_22 = (74, 74, 74, 20, 21, 22)
 FLAGS_22 = (76, 76, 76, 103, 100, 101)
 RAMPART_22 = (75, 75, 13)
 RAMPART_FACE_22 = 49
 
+def float_island(bd, island, edge_share, nn, face_tile):
+    """Cut the model down to ``island`` and hang it in the sky.
+
+    Everything off the island is cleared, so the battle sky shows behind and
+    below it; its outer edge is wrapped in ``face_tile``'s rock (rock_faces
+    sees the drop to 0) as well as every inner step; and the underside tucks in
+    over the outer share of the island -- ``edge_share`` is 0 in the middle and
+    1 at the rim -- so the side cliffs read as a floating rock, not a slab cut
+    flat. The middle keeps its bottom at z 0, so the exporter's grounding does
+    not move.
+    """
+    bd.a[~island] = 0
+    bd.ground[~island] = 0
+    rock_faces(bd, nn, face_tile, min_rise=3)
+    under = np.clip((edge_share - 0.72) / 0.28, 0, 1) ** 1.5
+    bottom = np.round(under * (bd.ground - 3)).astype(np.int32)
+    for x, y in zip(*np.nonzero(island & (bottom > 0))):
+        bd.a[x, y, :bottom[x, y]] = 0
+
+
 DAIS_Y_22 = 108
+ISLAND_22 = 1.04                       # the island's edge, as a share of the ring's radius
 RING_22 = (116.0, 64.0, 104.0)         # centre x, y of the sanctum, and its radius
 ORBS_22 = ('orb_pillar_red', 'orb_pillar_orange', 'orb_pillar_yellow',
            'orb_pillar_green', 'orb_pillar_blue', 'orb_pillar_purple')
@@ -2717,8 +2740,10 @@ def recipe_22(bd):
     lay_where(bd, _pick(FLAGS_22, 122), '22',
               dais | ((np.abs(xs - cx) < 14) & (ys < DAIS_Y_22)))
     lay_where(bd, _pick(RAMPART_22, 222), '22', rampart)
-    rock_faces(bd, '22', RAMPART_FACE_22, min_rise=3)
-    enclose(bd, VOID, back=174, sides=4, seed=22)
+
+    # The island: the ring and a little of its rim, with a ragged edge.
+    edge = r * ISLAND_22 + 7.0 * (_vnoise(xs, ys, 11.0, 2201) - 0.5)
+    float_island(bd, d < edge, d / edge, '22', RAMPART_FACE_22)
 
     turn.stamp(obstacle('stone_shrine_2', 2), int(cx) - 30, DAIS_Y_22 + 24)
     for i, key in enumerate(ORBS_22):
@@ -2742,8 +2767,11 @@ def recipe_22(bd):
 # bare earth with a ring of stone posts on it.
 #
 # The fight is on the turf of the approach, on the paved way up between the
-# wings. The temple's terrace runs across the back with its posts and statues,
-# the brown rock rises steeply at both sides, and over all of it is the dark.
+# wings. The temple's terrace runs across the back with its posts and statues.
+# The hilltop is an island hanging in the sky (the user's call, 2026-10-11 --
+# it used to be shut in by brown rock rising at both sides under the black
+# void): no hills, no wall, a ragged rock edge round the temple's ground and
+# the battle sky behind and below it.
 
 TURF_23 = (74, 74, 74, 20, 21, 22, 29)
 PAVE_23 = (76, 76, 76)
@@ -2752,6 +2780,7 @@ EARTH_23 = 17
 
 TERRACE_Y_23 = 118
 TERRACE_H_23 = 5
+ISLAND_23 = (116.0, 92.0, 104.0, 82.0)  # centre u, v of the island, and its radii
 
 
 def recipe_23(bd):
@@ -2759,12 +2788,11 @@ def recipe_23(bd):
     turn = Turn(bd)
     xs, ys = turn.u, turn.v                # the design, laid out turned
     tx, ty = xs / TILE_OUT, ys / TILE_OUT
-    # The hills: rock climbing away at both sides, steepening as it goes.
-    off = np.abs(xs - 116) - 80 - 10.0 * np.sin(ys / 23.0 + 0.5) + np.clip(ys - 150, 0, None) * 2.0
-    hills = np.clip(off, 0, None) ** 1.2 * 0.45
-    hills = hills + 6.0 * _vnoise(xs, ys, 8.0, 230) * (hills > 0)
-    bd.ground = np.minimum(bd.ground + hills, ENCLOSE_TOP - 4).astype(np.int16)
-    rocky = hills > 1.5
+    icx, icy, irx, iry = ISLAND_23
+    share = np.hypot((xs - icx) / irx, (ys - icy) / iry)
+    share = share / (1.0 + 0.08 * (_vnoise(xs, ys, 11.0, 2301) - 0.5))
+    island = share < 1.0
+    rocky = island & (share > 0.9)           # a rim of bare rock round the edge
     terrace = (ys >= TERRACE_Y_23) & ~rocky
     raise_where(bd, terrace, TERRACE_H_23)
     stair = (np.abs(xs - 116) < 14) & (ys >= TERRACE_Y_23 - 8) & (ys < TERRACE_Y_23 + 2)
@@ -2779,8 +2807,7 @@ def recipe_23(bd):
     mound = _blob(tx, ty, (14.5, 19.5, 4.0, 2.2), wob=0.3, seed=2.3) < 1.0
     lay_where(bd, lambda tx, ty: EARTH_23, '23', mound & terrace)
     lay_where(bd, lambda tx, ty: ROCK_23, '23', rocky)
-    rock_faces(bd, '23', ROCK_23, min_rise=3)
-    enclose(bd, VOID, back=176, sides=3, seed=23)
+    float_island(bd, island, share, '23', ROCK_23)
 
     for x in (62, 160):                       # the wings' posts and statues
         for y in (78, 100):

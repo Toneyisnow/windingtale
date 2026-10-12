@@ -16,7 +16,8 @@ using WindingTale.UI.Audio;
 ///
 /// Up / Down walk the four rows; stepping down off the last row turns to the next page
 /// (cursor to the top), stepping up off the first turns back a page (cursor to the bottom),
-/// with no wrap at either end of the twenty. Space / Enter confirms the highlighted slot
+/// and a key press at either end of the list wraps round (Up on the first to the last, Down
+/// on the last to the first); a held key stops at the end. Space / Enter confirms the highlighted slot
 /// and hands its index back through OnSlotSelected; Esc backs out with -1.
 ///
 /// It does not itself save or load -- it only reports which slot the player picked. The
@@ -433,12 +434,12 @@ public class ShoppingRecordDialog : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            MoveSelectionWithSound(-1);
+            MoveSelectionWithSound(-1, wrap: true);
             repeatTimer = RepeatInitialDelay;
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            MoveSelectionWithSound(1);
+            MoveSelectionWithSound(1, wrap: true);
             repeatTimer = RepeatInitialDelay;
         }
         else if (Input.GetKey(KeyCode.UpArrow) != Input.GetKey(KeyCode.DownArrow))
@@ -469,24 +470,44 @@ public class ShoppingRecordDialog : MonoBehaviour
     /// <summary>
     /// Steps the highlight by one row. Off the bottom of a page it turns to the next page
     /// with the cursor at the top; off the top it turns back a page with the cursor at the
-    /// bottom. At the first and last of the twenty slots the step is simply refused -- there
-    /// is no wrap from slot 20 back to slot 1.
+    /// bottom. At the first and last slot, with <paramref name="wrap"/> (a key press) the step
+    /// goes round to the other end -- Up on the first to the last, Down on the last to the
+    /// first; without it (a held key repeating) the step is refused, so holding stops there.
     /// </summary>
     /// <summary>MoveSelection, with the cursor sound when the highlight (or page) actually moved.</summary>
-    private void MoveSelectionWithSound(int delta)
+    private void MoveSelectionWithSound(int delta, bool wrap = false)
     {
         int pageBefore = currentPage;
         int indexBefore = selectedIndex;
-        MoveSelection(delta);
+        MoveSelection(delta, wrap);
         if (pageBefore != currentPage || indexBefore != selectedIndex)
         {
             SoundEffects.Play(SoundEffect.DialogCursorMove);
         }
     }
 
-    private void MoveSelection(int delta)
+    private void MoveSelection(int delta, bool wrap = false)
     {
         int next = selectedIndex + delta;
+
+        int slot = currentPage * RowsPerPage + selectedIndex;
+        if (wrap && slotCount > 0)
+        {
+            if (delta < 0 && slot == 0)
+            {
+                currentPage = pageCount - 1;
+                selectedIndex = slotCount - 1 - currentPage * RowsPerPage;
+                RefreshPage();
+                return;
+            }
+            if (delta > 0 && slot == slotCount - 1)
+            {
+                currentPage = 0;
+                selectedIndex = 0;
+                RefreshPage();
+                return;
+            }
+        }
 
         if (next >= RowsPerPage)
         {

@@ -48,6 +48,16 @@ namespace WindingTale.MapObjects.GameMap
         // of its tiles. Near-invisible: a unit under a tree must read at a glance.
         private const float FadedAlpha = 0.1f;
 
+        // TODO: Per-chapter shift of every obstacle, in tiles (+Y = one row down the map).
+        // Chapter 02's obstacles all render one tile too high, so they are moved down
+        // one row here (model and fade footprint; movement blocking comes from the
+        // ShapeMatrix and is unaffected). Still to check whether other chapters need
+        // the same shift -- if they all do, fold it into the data or drop the table.
+        private static readonly Dictionary<int, Vector2Int> ChapterObstacleShift = new Dictionary<int, Vector2Int>
+        {
+            { 2, new Vector2Int(0, 1) },
+        };
+
         private bool initialized = false;
 
         private FDMap map = null;
@@ -205,7 +215,8 @@ namespace WindingTale.MapObjects.GameMap
                     continue;
                 }
 
-                FDPosition pos = FDPosition.At(obstacle.Position.X, obstacle.Position.Y);
+                ChapterObstacleShift.TryGetValue(field.ChapterId, out Vector2Int shift);
+                FDPosition pos = FDPosition.At(obstacle.Position.X + shift.x, obstacle.Position.Y + shift.y);
 
                 GameObject obj = Instantiate(prefab);
                 obj.name = string.Format("obstacle_{0}_{1}", obstacle.Id, obstacle.DefinitionKey);

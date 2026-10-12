@@ -36,9 +36,13 @@ namespace WindingTale.EditorTools
         private const GlyphRenderMode RenderMode = GlyphRenderMode.SDFAA;
 
         // The bounds the sampling point size is searched between. Chapter 01 lands on 199
-        // with 405 glyphs; a shorter chapter goes higher, which is only more resolution.
+        // with 405 glyphs. The ceiling is not "more is better": the SDF ramp is a fixed 5
+        // atlas pixels, so a chapter baked at a much larger point size (chapter 04 went to
+        // 328 with only 150 glyphs) gets a relatively thinner ramp and renders visibly
+        // sharper/thinner than the rest. Capping near the common size keeps every chapter's
+        // dialog looking the same.
         private const int MinPointSize = 16;
-        private const int MaxPointSize = 512;
+        private const int MaxPointSize = 200;
 
         // The point size the font is probed at to find characters it simply does not have.
         // Small, so the probe is about the font's coverage and never about atlas space.

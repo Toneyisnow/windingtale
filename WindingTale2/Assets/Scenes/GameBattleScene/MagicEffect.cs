@@ -82,6 +82,9 @@ namespace WindingTale.Scenes.GameBattleScene
         }
 
         private MagicEffectDefinition definition;
+
+        /// <summary>Seconds per frame of phase 2 for this cast (MagicEffectDefinition.FrameDurationFor).</summary>
+        private float frameDuration;
         private Action<int> onHit;
         private Action onComplete;
 
@@ -181,6 +184,7 @@ namespace WindingTale.Scenes.GameBattleScene
             Action<int> onHit, Action onComplete)
         {
             this.definition = definition;
+            this.frameDuration = definition.FrameDurationFor(targetIsFriend);
             this.onHit = onHit;
             this.onComplete = onComplete;
 
@@ -277,7 +281,7 @@ namespace WindingTale.Scenes.GameBattleScene
 
         /// <summary>
         /// The frame playing t seconds in: the flash frames (if this run has them) go at the
-        /// definition's FlashFrameDuration, the magic's own frames after them at FrameDuration.
+        /// definition's FlashFrameDuration, the magic's own frames after them at frameDuration.
         /// </summary>
         private int FrameAt(float t)
         {
@@ -287,14 +291,14 @@ namespace WindingTale.Scenes.GameBattleScene
                 return Mathf.FloorToInt(t / definition.FlashFrameDuration);
             }
 
-            return flashFrames + Mathf.FloorToInt((t - flashSeconds) / definition.FrameDuration);
+            return flashFrames + Mathf.FloorToInt((t - flashSeconds) / frameDuration);
         }
 
         /// <summary>The time, in seconds, at which the given frame starts (the inverse of FrameAt).</summary>
         private float TimeOfFrame(int frame)
         {
             int flashPart = Mathf.Min(frame, flashFrames);
-            return flashPart * definition.FlashFrameDuration + (frame - flashPart) * definition.FrameDuration;
+            return flashPart * definition.FlashFrameDuration + (frame - flashPart) * frameDuration;
         }
 
         /// <summary>
