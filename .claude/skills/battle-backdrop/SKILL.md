@@ -45,8 +45,14 @@ docstrings are the real manual.
 - Obstacle keys for the chapter: `Tools/MapPipeline/obstacles/obstacles_NN*.json`
   (`DefinitionKey`); the models are in `Resources/Remastered/Obstacles/vox`.
   `obstacle(key, 2)` is half again as big as the default scale 3.
-- Indoors / underground / void chapters: the battle sky is always daylight, so
-  wall the picture in with `enclose(bd, VOID or rock tones, back=..., sides=...)`.
+- The battle camera shows the chapter's own sky (`"Sky"` in Chapter_NN.json,
+  installed by SkySphere), so a void chapter on SKY_05 needs no wall: leave the
+  edges open to the stars (23, 24, 27-30). Only wall a picture in with
+  `enclose(bd, VOID or rock tones, back=..., sides=...)` when the chapter's sky
+  is wrong behind it (25, 26 keep theirs).
+- The exporter centres on the occupied bounding box: a floating island that
+  does not fill 256x180 must pin it with voxels in two opposite floor corners
+  (see recipe_24), or it lands shifted in game.
 
 ## Toolbox (all in chapter_bg_to_vox.py)
 

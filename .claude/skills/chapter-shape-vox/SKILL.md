@@ -147,6 +147,84 @@ variants on top of the base is enough to break the repetition; keep WIDTH
 within about 0.8..1.3 so a conifer stays a conifer, and preview every variant
 the way the base tiles are previewed below.
 
+## Void chapters: 23, 24, 28
+
+These three chapters float in a black void, and that black is cut out of the
+board so the sky (SKY_05, a starry night) shows through. In the tile PNGs the
+void is **alpha 0**, not opaque black; left alone, `shapes_to_vox.py` reads it
+as black voxels and lays a black slab over the sky. Always run `void_tiles.py`
+first for these chapters, and always build their shapes from the panel it
+writes -- never from `ShapePanelNN` directly:
+
+| chapter | void flooded from | extra |
+|---|---|---|
+| 23 | top-left and top-right corners | bottom-corner cliff rock (34, 192..197, rows 26..40) keeps only the layer of cells 8-touching the flat ground; the rest is cut away whole |
+| 24 | the whole map border (the black between the light shafts is closed off from the corners) | the three light shafts are cut away too and rebuilt as real 3D columns -- see below |
+| 28 | top-right corner only | the wire-mesh holes are alpha 0 too but stay black pits -- never seed 28 from the border |
+
+All of this is hard-coded in `void_tiles.py` (`VOID_SEEDS`, `ROCK_TRIM`); no
+other chapter is touched. What it does:
+
+1. flood-fills the alpha-0 pixels 4-connected to the seeds across the whole
+   map, so only the real void goes (not alpha-0 pixels inside the art)
+2. cuts each cell's tile: void pixels stay alpha 0, everything else is made
+   opaque (a non-void alpha-0 pixel becomes black, as it always rendered).
+   Edge cells come out half ground, half nothing
+3. a cell with nothing left -- or a trimmed rock cell -- is `-1` in
+   `RenderMatrix`: no model, the sky shows through. `ShapesLayer` still puts
+   an invisible click target there
+4. merges cuts that are identical or near-identical (same void mask, <=5% of
+   pixels off by >60 RGB) onto the most used one, so the board needs fewer
+   models; a tile whose cut differs between cells keeps its id for the most
+   common cut and gets a new id from 1000 for the others
+5. writes `out/void_NN/panel/*.png` + `out/void_NN/UsedTiles.json` and the new
+   `RenderMatrix` into `Chapter_NN.json`. `ShapeMatrix` is never touched
+
+### Chapter 24's light shafts
+
+The three shafts are painted in seven exact colours (a 6-pixel orange ramp each
+side of a pale core, `SHAFT_CUT` in `void_tiles.py`) that appear nowhere else on
+the map. `void_tiles.py 24` floods those colours up from the map's bottom edge
+and cuts them with the void, so the pure shaft tiles (36, 40, 44) become `-1`
+and the cliff tiles over them keep only their rock. It measures each shaft and
+writes `"LightShafts"` into `Chapter_24.json` (centre X, front-face Y and width
+in tiles, `EdgePixels` 6):
+
+| shaft | X | Y | Width |
+|---|---|---|---|
+| left | 14.5 | 22.5 | 1.5833 |
+| centre | 21.0 | 24.5 | 6.5833 |
+| right | 27.5 | 22.5 | 1.5833 |
+
+`ShapesLayer` builds each as an elliptical column (`LightShaft.cs`) hanging
+straight down from just under the board at that Y, as wide as the painted shaft.
+The field camera's 45-degree pitch makes a drop of h land on screen where a run
+of h south would, so the column covers exactly the stretch the 2D shaft did,
+and the island tiles cover its top the way the cliff did. The
+`Custom/LightShaft` shader paints the original ramp across the width, flickers
+bright / weak 5 times a second, and fades the column out past the map's bottom
+edge. Y sits `TOP_MARGIN` (4) pixels north of the shaft's first painted pixel so
+the top is tucked under the cliff.
+
+Then generate with `--skip-transparent` (alpha 0 -> no voxel) and export with
+`--tile-centre` (the OBJ exporter otherwise centres a half-empty tile on its
+own bounding box and slides it into the empty half):
+
+```bash
+cd Tools/MapPipeline
+python void_tiles.py 23        # 24, 28 the same
+python shapes_to_vox.py 23 --panel-dir out/void_23/panel --used-tiles out/void_23/UsedTiles.json     --skip-transparent --flat --force
+python shapes_to_vox.py 24 --panel-dir out/void_24/panel --used-tiles out/void_24/UsedTiles.json     --skip-transparent --flat --force
+python shapes_to_vox.py 28 --panel-dir out/void_28/panel --used-tiles out/void_28/UsedTiles.json     --skip-transparent --flat --lower 000000=3 --lower 345094=2 --lower-min-area 45 --force
+python vox_batch_to_obj.py --shapes 23 --force --tile-centre
+```
+
+Delete any `Shape_NN_<id>` VOX / OBJ (and its Unity copy + `.meta`) whose id
+is no longer in `out/void_NN/UsedTiles.json`, then copy the OBJs into
+`WindingTale2/Assets/Resources/Shapes/Shapes_NN/`. `install_chapter.py`
+re-applies the cut itself for these chapters, so re-installing does not bring
+the black back.
+
 ## Verify
 
 Regression-check the rules against chapter 01 — this must stay clean:

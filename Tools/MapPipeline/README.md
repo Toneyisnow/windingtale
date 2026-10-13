@@ -54,6 +54,7 @@ pip install Pillow
 | `voxmesh.py` | 贪心合并同色共面体素面的 OBJ 导出器，给超过 10 格宽的模型用（也可 `--greedy` 强制） |
 | `chapter_map.py` | `info` / `render` / `crop` / `verify`：看懂一关的地图数据，并把 ShapeMatrix 重新画回 PNG |
 | `map_clean.py` | 按 obstacle 列表把 footprint 抠掉换成普通地砖，产出 `Chapter_NN_Cleaned.json` |
+| `void_tiles.py` | 第 23 / 24 / 28 关：把黑色虚空（PNG 里是 alpha 0）从 RenderMatrix 里抠掉，露出天空；全空的格子是 `-1`，半空的格子只剩地面那一半，相同 / 相近的切法合并成一个模型；23 关底部两角的岩石只留贴着平地的一层（见 chapter-shape-vox 的 "Void chapters"） |
 | `shapes_to_vox.py` | tile PNG → 40³ 的 `Shape_<NN>_<id>.vox`（源 PNG 前缀是 `NN-1`，差一位） |
 | `install_chapter.py` | 把清洗后的地图作为 `RenderMatrix` 装进 `Chapter_NN.json`，`ShapeMatrix` 保持原样 |
 | `validate_shapes.py` | 拿第 01 关做回归：重新生成并与参考 VOX 逐体素比对 |

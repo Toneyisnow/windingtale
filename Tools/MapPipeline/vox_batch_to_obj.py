@@ -99,6 +99,12 @@ def main():
     p.add_argument('--out', help='explicit destination (default: sibling "obj" folder)')
     p.add_argument('--scale', type=float, default=0.1)
     p.add_argument('--no-center', action='store_true')
+    p.add_argument('--tile-centre', action='store_true',
+                   help='centre every model on its 24x24 tile cell, VOX (12, 12), not on '
+                        'its bounding box. Needed for a chapter whose tiles have their void '
+                        'cut out (void_tiles.py: 23, 24, 28) -- a half-empty tile would '
+                        'otherwise slide into the empty half. A whole tile comes out the same '
+                        'either way')
     p.add_argument('--no-ground', action='store_true')
     p.add_argument('--y-up', action='store_true', dest='y_up',
                    help='NOT used by this project -- the layers rotate models themselves')
@@ -118,7 +124,12 @@ def main():
         in_dir = os.path.abspath(args.in_dir)
     out_dir = args.out or os.path.join(os.path.dirname(os.path.normpath(in_dir)), 'obj')
 
-    convert(in_dir, out_dir, args.scale, not args.no_center, not args.no_ground,
+    center = not args.no_center
+    if args.tile_centre:
+        if args.greedy:
+            raise SystemExit('--tile-centre is not supported with --greedy')
+        center = (voxlib.TILE / 2.0, voxlib.TILE / 2.0)
+    convert(in_dir, out_dir, args.scale, center, not args.no_ground,
             args.y_up, args.force, args.dry_run, greedy=args.greedy)
 
 

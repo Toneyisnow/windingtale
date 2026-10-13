@@ -945,8 +945,8 @@ namespace WindingTale.Scenes.GameBattleScene
             {
                 MagicId = 108,
                 HitSound = "Audios/Effects/sfx_magic_holythunder",
-                // An enemy's 神雷术 plays at half speed (user's call); a friend's keeps the GIF's.
-                EnemyCastFrameDuration = 0.12f,
+                // Half the GIF's speed (user's call), whoever casts it.
+                FrameDuration = 0.12f,
                 ScreenFlashColor = LightningFlash,
                 HitColor = LightningHit,
             }.UseLightningLook();

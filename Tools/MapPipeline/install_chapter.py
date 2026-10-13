@@ -37,6 +37,7 @@ import os
 from collections import OrderedDict
 
 import map_clean
+import void_tiles
 import voxlib
 
 
@@ -80,7 +81,8 @@ def check(chapter, nn, root):
     if os.path.isdir(obj_dir):
         have = set(int(f.split('_')[2].split('.')[0])
                    for f in os.listdir(obj_dir) if f.endswith('.obj'))
-        missing = sorted(matrix_ids(chapter['RenderMatrix']) - have)
+        # -1 is a void cell (void_tiles.py): no model on purpose.
+        missing = sorted(set(i for i in matrix_ids(chapter['RenderMatrix']) if i >= 0) - have)
         if missing:
             problems.append('RenderMatrix uses tile ids with no OBJ in %s: %s'
                             % (obj_dir, missing))
@@ -132,6 +134,12 @@ def main():
                          % (len(painted), len(painted[0]), len(render), len(render[0])))
 
     merged = merge(cleaned, painted)
+    # Chapters 23 / 24 / 28 draw their black void as nothing; the cut is
+    # re-applied here, or installing would put the black slabs back.
+    if nn in void_tiles.VOID_SEEDS:
+        for line in void_tiles.apply_to_chapter(merged, root, nn):
+            print('  void: ' + line.strip())
+    render = merged['RenderMatrix']
     cleared = sum(1 for x in range(len(painted)) for y in range(len(painted[0]))
                   if painted[x][y] != render[x][y])
 

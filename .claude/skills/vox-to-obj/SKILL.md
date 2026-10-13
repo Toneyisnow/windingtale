@@ -45,6 +45,11 @@ its side; exporting un-centred shifts every tile by half a map.
 The three files travel together — the `.mtl` references the `.png` by bare
 filename, so never move just the `.obj`.
 
+`--tile-centre` centres every model on its 24x24 tile cell (VOX 12, 12) instead
+of its bounding box. A whole tile exports byte-identically either way; a tile
+with part of it cut away (the void chapters 23, 24, 28 -- `void_tiles.py`)
+needs it, or it slides into its own empty half.
+
 ## Getting them into the game
 
 Unity loads from `WindingTale2/Assets/Resources/`:

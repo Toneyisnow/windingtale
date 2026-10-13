@@ -2827,58 +2827,166 @@ def recipe_23(bd):
 # on pillars of pale light that fall away beneath it. On top is a patch of
 # black flagstones with three statues on it, ringed by stone posts.
 #
-# The fight is out on the rock. The flagstones and their statues are behind,
-# the island's edge breaks off into the void a little beyond them and down
-# both sides, and the pillars of light stand up out of the dark past the edge.
+# The fight is out on a small island of that rock with nothing round it (the
+# user's call, 2026-10-12 -- it used to be walled in with the black void): the
+# flagstones and their statues are behind, the edge is a ragged cliff tucking
+# in underneath, and past it there is only the battle sky, which BattleLoader
+# turns pitch black for this chapter. The island is lifted well off the floor
+# of the model so that its three pillars of light -- a thick one in the middle,
+# a thin one each side, as in the map -- hang from its underside down the
+# bottom of the frame.
 
-EARTH_24 = (43, 43, 22, 21, 25, 26)
+BATTLE_CAM = (109.0, 0.0, 62.0)          # the battle camera in design voxels (bg_preview.py)
+BATTLE_PITCH = math.radians(23.0)
+BATTLE_VFOV = math.radians(60.0)
+
+
+EARTH_24 = (43, 43, 22, 21, 25, 24)
 FLAGS_24 = 72
 CLIFF_24 = 27
-VOID_24 = 42
-VOID_Z_24 = 1
-ISLE_24 = (116.0, 76.0, 96.0, 86.0)    # centre x, y, radius x, y in voxels
+ISLE_24 = (116.0, 104.0, 64.0, 32.0)    # centre x, y, radius x, y in voxels
+ISLE_LIFT_24 = 6                       # the island's top above GROUND_Z
+ISLE_THICK_24 = 5                      # how deep its rock goes under the top
 FLAGS_SPEC_24 = (14.5, 14.5, 4.0, 2.6)
 BEAM_24 = ((255, 255, 236), (252, 248, 204), (248, 226, 150))
-BEAMS_24 = ((24, 152, 6), (210, 150, 6), (150, 170, 9))
+BEAMS_24 = ((80, 8, 5), (116, 13, 11), (152, 8, 5))   # x, depth in from the front edge, radius
+BEAM_POINT_24 = (116.0, 64.0, -120.0)  # where they all run to, far under the frame (file z)
+SCALE_24 = 1.2                          # the whole picture, blown up about its top-middle
+DROP_24 = 45                            # built this much higher, so the beams can fall below
+                                        # the island's floor, and then 25 lower than that so
+                                        # only the tops of the beams show
+ZOOM_24 = 1.3                           # the camera 30% closer...
+ZOOM_AT_24 = ((440 / 480.0 - 1) * math.tan(BATTLE_VFOV / 2) * 16 / 9,
+              (1 - 490 / 270.0) * math.tan(BATTLE_VFOV / 2))   # ...about the island's foot,
+                                        # screen (440, 490) of 960x540
+ZOOM_LIFT_24 = 50                       # how high the result is built; the game lowers it 12
+                                        # less (BattleLoader.BackdropDrop 38) so the beams show
 
 
-def light_beam(bd, cx, cy, r, tones):
+def light_beam(bd, cx, cy, r, tones, top=None, toward=None):
     """A column of light standing up out of the void: white-hot in the core,
-    burning orange at the rim, from the floor of the model to its top."""
+    burning orange at the rim, from the floor of the model to its top -- or,
+    with ``top``, only up to that z and only under the lowest voxel already in
+    each column, so it hangs under whatever is above it. (cx, cy) is where it stands at ``top``.
+
+    ``toward`` (x, y, z, below the model) is a vanishing point: the beam runs
+    down a cone from its top to there, drifting towards it and narrowing as it
+    falls, so several beams aimed at one point read as one bundle of light
+    seen in perspective."""
     core, mid, rim = [BOOK.index(t) for t in tones]
-    for x in range(int(cx - r) - 1, int(cx + r) + 2):
-        for y in range(int(cy - r) - 1, int(cy + r) + 2):
-            if not (0 <= x < bd.size[0] and 0 <= y < bd.size[1]):
-                continue
-            d = math.hypot(x + 0.5 - cx, y + 0.5 - cy) / r
-            if d > 1.0:
-                continue
-            bd.a[x, y, :] = core if d < 0.55 else mid if d < 0.85 else rim
+    if top is None:
+        top, toward, fill = bd.size[2], None, True
+    else:
+        fill = False
+        solid = bd.a > 0
+        under = np.where(solid.any(axis=2), solid.argmax(axis=2), bd.size[2])
+    for z in range(top):
+        zx, zy, zr = cx, cy, r
+        if toward is not None:
+            vx, vy, vz = toward
+            t = (z - vz) / float(top - vz)     # 1 at the top, 0 at the point
+            zx, zy, zr = vx + t * (cx - vx), vy + t * (cy - vy), max(r * t, 1.0)
+        for x in range(int(zx - zr) - 1, int(zx + zr) + 2):
+            for y in range(int(zy - zr) - 1, int(zy + zr) + 2):
+                if not (0 <= x < bd.size[0] and 0 <= y < bd.size[1]):
+                    continue
+                d = math.hypot(x + 0.5 - zx, y + 0.5 - zy) / zr
+                if d > 1.0 or not (fill or z < under[x, y]):
+                    continue
+                bd.a[x, y, z] = core if d < 0.55 else mid if d < 0.85 else rim
+
+
+def scale_picture(bd, k, drop=0, anchor=None, lift=0):
+    """Blow the backdrop up ``k`` times as the battle camera sees it, about
+    ``anchor`` -- a point of the frame as (right, up) over the depth, so
+    (0, tan(vfov/2)) is its top-middle, the default: the picture grows out
+    from there.
+
+    Done in the camera's own frame -- right a, up b, depth c: a' = k a +
+    (1 - k) A c and b' = k b + (1 - k) B c for anchor (A, B), depth kept --
+    which is exactly that enlargement of the image, and keeps what hides what. Resampled nearest
+    voxel; whatever lands outside the envelope is cut off.
+
+    The blow-up carries the bottom of the picture down through the floor of
+    the model; ``drop`` builds the result that many voxels higher in the
+    file, so it is kept. The game must then lower the backdrop as far again
+    (BattleLoader.BackdropDrop) to put it back where the camera expects it.
+    ``lift`` is how far the model coming in already stands above that.
+    """
+    sx, sy, sz = bd.size
+    cam = np.array(BATTLE_CAM)
+    up = np.array([0.0, math.sin(BATTLE_PITCH), math.cos(BATTLE_PITCH)])
+    fw = np.array([0.0, math.cos(BATTLE_PITCH), -math.sin(BATTLE_PITCH)])
+    ty = math.tan(BATTLE_VFOV / 2)
+    A, B = anchor if anchor is not None else (0.0, ty)
+    X, Y, Z = np.meshgrid(np.arange(sx) + 0.5, np.arange(sy) + 0.5,
+                          np.arange(sz) + 0.5 - drop, indexing='ij')
+    d = np.stack([X - cam[0], Y - cam[1], Z - cam[2]], -1)
+    a = -d[..., 0]
+    b, c = d @ up, d @ fw
+    a0, b0 = (a - (1 - k) * A * c) / k, (b - (1 - k) * B * c) / k   # where each voxel comes from
+    src = cam + (-a0)[..., None] * np.array([1.0, 0, 0]) + b0[..., None] * up + c[..., None] * fw
+    ix, iy, iz = [np.floor(src[..., i]).astype(int) for i in range(3)]
+    iz += lift
+    ok = (ix >= 0) & (ix < sx) & (iy >= 0) & (iy < sy) & (iz >= 0) & (iz < sz)
+    out = np.zeros_like(bd.a)
+    out[ok] = bd.a[ix[ok], iy[ok], iz[ok]]
+    # Nearest-voxel sampling of a thin slab that the blow-up leaves on the
+    # slant pinholes it; close every gap of a voxel or two in a column with
+    # what is above it (wider gaps are real: under an arm, a ledge).
+    for x, y in zip(*np.nonzero((out > 0).any(axis=2))):
+        col = out[x, y]
+        zs = np.nonzero(col)[0]
+        for lo, hi in zip(zs[:-1], zs[1:]):
+            if 1 < hi - lo <= 3:
+                col[lo + 1:hi] = col[hi]
+    bd.a = out
 
 
 def recipe_24(bd):
-    xs, ys = _grid(bd)
+    xs, ys = np.broadcast_arrays(*_grid(bd))
     tx, ty = xs / TILE_OUT, ys / TILE_OUT
     cx, cy, rx, ry = ISLE_24
     e = np.hypot((xs - cx) / rx, (ys - cy) / ry)
-    e = e + 0.08 * np.sin(np.arctan2(ys - cy, xs - cx) * 7.0) + 0.1 * (_vnoise(xs, ys, 6.0, 240) - 0.5)
+    e = e + 0.06 * np.sin(np.arctan2(ys - cy, xs - cx) * 7.0) + 0.08 * (_vnoise(xs, ys, 6.0, 240) - 0.5)
     isle = e < 1.0
     bd.undulate(amplitude=1.0, wavelength=60.0, seed=24)
-    bd.ground[~isle] = VOID_Z_24
+    raise_where(bd, np.ones_like(isle), ISLE_LIFT_24)
     bd.lay_ground(_pick(EARTH_24, 24), '24')
     flags = (_blob(tx, ty, FLAGS_SPEC_24, wob=0.35, seed=2.4) < 1.0) & isle
     lay_where(bd, lambda tx, ty: FLAGS_24, '24', flags)
-    lay_where(bd, lambda tx, ty: VOID_24, '24', ~isle)
-    sink_colour(bd, ~isle)
-    rock_faces(bd, '24', CLIFF_24, min_rise=4)
-    enclose(bd, VOID, back=176, sides=3, seed=24)
-    for x, y, r in BEAMS_24:
-        light_beam(bd, x, y, r, BEAM_24)
+    float_island(bd, isle, e, '24', CLIFF_24)
+    # Only a thin crust of rock under the top, so the beams show beneath it.
+    bottom = np.maximum(bd.ground.astype(np.int32) - ISLE_THICK_24, 0)
+    for x, y in zip(*np.nonzero(isle)):
+        bd.a[x, y, :bottom[x, y]] = 0
 
     for x, y in ((100, 118), (118, 124), (136, 118)):
         bd.stamp(obstacle('stone_statue_1', 2), x - 6, y)
     for x, y in ((70, 108), (162, 108), (84, 132), (148, 132)):
         bd.stamp(obstacle('stone_column_2', 2), x - 6, y)
+    scale_picture(bd, SCALE_24, DROP_24)
+    # Then in closer: ZOOM_24 more about the foot of the island, so its beams
+    # keep showing at the bottom of the frame and it grows up and out.
+    scale_picture(bd, ZOOM_24, ZOOM_LIFT_24, anchor=ZOOM_AT_24, lift=DROP_24 + 25)
+
+    # The beams go in after the blow-up, which would carry their lower ends
+    # under the floor of the model. Each hangs from the rock a little in from
+    # the island's front edge and runs at the vanishing point, off the bottom
+    # of the frame.
+    solid = bd.a > 0
+    for x, inset, r in BEAMS_24:
+        rows = np.nonzero(solid[x].any(axis=1))[0]
+        y = int(rows.min()) + inset
+        # No higher than the lowest rock across its width, or its top shows
+        # in front of the cliff where the underside tucks up to the edge.
+        disc = solid[x - r:x + r + 1, y - r:y + r + 1]
+        top = int(np.where(disc.any(axis=2), disc.argmax(axis=2), bd.size[2]).min())
+        light_beam(bd, x, y, r, BEAM_24, top=top, toward=BEAM_POINT_24)
+    # A black voxel in two opposite corners of the floor: the exporter centres
+    # and grounds on what is there, and the island alone would come out
+    # shifted. Against the black battle sky they do not show.
+    bd.a[0, 0, 0] = bd.a[-1, -1, 0] = BOOK.index(VOID[0])
 
 
 # --------------------------------------------------------------------------- #
@@ -3032,6 +3140,9 @@ def pillar_rows(bd, keys, xs_, y0, y1, spacing, scale=2):
 # The fight is on the brown rock at the temple's foot. The pale terraces climb
 # behind, a stair on the axis; the pillars of light line both sides, statues
 # flank the stair, and the pool opens on the top terrace with its steles.
+#
+# No wall closes the picture any more (the user's call, 2026-10-12): the battle
+# camera shows the chapter's own SKY_05 starfield past the edges of the model.
 
 FLOOR_27 = (74, 74, 69, 52, 51, 48)
 STONE_27 = (111, 111, 111, 117, 116)
@@ -3057,7 +3168,6 @@ def recipe_27(bd):
     lay_where(bd, lambda tx, ty: STAIR_27, '27', s1 | s2, contrast=1.0)
     lay_where(bd, lambda tx, ty: POOL_27, '27', pool)
     rock_faces(bd, '27', STONE_FACE_27, min_rise=3)
-    enclose(bd, VOID, back=176, sides=3, seed=27)
 
     bd.stamp(obstacle('stone_stele_1', 2), 98, 152)
     bd.stamp(obstacle('stone_stele_1', 2), 122, 152)
@@ -3079,6 +3189,9 @@ def recipe_27(bd):
 # The fight is on the grating. A pale walkway crosses the frame behind it, a
 # channel of blue water behind that, and then the row of pools on the far
 # terrace with their pillars of light, closing off into the dark.
+#
+# No wall closes the picture any more (the user's call, 2026-10-12): the battle
+# camera shows the chapter's own SKY_05 starfield past the edges of the model.
 
 GRATE_28 = (124, 124, 124, 125)
 STONE_28 = (121,)
@@ -3108,7 +3221,6 @@ def recipe_28(bd):
     lay_where(bd, lambda tx, ty: POOL_28, '28', pools)
     sink_colour(bd, channel | side)
     rock_faces(bd, '28', STONE_FACE_28, min_rise=3)
-    enclose(bd, VOID, back=176, sides=3, seed=28)
 
     for cx in (40, 92, 144, 196):
         bd.stamp(obstacle('stone_stele_1', 2), cx - 10, 150)
@@ -3130,6 +3242,9 @@ def recipe_28(bd):
 # The backdrop looks up the causeway: grating under the fighters, its pale
 # kerbs converging on the dais, the water stepping down in channels to both
 # sides and the pillars of light marching away along them.
+#
+# No wall closes the picture any more (the user's call, 2026-10-12): the battle
+# camera shows the chapter's own SKY_05 starfield past the edges of the model.
 
 GRATE_29 = (231, 231, 196, 198)
 STONE_29 = (145,)
@@ -3164,7 +3279,6 @@ def recipe_29(bd):
     lay_where(bd, lambda tx, ty: WATER_29, '29', wet)
     sink_colour(bd, wet)
     rock_faces(bd, '29', STONE_FACE_29, min_rise=3)
-    enclose(bd, VOID, back=176, sides=3, seed=29)
 
     keys = ('light_pillar_1', 'light_pillar_2')
     for i, y in enumerate(range(-40, 150, 26)):
@@ -3187,6 +3301,9 @@ def recipe_29(bd):
 # The fight is on the pale floor at the foot of the stair. The channels wrap
 # round behind it, the stair climbs on the axis, the pillars of light stand at
 # the bends, and the black rock rises jagged on every side.
+#
+# No wall closes the picture any more (the user's call, 2026-10-12): the battle
+# camera shows the chapter's own SKY_05 starfield past the edges of the model.
 
 FLOOR_30 = (145, 145, 3)
 WATER_30 = 163
@@ -3215,7 +3332,6 @@ def recipe_30(bd):
     lay_where(bd, lambda tx, ty: STAIR_30, '30', stair, contrast=1.0)
     sink_colour(bd, channel)
     rock_faces(bd, '30', STONE_FACE_30, min_rise=3)
-    enclose(bd, ROCK_TONES_30, back=168, sides=24, side_from=40, seed=30, ragged=10.0)
 
     for x, y in ((18, 88), (206, 88), (40, 120), (184, 120), (62, 150), (162, 150)):
         bd.stamp(obstacle(('light_pillar_1', 'light_pillar_2')[(x // 10) % 2], 2), x, y)
@@ -3238,7 +3354,7 @@ RECIPES = {'02': recipe_02, '03': recipe_03, '04': recipe_04, '05': recipe_05,
 # previews and are written pre-mirrored (x -> 255 - x), so the game shows the
 # composition exactly as designed. bg_preview.py now applies the importer's
 # flip itself, so it draws any backdrop the way the game does.
-MIRROR_FOR_GAME = {'16', '17', '18', '22', '23', '26', '29'}
+MIRROR_FOR_GAME = {'16', '17', '18', '22', '23', '24', '26', '29'}
 
 
 def build(chapter, out_dir=None):

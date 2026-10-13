@@ -139,6 +139,7 @@
     <Compile Include="Assets\Scripts\UI\Utils\LocalizationManager.cs" />
     <Compile Include="Assets\Scripts\Core\Events\CreatureDyingEvent.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuState.cs" />
+    <Compile Include="Assets\MapObjects\GameMap\LightShaft.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\MagicDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TreasureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Map\FDMap.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Assets\Scripts\Core\Common\FDMessage.cs" />
     <Compile Include="Assets\MapObjects\GameMap\MapObjectFade.cs" />
     <Compile Include="Assets\Scenes\GameBattleScene\MagicEffect.cs" />
+    <Compile Include="Assets\Scripts\Core\Definitions\LightShaftDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\SecretSequenceDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\MarchActivities.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureMaterial.cs" />
@@ -386,6 +388,7 @@
     <None Include="Assets\Resources\Data\Occupation.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-16.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-18.txt" />
+    <None Include="Assets\Resources\Skies\Sky05.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_31_ConversationId.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Message.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
@@ -501,6 +504,7 @@
     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_06_Creature.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-03.txt" />
+    <None Include="Assets\Resources\Materials\LightShaftShader.shader" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-28.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-02.txt" />

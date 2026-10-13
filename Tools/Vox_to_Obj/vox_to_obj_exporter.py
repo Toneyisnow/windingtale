@@ -701,7 +701,10 @@ def exportObjToStream(stream, aaQuads, mtl_lib=None, material_name=None,
                  size. Default 1.0 = raw voxel coordinates (legacy).
         center : if True, centers the model's bounding box on the X and Y
                  axes (the two "horizontal" axes). The vertical axis is
-                 not centered.
+                 not centered. An (x, y) pair puts that VOX point at the
+                 origin instead of the bounding box's centre -- a map tile
+                 with part of it cut away (void_tiles.py) must still be
+                 centred on its whole 24x24 cell, (12, 12).
         ground : if True, shifts the model so the lowest vertical voxel
                  lies at 0 (i.e. the character "stands on the ground plane").
         y_up   : if True, rotates the model -90° around the X axis so that
@@ -734,7 +737,9 @@ def exportObjToStream(stream, aaQuads, mtl_lib=None, material_name=None,
             for v in f.vertices:
                 xs.append(v[0]); ys.append(v[1]); zs.append(v[2])
         if xs:
-            if center:
+            if isinstance(center, (tuple, list)):
+                off_x, off_y = float(center[0]), float(center[1])
+            elif center:
                 off_x = (min(xs) + max(xs)) / 2.0
                 off_y = (min(ys) + max(ys)) / 2.0
             if ground:

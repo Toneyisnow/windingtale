@@ -29,6 +29,9 @@ namespace WindingTale.Core.Map
 
         public List<ObstacleDefinition> Obstacles { get; private set; }
 
+        // Light columns hanging under the board (chapter 24); empty for most chapters.
+        public List<LightShaftDefinition> LightShafts { get; private set; }
+
         public FDField(ChapterDefinition chapterDefinition)
         {
             ChapterId = chapterDefinition.ChapterId;
@@ -36,6 +39,7 @@ namespace WindingTale.Core.Map
             Height = chapterDefinition.Height;
 
             Obstacles = chapterDefinition.Obstacles ?? new List<ObstacleDefinition>();
+            LightShafts = chapterDefinition.LightShafts ?? new List<LightShaftDefinition>();
 
             // A chapter that has not been remastered has no RenderMatrix; it draws the
             // painted map, buildings and all.

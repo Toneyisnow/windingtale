@@ -136,10 +136,28 @@ namespace WindingTale.MapObjects.GameMap
                         Shape shape = shapeObj.AddComponent<Shape>();
                         shape.Init(pos, shapeDef);
                     }
+                    else if (field.GetRenderShapeIdAt(pos) < 0)
+                    {
+                        // A void cell (RenderMatrix -1, chapters 23 / 24 / 28): no model, so
+                        // the sky shows through, but still a click target like any tile.
+                        GameObject voidObj = new GameObject(string.Format("Void_{0}_{1}", pos.X, pos.Y));
+                        voidObj.transform.SetParent(this.transform);
+                        voidObj.transform.SetLocalPositionAndRotation(MapCoordinate.ConvertPosToVec3(pos), Quaternion.Euler(90, 0, 0));
+                        voidObj.AddComponent<Shape>().Init(pos, shapeDef);
+                    }
                 }
             }
 
             groundSurfaceHeight = DominantHeight(surfaceHeightByPos.Values);
+
+            // Chapter 24's light shafts, hanging under the board into the void.
+            if (field.LightShafts != null)
+            {
+                foreach (LightShaftDefinition shaft in field.LightShafts)
+                {
+                    LightShaft.Create(this.transform, shaft, field.Height);
+                }
+            }
         }
 
         /// <summary>

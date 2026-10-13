@@ -234,7 +234,10 @@ def lowered_pixels(px, lower, min_area=0):
     hit = set()
     for py in range(voxlib.TILE):
         for pxi in range(voxlib.TILE):
-            if tuple(px[pxi, py][:3]) in lower:
+            pixel = px[pxi, py]
+            if len(pixel) == 4 and pixel[3] == 0:
+                continue
+            if tuple(pixel[:3]) in lower:
                 hit.add((pxi, py))
     if min_area <= 1:
         return hit
@@ -279,13 +282,20 @@ def tile_to_voxels(image, grass_lift=voxlib.GRASS_LIFT, lift_grass=True, flat=Fa
     floor is drawn over black pits in the same black as the pits: the pits are
     hundreds of pixels, the gaps between the wires two or three, and only the
     pits should sink.
+
+    An RGBA ``image`` (``--skip-transparent``) gets no voxel at all for an
+    alpha-0 pixel: that is the void ``void_tiles.py`` cut out, where the sky
+    shows through.
     """
     px = image.load()
+    skip = image.mode == 'RGBA'
     voxels = []
     lower = lower or {}
     sunk = lowered_pixels(px, lower, lower_min_area)
     for py in range(voxlib.TILE):
         for pxi in range(voxlib.TILE):
+            if skip and px[pxi, py][3] == 0:
+                continue
             source = tuple(px[pxi, py][:3])
             colour = voxlib.palette_index(source)
             rgb = voxlib.PALETTE[colour - 1][:3]
@@ -303,14 +313,15 @@ def tile_to_voxels(image, grass_lift=voxlib.GRASS_LIFT, lift_grass=True, flat=Fa
 
 def build_tile(root, nn, tile_id, tree=None, tree_at=None, grass_lift=voxlib.GRASS_LIFT,
                templates=None, panel_dir=None, grass_tile=GRASS_TILE_ID,
-               canvas_z=voxlib.CANVAS, flat=False, lower=None, lower_min_area=0):
+               canvas_z=voxlib.CANVAS, flat=False, lower=None, lower_min_area=0,
+               skip_transparent=False):
     """Voxels for one tile. ``tree`` is a reference tile id from Shapes_01."""
     panel = panel_dir or voxlib.shape_panel_dir(root, nn)
     source_id = grass_tile if tree else tile_id
     path = os.path.join(panel, voxlib.tile_png_name(nn, source_id))
     if not os.path.isfile(path):
         raise SystemExit('tile PNG not found: %s' % path)
-    image = Image.open(path).convert('RGB')
+    image = Image.open(path).convert('RGBA' if skip_transparent else 'RGB')
     if image.size != (voxlib.TILE, voxlib.TILE):
         raise SystemExit('%s is %dx%d, expected %dx%d'
                          % (path, image.size[0], image.size[1], voxlib.TILE, voxlib.TILE))
@@ -440,6 +451,11 @@ def main():
                         '4-connected pixels within the tile. Chapter 26 paints its wire-mesh '
                         'floor over black pits in the same black: with N=45 the pits '
                         'sink and the two-pixel gaps between the wires stay up')
+    p.add_argument('--skip-transparent', action='store_true',
+                   help='no voxel for an alpha-0 pixel. For the panels void_tiles.py writes '
+                        '(chapters 23, 24, 28), whose black void is cut out to alpha 0 so the '
+                        'sky shows through; without it alpha 0 reads as black, as the original '
+                        'panels always have')
     p.add_argument('--grass-lift', type=int, default=voxlib.GRASS_LIFT,
                    help='voxels of grass stacked above the ground (default %d)' % voxlib.GRASS_LIFT)
     p.add_argument('--grass-tile', type=int, default=GRASS_TILE_ID,
@@ -542,7 +558,8 @@ def main():
         voxels, source_id, stamped = build_tile(
             root, nn, tid, tree=tree, tree_at=at, grass_lift=args.grass_lift,
             templates=templates, panel_dir=args.panel_dir, grass_tile=args.grass_tile,
-            canvas_z=canvas_z, flat=args.flat, lower=lower, lower_min_area=args.lower_min_area)
+            canvas_z=canvas_z, flat=args.flat, lower=lower, lower_min_area=args.lower_min_area,
+            skip_transparent=args.skip_transparent)
         name = voxlib.shape_vox_name(nn, tid)
         dest = os.path.join(out_dir, name)
         note = ''

@@ -83,6 +83,27 @@ namespace WindingTale.Scenes.GameBattleScene
             backdrop.SetActive(false);
 
             ShiftBackdrop(instance, chapterId);
+            DropBackdrop(instance, chapterId);
+        }
+
+        /// <summary>
+        /// Voxels to lower a backdrop by. BG_24 is built ZOOM_LIFT_24 (50) voxels higher in its
+        /// model than the battle camera expects, to leave room for its light beams under the
+        /// island, and is lowered 12 less than that so the tops of the beams show at the foot
+        /// of the screen. Preview with bg_preview.py --drop.
+        /// </summary>
+        private static readonly Dictionary<int, int> BackdropDrop = new Dictionary<int, int>
+        {
+            { 24, 38 },
+        };
+
+        private void DropBackdrop(GameObject instance, int chapterId)
+        {
+            if (!BackdropDrop.TryGetValue(chapterId, out int voxels)) return;
+
+            // The OBJ is exported at 0.1 units a voxel and the backdrop is scaled up from there.
+            float voxelSize = 0.1f * instance.transform.localScale.y;
+            instance.transform.position += Vector3.down * (voxels * voxelSize);
         }
 
         /// <summary>

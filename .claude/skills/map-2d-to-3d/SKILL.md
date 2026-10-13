@@ -60,11 +60,16 @@ as VOX, and punch them out of the tile matrix.
 Invoke `chapter-shape-vox`. Mostly mechanical, except for deciding which tiles
 carry trees and which reference crown fits.
 
+Chapters 23, 24 and 28 have their black void cut out first (`void_tiles.py`,
+then `--skip-transparent`) -- see "Void chapters" in `chapter-shape-vox`. Do
+not skip it, or the void comes back as black slabs over the sky.
+
 ### Step 4 — export OBJ
 
 Invoke `vox-to-obj` for both `Resources/Remastered/Obstacles/vox` and
 `Resources/Remastered/Shapes/Shapes_NN/vox`, then copy the results into
-`WindingTale2/Assets/Resources/`.
+`WindingTale2/Assets/Resources/`. The void chapters (23, 24, 28) export their
+shapes with `--tile-centre`.
 
 ### Step 5 — install the cleaned map
 

@@ -17,6 +17,7 @@ namespace WindingTale.Scenes.GameFieldScene
     ///   SKY_02  volcanic cave: dark rock ceiling, veins of magma and a sea of lava
     ///   SKY_03  overcast: a grey sky under a heavy deck of dark storm cloud
     ///   SKY_04  sunset: SKY_01's clouds lit as a burning orange-red evening sky
+    ///   SKY_05  pitch-black night full of twinkling stars (the void chapters 23, 24, 27..30)
     /// </summary>
     public class SkySphere : MonoBehaviour
     {
@@ -88,6 +89,8 @@ namespace WindingTale.Scenes.GameFieldScene
                     return "Skybox/WT_Sky03";
                 case "SKY_04":
                     return "Skybox/WT_Sky04";
+                case "SKY_05":
+                    return "Skybox/WT_Sky05";
                 default:
                     return null;
             }

@@ -65,7 +65,7 @@ def project(p, W, H):
     return sx, sy, c, ty
 
 
-def render(path, out, marks=True):
+def render(path, out, marks=True, drop=0):
     W, H = OUT_W * SS, OUT_H * SS
     m = voxlib.read_vox(path)
     v = np.asarray(m.voxels, np.int32)
@@ -92,6 +92,9 @@ def render(path, out, marks=True):
     inner = ~shown
     keep_surface = dense & ~inner
     v = v[keep_surface[v[:, 0], v[:, 1], v[:, 2]]].astype(np.float64)
+    # A backdrop built higher in its file is lowered that far again in the
+    # game (BattleLoader.BackdropDrop).
+    v[:, 2] -= drop
     pal = np.array([c[:3] for c in m.palette], np.uint8)
     cols = pal[v[:, 3].astype(int) - 1]
 
@@ -169,6 +172,8 @@ def main(argv=None):
                    help='where the PNGs go (default: beside each VOX)')
     p.add_argument('--no-marks', action='store_true',
                    help='leave the fighter boxes off')
+    p.add_argument('--drop', type=int, default=0,
+                   help='voxels the game lowers this backdrop by (BattleLoader.BackdropDrop)')
     args = p.parse_args(argv if argv is not None else sys.argv[1:])
     for path in args.vox:
         out_dir = args.out_dir or os.path.dirname(os.path.abspath(path))
@@ -176,7 +181,7 @@ def main(argv=None):
             os.makedirs(out_dir)
         out = os.path.join(out_dir,
                            os.path.basename(path).replace('.vox', '_cam.png'))
-        render(path, out, marks=not args.no_marks)
+        render(path, out, marks=not args.no_marks, drop=args.drop)
 
 
 if __name__ == '__main__':

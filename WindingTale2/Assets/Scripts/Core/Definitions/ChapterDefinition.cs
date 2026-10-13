@@ -63,6 +63,16 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        /// <summary>
+        /// Optional: columns of light hanging under the board into the void (chapter 24).
+        /// See LightShaftDefinition.
+        /// </summary>
+        [JsonProperty(PropertyName = "LightShafts")]
+        public List<LightShaftDefinition> LightShafts
+        {
+            get; set;
+        }
+
         [JsonProperty(PropertyName = "DefaultTais")]
         public List<int> DefaultTaiIds
         {
@@ -78,7 +88,8 @@ namespace WindingTale.Core.Definitions
         /// <summary>
         /// Which sky the battlefield stands under: "SKY_01" (blue sky and clouds, the default
         /// when the chapter names none), "SKY_02" (the lava cave), "SKY_03" (an overcast
-        /// sky under dark clouds) or "SKY_04" (a burning sunset). See SkySphere.
+        /// sky under dark clouds), "SKY_04" (a burning sunset) or "SKY_05" (a black starry
+        /// night). See SkySphere.
         /// </summary>
         [JsonProperty(PropertyName = "Sky")]
         public string Sky
