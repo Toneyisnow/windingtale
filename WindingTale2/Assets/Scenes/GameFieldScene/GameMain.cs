@@ -341,7 +341,8 @@ namespace WindingTale.Scenes.GameFieldScene
 
             GlobalVariables.Set(VillageScene.RecordVariableName, record);
 
-            QuitToScene("VillageScene");
+            // A village with nothing to sell is skipped for the quick one: only the save.
+            QuitToScene(QuickVillageScene.VillageSceneNameFor(record.ChapterId));
         }
 
         /// <summary>

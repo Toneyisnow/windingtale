@@ -1652,7 +1652,7 @@ public class ShoppingScene : MonoBehaviour
 
         leaving = true;
         GlobalVariables.Set(RecordVariableName, loaded);
-        SceneManager.LoadScene("VillageScene", LoadSceneMode.Single);
+        SceneManager.LoadScene(QuickVillageScene.VillageSceneNameFor(loaded.ChapterId), LoadSceneMode.Single);
     }
 
     /// <summary>The bar's Quit: "确认退出吗？" over the home dialog; the answer lands in OnQuitConfirmed.</summary>

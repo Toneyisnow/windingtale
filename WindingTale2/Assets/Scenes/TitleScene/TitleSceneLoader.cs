@@ -126,7 +126,7 @@ namespace WindingTale.Scenes.TitleScene
             // handover the shop and the field scene use.
             GlobalVariables.Set(VillageScene.RecordVariableName, record);
 
-            FindFirstObjectByType<SceneTransition>().LoadScene("VillageScene");
+            FindFirstObjectByType<SceneTransition>().LoadScene(QuickVillageScene.VillageSceneNameFor(record.ChapterId));
             FindFirstObjectByType<BackgroundMusic>().StopMusic();
         }
 

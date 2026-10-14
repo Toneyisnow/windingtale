@@ -87,5 +87,9 @@ public class ScreenFader : MonoBehaviour
     private void SetAlpha(float alpha)
     {
         curtain.color = new Color(0.0f, 0.0f, 0.0f, Mathf.Clamp01(alpha));
+
+        // A fully cleared curtain is still the top-most graphic on screen, and an Image takes
+        // clicks whatever its alpha -- so it only blocks the UI while some of it is showing.
+        curtain.raycastTarget = alpha > 0.0f;
     }
 }

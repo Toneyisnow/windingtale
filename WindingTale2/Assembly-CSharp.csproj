@@ -85,6 +85,7 @@
     <Compile Include="Assets\Scenes\GameBattleScene\EnemyHitEffect.cs" />
     <Compile Include="Assets\Scripts\UI\Utils\MonoBehaviourUtils.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
+    <Compile Include="Assets\Scenes\QuickVillageScene\QuickVillageScene.cs" />
     <Compile Include="Assets\Scenes\ShoppingScene\ShoppingMessageDialog.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ActivityFactory.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\TalkDialog.cs" />
