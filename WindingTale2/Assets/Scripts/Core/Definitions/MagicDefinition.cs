@@ -102,6 +102,15 @@ namespace WindingTale.Core.Definitions
 
         private static readonly HashSet<int> FieldOnlyAttackMagicIds = new HashSet<int> { 110, 111, 112 };
 
+        /// <summary>行动术 (406): gives a creature that has already acted this turn a fresh action.</summary>
+        public bool IsStartAction => this.MagicId == 406;
+
+        /// <summary>
+        /// 传送术 (501): puts a creature of one's own side on a tile of the caster's choosing.
+        /// Cast in two steps -- the creature, then the tile (SelectTransferToPositionState).
+        /// </summary>
+        public bool IsTransmit => this.MagicId == 501;
+
 
         public MagicDefinition()
         {

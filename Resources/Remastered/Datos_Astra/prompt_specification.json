@@ -1,0 +1,11 @@
+{
+  "mode": "built-in image_gen with user-authorized local compositing and solid background normalization",
+  "prompt_specification": {
+    "base": "Refine the supplied single character portrait into consistent crisp fantasy anime cel shading and clean linework. Preserve identity, face, expression, pose, costume and crop. Exactly one character. Flat blue #17468C background, no scenery or gradient.",
+    "1": "Based on frame 0, slightly open the visible mouth wider, respecting the actual mouth location and anatomy, including beasts and dragons. Preserve everything else.",
+    "2": "Based on frame 0, close the visible mouth naturally. Preserve everything else.",
+    "3": "Based on frame 0, fully close the eyes; for mechanical portraits turn off the eye lights. Preserve everything else."
+  },
+  "postprocessing": "Composite only approved mouth or eye regions onto frame 0. Hidden mouths retain frame 0 for frames 1 and 2. Hidden eyes retain frame 0 for frame 3. Background RGB(23,70,140).",
+  "exception_731": "Image generation blocked twice. Composited existing generated unlit sensor glass from character 740 into the two eye sensor regions."
+}

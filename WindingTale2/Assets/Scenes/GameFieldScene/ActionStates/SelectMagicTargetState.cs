@@ -9,6 +9,7 @@ using WindingTale.Core.Objects;
 using WindingTale.MapObjects.GameMap;
 using WindingTale.Scenes.GameFieldScene;
 using System;
+using System.Linq;
 using WindingTale.MapObjects.CreatureIcon;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
@@ -38,10 +39,15 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         private FDPosition blinkCursor = null;
         private List<FDCreature> blinkTargets = null;
 
-        public SelecteMagicTargetState(GameMain gameMain, FDCreature creature, MagicDefinition magic) : base(gameMain)
+        // Where the cursor parks on entering, instead of the usual recommendation: the
+        // creature 传送术 was about to send, when its tile choice was cancelled.
+        private FDCreature preferredTarget = null;
+
+        public SelecteMagicTargetState(GameMain gameMain, FDCreature creature, MagicDefinition magic, FDCreature preferredTarget = null) : base(gameMain)
         {
             this.Creature = creature;
             this.Magic = magic;
+            this.preferredTarget = preferredTarget;
 
             if (this.Creature == null)
             {
@@ -73,9 +79,23 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
             {
                 gameMain.gameMap.showActionTargetRange(this.Creature, magicRange);
 
-                FDCreature target = IsTargetingEnemy
-                    ? fdMap.GetPreferredAttackTargetInRange(this.Creature, magicRange)
-                    : fdMap.GetPreferredFriendOrNpcTargetInRange(this.Creature, magicRange, true);
+                FDCreature target;
+                if (preferredTarget != null)
+                {
+                    target = preferredTarget;
+                }
+                else if (this.Magic.IsStartAction)
+                {
+                    // 行动术 only takes someone who has already acted: the lowest id of those.
+                    List<FDCreature> candidates = gameMain.getMagicTargets(this.Creature, this.Magic, magicRange);
+                    target = candidates.OrderBy(c => c.Id).FirstOrDefault();
+                }
+                else
+                {
+                    target = IsTargetingEnemy
+                        ? fdMap.GetPreferredAttackTargetInRange(this.Creature, magicRange)
+                        : fdMap.GetPreferredFriendOrNpcTargetInRange(this.Creature, magicRange, true);
+                }
                 SlideCursorToTarget(this.Creature, target);
             });
         }
@@ -154,6 +174,13 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 {
                     // Cannot spell on that position, do nothing
                     return this;
+                }
+                else if (this.Magic.IsTransmit)
+                {
+                    // 传送术 is cast in two steps: this is the creature to send, the tile
+                    // to send it to is picked next. Its blast is the one tile.
+                    FDCreature target = targets.Find(t => t.Position.AreSame(position)) ?? targets[0];
+                    return new SelectTransferToPositionState(gameMain, this.Creature, this.Magic, target);
                 }
                 else
                 {

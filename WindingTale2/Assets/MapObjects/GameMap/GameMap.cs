@@ -385,7 +385,18 @@ namespace WindingTale.MapObjects.GameMap
         public void EndCursorCameraFollow()
         {
             EnsureMainCamera();
-            if (mainCamera != null)
+            if (mainCamera == null)
+            {
+                return;
+            }
+
+            // Whatever the batch did with the camera, the player picks up at the cursor:
+            // it must end up on screen.
+            if (cursor != null && cursor.Position != null && IsCursorVisible)
+            {
+                mainCamera.SettleOnCursor(GetTileWorldCentre(cursor.Position));
+            }
+            else
             {
                 mainCamera.ReturnToGameplay();
             }
@@ -745,6 +756,17 @@ namespace WindingTale.MapObjects.GameMap
             {
                 creatureIcon.SetPositionAndRotation(MapCoordinate.ConvertCreaturePosToVec3(position), Quaternion.identity);
             }
+        }
+
+        /// <summary>
+        /// Raises 传送术's column of light on a tile, its foot on the tile's surface where
+        /// the cursor lies. The caller takes it down (destroys its game object).
+        /// </summary>
+        public TeleportPillar CreateTeleportPillar(FDPosition position)
+        {
+            Vector3 foot = indicatorPositionAt(position);
+            foot.y += GetGroundSurfaceHeight();
+            return TeleportPillar.Create(indicatorsLayer.transform, foot);
         }
 
         public void MoveCreature(FDCreature creature, FDMovePath movePath)

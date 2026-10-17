@@ -239,6 +239,58 @@ public class MainCamera : MonoBehaviour
         savedPosition = groundFocus - forward * distance;
     }
 
+    /// <summary>
+    /// Hands the camera back to the player once a batch of activities (an action, a
+    /// conversation) is over, making sure the cursor -- where the player picks up from --
+    /// is on screen. A follow eases back to the framing it saved, rebased onto the cursor
+    /// when the cursor would be off screen there (an action that ended far from where it
+    /// started: 传送术, or a dialog that slid off to the caster). With no follow to end, a
+    /// cursor off screen gets the camera panned over to it at its own height and angle.
+    /// </summary>
+    public void SettleOnCursor(Vector3 cursorPoint)
+    {
+        if (cam == null || isSliding || isReturning)
+        {
+            ReturnToGameplay();
+            return;
+        }
+
+        if (followActive && !releaseOnArrive)
+        {
+            if (!IsPointInView(savedPosition, savedRotation, cursorPoint))
+            {
+                RebaseSavedFraming(cursorPoint);
+            }
+            ReturnToGameplay();
+            return;
+        }
+
+        if (!IsPointInView(transform.position, transform.rotation, cursorPoint))
+        {
+            PanFocusTo(cursorPoint, SettlePanDuration);
+        }
+    }
+
+    private const float SettlePanDuration = 0.4f;
+
+    /// <summary>
+    /// Whether a world point would be drawn inside the screen, clear of the hard cursor
+    /// margin, by this camera standing at the given position and rotation.
+    /// </summary>
+    private bool IsPointInView(Vector3 position, Quaternion rotation, Vector3 point)
+    {
+        Vector3 local = Quaternion.Inverse(rotation) * (point - position);
+        if (local.z <= 0f)
+        {
+            return false;
+        }
+
+        // Camera space looks down -z.
+        Vector3 ndc = cam.projectionMatrix.MultiplyPoint(new Vector3(local.x, local.y, -local.z));
+        float bound = 1f - 2f * CursorHardMargin;
+        return Mathf.Abs(ndc.x) <= bound && Mathf.Abs(ndc.y) <= bound;
+    }
+
     private void UpdateReturn()
     {
         returnElapsed += Time.deltaTime;

@@ -88,6 +88,31 @@ namespace WindingTale.MapObjects.CreatureIcon
             }
         }
 
+        // The scale the creature had before SetHidden(true) shrank it away; null while shown.
+        private Vector3? shownScale = null;
+
+        /// <summary>
+        /// Takes the creature off the screen, or puts it back, without touching its clips
+        /// (the Animator toggles their renderers every frame, so they cannot be switched
+        /// off from here): it is shrunk to nothing. Used by 传送术's vanish and arrival.
+        /// </summary>
+        public void SetHidden(bool hidden)
+        {
+            if (hidden)
+            {
+                if (shownScale == null)
+                {
+                    shownScale = transform.localScale;
+                    transform.localScale = Vector3.zero;
+                }
+            }
+            else if (shownScale != null)
+            {
+                transform.localScale = shownScale.Value;
+                shownScale = null;
+            }
+        }
+
         /// <summary>Whether any clip still renders with a see-through material.</summary>
         private bool HasFadedMaterial()
         {

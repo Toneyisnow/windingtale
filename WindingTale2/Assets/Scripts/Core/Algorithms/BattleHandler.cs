@@ -385,6 +385,21 @@ namespace WindingTale.Core.Algorithms
         /// <param name="magic"></param>
         /// <param name="effectResult"></param>
         /// <returns></returns>
+        /// <summary>
+        /// The experience for a 传送术 (501). It always lands and has no SoloResult of its
+        /// own, so it is not resolved through HandleCreatureMagic; it earns what any other
+        /// effect magic does (GetBaseExperience), for a friend caster only.
+        /// </summary>
+        public static int CalculateTransmitExp(FDCreature subject, FDCreature target, MagicDefinition magic)
+        {
+            if (subject == null || target == null || magic == null || subject.Faction != CreatureFaction.Friend)
+            {
+                return 0;
+            }
+
+            return Math.Min(magic.GetBaseExperience() * target.ExperienceLevel / subject.ExperienceLevel, MAX_EXPERIENCE_GAIN);
+        }
+
         private static int CalculateMagicEffectExp(FDCreature subject, FDCreature target, MagicDefinition magic, EffectResult effectResult)
         {
             if (subject == null || target == null || magic == null || effectResult == null || subject.Faction != CreatureFaction.Friend)

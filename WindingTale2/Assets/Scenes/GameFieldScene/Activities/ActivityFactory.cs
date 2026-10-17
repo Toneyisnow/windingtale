@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Algorithms;
+using WindingTale.Core.Common;
 using WindingTale.Core.Objects;
 using WindingTale.MapObjects.CreatureIcon;
 using WindingTale.MapObjects.GameMap;
@@ -161,6 +162,70 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             };
 
             return new DurationActivity(startAction, checkEnd, endAction);
+        }
+
+        /// <summary>
+        /// 行动术 (406): the creature, whose turn state has already been reset, flickers from
+        /// grey to normal (CreatureActionRestoring). Finishes when the flicker does; a
+        /// creature with no icon on the map is skipped without waiting.
+        /// </summary>
+        public static DurationActivity CreatureActionRestoredActivity(FDCreature creature)
+        {
+            Action<GameMain> startAction = gameMain =>
+            {
+                Creature creatureObj = gameMain.gameMap.GetCreature(creature);
+                if (creatureObj != null && creatureObj.GetComponent<CreatureActionRestoring>() == null)
+                {
+                    creatureObj.gameObject.AddComponent<CreatureActionRestoring>();
+                }
+            };
+
+            Func<GameMain, bool> checkEnd = gameMain =>
+            {
+                Creature creatureObj = gameMain.gameMap.GetCreature(creature);
+                return creatureObj == null || creatureObj.GetComponent<CreatureActionRestoring>() == null;
+            };
+
+            return new DurationActivity(startAction, checkEnd);
+        }
+
+        /// <summary>
+        /// One end of 传送术 (501): the cursor slides to the tile (the camera panning along),
+        /// a column of light grows on it (TeleportPillar), and once it is a tile wide the
+        /// creature vanishes from the tile (arriving false) or appears on it (arriving true);
+        /// the column goes LingerDuration later. The creature is not moved here -- the
+        /// caller relocates it between the two ends.
+        /// </summary>
+        public static ActivityBase CreatureTeleportActivity(FDCreature creature, FDPosition position, bool arriving)
+        {
+            TeleportPillar pillar = null;
+            float shownAt = 0f;
+
+            DurationActivity slide = new DurationActivity(
+                gameMain => gameMain.gameMap.SlideCursorTo(position, GameCanvas.DialogPosition.Bottom, true),
+                gameMain => !gameMain.gameMap.IsSlideBusy);
+
+            DurationActivity rise = new DurationActivity(
+                gameMain => pillar = gameMain.gameMap.CreateTeleportPillar(position),
+                gameMain => pillar == null || pillar.HasGrown,
+                gameMain =>
+                {
+                    gameMain.gameMap.GetCreature(creature)?.SetHidden(!arriving);
+                    shownAt = Time.time;
+                });
+
+            DurationActivity linger = new DurationActivity(
+                null,
+                gameMain => Time.time - shownAt >= TeleportPillar.LingerDuration,
+                gameMain =>
+                {
+                    if (pillar != null)
+                    {
+                        UnityEngine.Object.Destroy(pillar.gameObject);
+                    }
+                });
+
+            return new SequencedActivity(new List<ActivityBase> { slide, rise, linger });
         }
     }
 

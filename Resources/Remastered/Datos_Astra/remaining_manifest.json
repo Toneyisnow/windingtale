@@ -1,0 +1,767 @@
+[
+  {
+    "id": "101",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\101\\Dato_101_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\101\\Dato_101_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "102",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\102\\Dato_102_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\102\\Dato_102_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "103",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\103\\Dato_103_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\103\\Dato_103_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "105",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\105\\Dato_105_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\105\\Dato_105_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "106",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\106\\Dato_106_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\106\\Dato_106_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "107",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\107\\Dato_107_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\107\\Dato_107_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "108",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\108\\Dato_108_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\108\\Dato_108_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "109",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\109\\Dato_109_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\109\\Dato_109_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "110",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\110\\Dato_110_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\110\\Dato_110_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "111",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\111\\Dato_111_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\111\\Dato_111_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "112",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\112\\Dato_112_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\112\\Dato_112_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "113",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\113\\Dato_113_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\113\\Dato_113_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "114",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\114\\Dato_114_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\114\\Dato_114_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "115",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\115\\Dato_115_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\115\\Dato_115_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "116",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\116\\Dato_116_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\116\\Dato_116_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "201",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\201\\Dato_201_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\201\\Dato_201_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "202",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\202\\Dato_202_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\202\\Dato_202_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "203",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\203\\Dato_203_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\203\\Dato_203_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "205",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\205\\Dato_205_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\205\\Dato_205_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "206",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\206\\Dato_206_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\206\\Dato_206_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "207",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\207\\Dato_207_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\207\\Dato_207_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "208",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\208\\Dato_208_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\208\\Dato_208_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "209",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\209\\Dato_209_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\209\\Dato_209_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "210",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\210\\Dato_210_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\210\\Dato_210_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "211",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\211\\Dato_211_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\211\\Dato_211_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "212",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\212\\Dato_212_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\212\\Dato_212_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "213",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\213\\Dato_213_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\213\\Dato_213_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "214",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\214\\Dato_214_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\214\\Dato_214_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "216",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\216\\Dato_216_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\216\\Dato_216_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "701",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\701\\Dato_701_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\701\\Dato_701_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "702",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\702\\Dato_702_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\702\\Dato_702_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "703",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\703\\Dato_703_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\703\\Dato_703_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "704",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\704\\Dato_704_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\704\\Dato_704_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "705",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\705\\Dato_705_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\705\\Dato_705_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "706",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\706\\Dato_706_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\706\\Dato_706_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "707",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\707\\Dato_707_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\707\\Dato_707_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "708",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\708\\Dato_708_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\708\\Dato_708_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "709",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\709\\Dato_709_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\709\\Dato_709_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "710",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\710\\Dato_710_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\710\\Dato_710_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "711",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\711\\Dato_711_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\711\\Dato_711_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "712",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\712\\Dato_712_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\712\\Dato_712_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "713",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\713\\Dato_713_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\713\\Dato_713_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "714",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\714\\Dato_714_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\714\\Dato_714_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "715",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\715\\Dato_715_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\715\\Dato_715_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "716",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\716\\Dato_716_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\716\\Dato_716_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "717",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\717\\Dato_717_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\717\\Dato_717_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "718",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\718\\Dato_718_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\718\\Dato_718_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "719",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\719\\Dato_719_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\719\\Dato_719_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "720",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\720\\Dato_720_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\720\\Dato_720_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "721",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\721\\Dato_721_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\721\\Dato_721_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "722",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\722\\Dato_722_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\722\\Dato_722_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "723",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\723\\Dato_723_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\723\\Dato_723_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "724",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\724\\Dato_724_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\724\\Dato_724_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "725",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\725\\Dato_725_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\725\\Dato_725_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "726",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\726\\Dato_726_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\726\\Dato_726_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "727",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\727\\Dato_727_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\727\\Dato_727_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "728",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\728\\Dato_728_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\728\\Dato_728_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "729",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\729\\Dato_729_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\729\\Dato_729_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "730",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\730\\Dato_730_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\730\\Dato_730_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "731",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\731\\Dato_731_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\731\\Dato_731_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "732",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\732\\Dato_732_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\732\\Dato_732_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "733",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\733\\Dato_733_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\733\\Dato_733_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "734",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\734\\Dato_734_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\734\\Dato_734_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "735",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\735\\Dato_735_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\735\\Dato_735_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "736",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\736\\Dato_736_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\736\\Dato_736_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "737",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\737\\Dato_737_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\737\\Dato_737_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "738",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\738\\Dato_738_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\738\\Dato_738_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "739",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\739\\Dato_739_0.jpg",
+    "origin": "Resources\\Remastered\\Datos_Astra\\739\\Dato_739_origin.png",
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "id": "740",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\740\\Dato_740_0.jpg",
+    "origin": "Resources\\Remastered\\Datos_Astra\\740\\Dato_740_origin.png",
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "id": "741",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\741\\Dato_741_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\741\\Dato_741_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "742",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\742\\Dato_742_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\742\\Dato_742_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "743",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\743\\Dato_743_0.jpg",
+    "origin": "Resources\\Remastered\\Datos_Astra\\743\\Dato_743_origin.png",
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "id": "744",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\744\\Dato_744_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\744\\Dato_744_origin.png",
+    "size": [
+      160,
+      160
+    ]
+  },
+  {
+    "id": "745",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\745\\Dato_745_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\745\\Dato_745_origin.png",
+    "size": [
+      160,
+      160
+    ]
+  },
+  {
+    "id": "750",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\750\\Dato_750_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\750\\Dato_750_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "751",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\751\\Dato_751_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\751\\Dato_751_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "752",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\752\\Dato_752_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\752\\Dato_752_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "753",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\753\\Dato_753_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\753\\Dato_753_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "754",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\754\\Dato_754_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\754\\Dato_754_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "755",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\755\\Dato_755_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\755\\Dato_755_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "756",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\756\\Dato_756_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\756\\Dato_756_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "757",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\757\\Dato_757_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\757\\Dato_757_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "761",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\761\\Dato_761_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\761\\Dato_761_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "763",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\763\\Dato_763_0.png",
+    "origin": "Resources\\Remastered\\Datos_Astra\\763\\Dato_763_origin.png",
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "id": "901",
+    "source": "WindingTale2\\Assets\\Resources\\Datos\\901\\Dato_901_0.jpg",
+    "origin": "Resources\\Remastered\\Datos_Astra\\901\\Dato_901_origin.png",
+    "size": [
+      1024,
+      1024
+    ]
+  }
+]

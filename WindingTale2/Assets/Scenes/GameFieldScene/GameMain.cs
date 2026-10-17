@@ -615,10 +615,13 @@ namespace WindingTale.Scenes.GameFieldScene
                         target.ApplyEffect(effectResult);
 
                         // A fresh action also has to put the icon back to its un-greyed look,
-                        // which lives on the map object rather than on the creature.
+                        // which lives on the map object rather than on the creature: the turn
+                        // state is reset at once (neither acted nor moved), and the icon
+                        // flickers from grey to normal alongside the floating text.
                         if (MagicResultText.Contains(effectResult, EffectType.StartAction))
                         {
                             gameMap.GetCreature(target)?.ResetTurnState();
+                            floatingTexts.Add(ActivityFactory.CreatureActionRestoredActivity(target));
                         }
 
                         Color textColor;
@@ -683,6 +686,57 @@ namespace WindingTale.Scenes.GameFieldScene
 
                 FDCreature firstTarget = targetList.Count > 0 ? targetList[0] : null;
                 grantDropItems(kills, getDropTalker(creature, firstTarget, false));
+            });
+
+            this.PushActivity((gameMain) =>
+            {
+                onCreatureEndTurn(creature);
+            });
+        }
+
+        /// <summary>
+        /// 传送术 (501): the caster puts a creature of its own side (picked in
+        /// SelecteMagicTargetState) onto a free tile it can stand on (picked in
+        /// SelectTransferToPositionState). It always lands. The MP is paid, then a column of
+        /// light rises under the creature and it vanishes, and another rises on the new tile
+        /// and it appears there (ActivityFactory.CreatureTeleportActivity). The target's own
+        /// turn state is left alone: one that has not acted can still move and act from its
+        /// new tile.
+        /// </summary>
+        public void creatureTransfer(FDCreature creature, FDCreature target, FDPosition position, int magicId)
+        {
+            Creature c = gameMap.GetCreature(creature);
+            MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
+            FDPosition from = target.Position;
+            int experience = BattleHandler.CalculateTransmitExp(creature, target, magic);
+
+            c.SetActioned(true);
+            SoundEffects.PlayFieldMagic(magicId);
+
+            this.PushActivity((gameMain) =>
+            {
+                creature.UpdateMp(-magic.MpCost);
+            });
+
+            this.PushActivity(ActivityFactory.CreatureTeleportActivity(target, from, false));
+            this.PushActivity((gameMain) =>
+            {
+                gameMap.RelocateCreature(target.Id, position);
+            });
+            this.PushActivity(ActivityFactory.CreatureTeleportActivity(target, position, true));
+
+            // Arriving on a tile can be what a chapter's event waits for.
+            this.PushActivity((gameMain) =>
+            {
+                gameMain.notifyTriggeredEventsFirst();
+            });
+
+            this.PushActivity((gameMain) =>
+            {
+                if (experience > 0)
+                {
+                    applyExperienceAndLevelUp(creature, experience);
+                }
             });
 
             this.PushActivity((gameMain) =>
@@ -851,6 +905,13 @@ namespace WindingTale.Scenes.GameFieldScene
             {
                 targets.AddRange(gameMap.Map.GetCreaturesInRange(positions, CreatureFaction.Friend));
                 targets.AddRange(gameMap.Map.GetCreaturesInRange(positions, CreatureFaction.Npc));
+            }
+
+            // 行动术 gives a fresh action, so only someone who has already acted this turn
+            // can take it. The caster has not acted yet while choosing, so is never one.
+            if (magic.IsStartAction)
+            {
+                targets.RemoveAll(target => !target.HasActioned);
             }
 
             return targets;
