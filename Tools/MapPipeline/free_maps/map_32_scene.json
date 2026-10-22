@@ -1,0 +1,217 @@
+{
+  "_comment": "Map 32, the royal throne hall: who stands where and what the hero can talk to. Merged into Data/Maps/Map_32.json by build_free_map.py. Positions are 1-based (X column, Y row). Facing is Up / Down / Left / Right. Strings: the map's talk is conversations 1-2 of Resources/Original/Strings/Maps/Chapter-00.strings (the audience with the king and queen), kept as conversations 1-2 of ChapterStrings-32; Speakers turns the source's speaker ids into portraits (99 the king -> 901, 98 the queen -> 902; 9 on 00-02-007 is the king's line, so 901 too). Each event plays its Conversations in order; Trigger Step fires on arriving on one of its tiles (Rows = whole map rows), Face on coming to face one; Once fires the first time only; Requires lists the event Ids that must have played first; Then runs once the talk is over (Map: go to that free-field map; Spawn: put creatures on this one). The queen's model is icon 902 (008 with purple hair); her portrait is Dato 902. Hint: shown in the top-left corner, pulsing, until the player first presses an arrow key.",
+  "Sky": "",
+  "BlockedExtra": [
+    {
+      "X": 3,
+      "Y": 3
+    },
+    {
+      "X": 5,
+      "Y": 3
+    },
+    {
+      "X": 6,
+      "Y": 3
+    },
+    {
+      "X": 8,
+      "Y": 3
+    },
+    {
+      "X": 9,
+      "Y": 3
+    },
+    {
+      "X": 10,
+      "Y": 3
+    },
+    {
+      "X": 13,
+      "Y": 14
+    }
+  ],
+  "BlockedRows": [
+    1,
+    2
+  ],
+  "Hero": {
+    "DefinitionId": 1,
+    "X": 6,
+    "Y": 37,
+    "Facing": "Up"
+  },
+  "Creatures": [
+    {
+      "Id": 901,
+      "AnimationId": 901,
+      "X": 5,
+      "Y": 2,
+      "Facing": "Down"
+    },
+    {
+      "Id": 902,
+      "AnimationId": 902,
+      "X": 8,
+      "Y": 2,
+      "Facing": "Down"
+    },
+    {
+      "Id": 911,
+      "AnimationId": 703,
+      "X": 3,
+      "Y": 12,
+      "Facing": "Down"
+    },
+    {
+      "Id": 912,
+      "AnimationId": 703,
+      "X": 10,
+      "Y": 12,
+      "Facing": "Down"
+    },
+    {
+      "Id": 913,
+      "AnimationId": 736,
+      "X": 3,
+      "Y": 14,
+      "Facing": "Down"
+    },
+    {
+      "Id": 914,
+      "AnimationId": 736,
+      "X": 10,
+      "Y": 14,
+      "Facing": "Down"
+    },
+    {
+      "Id": 915,
+      "AnimationId": 703,
+      "X": 3,
+      "Y": 19,
+      "Facing": "Down"
+    },
+    {
+      "Id": 916,
+      "AnimationId": 703,
+      "X": 10,
+      "Y": 19,
+      "Facing": "Down"
+    },
+    {
+      "Id": 921,
+      "AnimationId": 703,
+      "X": 4,
+      "Y": 22,
+      "Facing": "Down"
+    },
+    {
+      "Id": 922,
+      "AnimationId": 703,
+      "X": 9,
+      "Y": 22,
+      "Facing": "Down"
+    },
+    {
+      "Id": 923,
+      "AnimationId": 736,
+      "X": 4,
+      "Y": 26,
+      "Facing": "Down"
+    },
+    {
+      "Id": 924,
+      "AnimationId": 736,
+      "X": 9,
+      "Y": 26,
+      "Facing": "Down"
+    },
+    {
+      "Id": 925,
+      "AnimationId": 703,
+      "X": 4,
+      "Y": 30,
+      "Facing": "Down"
+    },
+    {
+      "Id": 926,
+      "AnimationId": 703,
+      "X": 9,
+      "Y": 30,
+      "Facing": "Down"
+    },
+    {
+      "Id": 927,
+      "AnimationId": 736,
+      "X": 4,
+      "Y": 34,
+      "Facing": "Down"
+    },
+    {
+      "Id": 928,
+      "AnimationId": 736,
+      "X": 9,
+      "Y": 34,
+      "Facing": "Down"
+    },
+    {
+      "Id": 929,
+      "AnimationId": 736,
+      "X": 4,
+      "Y": 38,
+      "Facing": "Down"
+    },
+    {
+      "Id": 930,
+      "AnimationId": 736,
+      "X": 9,
+      "Y": 38,
+      "Facing": "Down"
+    }
+  ],
+  "Events": [
+    {
+      "_what": "the line across the middle of the hall",
+      "Trigger": "Step",
+      "Once": true,
+      "Rows": [
+        20
+      ],
+      "Conversations": [
+        1
+      ],
+      "Id": 1
+    },
+    {
+      "_what": "the line two tiles in front of the king and queen",
+      "Trigger": "Step",
+      "Once": true,
+      "Rows": [
+        4
+      ],
+      "Conversations": [
+        2
+      ],
+      "Id": 2,
+      "Requires": [
+        1
+      ],
+      "Then": {
+        "Map": 33
+      }
+    }
+  ],
+  "Strings": {
+    "Source": 0,
+    "Conversations": {
+      "1": 1,
+      "2": 2
+    },
+    "Speakers": {
+      "99": 901,
+      "98": 902,
+      "9": 901
+    }
+  },
+  "Hint": "按方向键操作角色"
+}

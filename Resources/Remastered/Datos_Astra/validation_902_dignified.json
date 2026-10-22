@@ -1,0 +1,11 @@
+{
+  "mode": "built-in image_gen with authorized local compositing",
+  "prompt": "Dignified, composed and gracious expression; open attentive brown eyes, relaxed natural brows, softened eyeliner, subtle polite closed-lip smile and muted rose lips. Preserve identity, purple hairstyle, ornament and original framing. Speaking frame gently parted lips; blink frame naturally horizontal closed eyelids.",
+  "frames": 4,
+  "size": [
+    1254,
+    1254
+  ],
+  "outside_expression_mask_unchanged": true,
+  "unity_hashes_verified": true
+}

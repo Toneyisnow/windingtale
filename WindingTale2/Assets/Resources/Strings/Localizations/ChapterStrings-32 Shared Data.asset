@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: ChapterStrings-32 Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: ChapterStrings-32
+  m_TableCollectionNameGuidString: 67281d488a735d34eb778c65d4d0ef4b
+  m_Entries:
+  - m_Id: 482795520
+    m_Key: Conversation-32-01-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875904
+    m_Key: Conversation-32-01-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875905
+    m_Key: Conversation-32-01-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875906
+    m_Key: Conversation-32-01-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875907
+    m_Key: Conversation-32-01-05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875908
+    m_Key: Conversation-32-01-06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875909
+    m_Key: Conversation-32-02-01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875910
+    m_Key: Conversation-32-02-02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875911
+    m_Key: Conversation-32-02-03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875912
+    m_Key: Conversation-32-02-04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875913
+    m_Key: Conversation-32-02-05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875914
+    m_Key: Conversation-32-02-06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875915
+    m_Key: Conversation-32-02-07
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875916
+    m_Key: Conversation-32-02-08
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875917
+    m_Key: Conversation-32-02-09
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875918
+    m_Key: Conversation-32-02-10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875919
+    m_Key: Conversation-32-02-11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875920
+    m_Key: Conversation-32-02-12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 570875921
+    m_Key: Conversation-32-02-13
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 3194654683090911577
+  references:
+    version: 2
+    RefIds:
+    - rid: 3194654683090911577
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1792640790593

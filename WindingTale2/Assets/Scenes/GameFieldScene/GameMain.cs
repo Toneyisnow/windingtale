@@ -908,10 +908,16 @@ namespace WindingTale.Scenes.GameFieldScene
             }
 
             // 行动术 gives a fresh action, so only someone who has already acted this turn
-            // can take it. The caster has not acted yet while choosing, so is never one.
+            // can take it.
             if (magic.IsStartAction)
             {
                 targets.RemoveAll(target => !target.HasActioned);
+            }
+
+            // Neither 行动术 nor 传送术 can be cast on the caster itself.
+            if (magic.IsStartAction || magic.IsTransmit)
+            {
+                targets.RemoveAll(target => target.Id == creature.Id);
             }
 
             return targets;

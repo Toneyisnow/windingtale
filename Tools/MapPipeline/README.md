@@ -60,6 +60,10 @@ pip install Pillow
 | `validate_shapes.py` | 拿第 01 关做回归：重新生成并与参考 VOX 逐体素比对 |
 | `vox_preview.py` | 把 `.vox` 渲染成正交 + 等轴测的 PNG 联系表，用来肉眼检查模型 |
 | `vox_batch_to_obj.py` | 批量 `vox/` → `../obj/`（`.obj` + `.mtl` + 调色板 `.png`） |
+| `screenshot_map.py` | 自由地图（非战斗关卡，只有截图）：按人物格子切截图、抹掉人物与截图滚动条、把已有 obstacle（雕像 / 石球柱 / 高石柱 / 神龛）抠成地板、缩成 24×24 并合并相同格子，写 `out/map_NN/panel` + `UsedTiles.json` + `map.json`（目前只描述了 Map 32 王宫大殿） |
+| `build_free_map.py` | 把 `out/map_NN` + `free_maps/map_NN_scene.json`（人物、事件、台词）装成 `Data/Maps/Map_NN.json`（`ShapeSet: Map_NN`，ShapeMatrix 管能否行走、RenderMatrix 管画什么），并写 `ChapterStrings-NN.csv` 和 `CharacterList_Chapter-NN.txt` |
+| `free_map_strings.py` | 自由地图的对话取自原版某关的 `.strings`：挑出指定段落写 `ChapterStrings-MM.csv` 和字符表（Map 32 = `Chapter-00` 第 1–2 段；Map 33 表 = 第 3–11 段，原编号不变，Map 34 也读这张表） |
+| `grid_screenshot_map.py` | 地图编辑器截图（24px 格子、蓝色网格线、每格灰色“0”）：抹掉网格和“0”，按 `free_maps/map_NN_trees.json`（手读的树冠 / 顶部树身）生成 `tree_<colour>` 树 obstacle 并把树格补成草地，再走 `screenshot_map.write_map`（Map 33、34） |
 
 ### 典型顺序
 
@@ -268,3 +272,21 @@ obstacle 列表里 `DefinitionKey` 以 `_` 开头的条目（`_erase`）只做�
 所以 obstacle 的 VOX 是手写脚本 / MagicaVoxel 做出来的，
 这里只提供 `vox_preview.py`（看模型对不对）和 `map_clean.py`
 （尺寸不匹配会直接报错：`SIZE` 必须是 24 的整数倍）来兜底。
+
+### 自由地图（GameFreeFieldScene）
+
+```bash
+python screenshot_map.py 32 --image ../../Resources/Remastered/Maps/Map_32/Map-32-screenshot.png
+python build_free_map.py 32          # 对话：Chapter-00 第 1-2 段
+python grid_screenshot_map.py 33 --image ../../Resources/Remastered/Maps/Map_33/Map-33-screenshot.png --origin 1,1 --size 18x8 --pad 8
+python grid_screenshot_map.py 34 --image ../../Resources/Remastered/Maps/Map_34/Map-34-screenshot.png --origin 2,4 --size 20x11     --trees free_maps/map_34_trees.json
+python build_free_map.py 33          # 写 ChapterStrings-33（3-11）
+python build_free_map.py 34          # 用 Map 33 的表
+# 33 / 34 的 shapes_to_vox 不加 --flat --lower（草地 / 沙地按第 01 关的规则）
+python shapes_to_vox.py 32 --panel-dir out/map_32/panel --used-tiles out/map_32/UsedTiles.json     -o ../../Resources/Remastered/Shapes/Map_32/vox --flat --lower 6989cc=2 --force
+python vox_batch_to_obj.py --in ../../Resources/Remastered/Shapes/Map_32/vox     --out ../../Resources/Remastered/Shapes/Map_32/obj --tile-centre --force
+# 再把 obj/ 拷到 WindingTale2/Assets/Resources/Shapes/Map_32/
+```
+
+然后在 Unity 里 **WindingTale → Localization → Import All Chapter Strings CSV** 和
+**Build Missing Chapter Font Atlases**（台词表 `ChapterStrings-32` / `-33`、字体 `FZB_Chapter-32` / `-33`）。

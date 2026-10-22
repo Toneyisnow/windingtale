@@ -688,13 +688,30 @@ public class TalkDialog : MonoBehaviour
     public void onConfirm()
     {
         this.onSelected(1);
-        GameMain.getDefault().gameCanvas.CloseDialog();
+        CloseSelf();
     }
 
 
     public void onCancel()
     {
         this.onSelected(-1);
-        GameMain.getDefault().gameCanvas.CloseDialog();
+        CloseSelf();
+    }
+
+    /// <summary>
+    /// The field scene closes the dialog through its GameCanvas, which also remembers the
+    /// frame it closed on. A scene with no GameMain (GameFreeFieldScene) just hides it.
+    /// </summary>
+    private void CloseSelf()
+    {
+        GameMain gameMain = FindFirstObjectByType<GameMain>();
+        if (gameMain != null)
+        {
+            gameMain.gameCanvas.CloseDialog();
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

@@ -13,8 +13,8 @@ namespace WindingTale.MapObjects.CreatureIcon
     /// </summary>
     public class CreatureActionRestoring : MonoBehaviour
     {
-        public const int FlashCount = 5;
-        public const float FlashPeriod = 0.15f;
+        public const int FlashCount = 8;
+        public const float FlashPeriod = 0.25f;
 
         private float elapsed = 0f;
         private bool isGrey = false;

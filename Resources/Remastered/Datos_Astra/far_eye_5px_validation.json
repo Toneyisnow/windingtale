@@ -1,0 +1,19 @@
+{
+  "ids": [
+    "102",
+    "202"
+  ],
+  "updated_frames": [
+    0,
+    1,
+    2
+  ],
+  "pixel_shift": [
+    -5,
+    0
+  ],
+  "method": "User-requested local composition translating existing far-eye pixels, without AI regeneration",
+  "near_eye_unchanged": true,
+  "outside_mask_unchanged": true,
+  "unity_copies_verified": true
+}

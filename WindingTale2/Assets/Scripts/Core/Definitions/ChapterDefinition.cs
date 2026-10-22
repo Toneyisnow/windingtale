@@ -51,6 +51,17 @@ namespace WindingTale.Core.Definitions
             get; set;
         }
 
+        /// <summary>
+        /// Optional: the folder under Resources/Shapes the tile models come from, for a map
+        /// whose tiles are not a chapter's own set -- a free-field map (Data/Maps/Map_NN.json)
+        /// names "Map_NN". A chapter leaves it out and draws from Shapes_NN.
+        /// </summary>
+        [JsonProperty(PropertyName = "ShapeSet")]
+        public string ShapeSet
+        {
+            get; set;
+        }
+
         [JsonProperty(PropertyName = "Shapes")]
         public Dictionary<int, ShapeDefinition> ShapeDict
         {

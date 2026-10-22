@@ -16,10 +16,28 @@ namespace WindingTale.Scenes.TitleScene
         /// </summary>
         public GameObject recordDialogPrefab = null;
 
+        /// <summary>
+        /// The yes / no question asked before a new game starts -- the shop's
+        /// ShoppingConfirmDialog prefab, as the quick village uses it.
+        /// </summary>
+        public GameObject confirmDialogPrefab = null;
+
+        /// <summary>
+        /// Asked when Start is pressed. Drawn in the record font (InitLiteral): the baked
+        /// message atlas is not guaranteed to carry its glyphs.
+        /// </summary>
+        private const string NewGameConfirmText = "确认要开始新游戏吗？";
+
+        /// <summary>The free-field map a new game opens on: the throne hall (Map 32).</summary>
+        private const int NewGameFreeFieldMapId = 32;
+
         private bool initialized = false;
 
         /// <summary>The open slot picker, or null when none is up. Guards against a second one.</summary>
         private GameObject recordDialog = null;
+
+        /// <summary>The open new-game question, or null. Guards against a second one.</summary>
+        private GameObject confirmDialog = null;
 
         // Start is called before the first frame update
         void Start()
@@ -44,17 +62,66 @@ namespace WindingTale.Scenes.TitleScene
         }
 
 
+        /// <summary>
+        /// Start: asks "确认要开始新游戏吗？" first. Yes opens the new game on the throne hall
+        /// (GameFreeFieldScene, Map 32); No closes the question and leaves the title up.
+        /// </summary>
         public void OnStartNewGame()
         {
+            if (confirmDialog != null || recordDialog != null)
+            {
+                // A question or the slot picker is already up.
+                return;
+            }
+
+            if (confirmDialogPrefab == null)
+            {
+                Debug.LogWarning("Title scene has no confirm dialog prefab to show.");
+                return;
+            }
+
+            GameObject dialogObject = Instantiate(confirmDialogPrefab);
+
+            // Draw it above the title's own buttons, as the slot picker is.
+            Canvas canvas = dialogObject.GetComponentInChildren<Canvas>();
+            if (canvas != null)
+            {
+                canvas.sortingOrder = 100;
+            }
+
+            ShoppingConfirmDialog dialog = dialogObject.GetComponent<ShoppingConfirmDialog>();
+            if (dialog == null)
+            {
+                Debug.LogWarning("Confirm dialog prefab has no ShoppingConfirmDialog component.");
+                Destroy(dialogObject);
+                return;
+            }
+
+            confirmDialog = dialogObject;
+            dialog.InitLiteral(NewGameConfirmText, OnNewGameConfirmed);
+        }
+
+        private void OnNewGameConfirmed(bool yes)
+        {
+            if (confirmDialog != null)
+            {
+                Destroy(confirmDialog);
+                confirmDialog = null;
+            }
+
+            if (!yes)
+            {
+                return;
+            }
+
             GlobalVariables.Set(GameFiledSceneParams.ChapterIdVariableName, 1);
+            GlobalVariables.Set(GameFreeFieldScene.GameFreeFieldScene.MapIdVariableName, NewGameFreeFieldMapId);
 
             // The flag is static and survives scene loads, so a New Game after returning to
             // the title from a continued session has to clear it explicitly.
             GameFiledSceneParams.isContinue = false;
 
-            //// SceneManager.LoadScene("GameFieldScene", LoadSceneMode.Single);
-
-            FindFirstObjectByType<SceneTransition>().LoadScene("GameFieldScene");
+            FindFirstObjectByType<SceneTransition>().LoadScene(GameFreeFieldScene.GameFreeFieldScene.SceneName);
             FindFirstObjectByType<BackgroundMusic>().StopMusic();
         }
 
@@ -65,7 +132,7 @@ namespace WindingTale.Scenes.TitleScene
         /// </summary>
         public void OnLoadGame()
         {
-            if (recordDialog != null)
+            if (recordDialog != null || confirmDialog != null)
             {
                 // Already open -- ignore a second Load click.
                 return;

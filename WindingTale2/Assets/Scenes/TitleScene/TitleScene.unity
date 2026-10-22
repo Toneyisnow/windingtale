@@ -681,6 +681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recordDialogPrefab: {fileID: 2694091083722347790, guid: bf08802685ebf9d4d9672010cd4156e8, type: 3}
+  confirmDialogPrefab: {fileID: 2000000000000000001, guid: 81b649b9859e45e9b9fb7b362dccd956, type: 3}
 --- !u!4 &579719896
 Transform:
   m_ObjectHideFlags: 0

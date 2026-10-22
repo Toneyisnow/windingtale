@@ -49,6 +49,7 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.10f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scenes\GameFreeFieldScene\FreeFieldPose.cs" />
     <Compile Include="Assets\Scripts\Core\Events\ReachPositionEvent.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TransferDefinition.cs" />
     <Compile Include="Assets\MapObjects\GameMap\TreasureInstance.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Assets\Scenes\GameFieldScene\PlayerInterface.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter31.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\SelectItemUseTargetState.cs" />
+    <Compile Include="Assets\Scenes\GameFreeFieldScene\FreeFieldSkipBar.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
     <Compile Include="Assets\MapObjects\GameMap\TilePreview.cs" />
     <Compile Include="Assets\MapObjects\GameMap\ShapesLayer.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="Assets\Scripts\Chapters\Chapter21.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIAggressiveDelegate.cs" />
     <Compile Include="Assets\Scenes\VillageScene\VillageInfoBar.cs" />
+    <Compile Include="Assets\Scenes\GameFreeFieldScene\GameFreeFieldScene.cs" />
     <Compile Include="Assets\Scripts\UI\Common\TaggedButton.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\DefendItemDefinition.cs" />
     <Compile Include="Assets\FightObjects\FightBody.cs" />
@@ -143,6 +146,7 @@
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuState.cs" />
     <Compile Include="Assets\MapObjects\GameMap\LightShaft.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\MagicDefinition.cs" />
+    <Compile Include="Assets\Scenes\GameFreeFieldScene\FreeFieldHintBar.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\TreasureDefinition.cs" />
     <Compile Include="Assets\Scripts\Core\Map\FDMap.cs" />
     <Compile Include="Assets\Scenes\ShoppingScene\ShoppingHomeDialog.cs" />
@@ -163,6 +167,7 @@
     <Compile Include="Assets\MapObjects\Others\TurnInfo.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\MapObjects\BlockIndicator\BlockBlinkEffect.cs" />
+    <Compile Include="Assets\Scenes\GameFreeFieldScene\FreeFieldDefinition.cs" />
     <Compile Include="Assets\MapObjects\GameMap\GameMap.cs" />
     <Compile Include="Assets\Scenes\ShoppingScene\ShoppingScene.cs" />
     <Compile Include="Assets\MapObjects\GameMap\MapCoordinate.cs" />
@@ -212,12 +217,14 @@
     <Compile Include="Assets\Scenes\VillageScene\VillageSpotLayout.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
+    <Compile Include="Assets\Scenes\GameFreeFieldScene\FreeFieldTalkQueue.cs" />
     <Compile Include="Assets\Scripts\Core\Files\GameRecord.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ShopDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\SimpleActivity.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureClip.cs" />
     <Compile Include="Assets\Scripts\Core\Common\StringUtils.cs" />
     <Compile Include="Assets\MapObjects\GameMap\ObstaclesLayer.cs" />
+    <Compile Include="Assets\Scenes\GameFreeFieldScene\FreeFieldWalker.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter27.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ActionStates\MenuSettingsState.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\ShapeInfoPanel.cs" />
@@ -358,12 +365,14 @@
     <None Include="Assets\Resources\Materials\SkySphere.shader" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_03_Creature.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_30_Creature.txt" />
+    <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-32.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_27_ConversationId.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-27.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_16_ConversationId.txt" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald-Bold - OFL.txt" />
     <None Include="Assets\Resources\Strings\Item.strings.txt" />
     <None Include="Assets\Resources\Data\Levelup.txt" />
+    <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-33.txt" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Roboto-Bold - AFL.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Chapter-12.txt" />
     <None Include="Assets\Resources\Fonts\CharacterList\CharacterList_Common.txt" />

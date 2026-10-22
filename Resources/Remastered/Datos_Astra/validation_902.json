@@ -1,0 +1,18 @@
+{
+  "id": "902",
+  "frames": 4,
+  "size": [
+    1254,
+    1254
+  ],
+  "outside_expression_mask_unchanged": true,
+  "background": "#17468C",
+  "unity_hashes_verified": true,
+  "mode": "built-in image_gen with authorized local compositing",
+  "prompt_specification": {
+    "0": "Faithful remaster of attached purple-haired woman; preserve identity, brown eyes, high hairstyle, blue ornament and gentle smile. Crisp anime cel shading matching existing portraits; solid blue background.",
+    "1": "Mouth slightly wider for gentle speaking.",
+    "2": "Lips naturally closed, faint smile.",
+    "3": "Neutral relaxed closed eyes with essentially horizontal eyelids, no smiling squint."
+  }
+}

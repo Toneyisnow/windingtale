@@ -1,0 +1,19 @@
+{
+  "updated_ids": [
+    "102",
+    "202",
+    "108",
+    "208",
+    "302"
+  ],
+  "frames": 20,
+  "outside_expression_mask_unchanged": true,
+  "unity_copies_verified": true,
+  "mode": "built-in image_gen and authorized local compositing",
+  "prompt_specifications": {
+    "102": "Eyes gaze straight ahead at eye level, relaxed natural level red brows, no frown or sad downward gaze. Preserve head angle and all other portrait details.",
+    "108": "Restrained very subtle closed-lip smile, barely lifted corners. Speaking frame lips just slightly apart, no broad grin.",
+    "302": "Based on revised 102, add a high crimson standing fabric collar just below jaw on both sides; preserve face, hair, earring and blue background.",
+    "blink": "Naturally closed essentially horizontal eyelids, not smiling or squinting."
+  }
+}

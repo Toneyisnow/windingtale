@@ -68,6 +68,10 @@ namespace WindingTale.MapObjects.GameMap
 
         public FDField Field { get; private set; }
 
+        // The Resources/Shapes folder a free-field map draws from (FDField.ShapeSet);
+        // null for a chapter, which draws from its own Shapes_NN.
+        private string shapeSet = null;
+
         /// <summary>
         /// How far above a tile's origin the board's usual ground surface sits, in
         /// world units -- the top of an ordinary one-voxel-thick tile. Anything meant
@@ -96,6 +100,8 @@ namespace WindingTale.MapObjects.GameMap
 
         private void buildField(FDField field)
         {
+            shapeSet = field.ShapeSet;
+
             // Glowing tiles use the clip shader, which discards everything outside the
             // map rectangle -- publish it before the first of them is instantiated.
             ObstaclesLayer.SetMapClipBounds(field);
@@ -439,7 +445,7 @@ namespace WindingTale.MapObjects.GameMap
         /// Resource path of the k-th alternative model of a tile, Shape_N_&lt;id&gt;_vk
         /// next to the base one; see PickVariant.
         /// </summary>
-        private static string ShapeVariantResourcePath(int chapterId, int shapeId, int k)
+        private string ShapeVariantResourcePath(int chapterId, int shapeId, int k)
         {
             return string.Format("{0}_v{1}", ShapeResourcePath(chapterId, shapeId), k);
         }
@@ -448,9 +454,15 @@ namespace WindingTale.MapObjects.GameMap
         /// Resource path of one remastered tile model. Each chapter has its own set,
         /// laid out as Resources/Shapes/Shapes_NN/Shape_N_&lt;tileId&gt; -- the folder uses
         /// the two-digit chapter number, the file the plain one (Shapes_02/Shape_2_153).
+        /// A free-field map names its own folder instead (Shapes/Map_32/Shape_32_7).
         /// </summary>
-        private static string ShapeResourcePath(int chapterId, int shapeId)
+        private string ShapeResourcePath(int chapterId, int shapeId)
         {
+            if (!string.IsNullOrEmpty(shapeSet))
+            {
+                return string.Format("Shapes/{0}/Shape_{1}_{2}", shapeSet, chapterId, shapeId);
+            }
+
             return string.Format("Shapes/Shapes_{0:D2}/Shape_{0}_{1}", chapterId, shapeId);
         }
 

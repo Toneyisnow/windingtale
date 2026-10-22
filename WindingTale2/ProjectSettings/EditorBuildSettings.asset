@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/QuickVillageScene/QuickVillageScene.unity
     guid: 06698f4484af4341ba05b3a3fc20eb4f
+  - enabled: 1
+    path: Assets/Scenes/GameFreeFieldScene/GameFreeFieldScene.unity
+    guid: 94814cb3451e4443a3851a0a779971e2
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: a74496f36fa7a024fa4410f8326dfce0, type: 2}
     com.unity.localization.addressable-group-rules: {fileID: 11400000, guid: fc90c516e22684f40846fe95d0dc8d5a, type: 2}

@@ -1,0 +1,71 @@
+{
+  "_comment": "Map 33, the meadow behind the castle (cut from the editor screenshot Resources/Remastered/Maps/Map_33 and grown by 8 tiles of grass on every side, grid_screenshot_map.py --pad 8, so the screenshot's (x, y) is (x + 8, y + 8) here: Sol starts at (14, 15) -- the screenshot's (6, 7) -- and Ares stands at (17, 13), its (9, 5)). Ares (003) dozes here; walking up to him plays 03, walking up to him again plays 04, and then the game goes on to Map 34. Positions are 1-based (X column, Y row) from the top-left. Trigger: Step = arriving on one of the tiles (Rows / Columns = whole lines), Near = arriving on a tile next to one of them, Face = coming to face one. Once fires the first time only; Requires lists the event Ids that must have played first; Then runs once the talk is over (Map: go to that free-field map; Spawn: put creatures here). Talk: conversations of Resources/Original/Strings/Maps/Chapter-00.strings under their own numbers, in ChapterStrings-33 (3-11); speaker ids are creature ids, which are also their portraits (1 Sol, 2 Yuni, 3 Ares, 4 Gaia).",
+  "Sky": "SKY_01",
+  "Hero": {
+    "DefinitionId": 1,
+    "X": 14,
+    "Y": 15,
+    "Facing": "Up"
+  },
+  "Creatures": [
+    {
+      "Id": 3,
+      "DefinitionId": 3,
+      "X": 17,
+      "Y": 13,
+      "Facing": "Down"
+    }
+  ],
+  "Strings": {
+    "Source": 0,
+    "Conversations": {
+      "3": 3,
+      "4": 4,
+      "5": 5,
+      "6": 6,
+      "7": 7,
+      "8": 8,
+      "9": 9,
+      "10": 10,
+      "11": 11
+    }
+  },
+  "Events": [
+    {
+      "Id": 1,
+      "_what": "walking up to Ares",
+      "Trigger": "Near",
+      "Once": true,
+      "Positions": [
+        {
+          "X": 17,
+          "Y": 13
+        }
+      ],
+      "Conversations": [
+        3
+      ]
+    },
+    {
+      "Id": 2,
+      "_what": "walking up to Ares again",
+      "Trigger": "Near",
+      "Once": true,
+      "Requires": [
+        1
+      ],
+      "Positions": [
+        {
+          "X": 17,
+          "Y": 13
+        }
+      ],
+      "Conversations": [
+        4
+      ],
+      "Then": {
+        "Map": 34
+      }
+    }
+  ]
+}

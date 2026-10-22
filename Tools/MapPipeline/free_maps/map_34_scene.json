@@ -1,0 +1,142 @@
+{
+  "_comment": "Map 34, the hill behind the castle where Sol and Ares spar (cut from the editor screenshot Resources/Remastered/Maps/Map_34, trees from map_34_trees.json, grown by 5 tiles of grass on every side -- grid_screenshot_map.py --pad 5 -- so the screenshot's (x, y) is (x + 5, y + 5) here). Sol starts at (24, 14) and Ares stands at (21, 14) -- the screenshot's (19, 9) and (16, 9), i.e. (2, 3) and (5, 3) from its bottom-right; stepping onto column 21 (the screenshot's 5th from the right) plays 05, after which Yuni (002) appears lying on her side at (11, 11) and Gaia (004) at (11, 10) -- the screenshot's (6, 6) and (6, 5); walking up to either plays 06, 07 and 08-001 (after 06-002 Ares walks to (14, 11), the screenshot's (9, 6)), after which Yuni gets up and the talk stops; walking up to Yuni again plays 08-002 to 11-007, and then chapter 1's battle (GameFieldScene). Conversations entries are a whole conversation's id or {Id, From, To} for part of one. Actions run inside an event's talk, After or Before a line [conversation, sequence]: Walk moves a creature (by Id) to a tile and the talk waits for it; Stand puts a creature lying down (Spawn Pose Lying) back on its feet, facing front. Trigger: Step = arriving on one of the tiles (Rows / Columns = whole lines), Near = arriving next to one, Face = coming to face one. Once fires the first time only; Requires lists the event Ids that must have played first; Then runs once the talk is over (Map: go to that free-field map; Chapter: start that battle chapter; Spawn: put creatures here). The talk is ChapterStrings-33's (Table 33).",
+  "Sky": "SKY_01",
+  "Hero": {
+    "DefinitionId": 1,
+    "X": 24,
+    "Y": 14,
+    "Facing": "Left"
+  },
+  "Creatures": [
+    {
+      "Id": 3,
+      "DefinitionId": 3,
+      "X": 21,
+      "Y": 14,
+      "Facing": "Right"
+    }
+  ],
+  "Strings": {
+    "Source": 0,
+    "Table": 33,
+    "Conversations": {
+      "5": 5,
+      "6": 6,
+      "7": 7,
+      "8": 8,
+      "9": 9,
+      "10": 10,
+      "11": 11
+    }
+  },
+  "Events": [
+    {
+      "Id": 1,
+      "_what": "the column five tiles from the right edge",
+      "Trigger": "Step",
+      "Once": true,
+      "Columns": [
+        21
+      ],
+      "Conversations": [
+        5
+      ],
+      "Then": {
+        "Spawn": [
+          {
+            "Id": 2,
+            "DefinitionId": 2,
+            "X": 11,
+            "Y": 11,
+            "Facing": "Down",
+            "Pose": "Lying"
+          },
+          {
+            "Id": 4,
+            "DefinitionId": 4,
+            "X": 11,
+            "Y": 10,
+            "Facing": "Down"
+          }
+        ]
+      }
+    },
+    {
+      "Id": 2,
+      "_what": "walking up to Yuni or Gaia: 06, 07 and 08-001, then Yuni gets up and the talk stops",
+      "Trigger": "Near",
+      "Once": true,
+      "Requires": [
+        1
+      ],
+      "Positions": [
+        {
+          "X": 11,
+          "Y": 11
+        },
+        {
+          "X": 11,
+          "Y": 10
+        }
+      ],
+      "Conversations": [
+        6,
+        7,
+        {
+          "Id": 8,
+          "From": 1,
+          "To": 1
+        }
+      ],
+      "Actions": [
+        {
+          "_what": "after 06-002 Ares walks over to them",
+          "After": [
+            6,
+            2
+          ],
+          "Walk": {
+            "Creature": 3,
+            "X": 14,
+            "Y": 11
+          }
+        },
+        {
+          "_what": "after 08-001 Yuni gets up",
+          "After": [
+            8,
+            1
+          ],
+          "Stand": 2
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "_what": "walking up to Yuni again: the rest, 08-002 to 11",
+      "Trigger": "Near",
+      "Once": true,
+      "Requires": [
+        2
+      ],
+      "Positions": [
+        {
+          "X": 11,
+          "Y": 11
+        }
+      ],
+      "Conversations": [
+        {
+          "Id": 8,
+          "From": 2
+        },
+        9,
+        10,
+        11
+      ],
+      "Then": {
+        "Chapter": 1
+      }
+    }
+  ]
+}

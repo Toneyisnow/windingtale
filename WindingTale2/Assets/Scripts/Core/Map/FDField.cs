@@ -14,6 +14,10 @@ namespace WindingTale.Core.Map
         // the right set.
         public int ChapterId { get; private set; }
 
+        // The Resources/Shapes folder to draw from when it is not the chapter's own
+        // Shapes_NN (a free-field map's "Map_NN"); null for a chapter.
+        public string ShapeSet { get; private set; }
+
         public int Width { get; private set; }
         public int Height { get; private set; }
 
@@ -35,6 +39,7 @@ namespace WindingTale.Core.Map
         public FDField(ChapterDefinition chapterDefinition)
         {
             ChapterId = chapterDefinition.ChapterId;
+            ShapeSet = chapterDefinition.ShapeSet;
             Width = chapterDefinition.Width;
             Height = chapterDefinition.Height;
 

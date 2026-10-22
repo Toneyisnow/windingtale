@@ -195,6 +195,11 @@ namespace WindingTale.MapObjects.GameMap
             SetMapClipBounds(field);
             Shader clipShader = Shader.Find("Custom/MapClip");
 
+            // The ground plane the obstacles stand on: the height of the board's tile layer.
+            // GameFieldScene raises its ShapesLayer to y = 1.6, so seating them at y = 0 left
+            // every obstacle sunk that far into the ground.
+            float groundPlaneY = GroundPlaneY();
+
             // The pieces of each multi-piece building (ObstacleDefinition.Group).
             Dictionary<string, List<GameObject>> groups = new Dictionary<string, List<GameObject>>();
 
@@ -274,7 +279,7 @@ namespace WindingTale.MapObjects.GameMap
                     //    (less one tile) into the map. A 1 x 1 tree lands dead centre on
                     //    its tile; a 6-wide house is centred over its six tiles;
                     //  - vertically, seat the BOTTOM edge (bounds.min.y) on the ground
-                    //    plane (y = 0). This puts the effective anchor at the model's
+                    //    plane (groundPlaneY, the tile layer's height). This puts the effective anchor at the model's
                     //    base, so changing the height scale above grows/shrinks the model
                     //    upward from a fixed base and needs no further adjustment.
                     Vector3 tileCentre = this.transform.TransformPoint(MapCoordinate.ConvertPosToVec3(pos));
@@ -284,15 +289,15 @@ namespace WindingTale.MapObjects.GameMap
                     float horizZ = footprintZ - bounds.center.z;
 
                     // Vertical seating: prefer the prefab's authored anchor point (drop it
-                    // onto the ground plane y = 0); otherwise drop the bounding-box bottom.
-                    float seatY = (anchor != null && anchor.groundAnchor != null)
-                        ? -anchor.groundAnchor.position.y
-                        : -bounds.min.y;
+                    // onto the ground plane); otherwise drop the bounding-box bottom.
+                    float seatY = groundPlaneY - ((anchor != null && anchor.groundAnchor != null)
+                        ? anchor.groundAnchor.position.y
+                        : bounds.min.y);
 
                     // Per-prefab fine offset. When the prefab has no ObstacleAnchor we fall
                     // back to the per-key code table so existing models keep their tweaks.
                     // A ground cover is lifted onto the tile's top surface instead: seated
-                    // at y = 0 like everything else it would sit inside the tile's own
+                    // on the ground plane like everything else it would sit inside the tile's own
                     // voxel layer and never show.
                     Vector3 extra = (anchor != null)
                         ? anchor.anchorOffset
@@ -699,8 +704,8 @@ namespace WindingTale.MapObjects.GameMap
         /// Whether the obstacle is a ground cover: a flat sheet that lies on its tiles
         /// rather than standing on them -- chapter 25's lava. A cover keeps the full
         /// tile size instead of the ObstacleFill shrink (its edges must meet the
-        /// neighbouring covers), is seated on the tile's top surface instead of at
-        /// y = 0, is never faded, and glows without a light (GetGlow).
+        /// neighbouring covers), is seated on the tile's top surface instead of on
+        /// the ground plane, is never faded, and glows without a light (GetGlow).
         /// </summary>
         private static bool IsGroundCover(string definitionKey)
         {
@@ -734,6 +739,22 @@ namespace WindingTale.MapObjects.GameMap
                 return gameMap != null ? gameMap.GetGroundSurfaceHeight() : 0f;
             }
             return GetGroundYOffset(definitionKey);
+        }
+
+        /// <summary>
+        /// The world height of the board's tile layer, which the obstacles stand on: the
+        /// GameMap's ShapesLayer, or in a scene without a GameMap (GameFreeFieldScene) the
+        /// ShapesLayer beside this layer. 0 when there is none.
+        /// </summary>
+        private float GroundPlaneY()
+        {
+            ShapesLayer shapes = gameMap != null ? gameMap.Shapes : null;
+            if (shapes == null && transform.parent != null)
+            {
+                shapes = transform.parent.GetComponentInChildren<ShapesLayer>();
+            }
+
+            return shapes != null ? shapes.transform.position.y : 0f;
         }
 
         private static bool TryGetWorldBounds(GameObject obj, out Bounds bounds)

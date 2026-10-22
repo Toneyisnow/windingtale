@@ -110,6 +110,18 @@ namespace WindingTale.Core.Map
 
         #region Public Static Methods
 
+        /// <summary>
+        /// A map over a field that is not a battle chapter's -- a free-field map read from
+        /// Data/Maps -- with no creatures or treasures on it yet.
+        /// </summary>
+        public static FDMap LoadFromDefinition(ChapterDefinition definition)
+        {
+            var map = new FDMap();
+            map.ChapterId = definition.ChapterId;
+            map.Field = new FDField(definition);
+            return map;
+        }
+
         public static FDMap LoadFromChapter(int chapterId)
         {
             var map = new FDMap();

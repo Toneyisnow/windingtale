@@ -84,9 +84,10 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
                 {
                     target = preferredTarget;
                 }
-                else if (this.Magic.IsStartAction)
+                else if (this.Magic.IsStartAction || this.Magic.IsTransmit)
                 {
-                    // 行动术 only takes someone who has already acted: the lowest id of those.
+                    // 行动术 only takes someone who has already acted, and neither it nor 传送术
+                    // takes the caster: the lowest id of those it can take.
                     List<FDCreature> candidates = gameMain.getMagicTargets(this.Creature, this.Magic, magicRange);
                     target = candidates.OrderBy(c => c.Id).FirstOrDefault();
                 }

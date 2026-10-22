@@ -1,0 +1,21 @@
+{
+  "ids": [
+    "746",
+    "747",
+    "748",
+    "749"
+  ],
+  "size": [
+    1254,
+    1254
+  ],
+  "frames": 16,
+  "mode": "built-in image_gen plus authorized background normalization and local compositing",
+  "outside_eye_mask_unchanged": true,
+  "background": "#17468C",
+  "prompts": {
+    "base": "Faithfully refine the supplied original into one high-resolution helmeted portrait. Use 745 as style only: crisp anime black linework and cel shading. Preserve original helmet, color, neck cloth and crop. Solid #17468C background.",
+    "3": "Switch off only the eye slit or yellow-green circular eye lens; preserve all other details exactly.",
+    "1_2": "Mouth hidden by opaque helmet: identical to frame 0."
+  }
+}
