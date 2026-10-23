@@ -152,6 +152,12 @@ namespace WindingTale.Scenes.GameFreeFieldScene
             lastFacedTile = FacedTile();
             ready = true;
 
+            // The map's music, as the village plays its own: Audios/Musics/<name>.
+            if (!string.IsNullOrEmpty(definition.Music))
+            {
+                BackgroundMusic.GetOrCreate().PlayClipByName("Audios/Musics/" + definition.Music);
+            }
+
             // The map's hint ("按方向键操作角色" on Map 32), until the first arrow key.
             if (!string.IsNullOrEmpty(definition.Hint) && talkDialog != null && talkDialog.transform.parent != null)
             {
@@ -430,6 +436,11 @@ namespace WindingTale.Scenes.GameFreeFieldScene
                     talkQueue.PushAction(
                         () => { path = StartWalk(walk.Creature, FDPosition.At(walk.X, walk.Y)); },
                         () => ContinueWalk(walk.Creature, path));
+                }
+
+                if (action.StopMusic)
+                {
+                    talkQueue.PushAction(() => BackgroundMusic.GetOrCreate().StopMusic(), () => true);
                 }
 
                 if (action.Stand > 0)

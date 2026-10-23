@@ -48,6 +48,13 @@ namespace WindingTale.Scenes.GameFreeFieldScene
         /// </summary>
         [JsonProperty(PropertyName = "Hint")]
         public string Hint { get; set; }
+
+        /// <summary>
+        /// Optional: the background music, a clip in Resources/Audios/Musics (Maps 33 and 34
+        /// play "Shop_Church_HD_Final"); a map without one leaves the music alone.
+        /// </summary>
+        [JsonProperty(PropertyName = "Music")]
+        public string Music { get; set; }
     }
 
     /// <summary>The creature the player walks about, and where it starts.</summary>
@@ -210,7 +217,7 @@ namespace WindingTale.Scenes.GameFreeFieldScene
     /// Something that happens in the middle of an event's talk, After or Before one of its
     /// lines ([conversation, sequence]): Walk moves a creature (by Id) to a tile, and the
     /// talk waits until it is there; Stand puts a creature that is lying down (Spawn Pose
-    /// "Lying") back on its feet, facing front.
+    /// "Lying") back on its feet, facing front; StopMusic fades the background music out.
     /// </summary>
     public class FreeFieldActionDefinition
     {
@@ -225,6 +232,9 @@ namespace WindingTale.Scenes.GameFreeFieldScene
 
         [JsonProperty(PropertyName = "Stand")]
         public int Stand { get; set; }
+
+        [JsonProperty(PropertyName = "StopMusic")]
+        public bool StopMusic { get; set; }
 
         public bool IsAfter(int conversationId, int sequenceId)
         {

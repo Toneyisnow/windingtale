@@ -1,5 +1,5 @@
 {
-  "_comment": "Map 34, the hill behind the castle where Sol and Ares spar (cut from the editor screenshot Resources/Remastered/Maps/Map_34, trees from map_34_trees.json, grown by 5 tiles of grass on every side -- grid_screenshot_map.py --pad 5 -- so the screenshot's (x, y) is (x + 5, y + 5) here). Sol starts at (24, 14) and Ares stands at (21, 14) -- the screenshot's (19, 9) and (16, 9), i.e. (2, 3) and (5, 3) from its bottom-right; stepping onto column 21 (the screenshot's 5th from the right) plays 05, after which Yuni (002) appears lying on her side at (11, 11) and Gaia (004) at (11, 10) -- the screenshot's (6, 6) and (6, 5); walking up to either plays 06, 07 and 08-001 (after 06-002 Ares walks to (14, 11), the screenshot's (9, 6)), after which Yuni gets up and the talk stops; walking up to Yuni again plays 08-002 to 11-007, and then chapter 1's battle (GameFieldScene). Conversations entries are a whole conversation's id or {Id, From, To} for part of one. Actions run inside an event's talk, After or Before a line [conversation, sequence]: Walk moves a creature (by Id) to a tile and the talk waits for it; Stand puts a creature lying down (Spawn Pose Lying) back on its feet, facing front. Trigger: Step = arriving on one of the tiles (Rows / Columns = whole lines), Near = arriving next to one, Face = coming to face one. Once fires the first time only; Requires lists the event Ids that must have played first; Then runs once the talk is over (Map: go to that free-field map; Chapter: start that battle chapter; Spawn: put creatures here). The talk is ChapterStrings-33's (Table 33).",
+  "_comment": "Map 34, the hill behind the castle where Sol and Ares spar (cut from the editor screenshot Resources/Remastered/Maps/Map_34, trees from map_34_trees.json, grown by 5 tiles of grass on every side -- grid_screenshot_map.py --pad 5 -- so the screenshot's (x, y) is (x + 5, y + 5) here). Sol starts at (24, 14) and Ares stands at (21, 14) -- the screenshot's (19, 9) and (16, 9), i.e. (2, 3) and (5, 3) from its bottom-right; stepping onto column 21 (the screenshot's 5th from the right) plays 05, after which Yuni (002) appears lying on her side at (11, 11) and Gaia (004) at (11, 10) -- the screenshot's (6, 6) and (6, 5); walking up to either plays 06, 07 and 08-001 (after 06-002 Ares walks to (14, 11), the screenshot's (9, 6)), after which Yuni gets up and the talk stops; walking up to Yuni again plays 08-002 to 11-007, and then chapter 1's battle (GameFieldScene). Conversations entries are a whole conversation's id or {Id, From, To} for part of one. Actions run inside an event's talk, After or Before a line [conversation, sequence]: Walk moves a creature (by Id) to a tile and the talk waits for it; Stand puts a creature lying down (Spawn Pose Lying) back on its feet, facing front. Trigger: Step = arriving on one of the tiles (Rows / Columns = whole lines), Near = arriving next to one, Face = coming to face one. Once fires the first time only; Requires lists the event Ids that must have played first; Then runs once the talk is over (Map: go to that free-field map; Chapter: start that battle chapter; Spawn: put creatures here). The talk is ChapterStrings-33's (Table 33). Music: Shop_Church_HD_Final, stopped (faded out) after 05-006 \"咦，那是什么东西？\".",
   "Sky": "SKY_01",
   "Hero": {
     "DefinitionId": 1,
@@ -59,7 +59,17 @@
             "Facing": "Down"
           }
         ]
-      }
+      },
+      "Actions": [
+        {
+          "_what": "after 05-006 the music stops",
+          "After": [
+            5,
+            6
+          ],
+          "StopMusic": true
+        }
+      ]
     },
     {
       "Id": 2,
@@ -138,5 +148,6 @@
         "Chapter": 1
       }
     }
-  ]
+  ],
+  "Music": "Shop_Church_HD_Final"
 }

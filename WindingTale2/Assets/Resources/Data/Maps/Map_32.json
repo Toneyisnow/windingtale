@@ -6,6 +6,7 @@
  "Sky": "",
  "StringsTable": 32,
  "Hint": "按方向键操作角色",
+ "Music": "",
  "Hero": {
   "DefinitionId": 1,
   "X": 6,

@@ -6,6 +6,7 @@
  "Sky": "SKY_01",
  "StringsTable": 33,
  "Hint": "",
+ "Music": "Shop_Church_HD_Final",
  "Hero": {
   "DefinitionId": 1,
   "X": 24,
@@ -146,7 +147,17 @@
       "Facing": "Down"
      }
     ]
-   }
+   },
+   "Actions": [
+    {
+     "_what": "after 05-006 the music stops",
+     "After": [
+      5,
+      6
+     ],
+     "StopMusic": true
+    }
+   ]
   },
   {
    "Trigger": "Near",

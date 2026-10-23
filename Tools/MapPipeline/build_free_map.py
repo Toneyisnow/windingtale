@@ -150,6 +150,7 @@ def main():
         "Sky": scene.get("Sky", ""),
         "StringsTable": strings.get("Table", args.map_id),
         "Hint": scene.get("Hint", ""),
+        "Music": scene.get("Music", ""),
         "Hero": scene["Hero"],
         "Creatures": scene["Creatures"],
         "Events": events,
