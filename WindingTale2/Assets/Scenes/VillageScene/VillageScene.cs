@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -832,13 +832,29 @@ public class VillageScene : MonoBehaviour
     /// shopZoomFactor. Facing it is a straight sideways slide to sit over it -- the
     /// camera never turns -- and pulling in closes the resting gap to the cursor plane
     /// down to a fraction of its length. Must be read with the camera at rest.
+    ///
+    /// A spot near the picture's edge is only faced as far as the picture allows: the
+    /// slide is held to where the pulled-in view's edge meets the picture's edge, so the
+    /// sky behind the picture never shows at the side of the screen. The view's edge on
+    /// the picture plane moves by (slide - pull-in * tan) along the whole way in, so
+    /// keeping the end of the slide inside pull-in * tan keeps every frame of it inside.
     /// </summary>
     private Vector3 ZoomedCameraPosition(Camera camera, Vector3 spot)
     {
-        float restingZ = camera.transform.position.z;
-        float zoomedZ = restingZ + cursorDistance * (1.0f - 1.0f / shopZoomFactor);
-        return new Vector3(spot.x, spot.y, zoomedZ);
+        Vector3 resting = camera.transform.position;
+        float pullIn = cursorDistance * (1.0f - 1.0f / shopZoomFactor);
+
+        float tanHalfHeight = Mathf.Tan(camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+        float maxSlideY = pullIn * tanHalfHeight * ZoomEdgeMargin;
+        float maxSlideX = maxSlideY * camera.aspect;
+
+        float x = resting.x + Mathf.Clamp(spot.x - resting.x, -maxSlideX, maxSlideX);
+        float y = resting.y + Mathf.Clamp(spot.y - resting.y, -maxSlideY, maxSlideY);
+        return new Vector3(x, y, resting.z + pullIn);
     }
+
+    /// <summary>A hair inside the picture's edge, so no sliver of sky shows at the side.</summary>
+    private const float ZoomEdgeMargin = 0.98f;
 
     private IEnumerator LerpCameraPosition(Camera camera, Vector3 from, Vector3 to, float duration)
     {

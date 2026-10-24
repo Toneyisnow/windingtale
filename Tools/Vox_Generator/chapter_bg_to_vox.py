@@ -3066,14 +3066,21 @@ def recipe_25(bd):
 # heart of it, with raw brown rock showing in the corners.
 #
 # The fight is on the grating of the central walkway. Shafts drop away black
-# on either side of it, the diamond yawns behind the fighters, and the rock of
-# the corners rises at the back of the frame into the dark.
+# on either side of it and the diamond yawns behind the fighters.
+#
+# Redone 2026-10-23 at the user's word: the floor has to read as wire mesh and
+# the sky stays open -- no wall, no rock rising at the back. The tile art's
+# grid is finer than a backdrop voxel, so the mesh is painted on over the
+# grating: bright wires every MESH_PITCH_26 voxels, both ways.
 
-GRATE_26 = (75, 75, 75, 39, 4, 13, 6, 14)
+GRATE_26 = (75, 75, 75, 39)
 SHAFT_26 = 73
 SHAFT_FACE_26 = 5
 ROCK_26 = (72, 74, 61, 62)
 SHAFT_Z_26 = 1
+MESH_PITCH_26 = 3
+MESH_WIRE_26 = (74, 102, 98)
+MESH_HOLE_26 = (16, 22, 21)
 
 
 def recipe_26(bd):
@@ -3085,16 +3092,29 @@ def recipe_26(bd):
     sides = (((xs < 70) | (xs > 166)) & (ys > 40) & (ys < 112)
              & ((np.abs(xs - 116) / 1.0 + (ys - 40) * 0.4) > 56))
     shaft = diamond | sides
-    rock = ((np.abs(xs - 116) > 86) & (ys > 132)) & ~shaft
-    raise_where(bd, rock, 12)
     bd.ground[shaft] = SHAFT_Z_26
 
     bd.lay_ground(_pick(GRATE_26, 26), '26', contrast=0.8)
-    lay_where(bd, _pick(ROCK_26, 126), '26', rock)
     lay_where(bd, lambda tx, ty: SHAFT_26, '26', shaft)
     sink_colour(bd, shaft)
     rock_faces(bd, '26', SHAFT_FACE_26, min_rise=4)
-    enclose(bd, VOID, back=172, sides=3, seed=26)
+    # Grating, not soil, down the open sides of the model the camera catches.
+    xs_, ys_ = np.broadcast_arrays(*_grid(bd))
+    rim = ~shaft & ((xs_ < 4) | (xs_ >= bd.size[0] - 4) | (ys_ >= bd.size[1] - 4))
+    sink_colour(bd, rim)
+    wire_mesh_26(bd, ~shaft)
+
+
+def wire_mesh_26(bd, mask):
+    """Paint a square wire mesh over the top voxel of every masked column."""
+    gx, gy = np.broadcast_arrays(*_grid(bd))
+    wire = (gx % MESH_PITCH_26 == 0) | (gy % MESH_PITCH_26 == 0)
+    wire_c, hole_c = BOOK.index(MESH_WIRE_26), BOOK.index(MESH_HOLE_26)
+    filled = bd.a > 0
+    top = bd.size[2] - 1 - np.argmax(filled[:, :, ::-1], axis=2)
+    m = np.broadcast_to(mask, bd.ground.shape) & filled.any(axis=2)
+    xs, ys = np.nonzero(m)
+    bd.a[xs, ys, top[xs, ys]] = np.where(wire[xs, ys], wire_c, hole_c)
 
 
 # --------------------------------------------------------------------------- #

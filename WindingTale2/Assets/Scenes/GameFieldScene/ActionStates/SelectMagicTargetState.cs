@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -63,15 +63,15 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         {
             if (magicRange == null)
             {
-                DirectRangeFinder rangeFinder = new DirectRangeFinder(fdMap.Field, this.Creature.Position, this.Magic.EffectRange);
-                magicRange = rangeFinder.CalculateRange();
+                magicRange = MagicAreaFinder.CastRange(fdMap.Field, this.Creature.Position, this.Magic);
             }
 
             //ShowRangeActivity activity = new ShowRangeActivity(magicRange.ToList());
             //activityManager.Push(activity);
 
-            // A spell with a blast wider than one tile shows its outline as the cursor.
-            gameMain.gameMap.SetCursorScope(this.Magic.EffectScope);
+            // A spell with a blast wider than one tile shows its outline as the cursor. A
+            // cross spell's blast is a line, shown by its targets blinking instead.
+            gameMain.gameMap.SetCursorScope(this.Magic.IsCross ? 0 : this.Magic.EffectScope);
 
             // Send magic range to UI, then park the cursor on the creature this magic is
             // most likely meant for (own tile when the range holds nobody suitable).
@@ -146,8 +146,8 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
             if (blinkCursor == null || !blinkCursor.AreSame(cursor))
             {
-                DirectRangeFinder rangeFinder = new DirectRangeFinder(fdMap.Field, cursor, this.Magic.EffectScope);
-                blinkTargets = gameMain.getMagicTargets(this.Creature, this.Magic, rangeFinder.CalculateRange());
+                FDRange blinkScope = MagicAreaFinder.Scope(fdMap.Field, this.Creature.Position, cursor, this.Magic);
+                blinkTargets = gameMain.getMagicTargets(this.Creature, this.Magic, blinkScope);
                 blinkCursor = FDPosition.At(cursor.X, cursor.Y);
             }
 
@@ -164,8 +164,7 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
 
             if (this.magicRange.Contains(position))
             {
-                DirectRangeFinder rangeFinder = new DirectRangeFinder(fdMap.Field, position, this.Magic.EffectScope);
-                FDRange magicScope = rangeFinder.CalculateRange();
+                FDRange magicScope = MagicAreaFinder.Scope(fdMap.Field, this.Creature.Position, position, this.Magic);
 
                 // Whose side the spell lands on depends on its kind: attack and debuff magic
                 // on the enemy, recovery and buffs on the caster's own side. Asking for

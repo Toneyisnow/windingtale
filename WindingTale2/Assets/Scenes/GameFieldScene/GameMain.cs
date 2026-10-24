@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -528,8 +528,7 @@ namespace WindingTale.Scenes.GameFieldScene
             Creature c = gameMap.GetCreature(creature);
             MagicDefinition magic = DefinitionStore.Instance.GetMagicDefinition(magicId);
 
-            DirectRangeFinder directRangeFinder = new DirectRangeFinder(gameMap.Map.Field, position, magic.EffectScope);
-            FDRange magicScope = directRangeFinder.CalculateRange();
+            FDRange magicScope = MagicAreaFinder.Scope(gameMap.Map.Field, creature.Position, position, magic);
 
             List<FDCreature> targetList = getMagicTargets(creature, magic, magicScope);
 

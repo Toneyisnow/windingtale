@@ -222,6 +222,7 @@
     <Compile Include="Assets\Scripts\Core\Definitions\ShopDefinition.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\SimpleActivity.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureClip.cs" />
+    <Compile Include="Assets\Scripts\Core\Algorithms\MagicAreaFinder.cs" />
     <Compile Include="Assets\Scripts\Core\Common\StringUtils.cs" />
     <Compile Include="Assets\MapObjects\GameMap\ObstaclesLayer.cs" />
     <Compile Include="Assets\Scenes\GameFreeFieldScene\FreeFieldWalker.cs" />
@@ -290,6 +291,7 @@
     <Compile Include="Assets\Scripts\Core\Files\GameMapRecordManager.cs" />
     <Compile Include="Assets\MapObjects\CreatureIcon\CreatureWalk.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
+    <Compile Include="Assets\MapObjects\GameMap\StillFigure.cs" />
     <Compile Include="Assets\Scripts\Core\Common\Constants.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIDefensiveDelegate.cs" />
     <Compile Include="Assets\Scenes\GameFieldScene\Activities\ParallelActivity.cs" />

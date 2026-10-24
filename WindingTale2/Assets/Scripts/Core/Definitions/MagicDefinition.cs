@@ -81,7 +81,9 @@ namespace WindingTale.Core.Definitions
         }
 
         /// <summary>
-        /// This is special one for the 光子炮
+        /// A spell that fires in a straight line: 音速刃 (116) and the beam cannon's 震荡波
+        /// (119). It is aimed along the caster's row or column, EffectRange tiles out, and
+        /// lands on every target down that line (see MagicAreaFinder).
         /// </summary>
         public bool IsCross
         {
@@ -143,9 +145,11 @@ namespace WindingTale.Core.Definitions
             def.AiConsiderRate = dataFile.ReadInt();
             def.IsCross = false;
 
-            if (def.EffectScope < 0)
+            // A negative range marks a spell that fires along a row or a column only, as
+            // in the original Magic.dat (its effectScope, read first, is our EffectRange).
+            if (def.EffectRange < 0)
             {
-                def.EffectScope = -def.EffectScope;
+                def.EffectRange = -def.EffectRange;
                 def.IsCross = true;
             }
 

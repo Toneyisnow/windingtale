@@ -896,6 +896,43 @@ namespace WindingTale.MapObjects.GameMap
             return tile;
         }
 
+        /// <summary>
+        /// Stands a creature's map figure on a tile as scenery -- not a creature on the map,
+        /// so nothing can target it, and it neither idles nor moves: chapter 26's dormant
+        /// Wode, painted into the original map, before Youni wakes him. The figure takes
+        /// itself away once the creature it shows (creatureId) is on the map or has fallen.
+        /// </summary>
+        public void AddStillFigure(int creatureId, int animationId, FDPosition position)
+        {
+            GameObject figure = Instantiate(creatureIconPrefab);
+
+            figure.name = string.Format("figure_{0}", StringUtils.Digit3(creatureId));
+            figure.transform.SetParent(creaturesLayer.transform);
+            figure.transform.SetPositionAndRotation(MapCoordinate.ConvertCreaturePosToVec3(position), Quaternion.identity);
+
+            AttachIcon(string.Format("Icons/{0}/Icon_{0}_01", StringUtils.Digit3(animationId)), figure.transform.Find("Clip_01"));
+            AttachIcon(string.Format("Icons/{0}/Icon_{0}_02", StringUtils.Digit3(animationId)), figure.transform.Find("Clip_02"));
+            AttachIcon(string.Format("Icons/{0}/Icon_{0}_03", StringUtils.Digit3(animationId)), figure.transform.Find("Clip_03"));
+
+            // The first idle frame, held: no Creature for CreatureSynced to animate, no idle loop.
+            Creature comp = figure.GetComponent<Creature>();
+            comp.InitializeClipVisibility();
+            DestroyImmediate(comp);
+
+            CreatureIdleSynced idle = figure.GetComponent<CreatureIdleSynced>();
+            if (idle != null)
+            {
+                idle.enabled = false;
+            }
+            Animator animator = figure.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.enabled = false;
+            }
+
+            figure.AddComponent<StillFigure>().Initialize(this, creatureId);
+        }
+
         private void AddCreatureUI(FDCreature creature, FDPosition pos)
         {
             GameObject creatureIcon = Instantiate(creatureIconPrefab);

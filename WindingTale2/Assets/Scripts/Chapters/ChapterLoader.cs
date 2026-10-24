@@ -148,6 +148,7 @@ namespace WindingTale.Chapters
         public static List<FDEvent> LoadEvents(GameMain gameMain, int chapterId)
         {
             ChapterEvents chapter = CreateChapter(gameMain, chapterId);
+            chapter.DecorateField();
 
             return chapter.AllEvents;
         }

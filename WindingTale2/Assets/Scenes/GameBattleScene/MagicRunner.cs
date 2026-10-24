@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,6 +29,14 @@ namespace WindingTale.Scenes.GameBattleScene
 
         /// <summary>Seconds to slide one target off screen and the next one into its place.</summary>
         public static float TARGET_SWAP_DURATION = 0.3f;
+
+        /// <summary>
+        /// The most one frame may move the swap on. Binding a new target loads its fight
+        /// models and animator the first time that kind of creature shows up, and the long
+        /// frame that follows would otherwise use up the whole slide-in at once -- the second
+        /// target popped straight into place while the later ones (already loaded) slid in.
+        /// </summary>
+        private const float MaxSwapStep = 1f / 30f;
 
         private MagicResult magicResult;
 
@@ -254,7 +262,7 @@ namespace WindingTale.Scenes.GameBattleScene
             Vector3 offScreen = targetRestPosition + body.parent.InverseTransformVector(offScreenOffset());
             float half = TARGET_SWAP_DURATION / 2;
 
-            for (float elapsed = 0; elapsed < half; elapsed += Time.deltaTime)
+            for (float elapsed = 0; elapsed < half; elapsed += Mathf.Min(Time.deltaTime, MaxSwapStep))
             {
                 float t = elapsed / half;
                 body.localPosition = Vector3.LerpUnclamped(targetRestPosition, offScreen, t * t);
@@ -264,7 +272,7 @@ namespace WindingTale.Scenes.GameBattleScene
             body.localPosition = offScreen;
             bindTarget(index);
 
-            for (float elapsed = 0; elapsed < half; elapsed += Time.deltaTime)
+            for (float elapsed = 0; elapsed < half; elapsed += Mathf.Min(Time.deltaTime, MaxSwapStep))
             {
                 float t = elapsed / half;
                 body.localPosition = Vector3.LerpUnclamped(offScreen, targetRestPosition, 1 - (1 - t) * (1 - t));

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Objects;
@@ -26,7 +26,8 @@ namespace WindingTale.Chapters
     /// conversation 1 lines 10..20; anyone else only wonders what it is (conversation 2,
     /// spoken by whoever stepped up). Each creature's event fires once, as in the
     /// original -- Youni stepping there without the box spends hers. Wode's own tile is
-    /// painted on the map and erased from the render map; it stays Gap in ShapeMatrix.
+    /// painted on the map and erased from the render map; it stays Gap in ShapeMatrix, and
+    /// DecorateField stands his still figure there until he wakes.
     ///
     /// The closing talk depends on Wode: conversation 4 if he joined (alive or fallen),
     /// conversation 5 if not, then conversation 6 for everyone.
@@ -192,6 +193,19 @@ namespace WindingTale.Chapters
             }
 
             LoadTeamEvent(++eventId, CreatureFaction.Enemy, enemyClear);
+        }
+
+        /// <summary>
+        /// The original map has Wode painted into the rock at (2, 46); the 3D map does not,
+        /// so his figure stands there, still, until he wakes (StillFigure then removes it).
+        /// </summary>
+        internal override void DecorateField()
+        {
+            CreatureDefinition wode = DefinitionStore.Instance.GetCreatureDefinition(WodeId);
+            if (wode != null)
+            {
+                gameMain.gameMap.AddStillFigure(WodeId, wode.AnimationId, WodeTile);
+            }
         }
 
         private static void AddEnemies(GameMain gameMain, int[,] enemies, AITypes? aiType = null)

@@ -535,6 +535,15 @@ namespace WindingTale.Chapters
         }
 
 
+        /// <summary>
+        /// Puts up whatever the chapter shows on its field beyond the map itself, once the
+        /// field is loaded -- for a new battle and a continued one alike, before any
+        /// creature is on it. Chapter 26 stands its dormant Wode here.
+        /// </summary>
+        internal virtual void DecorateField()
+        {
+        }
+
         internal virtual void AdjustFriendsAfterWon()
         {
             // By default, do nothing. Each chapter can override this to adjust the friends after winning.
