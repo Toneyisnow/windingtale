@@ -75,6 +75,9 @@ namespace WindingTale.Chapters
 
         private const int FirstOptionalFriendId = 10;
 
+        /// <summary>Where the party appears and walks in from, on the map's bottom row.</summary>
+        private static readonly FDPosition PartyMarchEntry = FDPosition.At(16, 47);
+
         private const int AzimegiId = 31;
 
         /// <summary>The first host, awake from the start, as (id, definition, x, y, drop item).</summary>
@@ -227,7 +230,9 @@ namespace WindingTale.Chapters
 
         private Action<GameMain> turn1 = (gameMain) =>
         {
-            SettleParty(gameMain, PartyEntry, FirstOptionalFriendId);
+            // The party walks in from the bottom edge, all from one tile, and the talking
+            // waits until everyone has arrived.
+            MarchInParty(gameMain, PartyEntry, FirstOptionalFriendId, PartyMarchEntry);
 
             AddEnemies(gameMain, FirstEnemies);
             AddEnemies(gameMain, SecondEnemies, AITypes.AIType_Guard);

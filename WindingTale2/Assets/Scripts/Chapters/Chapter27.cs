@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
@@ -68,6 +68,9 @@ namespace WindingTale.Chapters
         };
 
         private const int FirstOptionalFriendId = 10;
+
+        /// <summary>Where the party appears and walks in from, on the map's bottom row.</summary>
+        private static readonly FDPosition PartyMarchEntry = FDPosition.At(16, 57);
 
         /// <summary>The guards awake from the start, as (id, definition, x, y).</summary>
         private static readonly int[,] FirstEnemies = new int[,]
@@ -246,7 +249,9 @@ namespace WindingTale.Chapters
 
         private Action<GameMain> turn1 = (gameMain) =>
         {
-            SettleParty(gameMain, PartyEntry, FirstOptionalFriendId);
+            // The party walks in from the bottom edge, all from one tile, and the talking
+            // waits until everyone has arrived.
+            MarchInParty(gameMain, PartyEntry, FirstOptionalFriendId, PartyMarchEntry);
 
             AddEnemies(gameMain, FirstEnemies);
             AddEnemies(gameMain, SecondEnemies, AITypes.AIType_StandBy);

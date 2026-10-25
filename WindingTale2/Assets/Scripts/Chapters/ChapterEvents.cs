@@ -6,6 +6,7 @@ using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Events;
 using WindingTale.Core.Files;
+using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene;
 using WindingTale.Scenes.GameFieldScene.Activities;
@@ -498,6 +499,120 @@ namespace WindingTale.Chapters
                 AddCreatureToMap(gameMain, CreatureFaction.Friend, creatureId, creatureId,
                     FDPosition.At(entries[i, 1], entries[i, 2]));
             }
+        }
+
+        /// <summary>
+        /// The party's opening entrance from one tile: the cursor slides to just inside
+        /// <paramref name="entry"/>, then everyone the party fills of <paramref name="entries"/>
+        /// ((creature id, x, y), the same rows SettleParty takes) appears stacked on it and
+        /// all walk to their own tiles together. Each takes the shortest way over open ground
+        /// (blocked tiles and gaps are walked round), heading up the map before turning
+        /// aside, so they share the way in and split near the end. Whatever is pushed after
+        /// this -- the opening talk -- waits until the last of them has arrived.
+        /// </summary>
+        protected static void MarchInParty(GameMain gameMain, int[,] entries, int firstOptionalId,
+            FDPosition entry, int cursorLead = 3)
+        {
+            List<int> members = new List<int>();
+            for (int i = 0; i < entries.GetLength(0); i++)
+            {
+                int creatureId = entries[i, 0];
+                if (creatureId >= firstOptionalId && !PartyCarries(gameMain, creatureId))
+                {
+                    continue;
+                }
+                members.Add(i);
+            }
+
+            gameMain.PushActivity(new SlideCursorActivity(entry.X, Math.Max(1, entry.Y - cursorLead)));
+
+            gameMain.PushActivity((gameMain) =>
+            {
+                foreach (int i in members)
+                {
+                    AddCreatureToMap(gameMain, CreatureFaction.Friend, entries[i, 0], entries[i, 0], entry);
+                }
+            });
+
+            Dictionary<FDPosition, FDPosition> cameFrom = SearchOpenGround(gameMain.gameMap.Map.Field, entry);
+            List<ActivityBase> marches = new List<ActivityBase>();
+            foreach (int i in members)
+            {
+                FDPosition place = FDPosition.At(entries[i, 1], entries[i, 2]);
+                FDMovePath path = PathFromSearch(cameFrom, entry, place);
+                if (path != null)
+                {
+                    marches.Add(ActivityFactory.CreatureWalkActivity(entries[i, 0], path));
+                }
+            }
+
+            gameMain.PushActivity(new ParallelActivity(marches.ToArray()));
+        }
+
+        /// <summary>
+        /// Breadth-first search over the walkable tiles from <paramref name="start"/>, trying
+        /// up the map first, then sideways, then down: each tile reached maps to the one it
+        /// was reached from.
+        /// </summary>
+        private static Dictionary<FDPosition, FDPosition> SearchOpenGround(FDField field, FDPosition start)
+        {
+            int[,] steps = { { 0, -1 }, { -1, 0 }, { 1, 0 }, { 0, 1 } };
+            Dictionary<FDPosition, FDPosition> cameFrom = new Dictionary<FDPosition, FDPosition>();
+            Queue<FDPosition> queue = new Queue<FDPosition>();
+            cameFrom[start] = null;
+            queue.Enqueue(start);
+            while (queue.Count > 0)
+            {
+                FDPosition current = queue.Dequeue();
+                for (int k = 0; k < 4; k++)
+                {
+                    FDPosition next = FDPosition.At(current.X + steps[k, 0], current.Y + steps[k, 1]);
+                    if (next.X < 1 || next.X > field.Width || next.Y < 1 || next.Y > field.Height
+                        || cameFrom.ContainsKey(next))
+                    {
+                        continue;
+                    }
+
+                    ShapeDefinition shape = field.GetShapeAt(next);
+                    if (shape == null || shape.Type == ShapeType.Blocked || shape.Type == ShapeType.Gap)
+                    {
+                        continue;
+                    }
+
+                    cameFrom[next] = current;
+                    queue.Enqueue(next);
+                }
+            }
+            return cameFrom;
+        }
+
+        /// <summary>
+        /// The searched way from <paramref name="start"/> to <paramref name="place"/> as a walk
+        /// through its corners; null when the place is the start itself or cannot be reached.
+        /// </summary>
+        private static FDMovePath PathFromSearch(Dictionary<FDPosition, FDPosition> cameFrom, FDPosition start, FDPosition place)
+        {
+            if (place.AreSame(start) || !cameFrom.ContainsKey(place))
+            {
+                return null;
+            }
+
+            List<FDPosition> tiles = new List<FDPosition>();
+            for (FDPosition p = place; p != null; p = cameFrom[p])
+            {
+                tiles.Insert(0, p);
+            }
+
+            FDMovePath path = FDMovePath.Create(start);
+            for (int i = 1; i < tiles.Count; i++)
+            {
+                bool last = i == tiles.Count - 1;
+                if (last || (tiles[i - 1].X != tiles[i + 1].X && tiles[i - 1].Y != tiles[i + 1].Y))
+                {
+                    path.Push(tiles[i]);
+                }
+            }
+            return path;
         }
 
         /// <summary>

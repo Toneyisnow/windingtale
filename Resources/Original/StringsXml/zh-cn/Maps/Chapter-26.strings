@@ -40,9 +40,9 @@
     <key>26-01-011</key><string>系统启始，请指示操作码及行动模式。</string>
     <key>26-01-012-Id</key><string>2</string>
     <key>26-01-012</key><string>这。。#好象是01EC244#-FE2C51932</string>
-    <key>26-01-013-Id</key><string></string>
+    <key>26-01-013-Id</key><string>32</string>
     <key>26-01-013</key><string>确认。#主人，01279943渥德，回复到正常操作状态，请指示。</string>
-    <key>26-01-014-Id</key><string></string>
+    <key>26-01-014-Id</key><string>2</string>
     <key>26-01-014</key><string>我为什么记得这些东西？。。好吧，帮我们打倒那些机兵！能理解吗？</string>
     <key>26-01-015-Id</key><string>32</string>
     <key>26-01-015</key><string>理解，指令内容确认，系统资料设定。。待命状态完成。#完毕。</string>
