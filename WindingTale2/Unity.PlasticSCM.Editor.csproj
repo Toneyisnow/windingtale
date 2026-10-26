@@ -43,7 +43,7 @@
     <UnityVersion>6000.3.10f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="C:\Users\charl\.vscode\extensions\visualstudiotoolsforunity.vstuc-1.3.1\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="C:\Users\charl\.vscode\extensions\visualstudiotoolsforunity.vstuc-1.3.2\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.10f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.10f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.10f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
@@ -124,12 +124,12 @@
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\AssetsUtils\Processor\AssetsProcessor.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\Developer\GenericProgress.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\UI\DockEditorWindow.cs" />
-    <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\Views\Changesets\Dialogs\LabelChangesetDialog.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\Developer\ShelvedChangesNotification.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\AssetsUtils\Processor\UVCSAssetsProcessor.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\AssetOverlays\Cache\BuildPathDictionary.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\Views\Branch\BranchListViewItem.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\CloudDrive\Workspaces\DirectoryContent\DirectoryContentPanelMenu.cs" />
+    <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\Views\Changesets\Dialogs\LabelChangesetDialog.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\UVCSToolbar\PopupWindow\UncontrolledPopupWindow.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\AssetMenu\AssetMenuOperations.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@e566cd3e7623\Editor\UI\UnityMenuItem.cs" />
