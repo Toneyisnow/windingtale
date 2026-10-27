@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Common;
@@ -38,7 +39,9 @@ namespace WindingTale.Core.Definitions.Items
 
             if (scope <= 2)
             {
-                def.AttackScope = new FDSpan(1, scope);
+                // MIN(1, scope) as in the original: a scope-0 weapon (光束炮, item 288)
+                // gets span 0..0, so it never strikes or fights back.
+                def.AttackScope = new FDSpan(Math.Min(1, scope), scope);
             }
             else
             {

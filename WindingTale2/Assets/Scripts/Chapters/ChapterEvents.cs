@@ -554,7 +554,7 @@ namespace WindingTale.Chapters
         /// up the map first, then sideways, then down: each tile reached maps to the one it
         /// was reached from.
         /// </summary>
-        private static Dictionary<FDPosition, FDPosition> SearchOpenGround(FDField field, FDPosition start)
+        protected static Dictionary<FDPosition, FDPosition> SearchOpenGround(FDField field, FDPosition start)
         {
             int[,] steps = { { 0, -1 }, { -1, 0 }, { 1, 0 }, { 0, 1 } };
             Dictionary<FDPosition, FDPosition> cameFrom = new Dictionary<FDPosition, FDPosition>();
@@ -590,7 +590,7 @@ namespace WindingTale.Chapters
         /// The searched way from <paramref name="start"/> to <paramref name="place"/> as a walk
         /// through its corners; null when the place is the start itself or cannot be reached.
         /// </summary>
-        private static FDMovePath PathFromSearch(Dictionary<FDPosition, FDPosition> cameFrom, FDPosition start, FDPosition place)
+        protected static FDMovePath PathFromSearch(Dictionary<FDPosition, FDPosition> cameFrom, FDPosition start, FDPosition place)
         {
             if (place.AreSame(start) || !cameFrom.ContainsKey(place))
             {

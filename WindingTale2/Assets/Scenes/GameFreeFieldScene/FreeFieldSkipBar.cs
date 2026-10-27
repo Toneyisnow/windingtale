@@ -16,10 +16,10 @@ namespace WindingTale.Scenes.GameFreeFieldScene
     public class FreeFieldSkipBar : MonoBehaviour
     {
         /// <summary>Seconds of holding to fill the bar.</summary>
-        public const float HoldSeconds = 3f;
+        public const float HoldSeconds = 2f;
 
         /// <summary>Seconds after the map opens before the bar starts to fade in.</summary>
-        public const float AppearDelay = 5f;
+        public const float AppearDelay = 3f;
 
         private const float FadeInSeconds = 1f;
 

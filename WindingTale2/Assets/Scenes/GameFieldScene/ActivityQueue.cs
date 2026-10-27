@@ -61,6 +61,12 @@ namespace WindingTale.Scenes.GameFieldScene
                 activityList.Insert(0, activity);
             }
 
+            /// <summary>Puts the activity in at <paramref name="index"/> of the waiting ones (0 = next).</summary>
+            public void InsertAt(int index, ActivityBase activity)
+            {
+                activityList.Insert(index, activity);
+            }
+
             public void Insert(List<ActivityBase> activities)
             {
                 activityList.InsertRange(0, activities);

@@ -499,5 +499,14 @@ namespace WindingTale.MapObjects.CreatureIcon
                 SetGreyout(false);
             }
         }
+
+        /// <summary>
+        /// Turns the icon to face up the map, as CreatureWalk does on an upward step. A walk
+        /// always ends facing down, so a scripted line-up turns everyone round afterwards.
+        /// </summary>
+        public void FaceUp()
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
     }
 }

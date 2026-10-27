@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
@@ -17,9 +17,9 @@ namespace WindingTale.Chapters
     /// The original brought everyone back for the scene, the fallen included, at full
     /// HP -- so any party member the record carries at 0 HP is stood up before the
     /// party is settled. Youni (2) stayed on the fortress and is not settled; Sol (1)
-    /// stands apart from the others, as the original placed him last. There is no
-    /// ending screen yet (the original went on to its GameWinScene), so the last line
-    /// returns the game to the title -- see GameMain.OnGameFinished.
+    /// stands apart from the others, as the original placed him last. The last line
+    /// goes on to the ending theme and each companion's epilogue -- see
+    /// GameMain.OnGameFinished and EndingThemeScene.
     /// </summary>
     public class Chapter31 : ChapterEvents
     {

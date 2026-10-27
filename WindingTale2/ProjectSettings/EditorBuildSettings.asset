@@ -29,6 +29,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameFreeFieldScene/GameFreeFieldScene.unity
     guid: 94814cb3451e4443a3851a0a779971e2
+  - enabled: 1
+    path: Assets/Scenes/GameEndingScene/GameEndingScene.unity
+    guid: 2ece1fb5046d4e0e81df91a186d0ba69
+  - enabled: 1
+    path: Assets/Scenes/EndingThemeScene/EndingThemeScene.unity
+    guid: 7e17aa4d3c1d4f9294c3a65a8e3cd0e7
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: a74496f36fa7a024fa4410f8326dfce0, type: 2}
     com.unity.localization.addressable-group-rules: {fileID: 11400000, guid: fc90c516e22684f40846fe95d0dc8d5a, type: 2}

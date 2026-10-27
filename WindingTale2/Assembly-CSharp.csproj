@@ -106,6 +106,7 @@
     <Compile Include="Assets\MapObjects\GameMap\TilePreview.cs" />
     <Compile Include="Assets\MapObjects\GameMap\ShapesLayer.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\Items\ItemDefinition.cs" />
+    <Compile Include="Assets\Scenes\GameEndingScene\GameEndingScene.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter21.cs" />
     <Compile Include="Assets\Scripts\AI\Delegates\AIAggressiveDelegate.cs" />
     <Compile Include="Assets\Scenes\VillageScene\VillageInfoBar.cs" />
@@ -257,6 +258,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter32.cs" />
+    <Compile Include="Assets\Scenes\EndingThemeScene\EndingThemeScene.cs" />
     <Compile Include="Assets\Scripts\Chapters\Chapter3.cs" />
     <Compile Include="Assets\Scenes\ShoppingScene\ShoppingCreaturesDialog.cs" />
     <Compile Include="Assets\Scripts\Core\Definitions\ObstacleDefinition.cs" />
@@ -334,7 +336,9 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_11_Creature.txt" />
     <None Include="Assets\Resources\Data\Item.txt" />
+    <None Include="Assets\Resources\Endings\Endings.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_23_Creature.txt" />
+    <None Include="Assets\Resources\Data\Chapters\Chapter_32_ConversationId.txt" />
     <None Include="Assets\Resources\Data\Chapters\Chapter_17_ConversationId.txt" />
     <None Include="Assets\Resources\Strings\Chapters\CharacterList_Chapter-20.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />

@@ -19,6 +19,11 @@ namespace WindingTale.Scenes.GameFieldScene
 
         public void notifyTurnEvents()
         {
+            if (gameMain.IsVictoryReached)
+            {
+                return;
+            }
+
             foreach(FDEvent eve in events)
             {
                 if (!eve.IsActive || !eve.IsDependencySatisfied || eve.EventType != FDEventType.Turn) continue;
@@ -27,7 +32,7 @@ namespace WindingTale.Scenes.GameFieldScene
                 if (turnEvent.TurnNo == gameMain.gameMap.Map.TurnNo
                     && turnEvent.TurnType == gameMain.gameMap.Map.TurnType)
                 {
-                    eve.Execute();
+                    gameMain.ExecuteEvent(eve);
                 }
             }
         }
@@ -44,6 +49,13 @@ namespace WindingTale.Scenes.GameFieldScene
         /// </summary>
         public void notifyTriggeredEvents()
         {
+            // Once the battle is won the chapter's script is done: the enemies the win blows
+            // up must not set off a "team eliminated" again.
+            if (gameMain.IsVictoryReached)
+            {
+                return;
+            }
+
             List<FDEvent> due = new List<FDEvent>();
             foreach (FDEvent eve in events)
             {
@@ -58,7 +70,7 @@ namespace WindingTale.Scenes.GameFieldScene
 
             foreach (FDEvent eve in due)
             {
-                eve.Execute();
+                gameMain.ExecuteEvent(eve);
             }
         }
 

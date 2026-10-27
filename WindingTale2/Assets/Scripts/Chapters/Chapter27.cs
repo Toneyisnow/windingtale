@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using WindingTale.Core.Algorithms;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
+using WindingTale.Core.Map;
 using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.Scenes.GameFieldScene.Activities;
 
 namespace WindingTale.Chapters
 {
@@ -20,9 +23,12 @@ namespace WindingTale.Chapters
     /// dying words are conversation 2 while another captain still stands, 3 for the
     /// last. Losing Sol (1) or Youni (2) ends the chapter.
     ///
-    /// The ending depends on the Sky Key (item 814): with it the party takes the
-    /// transfer station (conversation 4) and goes on to chapter 28; without it Youni
-    /// goes up alone and the game ends in the bad ending, chapter 32.
+    /// Once won, the party gathers before the transfer station -- Youni (2) at (16, 12)
+    /// facing them, Sol and 003 at (16, 14) and (16, 15), the rest around them at random,
+    /// all facing her -- and the ending depends on the Sky Key (item 814): with it the party
+    /// takes the transfer station (conversation 4) and goes on to chapter 28; without it
+    /// Youni walks up onto the station after line 5 of conversation 5, goes up alone, and
+    /// the game ends in the bad ending, GameEndingScene.
     ///
     /// The original's youniDead pointed at conversation 7, whose one line is in the
     /// strings, so it is kept. Friends 21..32, which the original never settled, take
@@ -184,7 +190,50 @@ namespace WindingTale.Chapters
         private const int FourthHostTurn = 13;
 
         private const int SkyKeyItemId = 814;
-        private const int BadEndingChapterId = 32;
+
+        private const int SolId = 1;
+        private const int YouniId = 2;
+        private const int ThirdFriendId = 3;
+
+        /// <summary>The transfer station, which Youni walks up to in the bad ending.</summary>
+        private static readonly FDPosition YouniStation = FDPosition.At(16, 10);
+
+        /// <summary>Where Youni stands for the closing talk, two tiles below the station, facing the party.</summary>
+        private static readonly FDPosition YouniGathering = FDPosition.At(16, 12);
+
+        /// <summary>The middle of the party's formation: Sol in front, 003 behind him.</summary>
+        private static readonly FDPosition SolGathering = FDPosition.At(16, 14);
+        private static readonly FDPosition ThirdFriendGathering = FDPosition.At(16, 15);
+
+        /// <summary>
+        /// The rest of the formation, as the original drew it: two on each side of row 13,
+        /// row 14 from x 14 to 18, and rows 15 and 16 from x 15 to 17, Sol's and 003's tiles
+        /// left out. The others take these at random.
+        /// </summary>
+        private static readonly int[,] GatheringTiles = new int[,]
+        {
+            { 13, 13 }, { 14, 13 }, { 18, 13 }, { 19, 13 },
+            { 14, 14 }, { 15, 14 }, { 17, 14 }, { 18, 14 },
+            { 15, 15 }, { 17, 15 },
+            { 15, 16 }, { 16, 16 }, { 17, 16 },
+        };
+
+        /// <summary>
+        /// Where anyone the formation has no room for goes, in this order: the rest of row
+        /// 13 and row 12 either side of Youni, then the steps below the formation.
+        /// </summary>
+        private static readonly int[,] OverflowTiles = new int[,]
+        {
+            { 15, 13 }, { 17, 13 }, { 12, 13 }, { 20, 13 },
+            { 15, 12 }, { 17, 12 }, { 14, 12 }, { 18, 12 }, { 13, 12 }, { 19, 12 }, { 12, 12 }, { 20, 12 },
+            { 15, 17 }, { 16, 17 }, { 17, 17 }, { 16, 18 }, { 17, 18 }, { 15, 18 },
+        };
+
+        /// <summary>Youni walks up to the station once this line of conversation 5 has been said.</summary>
+        private const int YouniWalksAfterLine = 5;
+
+        /// <summary>Where the cursor (and camera) goes to watch the party gather.</summary>
+        private static readonly FDPosition GatheringCursor = FDPosition.At(16, 13);
 
         public Chapter27(GameMain gameMain) : base(gameMain, 27)
         {
@@ -300,10 +349,22 @@ namespace WindingTale.Chapters
             PushConversationsActivities(gameMain, 27, 7, 1, 1);
         };
 
-        /// <summary>The last captain has fallen: with the Sky Key the party goes up, without it the story ends.</summary>
+        /// <summary>
+        /// The last captain has fallen. The win's cleanup goes first (the guards left blow up,
+        /// the party is no longer grey), then everyone gathers before the transfer station
+        /// and the talk begins: with the Sky Key the party goes up and on to chapter 28,
+        /// without it Youni goes alone and the game goes to its bad ending.
+        /// </summary>
         private static void EnemyClear(GameMain gameMain)
         {
-            if (TeamHasItem(gameMain, SkyKeyItemId))
+            bool hasSkyKey = TeamHasItem(gameMain, SkyKeyItemId);
+
+            // Declared before anything is queued, so the cleanup runs ahead of the gathering.
+            gameMain.FadeOutMusicForVictory();
+
+            GatherAtStation(gameMain);
+
+            if (hasSkyKey)
             {
                 // Talking
                 PushConversationsActivities(gameMain, 27, 4, 1, 23);
@@ -312,8 +373,125 @@ namespace WindingTale.Chapters
             }
             else
             {
-                gameMain.OnGameEnding(BadEndingChapterId);
+                // Talking -- partway through, Youni turns away from the party and walks
+                // up onto the station, where she faces them again for the rest.
+                PushConversationsActivities(gameMain, 27, 5, 1, YouniWalksAfterLine);
+                gameMain.PushActivity(ActivityFactory.CreatureWalkActivity(YouniId,
+                    FDMovePath.Create(YouniGathering, YouniStation)));
+                PushConversationsActivities(gameMain, 27, 5, YouniWalksAfterLine + 1, 15);
+
+                // The station takes her: 传送术's column of light rises under her and she
+                // is gone, and with that the field ends.
+                FDCreature youni = gameMain.gameMap.Map.GetCreatureById(YouniId);
+                if (youni != null)
+                {
+                    gameMain.PushActivity(ActivityFactory.CreatureTeleportActivity(youni, YouniStation, false));
+                }
+
+                gameMain.OnBadEnding();
             }
+        }
+
+        /// <summary>
+        /// The party walks up to the transfer station, as the original drew it: Youni two
+        /// tiles below the platform facing everyone, Sol and 003 in the middle of the
+        /// formation below her, and everyone else on the formation's other tiles at random,
+        /// all of them turned to face her. Worked out once the guards have blown up, so the
+        /// walk sees the field as it is then; each takes the shortest way over open ground,
+        /// all at once, and the talk waits until the last of them has arrived.
+        /// </summary>
+        private static void GatherAtStation(GameMain gameMain)
+        {
+            gameMain.PushActivity(new SlideCursorActivity(GatheringCursor));
+
+            gameMain.PushActivity((gameMain) =>
+            {
+                FDMap map = gameMain.gameMap.Map;
+                List<FDCreature> friends = new List<FDCreature>(map.Friends);
+                friends.Sort((a, b) => a.Id.CompareTo(b.Id));
+
+                Dictionary<int, FDPosition> places = new Dictionary<int, FDPosition>();
+                List<FDPosition> others = Shuffled(TilesOf(GatheringTiles));
+                foreach (KeyValuePair<int, FDPosition> fixedPlace in new Dictionary<int, FDPosition>
+                    { { YouniId, YouniGathering }, { SolId, SolGathering }, { ThirdFriendId, ThirdFriendGathering } })
+                {
+                    if (friends.Exists(friend => friend.Id == fixedPlace.Key))
+                    {
+                        places[fixedPlace.Key] = fixedPlace.Value;
+                    }
+                    else if (fixedPlace.Key != YouniId)
+                    {
+                        // Nobody to stand in the middle: the tile goes to the others.
+                        others.Add(fixedPlace.Value);
+                    }
+                }
+                others.AddRange(TilesOf(OverflowTiles));
+
+                List<ActivityBase> walks = new List<ActivityBase>();
+                foreach (FDCreature friend in friends)
+                {
+                    Dictionary<FDPosition, FDPosition> cameFrom = SearchOpenGround(map.Field, friend.Position);
+
+                    FDPosition place;
+                    if (!places.TryGetValue(friend.Id, out place) || !cameFrom.ContainsKey(place))
+                    {
+                        place = others.Find(tile => cameFrom.ContainsKey(tile) && IsFreeForFriend(map, tile));
+                        if (place != null)
+                        {
+                            others.Remove(place);
+                        }
+                    }
+
+                    FDMovePath path = place != null ? PathFromSearch(cameFrom, friend.Position, place) : null;
+                    if (path != null)
+                    {
+                        walks.Add(ActivityFactory.CreatureWalkActivity(friend.Id, path));
+                    }
+                }
+
+                // Inserted at the front, so in reverse: the walk, then the party turns to face
+                // Youni. She ends her walk facing down the map, at them.
+                gameMain.InsertActivity((gameMain) =>
+                {
+                    foreach (FDCreature friend in gameMain.gameMap.Map.Friends)
+                    {
+                        if (friend.Id != YouniId)
+                        {
+                            gameMain.gameMap.GetCreature(friend)?.FaceUp();
+                        }
+                    }
+                });
+                gameMain.InsertActivity(new ParallelActivity(walks));
+            });
+        }
+
+        private static List<FDPosition> TilesOf(int[,] tiles)
+        {
+            List<FDPosition> positions = new List<FDPosition>();
+            for (int i = 0; i < tiles.GetLength(0); i++)
+            {
+                positions.Add(FDPosition.At(tiles[i, 0], tiles[i, 1]));
+            }
+            return positions;
+        }
+
+        private static List<FDPosition> Shuffled(List<FDPosition> tiles)
+        {
+            for (int i = tiles.Count - 1; i > 0; i--)
+            {
+                int j = UnityEngine.Random.Range(0, i + 1);
+                FDPosition swap = tiles[i];
+                tiles[i] = tiles[j];
+                tiles[j] = swap;
+            }
+            return tiles;
+        }
+
+        /// <summary>A tile nobody but a friend stands on -- the friends are all about to move.</summary>
+        private static bool IsFreeForFriend(FDMap map, FDPosition tile)
+        {
+            FDCreature standing = map.GetCreatureAt(tile);
+            return standing == null || standing.Faction == CreatureFaction.Friend;
         }
 
         /// <summary>The party's members, living and fallen -- the original's teamHasItem looked in both lists.</summary>

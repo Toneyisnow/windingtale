@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using WindingTale.Core.Files;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.UI.Audio;
 using WindingTale.UI.Utils;
 
 namespace WindingTale.Scenes.TitleScene
@@ -39,6 +41,21 @@ namespace WindingTale.Scenes.TitleScene
         /// <summary>The open new-game question, or null. Guards against a second one.</summary>
         private GameObject confirmDialog = null;
 
+        /// <summary>The title's three buttons, left to right on screen: Start, Load, Continue.</summary>
+        private List<TitleButton> buttons = new List<TitleButton>();
+
+        /// <summary>The button the keyboard is on, an index into <see cref="buttons"/>.</summary>
+        private int selectedIndex = 0;
+
+        /// <summary>
+        /// The frame a dialog last closed on. The key that closed it must not also press the
+        /// button under it -- the dialog may close before or after this script's Update.
+        /// </summary>
+        private int dialogClosedFrame = -1;
+
+        /// <summary>Set once a button has sent the game on to another scene; the title takes no more keys.</summary>
+        private bool leaving = false;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -52,13 +69,109 @@ namespace WindingTale.Scenes.TitleScene
             {
                 Init();
                 initialized = true;
+                return;
             }
+
+            HandleKeys();
         }
 
         void Init()
         {
             FindFirstObjectByType<BackgroundMusic>().PlayMusic();
 
+            InitButtons();
+        }
+
+        /// <summary>
+        /// Finds the three buttons and puts the keyboard on the first that has something
+        /// behind it: Continue when there is a battle to resume, else Load when there is any
+        /// save, else Start.
+        /// </summary>
+        private void InitButtons()
+        {
+            buttons = new List<TitleButton>(FindObjectsByType<TitleButton>(FindObjectsSortMode.None));
+            buttons.Sort((a, b) => a.GetComponent<RectTransform>().anchoredPosition.x
+                .CompareTo(b.GetComponent<RectTransform>().anchoredPosition.x));
+            if (buttons.Count == 0)
+            {
+                return;
+            }
+
+            foreach (TitleButton button in buttons)
+            {
+                button.Hovered = OnButtonHovered;
+            }
+
+            int startIndex = 0;
+            int loadIndex = Mathf.Min(1, buttons.Count - 1);
+            int continueIndex = Mathf.Min(2, buttons.Count - 1);
+            if (GameMapRecordManager.HasSavedGame(GameMain.SaveRecordName))
+            {
+                Select(continueIndex);
+            }
+            else if (GameRecordManager.GetAllFiles().Count > 0)
+            {
+                Select(loadIndex);
+            }
+            else
+            {
+                Select(startIndex);
+            }
+        }
+
+        /// <summary>
+        /// Left / Right move between the buttons, round from either end; Enter or Space presses
+        /// the selected one, as a click would. Nothing while a dialog is up -- it has the keys.
+        /// </summary>
+        private void HandleKeys()
+        {
+            if (leaving || buttons.Count == 0 || recordDialog != null || confirmDialog != null
+                || Time.frameCount - dialogClosedFrame <= 1)
+            {
+                return;
+            }
+
+            // A clicked button stays the EventSystem's selection, and the EventSystem would
+            // turn Enter / Space into a second click on it: the keys are this script's alone.
+            if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                SoundEffects.Play(SoundEffect.DialogCursorMove);
+                Select((selectedIndex + buttons.Count - 1) % buttons.Count);
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                SoundEffects.Play(SoundEffect.DialogCursorMove);
+                Select((selectedIndex + 1) % buttons.Count);
+            }
+            else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)
+                || Input.GetKeyDown(KeyCode.Space))
+            {
+                buttons[selectedIndex].Press();
+            }
+        }
+
+        private void Select(int index)
+        {
+            selectedIndex = index;
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                buttons[i].SetSelected(i == index);
+            }
+        }
+
+        /// <summary>The mouse coming onto a button moves the keyboard selection there too.</summary>
+        private void OnButtonHovered(TitleButton button)
+        {
+            int index = buttons.IndexOf(button);
+            if (index >= 0 && index != selectedIndex)
+            {
+                Select(index);
+            }
         }
 
 
@@ -107,12 +220,15 @@ namespace WindingTale.Scenes.TitleScene
             {
                 Destroy(confirmDialog);
                 confirmDialog = null;
+                dialogClosedFrame = Time.frameCount;
             }
 
             if (!yes)
             {
                 return;
             }
+
+            leaving = true;
 
             GlobalVariables.Set(GameFiledSceneParams.ChapterIdVariableName, 1);
             GlobalVariables.Set(GameFreeFieldScene.GameFreeFieldScene.MapIdVariableName, NewGameFreeFieldMapId);
@@ -188,6 +304,7 @@ namespace WindingTale.Scenes.TitleScene
             }
 
             CloseRecordDialog();
+            leaving = true;
 
             // The village picks the party up out of GlobalVariables on the way in, the same
             // handover the shop and the field scene use.
@@ -203,6 +320,7 @@ namespace WindingTale.Scenes.TitleScene
             {
                 Destroy(recordDialog);
                 recordDialog = null;
+                dialogClosedFrame = Time.frameCount;
             }
         }
 
@@ -222,6 +340,7 @@ namespace WindingTale.Scenes.TitleScene
 
             // GameMain reads this on Start to load the .sav instead of beginning a chapter.
             GameFiledSceneParams.isContinue = true;
+            leaving = true;
 
             FindFirstObjectByType<SceneTransition>().LoadScene("GameFieldScene");
             FindFirstObjectByType<BackgroundMusic>().StopMusic();

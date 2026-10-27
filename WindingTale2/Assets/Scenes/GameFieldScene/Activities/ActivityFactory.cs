@@ -75,12 +75,11 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         }
 
         /// <summary>
-        /// 
+        /// The death explosion, after which the creature is off the map. countAsDead puts it
+        /// among the map's dead, which is what death events listen for; the enemies a won
+        /// battle blows up (GameMain.QueueVictoryCleanup) leave it out.
         /// </summary>
-        /// <param name="creature"></param>
-        /// <param name="movePath"></param>
-        /// <returns></returns>
-        public static DurationActivity CreatureDyingActivity(FDCreature creature)
+        public static DurationActivity CreatureDyingActivity(FDCreature creature, bool countAsDead = true)
         {
             DateTime startTime = DateTime.Now;
             Action<GameMain> startAction = gameMain =>
@@ -97,7 +96,10 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
             Action<GameMain> endAction = gameMain =>
             {
                 gameMain.gameMap.RemoveCreature(creature.Id);
-                gameMain.gameMap.Map.DeadCreatures.Add(creature);
+                if (countAsDead)
+                {
+                    gameMain.gameMap.Map.DeadCreatures.Add(creature);
+                }
             };
 
             return new DurationActivity(startAction, checkEnd, endAction);

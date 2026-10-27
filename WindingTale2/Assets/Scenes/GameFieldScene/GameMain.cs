@@ -273,23 +273,112 @@ namespace WindingTale.Scenes.GameFieldScene
         /// <summary>
         /// The chapter is won: the battle music fades out right away, under the closing
         /// conversation, instead of playing on until the field fades to the next scene.
-        /// Common to every chapter -- they all end through OnGameWin / OnGameEnding. The flag
+        /// Common to every chapter -- they all end through OnGameWin / OnGameEnding / OnBadEnding --
+        /// and so is the cleanup it queues the first time (QueueVictoryCleanup). The flag
         /// keeps the turn cycle, which may still have steps queued, from starting a track again.
         /// A chapter that only calls OnGameWin once a later scene has played (17, 20) calls
         /// this itself as soon as the battle is won, so the music still goes before the talk.
         /// </summary>
         public void FadeOutMusicForVictory()
         {
-            victoryReached = true;
+            if (!victoryReached)
+            {
+                victoryReached = true;
+                QueueVictoryCleanup();
+            }
             StopBackgroundMusic();
         }
 
         private bool victoryReached = false;
 
         /// <summary>
+        /// The battle is won: the turn cycle stops here, and no chapter event fires any more
+        /// -- the enemies the win blows up must not set off a "team eliminated" a second time.
+        /// </summary>
+        public bool IsVictoryReached
+        {
+            get { return victoryReached; }
+        }
+
+        /// <summary>
+        /// While a chapter event is executing: how many activities were waiting before it
+        /// started, and the enemies on the field at that moment. -1 / null between events.
+        /// </summary>
+        private int eventQueueMark = -1;
+        private List<FDCreature> eventEnemies = null;
+
+        /// <summary>
+        /// Runs one chapter event, remembering where the queue stood when it started -- the
+        /// victory cleanup goes in there, ahead of everything the event's script queues.
+        /// </summary>
+        internal void ExecuteEvent(FDEvent eve)
+        {
+            eventQueueMark = activityQueue.Count;
+            eventEnemies = new List<FDCreature>(gameMap.Map.Enemies);
+            try
+            {
+                eve.Execute();
+            }
+            finally
+            {
+                eventQueueMark = -1;
+                eventEnemies = null;
+            }
+        }
+
+        /// <summary>
+        /// What every chapter does first once it is won, before its closing walk and talk:
+        /// the enemies still standing all blow up together, and every friend loses the grey
+        /// of having acted. The chapter's script runs inside an event and has already queued
+        /// its closing lines by the time it declares the win, so the cleanup is slotted in
+        /// where the queue stood when that event began.
+        ///
+        /// The enemies are the ones that were on the field when the event began: one the
+        /// closing scene brings on (chapter 29's boss walking in) is not blown up with them.
+        /// One that is dying already plays its own death, and one the script has taken off
+        /// the map or turned friend by the time the cleanup runs is left alone. The blown-up
+        /// enemies are not counted among the dead, so no death event goes off for them.
+        /// </summary>
+        private void QueueVictoryCleanup()
+        {
+            List<FDCreature> enemies = eventEnemies ?? new List<FDCreature>(gameMap.Map.Enemies);
+            int index = Math.Max(0, Math.Min(eventQueueMark, activityQueue.Count));
+
+            activityQueue.InsertAt(index, new SimpleActivity(game =>
+            {
+                List<ActivityBase> explosions = new List<ActivityBase>();
+                foreach (FDCreature enemy in enemies)
+                {
+                    if (game.gameMap.Map.GetCreatureById(enemy.Id) == enemy
+                        && enemy.Faction == CreatureFaction.Enemy && !enemy.IsDead())
+                    {
+                        explosions.Add(ActivityFactory.CreatureDyingActivity(enemy, false));
+                    }
+                }
+
+                // Inserted at the front, so in reverse: the explosions, then the reset.
+                game.InsertActivity(g =>
+                {
+                    foreach (FDCreature friend in g.gameMap.Map.Friends)
+                    {
+                        Creature icon = g.gameMap.GetCreature(friend);
+                        if (icon != null)
+                        {
+                            icon.SetActioned(false);
+                        }
+                        else
+                        {
+                            friend.HasActioned = false;
+                        }
+                    }
+                });
+                game.InsertActivity(new ParallelActivity(explosions));
+            }));
+        }
+
+        /// <summary>
         /// The battle is over and the story goes straight on to one of the ending
-        /// chapters -- the original's gameEnding: chapter 30 into the good ending (31),
-        /// chapter 27 into the bad one (32) when the party has no Sky Key. The party is
+        /// chapters -- the original's gameEnding: chapter 30 into the good ending (31). The party is
         /// carried over exactly as for a win, but the village is skipped: the field scene
         /// reloads on the ending chapter, whose script is a cutscene and nothing else.
         /// Queued behind the closing conversation like OnGameWin.
@@ -314,14 +403,43 @@ namespace WindingTale.Scenes.GameFieldScene
         }
 
         /// <summary>
-        /// The end of the game: an ending chapter has played its last line. The original
-        /// went on to its GameWinScene -- the good or bad ending picture and the credits
-        /// -- which has no counterpart here yet, so for now the game returns to the title.
-        /// Queued behind the closing conversation like OnGameWin.
+        /// The bad ending: chapter 27 is won without the Sky Key, and once Youni's farewell
+        /// has been read the field fades out into the ending scene. Only the party goes on,
+        /// for the epilogue's who-became-what (EndingThemeScene). Queued behind the closing
+        /// conversation like OnGameWin.
         /// </summary>
-        public void OnGameFinished()
+        public void OnBadEnding()
         {
-            this.PushActivity(game => game.QuitToScene("TitleScene"));
+            FadeOutMusicForVictory();
+            this.PushActivity(game =>
+            {
+                EndingThemeScene.SetEnding(game.BuildFinalParty(), false);
+                game.QuitToScene(GameEndingScene.SceneName);
+            });
+        }
+
+        /// <summary>
+        /// The end of the game: an ending chapter has played its last line, and the field
+        /// fades out into the ending theme and each companion's epilogue (EndingThemeScene).
+        /// Chapter 31 is the good ending. Queued behind the closing conversation like OnGameWin.
+        /// </summary>
+        public void OnGameFinished(bool goodEnding = true)
+        {
+            this.PushActivity(game =>
+            {
+                EndingThemeScene.SetEnding(game.BuildFinalParty(), goodEnding);
+                game.QuitToScene(EndingThemeScene.SceneName);
+            });
+        }
+
+        /// <summary>
+        /// The party as the story leaves it: everyone on the field and everyone carried in
+        /// (fallen ones included), each with the trade they hold now.
+        /// </summary>
+        private GameRecord BuildFinalParty()
+        {
+            GameMapRecord mapRecord = new GameMapRecordManager().BuildRecord(this);
+            return GameRecordManager.CreateFromMapRecord(mapRecord, PartyRecord);
         }
 
         /// <summary>
@@ -1368,6 +1486,12 @@ namespace WindingTale.Scenes.GameFieldScene
 
         private void onStartNextTurn()
         {
+            // A won battle has no next turn; only its closing scene is left to play.
+            if (victoryReached)
+            {
+                return;
+            }
+
             // Update the turn type and turn number
             switch(this.gameMap.Map.TurnType)
             {
@@ -1402,6 +1526,11 @@ namespace WindingTale.Scenes.GameFieldScene
                         eventHandler.notifyTriggeredEvents();
                         this.gameMap.Map.IsEndOfTurn = false;
 
+                        if (victoryReached)
+                        {
+                            return;
+                        }
+
                         // Status rounds, as the original's updateStatusInTurn right after
                         // those events: poison bites first, then every creature's effects
                         // lose a round, and the ones at 0 wear off (a paralysed creature can
@@ -1433,6 +1562,11 @@ namespace WindingTale.Scenes.GameFieldScene
 
             //// Main entry to notify the turn events
             eventHandler.notifyTurnEvents();
+
+            if (victoryReached)
+            {
+                return;
+            }
 
             //// Turn-start banner. Only the player turn opens a new turn number, so that
             //// is the only one worth announcing. Runs as a duration activity so the turn
@@ -1712,6 +1846,13 @@ namespace WindingTale.Scenes.GameFieldScene
             }
 
             eventHandler.notifyTriggeredEvents();
+
+            // That was the win: nobody else acts, the closing scene is all that is left.
+            if (victoryReached)
+            {
+                marchSession = null;
+                return;
+            }
 
             if (gameMap.Map.HasAllCreaturesActioned(creature.Faction))
             {
