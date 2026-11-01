@@ -74,7 +74,9 @@ namespace WindingTale.MapObjects.GameMap
             cursorObject.name = "cursor";
             cursor = cursorObject.GetComponent<Cursor>();
 
-            SetCursorTo(FDPosition.At(8, 12));
+            // A snap asked for before the cursor existed (see SnapCursorAndCameraTo) wins.
+            SetCursorTo(pendingCursorSnap ?? FDPosition.At(8, 12));
+            pendingCursorSnap = null;
 
             //// var animator = sampleFight.GetComponent<Animator>();
             //// var controller = Resources.Load<AnimatorController>("Fights/734/animator_734");
@@ -164,6 +166,44 @@ namespace WindingTale.MapObjects.GameMap
         {
             return cursor.Position;
         }
+
+        /// <summary>
+        /// Puts the cursor on the tile and the camera over it straight away, with no slide --
+        /// the opening framing of a chapter start or a load, so the battle opens on hero 001
+        /// rather than gliding over from the default spot. Asked before Start has made the
+        /// cursor, the tile is kept and Start places the cursor there instead.
+        /// </summary>
+        public void SnapCursorAndCameraTo(FDPosition position)
+        {
+            if (position == null)
+            {
+                return;
+            }
+
+            if (cursorSlideCoroutine != null)
+            {
+                StopCoroutine(cursorSlideCoroutine);
+                cursorSlideCoroutine = null;
+            }
+
+            if (cursor == null || cursorObject == null)
+            {
+                pendingCursorSnap = position;
+            }
+            else
+            {
+                SetCursorTo(position);
+            }
+
+            EnsureMainCamera();
+            if (mainCamera != null)
+            {
+                mainCamera.JumpFocusTo(MapCoordinate.ConvertPosToVec3(position));
+            }
+        }
+
+        // The tile SnapCursorAndCameraTo asked for before Start had made the cursor.
+        private FDPosition pendingCursorSnap = null;
 
         public void SetCursorTo(FDPosition position)
         {

@@ -153,6 +153,11 @@ public class VillageScene : MonoBehaviour
     /// <summary>CommonStrings "Confirm-08": 确定要进入战场吗？</summary>
     private const int EnterBattleConfirmId = 8;
 
+    // Chapter 27's exit asks with a hint instead when the party has no Sky Key (item 814).
+    private const int SkyKeyChapterId = 27;
+    private const int SkyKeyItemId = 814;
+    private const string NoSkyKeyEnterBattleText = "队伍中没有天空之钥，去道具店可以买到。确认进入战场吗？";
+
     /// <summary>The party that walked into the village, as the won battle left them.</summary>
     public GameRecord Record { get; private set; }
 
@@ -717,7 +722,23 @@ public class VillageScene : MonoBehaviour
         }
 
         confirmDialog = dialogObject;
-        dialog.Init(EnterBattleConfirmId, OnEnterBattleConfirmed);
+        if (Record != null && Record.ChapterId == SkyKeyChapterId && !PartyHasItem(Record, SkyKeyItemId))
+        {
+            // Chapter 27 without the Sky Key heads for the bad ending; point at the item shop,
+            // which stocks one for the party that lacks it (ShoppingScene.ExtraStockIds).
+            dialog.InitLiteral(NoSkyKeyEnterBattleText, OnEnterBattleConfirmed);
+        }
+        else
+        {
+            dialog.Init(EnterBattleConfirmId, OnEnterBattleConfirmed);
+        }
+    }
+
+    /// <summary>Whether any party member, living or fallen, carries the item.</summary>
+    private static bool PartyHasItem(GameRecord record, int itemId)
+    {
+        return record.Friends != null
+            && record.Friends.Exists(friend => friend != null && friend.ItemIds != null && friend.ItemIds.Contains(itemId));
     }
 
     /// <summary>

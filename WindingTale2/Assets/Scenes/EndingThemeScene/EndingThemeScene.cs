@@ -70,9 +70,6 @@ public class EndingThemeScene : MonoBehaviour
         GlobalVariables.Set(EndingVariableName, new EndingInfo() { Party = party, IsGoodEnding = isGoodEnding });
     }
 
-    /// <summary>TEMP test: show only these companions' pages (Sol and Youni). Empty it to show everyone.</summary>
-    private static readonly int[] TestOnlyIds = { 1, 2 };
-
     private const string MusicPath = "Audios/Musics/Ending_Theme_Final";
     private const string EndingsPath = "Endings/Endings";
     private const string BackgroundPath = "Endings/EndingBackground";
@@ -168,12 +165,6 @@ public class EndingThemeScene : MonoBehaviour
         {
             foreach (EndingEntry entry in table.Endings)
             {
-                // TEMP test: only the companions in TestOnlyIds. Empty the array to show everyone.
-                if (TestOnlyIds.Length > 0 && Array.IndexOf(TestOnlyIds, entry.Id) < 0)
-                {
-                    continue;
-                }
-
                 CreatureMapRecord member = info.Party.Friends.Find(friend => friend.Id == entry.Id);
                 if (member == null)
                 {

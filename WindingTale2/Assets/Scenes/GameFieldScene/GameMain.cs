@@ -109,6 +109,9 @@ namespace WindingTale.Scenes.GameFieldScene
         /// </summary>
         private bool isResumingFromRecord = false;
 
+        // Set at kick-off: the first turn start snaps the cursor and camera onto hero 001.
+        private bool openOnHero = false;
+
         void Start()
         {
             DontDestroyOnLoad(gameObject);
@@ -1481,6 +1484,7 @@ namespace WindingTale.Scenes.GameFieldScene
             npcAIHandler = new AIHandler(this, CreatureFaction.Npc);
             activityQueue = new ActivityQueue(this);
 
+            openOnHero = true;
             onStartNextTurn();
         }
 
@@ -1562,6 +1566,20 @@ namespace WindingTale.Scenes.GameFieldScene
 
             //// Main entry to notify the turn events
             eventHandler.notifyTurnEvents();
+
+            //// The first turn after a chapter start or a load opens with the cursor and
+            //// camera already on hero 001 -- placed by the turn events just fired, or by
+            //// the record -- instead of sliding there from the default spot. Activities
+            //// those events queued have not run yet, so they start from 001 too.
+            if (openOnHero)
+            {
+                openOnHero = false;
+                FDCreature openingHero = this.gameMap.Map.GetCreatureById(1);
+                if (openingHero != null && openingHero.Position != null)
+                {
+                    this.gameMap.SnapCursorAndCameraTo(openingHero.Position);
+                }
+            }
 
             if (victoryReached)
             {

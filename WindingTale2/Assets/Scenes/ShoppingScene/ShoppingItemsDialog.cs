@@ -120,6 +120,10 @@ public class ShoppingItemsDialog : MonoBehaviour
     // grid index i on page p stands for items[p * 6 + i].
     private List<ItemDefinition> items = null;
 
+    // The (chapter, shop) the stock was loaded for, kept so RefreshStock can reload it.
+    private int stockChapterId = 0;
+    private int stockShopId = 0;
+
     // Per-cell built pieces, created once at Init and reused: the icon Image, the name label
     // (which carries the parenthesised attribute inline) and the price label, all UI children
     // of the slot. RefreshPage fills or hides them per page.
@@ -150,16 +154,19 @@ public class ShoppingItemsDialog : MonoBehaviour
     /// <summary>
     /// Loads the shop's stock for (chapterId, shopId) and shows the first page. shopId is the
     /// Shop.txt second column (1 = Amor, 2 = Item, 3 = Secret), matched one-to-one against the
-    /// ShopDefinition keys DefinitionStore builds from that file.
+    /// ShopDefinition keys DefinitionStore builds from that file. extraItemIds, if any, are
+    /// stocked after the file's list (the chapter 27 Sky Key, see ShoppingScene.ExtraStockIds).
     /// </summary>
-    public void Init(int chapterId, int shopId)
+    public void Init(int chapterId, int shopId, List<int> extraItemIds = null)
     {
         slots = new GameObject[] { Item0, Item1, Item2, Item3, Item4, Item5 };
 
         indicatorImage = Indicator != null ? Indicator.GetComponent<Image>() : null;
         indicatorRect = Indicator != null ? Indicator.GetComponent<RectTransform>() : null;
 
-        items = LoadShopItems(chapterId, shopId);
+        stockChapterId = chapterId;
+        stockShopId = shopId;
+        items = LoadShopItems(chapterId, shopId, extraItemIds);
         pageCount = Mathf.Max(1, (items.Count + SlotsPerPage - 1) / SlotsPerPage);
 
         BuildSlots();
@@ -178,23 +185,52 @@ public class ShoppingItemsDialog : MonoBehaviour
     }
 
     /// <summary>
-    /// The shop's item definitions for (chapterId, shopId), resolved from the id list on its
-    /// ShopDefinition. DefinitionStore reads and caches Data/Shop.txt itself (the file the
-    /// task describes), so this reuses that rather than re-opening the file. Ids that resolve
-    /// to no definition are logged and skipped.
+    /// Re-reads the stock with a new extra-item list after a purchase, keeping the page and
+    /// cell where they were as far as the shorter list still allows.
     /// </summary>
-    private static List<ItemDefinition> LoadShopItems(int chapterId, int shopId)
+    public void RefreshStock(List<int> extraItemIds)
+    {
+        if (!initialized)
+        {
+            return;
+        }
+
+        items = LoadShopItems(stockChapterId, stockShopId, extraItemIds);
+        pageCount = Mathf.Max(1, (items.Count + SlotsPerPage - 1) / SlotsPerPage);
+        currentPage = Mathf.Min(currentPage, pageCount - 1);
+        selectedIndex = ClampToPage(selectedIndex, currentPage);
+        RefreshPage();
+        PositionIndicator();
+    }
+
+    /// <summary>
+    /// The shop's item definitions for (chapterId, shopId), resolved from the id list on its
+    /// ShopDefinition, then any extra ids. DefinitionStore reads and caches Data/Shop.txt itself
+    /// (the file the task describes), so this reuses that rather than re-opening the file. Ids
+    /// that resolve to no definition are logged and skipped.
+    /// </summary>
+    private static List<ItemDefinition> LoadShopItems(int chapterId, int shopId, List<int> extraItemIds)
     {
         List<ItemDefinition> result = new List<ItemDefinition>();
 
         ShopDefinition shop = DefinitionStore.Instance.GetShopDefinition(chapterId, (ShopType)shopId);
-        if (shop == null || shop.Items == null)
+        List<int> itemIds = new List<int>();
+        if (shop != null && shop.Items != null)
+        {
+            itemIds.AddRange(shop.Items);
+        }
+        if (extraItemIds != null)
+        {
+            itemIds.AddRange(extraItemIds);
+        }
+
+        if (itemIds.Count == 0)
         {
             Debug.LogWarning(string.Format("ShoppingItemsDialog: no shop stock for chapter {0} shop {1}.", chapterId, shopId));
             return result;
         }
 
-        foreach (int itemId in shop.Items)
+        foreach (int itemId in itemIds)
         {
             ItemDefinition def = DefinitionStore.Instance.GetItemDefinition(itemId);
             if (def != null)

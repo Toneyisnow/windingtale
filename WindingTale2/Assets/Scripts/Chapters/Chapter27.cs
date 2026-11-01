@@ -232,6 +232,9 @@ namespace WindingTale.Chapters
         /// <summary>Youni walks up to the station once this line of conversation 5 has been said.</summary>
         private const int YouniWalksAfterLine = 5;
 
+        /// <summary>Conversation 4's "是这个吧！": the Sky Key leaves the party and Youni walks up after it.</summary>
+        private const int SkyKeyHandedOverLine = 20;
+
         /// <summary>Where the cursor (and camera) goes to watch the party gather.</summary>
         private static readonly FDPosition GatheringCursor = FDPosition.At(16, 13);
 
@@ -366,8 +369,25 @@ namespace WindingTale.Chapters
 
             if (hasSkyKey)
             {
-                // Talking
-                PushConversationsActivities(gameMain, 27, 4, 1, 23);
+                // Talking -- Sol hands the Sky Key over ("是这个吧！"), it leaves the party,
+                // and Youni walks up onto the station and faces everyone, as in the bad ending.
+                PushConversationsActivities(gameMain, 27, 4, 1, SkyKeyHandedOverLine);
+                gameMain.PushActivity((gameMain) => TeamConsumeItem(gameMain, SkyKeyItemId));
+                gameMain.PushActivity(ActivityFactory.CreatureWalkActivity(YouniId,
+                    FDMovePath.Create(YouniGathering, YouniStation)));
+                PushConversationsActivities(gameMain, 27, 4, SkyKeyHandedOverLine + 1, 23);
+
+                // The station takes them all: a column of light rises over every one of the
+                // party at once, the way it took Youni alone in the bad ending.
+                gameMain.PushActivity((gameMain) =>
+                {
+                    List<ActivityBase> teleports = new List<ActivityBase>();
+                    foreach (FDCreature friend in gameMain.gameMap.Map.Friends)
+                    {
+                        teleports.Add(ActivityFactory.CreatureTeleportActivity(friend, friend.Position, false, slideCursor: false));
+                    }
+                    gameMain.InsertActivity(new ParallelActivity(teleports));
+                });
 
                 gameMain.OnGameWin();
             }
@@ -520,6 +540,19 @@ namespace WindingTale.Chapters
                 }
             }
             return false;
+        }
+
+        private static void TeamConsumeItem(GameMain gameMain, int itemId)
+        {
+            foreach (FDCreature creature in TeamMembers(gameMain))
+            {
+                int index = creature.Items != null ? creature.Items.IndexOf(itemId) : -1;
+                if (index >= 0)
+                {
+                    creature.RemoveItemAt(index);
+                    return;
+                }
+            }
         }
     }
 }

@@ -196,16 +196,23 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
         /// a column of light grows on it (TeleportPillar), and once it is a tile wide the
         /// creature vanishes from the tile (arriving false) or appears on it (arriving true);
         /// the column goes LingerDuration later. The creature is not moved here -- the
-        /// caller relocates it between the two ends.
+        /// caller relocates it between the two ends. slideCursor false skips the cursor slide,
+        /// for several columns rising at once in a ParallelActivity (chapter 27's good ending).
         /// </summary>
-        public static ActivityBase CreatureTeleportActivity(FDCreature creature, FDPosition position, bool arriving)
+        public static ActivityBase CreatureTeleportActivity(FDCreature creature, FDPosition position, bool arriving, bool slideCursor = true)
         {
             TeleportPillar pillar = null;
             float shownAt = 0f;
 
             DurationActivity slide = new DurationActivity(
-                gameMain => gameMain.gameMap.SlideCursorTo(position, GameCanvas.DialogPosition.Bottom, true),
-                gameMain => !gameMain.gameMap.IsSlideBusy);
+                gameMain =>
+                {
+                    if (slideCursor)
+                    {
+                        gameMain.gameMap.SlideCursorTo(position, GameCanvas.DialogPosition.Bottom, true);
+                    }
+                },
+                gameMain => !slideCursor || !gameMain.gameMap.IsSlideBusy);
 
             DurationActivity rise = new DurationActivity(
                 gameMain => pillar = gameMain.gameMap.CreateTeleportPillar(position),

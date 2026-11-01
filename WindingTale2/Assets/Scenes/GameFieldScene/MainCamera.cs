@@ -150,6 +150,35 @@ public class MainCamera : MonoBehaviour
         releaseOnArrive = true;
     }
 
+    /// <summary>
+    /// Moves the camera at once, at its current height and angle, so it looks at the given
+    /// ground point -- no slide and no follow state. For the battle's opening framing (hero
+    /// 001 on a chapter start or a load). Called before Start has set the opening angle, it
+    /// waits and is applied at the end of Start.
+    /// </summary>
+    public void JumpFocusTo(Vector3 groundTarget)
+    {
+        if (!hasStarted)
+        {
+            pendingJumpFocus = groundTarget;
+            return;
+        }
+
+        Vector3 forward = transform.rotation * Vector3.forward;
+        if (forward.y > -0.01f)
+        {
+            return; // looking level or up: no ground point to aim at
+        }
+
+        float along = (groundTarget.y - transform.position.y) / forward.y;
+        Vector3 target = groundTarget - forward * along;
+        transform.position = new Vector3(target.x, transform.position.y, target.z);
+    }
+
+    // Set once Start has run; until then JumpFocusTo parks its target in pendingJumpFocus.
+    private bool hasStarted = false;
+    private Vector3? pendingJumpFocus = null;
+
     private Vector3 FramePositionFor(Vector3 groundFocus, Quaternion rotation)
     {
         Vector3 forward = rotation * Vector3.forward;
@@ -545,6 +574,13 @@ public class MainCamera : MonoBehaviour
         zoomHeight = transform.position.y;
         lastAppliedHeight = zoomHeight;
         pitchOffset = 0f;
+
+        hasStarted = true;
+        if (pendingJumpFocus.HasValue)
+        {
+            JumpFocusTo(pendingJumpFocus.Value);
+            pendingJumpFocus = null;
+        }
     }
 
     // ---- Vertical orbit ----

@@ -14,8 +14,8 @@ namespace WindingTale.Chapters
     /// Chapter 29 -- in the boundless dark.
     ///
     /// The core of the Golden City: the dimensional reactor and, at the top of the
-    /// map, the fortress' defence centre under the three dragon heads. The party comes
-    /// in at the bottom. Six sentries (101..106) and the first host (107..130) attack
+    /// map, the fortress' defence centre under the three dragon heads. The party walks
+    /// in from the middle of the bottom edge. Six sentries (101..106) and the first host (107..130) attack
     /// at once; three more hosts stand by up the corridor until turns 5 (131..146),
     /// 10 (147..153) and 13 (154..163). Losing Sol (1) or Youni (2) ends the chapter.
     ///
@@ -34,7 +34,11 @@ namespace WindingTale.Chapters
     /// nothing and is not repeated here. Its setExtraInfo noted the turn number and was
     /// never read. Friends 21..32, which the original never settled, take free tiles
     /// beside the party's formation when the party carries them, since the save keeps
-    /// only friends on the map.
+    /// only friends on the map -- tiles open to the bottom edge, so they can walk in.
+    ///
+    /// The dragons are painted into the map's top corridor (13..19 x 1..14); there they
+    /// are the dragon_heads_29 obstacle, which fades away once the woken dragons stand
+    /// on it.
     /// </summary>
     public class Chapter29 : ChapterEvents
     {
@@ -64,17 +68,20 @@ namespace WindingTale.Chapters
             { 22, 18, 62 },
             { 23, 15, 60 },
             { 24, 17, 60 },
-            { 25, 12, 62 },
+            { 25, 13, 59 },
             { 26, 15, 59 },
             { 27, 16, 58 },
             { 28, 17, 59 },
-            { 29, 20, 62 },
-            { 30, 11, 63 },
-            { 31, 21, 63 },
+            { 29, 19, 59 },
+            { 30, 14, 58 },
+            { 31, 18, 58 },
             { 32, 14, 59 },
         };
 
         private const int FirstOptionalFriendId = 10;
+
+        /// <summary>Where the party appears and walks in from, the middle of the map's bottom row.</summary>
+        private static readonly FDPosition PartyMarchEntry = FDPosition.At(16, 64);
 
         /// <summary>The sentries and the first host, attacking from the start, as (id, definition, x, y).</summary>
         private static readonly int[,] FirstEnemies = new int[,]
@@ -244,7 +251,9 @@ namespace WindingTale.Chapters
 
         private Action<GameMain> turn1 = (gameMain) =>
         {
-            SettleParty(gameMain, PartyEntry, FirstOptionalFriendId);
+            // The party walks in from the bottom edge, all from one tile, and the talking
+            // waits until everyone has arrived.
+            MarchInParty(gameMain, PartyEntry, FirstOptionalFriendId, PartyMarchEntry);
 
             AddEnemies(gameMain, FirstEnemies);
             AddEnemies(gameMain, SecondEnemies, AITypes.AIType_StandBy);

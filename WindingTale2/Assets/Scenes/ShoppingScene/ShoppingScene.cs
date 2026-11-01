@@ -68,6 +68,10 @@ public class ShoppingScene : MonoBehaviour
     /// <summary>CommonStrings "Confirm-54" asked before a buy: "这个{名字}，#{价格}元，要不要啊？".</summary>
     private const int BuyConfirmId = 54;
 
+    /// <summary>Chapter 27's item shop stocks the Sky Key (item 814) while the party lacks one.</summary>
+    private const int SkyKeyChapterId = 27;
+    private const int SkyKeyItemId = 814;
+
     /// <summary>CommonStrings "Confirm-55" asked before a sale: "这个{名字}，#{价格}元，卖不卖啊？".</summary>
     private const int SellConfirmId = 55;
 
@@ -198,6 +202,9 @@ public class ShoppingScene : MonoBehaviour
     /// through the "buy it?" confirm, to the creature picker that finally receives it.
     /// </summary>
     private ItemDefinition pendingBuyItem = null;
+
+    /// <summary>The open Buy item picker, refreshed after a purchase (see ExtraStockIds).</summary>
+    private ShoppingItemsDialog itemsDialog = null;
 
     /// <summary>The Sell picker, kept so the flow can bring the creature's item page back up.</summary>
     private ShoppingCreaturesDialog sellCreaturesDialog = null;
@@ -686,8 +693,33 @@ public class ShoppingScene : MonoBehaviour
         int chapterId = record != null ? record.ChapterId : 0;
         dialog.OnClosed = PopDialog;
         dialog.OnItemSelected = OnItemToBuy;
-        dialog.Init(chapterId, shopId);
+        dialog.Init(chapterId, shopId, ExtraStockIds(shopId));
+        itemsDialog = dialog;
         PushDialog(dialogObject);
+    }
+
+    /// <summary>
+    /// Items stocked on top of the Shop.txt list. Chapter 27's item shop sells the Sky Key
+    /// (Data/Item.txt prices it 5000 to buy, 1 to sell) while nobody in the party carries one,
+    /// so a party that sold or never made it can still reach the good ending; once bought it
+    /// drops off the list again.
+    /// </summary>
+    private List<int> ExtraStockIds(int shopId)
+    {
+        List<int> extra = new List<int>();
+        if (record != null && record.ChapterId == SkyKeyChapterId && shopId == (int)ShopType.Item
+            && !PartyHasItem(SkyKeyItemId))
+        {
+            extra.Add(SkyKeyItemId);
+        }
+        return extra;
+    }
+
+    /// <summary>Whether any party member, living or fallen, carries the item.</summary>
+    private bool PartyHasItem(int itemId)
+    {
+        return record != null && record.Friends != null
+            && record.Friends.Exists(friend => friend != null && friend.ItemIds != null && friend.ItemIds.Contains(itemId));
     }
 
     /// <summary>
@@ -880,6 +912,12 @@ public class ShoppingScene : MonoBehaviour
         record.TotalMoney -= pendingBuyItem.Price;
         RefreshMoneyBar();
         SoundEffects.Play(SoundEffect.ShopPurchase);
+
+        // The picker underneath may stock something only while the party lacks it (the Sky Key).
+        if (itemsDialog != null)
+        {
+            itemsDialog.RefreshStock(ExtraStockIds(ShopIdForBuy(shopIndex)));
+        }
 
         ShowBoughtAnimation();
     }
