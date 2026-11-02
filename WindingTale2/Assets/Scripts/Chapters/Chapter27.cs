@@ -268,7 +268,7 @@ namespace WindingTale.Chapters
         {
             for (int i = 0; i < enemies.GetLength(0); i++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, enemies[i, 0], enemies[i, 1],
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, enemies[i, 0], enemies[i, 1],
                     FDPosition.At(enemies[i, 2], enemies[i, 3]), 0, aiType);
             }
         }
@@ -338,7 +338,8 @@ namespace WindingTale.Chapters
             int left = CaptainsOnField(gameMain);
             if (left == 2)
             {
-                AddEnemies(gameMain, EntranceEnemies);
+                // They arrive by transfer, in columns of light.
+                TransferInCreatures(gameMain, CreatureFaction.Enemy, EntranceEnemies);
             }
             else if (left == 0)
             {

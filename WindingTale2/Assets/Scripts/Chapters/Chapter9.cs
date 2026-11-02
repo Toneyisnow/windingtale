@@ -221,7 +221,7 @@ namespace WindingTale.Chapters
             FDCreature captain = gameMain.gameMap.Map.GetCreatureById(CaptainId);
             FDPosition position = captain != null ? captain.Position : CaptainPost;
 
-            FDCreature laiting = AddCreatureToMap(gameMain, CreatureFaction.Friend,
+            FDCreature laiting = AddCreatureAroundToMap(gameMain, CreatureFaction.Friend,
                 LaitingFriendId, LaitingFriendDefinitionId, position);
             if (laiting != null)
             {
@@ -230,7 +230,7 @@ namespace WindingTale.Chapters
 
             for (int i = 0; i < GreysMen.GetLength(0); i++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, GreysMen[i, 0], GreysMen[i, 1],
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, GreysMen[i, 0], GreysMen[i, 1],
                     FDPosition.At(GreysMen[i, 2], GreysMen[i, 3]));
             }
 

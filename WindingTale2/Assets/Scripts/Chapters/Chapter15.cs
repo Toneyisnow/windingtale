@@ -243,7 +243,7 @@ namespace WindingTale.Chapters
             for (int i = 0; i < Thieves.GetLength(0); i++)
             {
                 int thiefId = Thieves[i, 0];
-                FDCreature thief = AddCreatureToMap(gameMain, CreatureFaction.Enemy, thiefId, ThiefDefinitionId,
+                FDCreature thief = AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, thiefId, ThiefDefinitionId,
                     FDPosition.At(Thieves[i, 1], Thieves[i, 2]), Thieves[i, 3]);
                 if (thief != null)
                 {

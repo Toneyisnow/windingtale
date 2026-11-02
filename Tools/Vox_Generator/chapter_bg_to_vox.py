@@ -3313,48 +3313,84 @@ def recipe_29(bd):
 # chapter 30 -- the last hall                                                 #
 # --------------------------------------------------------------------------- #
 
-# Chapter 30 is the end of the game: a floor of pale stone in a cavern of black
-# rock, a broad stair climbing to a raised hall at its centre, and channels of
-# blue water running round it in squared-off bends, with pillars of light
-# standing on the stone between them and the dark rock jagged all round.
+# Chapter 30 is the end of the game: the altar of the Golden City after the
+# reactor's burst -- a floor of pale stone with blue channels running round it in
+# squared-off bends, a broad stair, pillars of light, and the floor broken away
+# into the black void all round it and in front of the altar.
 #
-# The fight is on the pale floor at the foot of the stair. The channels wrap
-# round behind it, the stair climbs on the axis, the pillars of light stand at
-# the bends, and the black rock rises jagged on every side.
-#
-# No wall closes the picture any more (the user's call, 2026-10-12): the battle
-# camera shows the chapter's own SKY_05 starfield past the edges of the model.
+# The backdrop is that ruin. The fight stands on the pale floor, a blue channel
+# beside it to screen right and a stair climbing to a terrace behind it there;
+# everything to one side, far back and in the near corner of a ragged break line
+# is gone, open to the chapter's SKY_05 stars, with a few slabs of the floor
+# drifting off in it.
+# Rebuilt 2026-11-01 (the user's call: half the ground empty, half floor and steps).
 
-FLOOR_30 = (145, 145, 3)
+FLOOR_30 = (145,)                      # the pale white stone
+BLUE_30 = (184, 187)                   # the blue paving laid across it
 WATER_30 = 163
 STAIR_30 = 192
-STONE_FACE_30 = 223                    # the hall's walls, in the dark grating
+STONE_FACE_30 = 223                    # the broken edges and the terrace walls, in the dark grating
 WORN_30 = (88, 91)                     # the blue-grey wear in the stone
 ROCK_TONES_30 = ((20, 26, 24), (12, 15, 14), (27, 35, 33), (6, 8, 7))
 
+BREAK_X_30 = 192                       # the break line's screen-left run, model x
+BREAK_Y_30 = 150                       # and its far run, model y
+CHANNEL_30 = (48, 70)                  # the blue channel's x span, screen right of the fighters
+TERRACE_30 = (92, 128, 9)              # the stair terrace: x below, y from, height
+# Slabs of floor adrift in the void: centre x, y, half sizes, and their height.
+SLABS_30 = ((206, 70, 9, 7, GROUND_Z + 2), (232, 118, 7, 6, GROUND_Z - 5),
+            (196, 160, 11, 6, GROUND_Z + 6), (150, 174, 8, 4, GROUND_Z - 2),
+            (238, 30, 6, 8, GROUND_Z - 8))
+
 
 def recipe_30(bd):
+    from scipy import ndimage
     xs, ys = np.broadcast_arrays(*_grid(bd))
+    tx, ty = xs / TILE_OUT, ys / TILE_OUT
     bd.ground[:, :] = GROUND_Z
-    off = np.abs(xs - 116)
-    # The squared-off U of the channels, wrapping round behind the fighters.
-    inner = (off < 70) & (ys >= 108)
-    outer = (off < 90) & (ys >= 92)
-    channel = outer & ~inner & ~((off < 18) & (ys < 128))
-    hall = (off < 50) & (ys >= 128)
+
+    # The ragged break: screen left of BREAK_X and beyond BREAK_Y the floor is gone.
+    jag = 18.0 * (_vnoise(xs, ys, 7.0, 301) - 0.5) + 8.0 * (_vnoise(xs, ys, 3.0, 302) - 0.5)
+    floor = ~((xs > BREAK_X_30 + jag) | ((ys > BREAK_Y_30 + jag) & (xs > 70 + 0.5 * jag))
+              | ((ys < 14 + 0.6 * jag) & (xs > 150 + jag)))     # and the near corner
+    slabs = np.zeros(floor.shape, bool)
+    for cx, cy, hx, hy, z in SLABS_30:
+        m = (np.abs(xs - cx) < hx + 3.0 * (_vnoise(xs, ys, 3.0, cx) - 0.5)) & (np.abs(ys - cy) < hy)
+        slabs |= m
+        bd.ground[m] = z
+    island = floor | slabs
+
+    channel = floor & (xs >= CHANNEL_30[0]) & (xs < CHANNEL_30[1]) & (ys < TERRACE_30[1])
     bd.ground[channel] = GROUND_Z - 4
-    stair = step_up(bd, hall, 8, axis_x=116, stair_hw=18, ramp=14)
+    tx_max, ty_min, height = TERRACE_30
+    terrace = floor & (xs < tx_max) & (ys >= ty_min)
+    stair = step_up(bd, terrace, height, axis_x=59, stair_hw=16, ramp=16)
 
     bd.lay_ground(_pick(FLOOR_30, 30), '30')
+    lay_where(bd, _pick(BLUE_30, 230), '30',
+              (_patchy(tx, ty, 30) > 0.58) & ~terrace)
     lay_where(bd, _pick(WORN_30, 130), '30',
-              (_patchy(xs / TILE_OUT, ys / TILE_OUT, 30) > 0.6) & ~hall)
+              (_patchy(tx, ty, 77) > 0.8) & ~terrace)
     lay_where(bd, lambda tx, ty: WATER_30, '30', channel)
     lay_where(bd, lambda tx, ty: STAIR_30, '30', stair, contrast=1.0)
     sink_colour(bd, channel)
-    rock_faces(bd, '30', STONE_FACE_30, min_rise=3)
 
-    for x, y in ((18, 88), (206, 88), (40, 120), (184, 120), (62, 150), (162, 150)):
+    # 0 deep in the floor, 1 at a broken edge: the underside tucks up there, so the
+    # edges read as a shattered crust and the slabs as thin plates.
+    depth = ndimage.distance_transform_edt(island)
+    float_island(bd, island, 1.0 - np.clip(depth / 22.0, 0, 1), '30', STONE_FACE_30)
+    # The broken edges and the slabs show what the floor is packed with: black rock,
+    # not soil.
+    soil = bd.a == BOOK.index(SOIL)
+    tones = np.array([BOOK.index(t) for t in ROCK_TONES_30], dtype=bd.a.dtype)
+    pick = np.random.RandomState(30).randint(len(tones), size=bd.a.shape)
+    bd.a[soil] = tones[pick[soil]]
+
+    for x, y in ((24, 96), (84, 52), (30, 150), (150, 136)):
         bd.stamp(obstacle(('light_pillar_1', 'light_pillar_2')[(x // 10) % 2], 2), x, y)
+    # A black voxel in two opposite corners of the floor: the exporter centres and
+    # grounds on what is there, and the broken floor alone would come out shifted.
+    bd.a[0, 0, 0] = bd.a[-1, -1, 0] = BOOK.index(VOID[0])
 
 
 RECIPES = {'02': recipe_02, '03': recipe_03, '04': recipe_04, '05': recipe_05,

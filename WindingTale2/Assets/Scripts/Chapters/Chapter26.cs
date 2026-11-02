@@ -215,7 +215,7 @@ namespace WindingTale.Chapters
         {
             for (int i = 0; i < enemies.GetLength(0); i++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, enemies[i, 0], enemies[i, 1],
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, enemies[i, 0], enemies[i, 1],
                     FDPosition.At(enemies[i, 2], enemies[i, 3]), enemies[i, 4], aiType);
             }
         }
@@ -262,7 +262,7 @@ namespace WindingTale.Chapters
             int firstId = 201 + wave * 3;
             for (int k = 0; k < 3; k++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, firstId + k, Reinforcements[wave, 1 + k],
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, firstId + k, Reinforcements[wave, 1 + k],
                     ReinforcementTiles[k]);
             }
 
@@ -303,7 +303,7 @@ namespace WindingTale.Chapters
             {
                 // Youni puts the box in, and Wode wakes as one of the party.
                 creature.RemoveItemAt(boxIndex);
-                AddCreatureToMap(gameMain, CreatureFaction.Friend, WodeId, WodeId, WodeTile);
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Friend, WodeId, WodeId, WodeTile);
 
                 // Talking
                 PushConversationsActivities(gameMain, 26, 1, 10, 20);

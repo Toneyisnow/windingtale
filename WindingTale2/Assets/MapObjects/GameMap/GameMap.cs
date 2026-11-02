@@ -405,6 +405,34 @@ namespace WindingTale.MapObjects.GameMap
         }
 
         /// <summary>
+        /// Slides the cursor to the tile and hands the camera back to the player looking at
+        /// it, in one move timed to the cursor (MainCamera.ReturnToGameplayAt): the start of
+        /// the player's turn. SlideCursorTo would frame the tile in the follow's angle first
+        /// and ease back to the player's angle after -- a second move.
+        /// </summary>
+        public void SlideCursorAndSettleCamera(FDPosition position)
+        {
+            if (cursor == null || position == null)
+            {
+                return;
+            }
+
+            FDPosition from = cursor.Position ?? position;
+            float duration = (Mathf.Abs(position.X - from.X) + Mathf.Abs(position.Y - from.Y)) / CursorSlideTilesPerSecond;
+
+            SlideCursorTo(position, GameCanvas.DialogPosition.Bottom, false, false);
+
+            EnsureMainCamera();
+            if (mainCamera != null)
+            {
+                mainCamera.ReturnToGameplayAt(MapCoordinate.ConvertPosToVec3(position), duration);
+            }
+        }
+
+        /// <summary>True while a cursor slide or any camera move -- a slide or a return -- is under way.</summary>
+        public bool IsCameraSettling => IsSlideBusy || (mainCamera != null && mainCamera.IsReturning);
+
+        /// <summary>
         /// Makes the tile the cursor was just slid to the place the camera settles on when
         /// the follow ends, instead of the spot it was standing at before the slide.
         /// Call right after SlideCursorTo. See MainCamera.RebaseSavedFraming.

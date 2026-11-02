@@ -422,9 +422,23 @@ namespace WindingTale.Scenes.GameFieldScene
         }
 
         /// <summary>
+        /// The good ending: chapter 31's talk on the soil of Mara has been read, and the field
+        /// fades out into the ending scene, which plays the rest of it -- the Golden City and
+        /// Youni's farewell -- and the epilogue. Queued behind the conversation like OnGameWin.
+        /// </summary>
+        public void OnGoodEnding()
+        {
+            this.PushActivity(game =>
+            {
+                EndingThemeScene.SetEnding(game.BuildFinalParty(), true);
+                game.QuitToScene(GameEndingScene.SceneName);
+            });
+        }
+
+        /// <summary>
         /// The end of the game: an ending chapter has played its last line, and the field
         /// fades out into the ending theme and each companion's epilogue (EndingThemeScene).
-        /// Chapter 31 is the good ending. Queued behind the closing conversation like OnGameWin.
+        /// Queued behind the closing conversation like OnGameWin.
         /// </summary>
         public void OnGameFinished(bool goodEnding = true)
         {
@@ -1597,25 +1611,22 @@ namespace WindingTale.Scenes.GameFieldScene
                     game => game.turnInfo == null || !game.turnInfo.IsPlaying
                 );
 
-                // Once the turn banner has finished, slide the cursor (and camera) to
-                // hero #001. Only the player turn does this, right after the banner --
-                // the AI sub-turns must not yank the cursor back to 001 while
-                // conversations and enemy moves are playing out. Runs as a duration
-                // activity so the turn waits for the slide to land.
+                // Once the turn banner has finished, slide the cursor to hero #001 and
+                // bring the camera there in the player's own height and angle, in one move
+                // (the enemy turn left it in the follow framing). Only the player turn does
+                // this, right after the banner -- the AI sub-turns must not yank the cursor
+                // back to 001 while conversations and enemy moves are playing out. Runs as a
+                // duration activity so the turn waits for the camera to land.
                 this.PushActivity(
                     game =>
                     {
                         var hero = game.gameMap.Map.GetCreatureById(1);
                         if (hero != null && hero.Position != null)
                         {
-                            game.gameMap.SlideCursorTo(hero.Position, GameCanvas.DialogPosition.Bottom);
-
-                            // The camera is to stay on 001 when the turn's follow ends, not
-                            // drift back to where it stood before the slide.
-                            game.gameMap.RebaseCameraOnTile(hero.Position);
+                            game.gameMap.SlideCursorAndSettleCamera(hero.Position);
                         }
                     },
-                    game => !game.gameMap.IsSlideBusy
+                    game => !game.gameMap.IsCameraSettling
                 );
             }
 

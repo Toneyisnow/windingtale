@@ -63,6 +63,7 @@ public class MainCamera : MonoBehaviour
 
     private const float ReturnDuration = 0.4f;      // ease back to gameplay framing, seconds
     private bool isReturning = false;
+    private float returnDuration = ReturnDuration;  // this return's length; see ReturnToGameplayAt
 
     // Set by PanFocusTo: the slide under way is the player's own (cycling to a friend,
     // parking on a target), not a cutscene's. It keeps the camera's height and angle and,
@@ -84,6 +85,9 @@ public class MainCamera : MonoBehaviour
     /// </summary>
     // True while the follow camera is easing toward a framing (not while merely holding).
     public bool IsFollowSliding => isSliding;
+
+    // True while the camera is easing back to the gameplay framing.
+    public bool IsReturning => isReturning;
 
     public void SlideFocusTo(Vector3 groundTarget, float duration, bool keepCursorLow)
     {
@@ -238,8 +242,31 @@ public class MainCamera : MonoBehaviour
         returnStartPosition = transform.position;
         returnStartRotation = transform.rotation;
         returnElapsed = 0f;
+        returnDuration = ReturnDuration;
         isSliding = false;
         isReturning = true;
+    }
+
+    /// <summary>
+    /// Hands the camera back to the player looking at the given ground point, in one move
+    /// over <paramref name="duration"/> (at least ReturnDuration): a follow eases straight
+    /// to the framing it saved, rebased onto the point; with no follow the camera pans
+    /// there at its own height and angle. For the start of the player's turn, which used
+    /// to slide to hero 001 in the follow framing and only then ease back to the player's
+    /// height and angle -- two moves where one will do.
+    /// </summary>
+    public void ReturnToGameplayAt(Vector3 groundFocus, float duration)
+    {
+        if (followActive && !releaseOnArrive)
+        {
+            RebaseSavedFraming(groundFocus);
+            isReturning = false;
+            ReturnToGameplay();
+            returnDuration = Mathf.Max(duration, ReturnDuration);
+            return;
+        }
+
+        PanFocusTo(groundFocus, duration);
     }
 
     /// <summary>
@@ -323,7 +350,7 @@ public class MainCamera : MonoBehaviour
     private void UpdateReturn()
     {
         returnElapsed += Time.deltaTime;
-        float t = Mathf.Clamp01(returnElapsed / ReturnDuration);
+        float t = Mathf.Clamp01(returnElapsed / returnDuration);
         float eased = Mathf.SmoothStep(0f, 1f, t);
         transform.position = Vector3.Lerp(returnStartPosition, savedPosition, eased);
         transform.rotation = Quaternion.Slerp(returnStartRotation, savedRotation, eased);

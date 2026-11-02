@@ -237,7 +237,7 @@ namespace WindingTale.Chapters
         /// <summary>Turn 4: Hawate rides in at the south-east corner and joins the party.</summary>
         private Action<GameMain> hawateAppear = (gameMain) =>
         {
-            AddCreatureToMap(gameMain, CreatureFaction.Friend, HawateId, HawateId, HawateEntry);
+            AddCreatureAroundToMap(gameMain, CreatureFaction.Friend, HawateId, HawateId, HawateEntry);
 
             // Talking
             PushConversationsActivities(gameMain, 13, 2, 1, 7);

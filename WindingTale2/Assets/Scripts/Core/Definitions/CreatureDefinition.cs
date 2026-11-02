@@ -229,12 +229,15 @@ namespace WindingTale.Core.Definitions
         }
 
         /// <summary>
-        /// Monks and priests (occupations 154 and 155): the ones who look after their own
-        /// side and never charge into the enemy.
+        /// Monks and priests (occupations 154 and 155), plus the 机甲守卫 (base creature
+        /// 747, which carries 修理套件): the ones who look after their own side and never
+        /// charge into the enemy. The original FDCreature.m meant 747 to be a medic but
+        /// compared the chapter definition id with it, so it never matched; chapter
+        /// definitions keep the base id only as AnimationId.
         /// </summary>
         public bool IsHealer()
         {
-            return Occupation == 154 || Occupation == 155;
+            return Occupation == 154 || Occupation == 155 || AnimationId == 747;
         }
 
         /// <summary>

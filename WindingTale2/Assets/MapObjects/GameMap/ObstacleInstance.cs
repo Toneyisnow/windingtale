@@ -28,6 +28,13 @@ namespace WindingTale.MapObjects.GameMap
         /// </summary>
         public bool IsGroundCover { get; set; }
 
+        /// <summary>
+        /// Never fades, whatever stands on or covers its tiles -- a creature, the cursor,
+        /// a menu item or an indicator: chapter 29's three dragon heads, whose dragons
+        /// stand on them. Set by ObstaclesLayer.
+        /// </summary>
+        public bool NeverFades { get; set; }
+
         public void SetFootprint(int tileX, int tileY, int width, int height)
         {
             this.TileX = tileX;

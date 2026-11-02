@@ -976,6 +976,24 @@ Resolved -- the map is 45 × 40 tiles, all ordinary tiles; `obstacles_30.json` f
 torn mesh edges (272..287) stay painted. Water here is `(40,68,136)`:
 `shapes_to_vox.py --flat --lower 000000=3 --lower 284488=2 --lower-min-area 45`.
 
+## Chapter 31
+
+好结局（不是战斗）：第 11 关的林地——ShapePanel31 与 ShapePanel11 逐字节相同（100 个 tile，
+同样的 id），地图也是第 11 关的，只有两处树桩 142 换成了深红松树 (17, 15-16) / (34, 11-12)。
+
+| Object | DefinitionKey | Footprint |
+|---|---|---|
+| — | — | — |
+
+Resolved (2026-11-01) -- 35 × 45 tiles, `Obstacles` = the trees only (352: chapter 11's
+350 + the two red pines), from chapter 11's recorded `tree_obstacles.py` line with
+`obstacles_31.json` empty; `map_clean.py 31`, then `shapes_to_vox.py 31` with **no flags**
+(the default flags reproduce all 89 of chapter 11's VOXs byte-for-byte). The cleaned map
+equals chapter 11's `RenderMatrix` except the two stump tiles, which now fill 163.
+`Chapter_31.json`'s `Shapes` had every tile at Type 0 / bg 0; they were replaced with
+chapter 11's entries (same tiles). Before this the chapter had no `Shapes_31` at all and
+rendered chapter 01's fallback tiles, most of them missing.
+
 ## Adding a chapter
 
 Append a section in the same shape: the Chinese description as given, then a

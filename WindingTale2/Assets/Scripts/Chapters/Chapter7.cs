@@ -281,7 +281,7 @@ namespace WindingTale.Chapters
             FDPosition position = kaili.Position ?? KailiStand;
 
             gameMain.gameMap.RemoveCreature(KailiId);
-            AddCreatureToMap(gameMain, CreatureFaction.Friend, KailiId, KailiId, position);
+            AddCreatureAroundToMap(gameMain, CreatureFaction.Friend, KailiId, KailiId, position);
         }
 
         /// <summary>

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using WindingTale.Core.Common;
 using WindingTale.Core.Definitions;
 using WindingTale.Core.Files;
+using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.Scenes.GameFieldScene.Activities;
 
 namespace WindingTale.Chapters
 {
@@ -17,9 +19,13 @@ namespace WindingTale.Chapters
     /// The original brought everyone back for the scene, the fallen included, at full
     /// HP -- so any party member the record carries at 0 HP is stood up before the
     /// party is settled. Youni (2) stayed on the fortress and is not settled; Sol (1)
-    /// stands apart from the others, as the original placed him last. The last line
-    /// goes on to the ending theme and each companion's epilogue -- see
-    /// GameMain.OnGameFinished and EndingThemeScene.
+    /// stands apart from the others, as the original placed him last.
+    ///
+    /// The party comes home by transfer: the cursor and camera open on the middle of
+    /// their tiles, a column of light grows on each tile and everyone appears in it
+    /// together (ActivityFactory.CreaturesArriveActivity). After line 16 the field fades
+    /// out into GameEndingScene, which plays lines 17..24 under the Golden City and the
+    /// epilogue, and goes on to each companion's epilogue -- see GameMain.OnGoodEnding.
     /// </summary>
     public class Chapter31 : ChapterEvents
     {
@@ -82,12 +88,47 @@ namespace WindingTale.Chapters
                 }
             }
 
-            SettleParty(gameMain, PartyEntry, FirstOptionalFriendId);
+            ArriveParty(gameMain);
 
             // Talking
             PushConversationsActivities(gameMain, 31, 1, 1, 16);
 
-            gameMain.OnGameFinished();
+            gameMain.OnGoodEnding();
         };
+
+        /// <summary>
+        /// SettleParty's line-up, by transfer: the cursor and camera are put straight on
+        /// the middle of the party's tiles, then each one's pillar of light grows and they
+        /// all appear in it together.
+        /// </summary>
+        private static void ArriveParty(GameMain gameMain)
+        {
+            List<int> members = new List<int>();
+            List<FDPosition> tiles = new List<FDPosition>();
+            for (int i = 0; i < PartyEntry.GetLength(0); i++)
+            {
+                int creatureId = PartyEntry[i, 0];
+                if (creatureId >= FirstOptionalFriendId && !PartyCarries(gameMain, creatureId))
+                {
+                    continue;
+                }
+                members.Add(i);
+                tiles.Add(FDPosition.At(PartyEntry[i, 1], PartyEntry[i, 2]));
+            }
+
+            FDPosition centre = MiddleOf(tiles);
+            gameMain.gameMap.SnapCursorAndCameraTo(centre);
+
+            gameMain.PushActivity(ActivityFactory.CreaturesArriveActivity(centre, (gameMain) =>
+            {
+                List<FDCreature> arrived = new List<FDCreature>();
+                foreach (int i in members)
+                {
+                    arrived.Add(AddCreatureToMap(gameMain, CreatureFaction.Friend, PartyEntry[i, 0], PartyEntry[i, 0],
+                        FDPosition.At(PartyEntry[i, 1], PartyEntry[i, 2])));
+                }
+                return arrived;
+            }));
+        }
     }
 }

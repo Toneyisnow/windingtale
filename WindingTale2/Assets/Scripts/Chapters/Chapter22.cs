@@ -218,7 +218,7 @@ namespace WindingTale.Chapters
         {
             for (int i = 0; i < wave.GetLength(0); i++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, wave[i, 0], ReinforcementDefinitionId,
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, wave[i, 0], ReinforcementDefinitionId,
                     FDPosition.At(wave[i, 1], wave[i, 2]), wave[i, 3]);
             }
         }

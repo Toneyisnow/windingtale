@@ -177,7 +177,7 @@ namespace WindingTale.Chapters
             {
                 for (int i = 0; i < GateExit.Length; i++)
                 {
-                    AddCreatureToMap(gameMain, CreatureFaction.Enemy, firstId + 1 + i, KnightDefinitionId, GateExit[i]);
+                    AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, firstId + 1 + i, KnightDefinitionId, GateExit[i]);
                 }
             };
         }

@@ -1,7 +1,8 @@
 """Cut a chapter's black void out of its render map, so the sky shows through.
 
-Chapters 23, 24 and 28 float in a black void (chapter 23's top corners, all of
-chapter 24 around its island, chapter 28's top-right corner). In the tile PNGs
+Chapters 23, 24, 28 and 30 float in a black void (chapter 23's top corners, all of
+chapter 24 around its island, chapter 28's top-right corner, chapter 30 all round
+the altar terrace and in the hole in front of the altar). In the tile PNGs
 that void is not opaque black -- it is alpha 0 -- and ``shapes_to_vox.py``
 used to read it as black voxels, laying a black slab over the sky. This step
 runs before the shape VOXs are generated and turns the void into nothing:
@@ -66,6 +67,10 @@ VOID_SEEDS = {
     '23': [(1, 1), (41, 1)],    # top-left and top-right
     '24': 'border',             # everything round the island
     '28': [(48, 1)],            # top-right
+    # The four corners, and (23, 16) inside the black round the altar. Not 'border':
+    # the wire mesh that fringes the floor reaches the top edge, and its holes are
+    # alpha 0 too -- they stay black pits, as chapter 28's do.
+    '30': [(1, 1), (45, 1), (1, 40), (45, 40), (23, 16)],
 }
 
 # Chapter 23's bottom corners are rows of cliff rock: 34, and the edge tiles

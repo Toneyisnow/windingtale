@@ -5,6 +5,7 @@ using WindingTale.Core.Definitions;
 using WindingTale.Core.Events;
 using WindingTale.Core.Objects;
 using WindingTale.Scenes.GameFieldScene;
+using WindingTale.Scenes.GameFieldScene.Activities;
 
 namespace WindingTale.Chapters
 {
@@ -28,8 +29,15 @@ namespace WindingTale.Chapters
     /// the demon down, so he appears at the end of the turn after the one the wave died
     /// in. The Sky Demon is on stand-by from the start and the original never changed
     /// that, so once he is on the altar he waits to be attacked, as it wrote him. The
-    /// four demons take the default AI, as in the original; penned on the walls by the
-    /// channel they have nowhere to go until they are brought down.
+    /// four demons rest on the walls (stand-by) until each is brought down, and go
+    /// aggressive on the altar; the original gave them the default AI from the start.
+    /// Like any sleeper, one that is hit or that a friend comes within two tiles of
+    /// wakes early.
+    ///
+    /// The Sky Demon moves his people by transfer, drawn as 传送术 draws it: a demon
+    /// coming down leaves his wall in a column of light and appears on the altar in
+    /// another, and every demon and soldier he calls up appears in one -- see
+    /// TransferToAltar and ChapterEvents.TransferInCreatures.
     ///
     /// Friends 21..32, which the original never settled, take free tiles inside the
     /// party's formation when the party carries them, since the save keeps only
@@ -147,12 +155,65 @@ namespace WindingTale.Chapters
             comesDown.AddDependentEvent(waveGone);
         }
 
-        private static void AddSoldiers(GameMain gameMain, int firstId)
+        /// <summary>A wave's four soldiers on the tiles beside the altar, as TransferInCreatures rows from <paramref name="firstId"/> on.</summary>
+        private static int[,] Soldiers(int firstId)
         {
+            int[,] soldiers = new int[SoldierTiles.Length, 4];
             for (int k = 0; k < SoldierTiles.Length; k++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, firstId + k, SoldierDefinitionId, SoldierTiles[k]);
+                soldiers[k, 0] = firstId + k;
+                soldiers[k, 1] = SoldierDefinitionId;
+                soldiers[k, 2] = SoldierTiles[k].X;
+                soldiers[k, 3] = SoldierTiles[k].Y;
             }
+            return soldiers;
+        }
+
+        /// <summary>
+        /// The Sky Demon transfers <paramref name="creatureId"/> -- a demon, or himself -- down
+        /// to the altar, as 传送术 does: a column of light where he stands and he is gone,
+        /// then the cursor goes to the altar, a column rises there and on each of
+        /// <paramref name="soldiers"/>' tiles, and he appears with them. He lands on the altar,
+        /// or beside it when someone is standing on it, and stops resting unless
+        /// <paramref name="wakes"/> is false. A demon who fell on his wall is not there to
+        /// come down; his soldiers still come.
+        /// </summary>
+        private static void TransferToAltar(GameMain gameMain, int creatureId, int[,] soldiers, bool wakes = true)
+        {
+            FDCreature transferred = gameMain.gameMap.Map.GetCreatureById(creatureId);
+            if (transferred != null)
+            {
+                gameMain.PushActivity(ActivityFactory.CreatureTeleportActivity(transferred, transferred.Position, false));
+            }
+
+            gameMain.PushActivity(ActivityFactory.CreaturesArriveActivity(Altar, (gameMain) =>
+            {
+                List<FDCreature> arrived = new List<FDCreature>();
+                if (transferred != null && gameMain.gameMap.Map.GetCreatureById(creatureId) != null)
+                {
+                    FDPosition landing = FindStandingTile(gameMain.gameMap.Map, transferred, Altar);
+                    if (landing != null)
+                    {
+                        gameMain.gameMap.RelocateCreature(creatureId, landing);
+                    }
+                    if (wakes)
+                    {
+                        SetCreatureAiType(gameMain, creatureId, AITypes.AIType_Aggressive);
+                    }
+
+                    // He rested through the enemy turn that has just ended and is greyed out
+                    // for it; he lands fresh, like the soldiers appearing beside him.
+                    gameMain.gameMap.GetCreature(transferred)?.SetActioned(false);
+                    arrived.Add(transferred);
+                }
+
+                for (int i = 0; soldiers != null && i < soldiers.GetLength(0); i++)
+                {
+                    arrived.Add(AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, soldiers[i, 0], soldiers[i, 1],
+                        FDPosition.At(soldiers[i, 2], soldiers[i, 3])));
+                }
+                return arrived;
+            }));
         }
 
         private Action<GameMain> turn1 = (gameMain) =>
@@ -164,25 +225,28 @@ namespace WindingTale.Chapters
             // Talking
             PushConversationsActivities(gameMain, 30, 1, 1, 10);
 
-            // "Come out, all of you": the four demons appear on the walls.
-            gameMain.PushActivity((gameMain) =>
-            {
-                for (int i = 0; i < Demons.GetLength(0); i++)
-                {
-                    AddCreatureToMap(gameMain, CreatureFaction.Enemy, Demons[i, 0], Demons[i, 1],
-                        FDPosition.At(Demons[i, 2], Demons[i, 3]));
-                }
-            });
+            // "Come out, all of you": the four demons appear on the walls, in columns of light,
+            // and rest there until they are sent down (TransferToAltar wakes them).
+            TransferInCreatures(gameMain, CreatureFaction.Enemy, Demons, AITypes.AIType_StandBy);
 
             // Talking
             PushConversationsActivities(gameMain, 30, 1, 11, 19);
 
-            // The first wave: five soldiers on the altar.
-            gameMain.PushActivity((gameMain) =>
+            // The first wave: five soldiers on the altar, in columns of light.
+            int[,] firstWave = new int[5, 4];
+            firstWave[0, 0] = 101;
+            firstWave[0, 1] = SoldierDefinitionId;
+            firstWave[0, 2] = Altar.X;
+            firstWave[0, 3] = Altar.Y;
+            int[,] beside = Soldiers(102);
+            for (int k = 0; k < 4; k++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, 101, SoldierDefinitionId, Altar);
-                AddSoldiers(gameMain, 102);
-            });
+                for (int c = 0; c < 4; c++)
+                {
+                    firstWave[k + 1, c] = beside[k, c];
+                }
+            }
+            TransferInCreatures(gameMain, CreatureFaction.Enemy, firstWave);
 
             gameMain.PushActivity((gameMain) =>
             {
@@ -197,11 +261,7 @@ namespace WindingTale.Chapters
             // Talking
             PushConversationsActivities(gameMain, 30, 1, 18 + 2 * number, 19 + 2 * number);
 
-            gameMain.PushActivity((gameMain) =>
-            {
-                gameMain.gameMap.RelocateCreature(200 + number, Altar);
-                AddSoldiers(gameMain, 101 + 10 * number);
-            });
+            TransferToAltar(gameMain, 200 + number, Soldiers(101 + 10 * number));
         }
 
         /// <summary>The fire demon's wave is gone: the Sky Demon himself comes down to the altar.</summary>
@@ -210,10 +270,8 @@ namespace WindingTale.Chapters
             // Talking
             PushConversationsActivities(gameMain, 30, 1, 28, 28);
 
-            gameMain.PushActivity((gameMain) =>
-            {
-                gameMain.gameMap.RelocateCreature(BossId, Altar);
-            });
+            // He stays on stand-by, as the original left him.
+            TransferToAltar(gameMain, BossId, null, false);
         };
 
         private Action<GameMain> bossDying = (gameMain) =>

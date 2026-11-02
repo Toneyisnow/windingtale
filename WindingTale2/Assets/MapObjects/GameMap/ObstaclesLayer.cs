@@ -40,7 +40,8 @@ namespace WindingTale.MapObjects.GameMap
     /// it: a creature standing on one of its tiles, or the cursor, a menu item or a
     /// move/target indicator covering one. Like the chests (ObjectsLayer) this is
     /// polled in Update rather than pushed, because those things change from
-    /// unrelated places; SetTransparency is a no-op when nothing changed.
+    /// unrelated places; SetTransparency is a no-op when nothing changed. Chapter 29's
+    /// dragon heads are the one exception: they never fade (NeverFades).
     /// </summary>
     public class ObstaclesLayer : MonoBehaviour
     {
@@ -119,7 +120,7 @@ namespace WindingTale.MapObjects.GameMap
 
             foreach (ObstacleInstance instance in instances)
             {
-                if (instance == null || instance.IsGroundCover)
+                if (instance == null || instance.IsGroundCover || instance.NeverFades)
                 {
                     continue;
                 }
@@ -309,6 +310,7 @@ namespace WindingTale.MapObjects.GameMap
                 ObstacleInstance instance = obj.GetComponent<ObstacleInstance>() ?? obj.AddComponent<ObstacleInstance>();
                 instance.SetFootprint(pos.X, pos.Y, tileWidth, tileHeight);
                 instance.IsGroundCover = IsGroundCover(obstacle.DefinitionKey);
+                instance.NeverFades = obstacle.DefinitionKey == DragonHeadsKey;
                 instances.Add(instance);
 
                 if (!string.IsNullOrEmpty(obstacle.Group))
@@ -699,6 +701,10 @@ namespace WindingTale.MapObjects.GameMap
         // Keys of the ground covers: "lava_" + chapter + "_" + tile id, one flat
         // one-voxel sheet per lava tile shape (Tools/MapPipeline/build_obstacles_25.py).
         private const string LavaKeyPrefix = "lava_";
+
+        // Chapter 29's three dragon heads (Tools/MapPipeline/build_obstacles_29.py): the
+        // dragons stand on them, so nothing on their tiles fades them.
+        private const string DragonHeadsKey = "dragon_heads_29";
 
         /// <summary>
         /// Whether the obstacle is a ground cover: a flat sheet that lies on its tiles

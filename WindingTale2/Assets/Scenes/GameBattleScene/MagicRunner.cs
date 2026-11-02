@@ -31,6 +31,14 @@ namespace WindingTale.Scenes.GameBattleScene
         public static float TARGET_SWAP_DURATION = 0.3f;
 
         /// <summary>
+        /// Seconds the leaving target takes to slide off screen. It moves at a steady speed
+        /// from the first frame: eased in over half the swap, it hardly moved for the first
+        /// few frames and then crossed the visible part of the screen in two, so the target
+        /// read as simply vanishing.
+        /// </summary>
+        public static float TARGET_LEAVE_DURATION = 0.3f;
+
+        /// <summary>
         /// The most one frame may move the swap on. Binding a new target loads its fight
         /// models and animator the first time that kind of creature shows up, and the long
         /// frame that follows would otherwise use up the whole slide-in at once -- the second
@@ -251,10 +259,10 @@ namespace WindingTale.Scenes.GameBattleScene
         }
 
         /// <summary>
-        /// Slides the current target off screen, puts targets[index] in its place and slides
-        /// that one back in to where the target stands, TARGET_SWAP_DURATION in all. Each side
-        /// leaves by its own screen edge: an enemy (standing on the left) to the left, a friend
-        /// to the right, so neither crosses the caster.
+        /// Slides the current target off screen (TARGET_LEAVE_DURATION), puts targets[index]
+        /// in its place and slides that one back in to where the target stands (half of
+        /// TARGET_SWAP_DURATION). Each side leaves by its own screen edge: an enemy (standing
+        /// on the left) to the left, a friend to the right, so neither crosses the caster.
         /// </summary>
         private IEnumerator swapTarget(int index)
         {
@@ -262,10 +270,10 @@ namespace WindingTale.Scenes.GameBattleScene
             Vector3 offScreen = targetRestPosition + body.parent.InverseTransformVector(offScreenOffset());
             float half = TARGET_SWAP_DURATION / 2;
 
-            for (float elapsed = 0; elapsed < half; elapsed += Mathf.Min(Time.deltaTime, MaxSwapStep))
+            for (float elapsed = 0; elapsed < TARGET_LEAVE_DURATION; elapsed += Mathf.Min(Time.deltaTime, MaxSwapStep))
             {
-                float t = elapsed / half;
-                body.localPosition = Vector3.LerpUnclamped(targetRestPosition, offScreen, t * t);
+                float t = elapsed / TARGET_LEAVE_DURATION;
+                body.localPosition = Vector3.LerpUnclamped(targetRestPosition, offScreen, t);
                 yield return null;
             }
 

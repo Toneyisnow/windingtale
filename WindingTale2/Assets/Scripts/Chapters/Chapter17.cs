@@ -191,7 +191,7 @@ namespace WindingTale.Chapters
         {
             for (int i = 0; i < Islanders.GetLength(0); i++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Npc, Islanders[i, 0], IslanderDefinitionId,
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Npc, Islanders[i, 0], IslanderDefinitionId,
                     FDPosition.At(Islanders[i, 1], Islanders[i, 2]));
             }
 

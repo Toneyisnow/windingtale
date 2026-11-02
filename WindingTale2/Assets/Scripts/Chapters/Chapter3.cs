@@ -196,7 +196,7 @@ namespace WindingTale.Chapters
             FDPosition position = tienuo != null ? tienuo.Position : TienuoStand;
 
             gameMain.gameMap.RemoveCreature(TienuoId);
-            AddCreatureToMap(gameMain, CreatureFaction.Friend, TienuoId, 7, position);
+            AddCreatureAroundToMap(gameMain, CreatureFaction.Friend, TienuoId, 7, position);
         }
 
         /// <summary>

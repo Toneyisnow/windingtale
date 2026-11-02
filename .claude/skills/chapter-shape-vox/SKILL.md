@@ -147,9 +147,9 @@ variants on top of the base is enough to break the repetition; keep WIDTH
 within about 0.8..1.3 so a conifer stays a conifer, and preview every variant
 the way the base tiles are previewed below.
 
-## Void chapters: 23, 24, 28
+## Void chapters: 23, 24, 28, 30
 
-These three chapters float in a black void, and that black is cut out of the
+These four chapters float in a black void, and that black is cut out of the
 board so the sky (SKY_05, a starry night) shows through. In the tile PNGs the
 void is **alpha 0**, not opaque black; left alone, `shapes_to_vox.py` reads it
 as black voxels and lays a black slab over the sky. Always run `void_tiles.py`
@@ -161,6 +161,7 @@ writes -- never from `ShapePanelNN` directly:
 | 23 | top-left and top-right corners | bottom-corner cliff rock (34, 192..197, rows 26..40) keeps only the layer of cells 8-touching the flat ground; the rest is cut away whole |
 | 24 | the whole map border (the black between the light shafts is closed off from the corners) | the three light shafts are cut away too and rebuilt as real 3D columns -- see below |
 | 28 | top-right corner only | the wire-mesh holes are alpha 0 too but stay black pits -- never seed 28 from the border |
+| 30 | the four corners plus (23, 16), the black hole in front of the altar | the wire mesh fringing the floor reaches the top edge and its holes are alpha 0 -- never seed 30 from the border either |
 
 All of this is hard-coded in `void_tiles.py` (`VOID_SEEDS`, `ROCK_TRIM`); no
 other chapter is touched. What it does:
@@ -216,6 +217,7 @@ python void_tiles.py 23        # 24, 28 the same
 python shapes_to_vox.py 23 --panel-dir out/void_23/panel --used-tiles out/void_23/UsedTiles.json     --skip-transparent --flat --force
 python shapes_to_vox.py 24 --panel-dir out/void_24/panel --used-tiles out/void_24/UsedTiles.json     --skip-transparent --flat --force
 python shapes_to_vox.py 28 --panel-dir out/void_28/panel --used-tiles out/void_28/UsedTiles.json     --skip-transparent --flat --lower 000000=3 --lower 345094=2 --lower-min-area 45 --force
+python shapes_to_vox.py 30 --panel-dir out/void_30/panel --used-tiles out/void_30/UsedTiles.json     --skip-transparent --flat --lower 000000=3 --lower 284488=2 --lower-min-area 45 --force
 python vox_batch_to_obj.py --shapes 23 --force --tile-centre
 ```
 

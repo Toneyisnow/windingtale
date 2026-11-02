@@ -219,7 +219,7 @@ namespace WindingTale.Chapters
         /// <summary>Turn 6: Bana Long appears at the south-west corner and joins the party.</summary>
         private Action<GameMain> banaAppear = (gameMain) =>
         {
-            AddCreatureToMap(gameMain, CreatureFaction.Friend, BanaId, BanaId, BanaStop);
+            AddCreatureAroundToMap(gameMain, CreatureFaction.Friend, BanaId, BanaId, BanaStop);
 
             // Talking
             PushConversationsActivities(gameMain, 19, 1, 9, 13);

@@ -229,7 +229,7 @@ namespace WindingTale.Chapters
         {
             for (int i = 0; i < Guards.GetLength(0); i++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Npc, Guards[i, 0], GuardDefinitionId,
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Npc, Guards[i, 0], GuardDefinitionId,
                     FDPosition.At(Guards[i, 1], Guards[i, 2]));
             }
 
@@ -292,7 +292,7 @@ namespace WindingTale.Chapters
             FDPosition position = captive != null ? captive.Position : SophiaPost;
 
             gameMain.gameMap.RemoveCreature(SophiaId);
-            AddCreatureToMap(gameMain, CreatureFaction.Friend, SophiaId, SophiaDefinitionId, position);
+            AddCreatureAroundToMap(gameMain, CreatureFaction.Friend, SophiaId, SophiaDefinitionId, position);
 
             // Talking
             PushConversationsActivities(gameMain, 10, 4, 1, 35);
@@ -306,7 +306,7 @@ namespace WindingTale.Chapters
         /// </summary>
         private static void AddCaptive(GameMain gameMain, int creatureId, int definitionId, FDPosition position)
         {
-            FDCreature captive = AddCreatureToMap(gameMain, CreatureFaction.Npc, creatureId, definitionId,
+            FDCreature captive = AddCreatureAroundToMap(gameMain, CreatureFaction.Npc, creatureId, definitionId,
                 position, 0, AITypes.AIType_UnNoticable);
             if (captive != null)
             {

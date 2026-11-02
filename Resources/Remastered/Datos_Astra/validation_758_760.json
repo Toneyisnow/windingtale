@@ -1,0 +1,23 @@
+{
+  "ids": [
+    "758",
+    "759",
+    "760"
+  ],
+  "frames": 12,
+  "size": [
+    1254,
+    1254
+  ],
+  "outside_mask_unchanged": true,
+  "background": "#17468C",
+  "unity_hashes_verified": true,
+  "mode": "built-in image_gen and authorized local compositing",
+  "prompts": {
+    "base": "Faithfully remaster supplied red-brown, cobalt blue and charcoal teal dragons. Preserve original long snout, swept horns, scales, pose and silhouette. Use existing dragon 733 only for crisp anime linework and cel shading style. Remove scenery; solid blue background.",
+    "1": "Slightly open long reptilian mouth along existing seam, quiet speaking not roaring.",
+    "2": "Naturally close mouth, preserve external fangs.",
+    "3": "Close visible eye with scaled eyelid.",
+    "invariants": "All non-mouth/non-eye regions unchanged between frames."
+  }
+}

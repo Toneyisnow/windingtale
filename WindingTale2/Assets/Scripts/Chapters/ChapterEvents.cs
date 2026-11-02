@@ -134,8 +134,12 @@ namespace WindingTale.Chapters
         ///
         /// Leave aiType out and the creature behaves the way its trade suggests -- see
         /// GetDefaultAiType.
+        ///
+        /// The tile is taken as given, even when someone already stands there: the walk-ins
+        /// stack a whole group on their entry tile on purpose. Pass findFreeTile for a
+        /// creature that appears in place instead -- see AddCreatureAroundToMap.
         /// </summary>
-        public static FDCreature AddCreatureToMap(GameMain gameMain, CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItemId = 0, AITypes? aiType = null)
+        public static FDCreature AddCreatureToMap(GameMain gameMain, CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItemId = 0, AITypes? aiType = null, bool findFreeTile = false)
         {
             FDCreature creature = null;
 
@@ -175,6 +179,15 @@ namespace WindingTale.Chapters
                 }
             }
 
+            if (findFreeTile)
+            {
+                position = FindStandingTile(gameMain.gameMap.Map, creature, position);
+                if (position == null)
+                {
+                    return null;
+                }
+            }
+
             gameMain.gameMap.AddCreature(creature, position);
 
             return creature;
@@ -192,29 +205,118 @@ namespace WindingTale.Chapters
         };
 
         /// <summary>
-        /// Puts a creature on the first free tile at or next to the one asked for. Chapters
-        /// use this for reinforcements that arrive with nowhere in particular to walk in
-        /// from: the spot they are aimed at may well be occupied by whoever is standing
-        /// there when the turn comes round, and the original searched outward rather than
-        /// stacking two creatures on one tile.
+        /// Puts a creature that appears in place during the battle -- a reinforcement, a
+        /// wave, someone who joins -- on the tile asked for, or, when somebody is already
+        /// standing there, on the nearest free tile it can stand on (FindStandingTile).
+        /// Whoever is on the spot when the turn comes round, two creatures never share a
+        /// tile. Every in-place appearance goes through here; only walk-ins, which stack
+        /// their group on the entry tile on purpose, call AddCreatureToMap directly.
         ///
-        /// Occupancy is the only test, exactly as the original did it -- the tile is not
-        /// checked for being walkable, so the point passed in still has to be a sensible
-        /// one. Returns null when all nine tiles are taken, in which case the creature
+        /// Returns null when no tile is left on the whole map, in which case the creature
         /// simply does not join the battle.
         /// </summary>
         public static FDCreature AddCreatureAroundToMap(GameMain gameMain, CreatureFaction faction, int creatureId, int definitionId, FDPosition position, int dropItemId = 0, AITypes? aiType = null)
         {
-            for (int i = 0; i < AroundOffsets.GetLength(0); i++)
+            return AddCreatureToMap(gameMain, faction, creatureId, definitionId, position, dropItemId, aiType, true);
+        }
+
+        /// <summary>
+        /// A group that arrives by transfer during the battle (the mechs of chapters 27..29,
+        /// the Sky Demon's soldiers in chapter 30): the cursor slides to the middle of
+        /// their tiles, a column of light grows on each and they appear in it together --
+        /// see ActivityFactory.CreaturesArriveActivity. <paramref name="roster"/> rows are
+        /// (id, definition, x, y); each lands as AddCreatureAroundToMap puts it.
+        /// </summary>
+        protected static void TransferInCreatures(GameMain gameMain, CreatureFaction faction, int[,] roster, AITypes? aiType = null)
+        {
+            List<FDPosition> tiles = new List<FDPosition>();
+            for (int i = 0; i < roster.GetLength(0); i++)
             {
-                FDPosition candidate = FDPosition.At(position.X + AroundOffsets[i, 0], position.Y + AroundOffsets[i, 1]);
-                if (gameMain.gameMap.Map.GetCreatureAt(candidate) == null)
+                tiles.Add(FDPosition.At(roster[i, 2], roster[i, 3]));
+            }
+
+            gameMain.PushActivity(ActivityFactory.CreaturesArriveActivity(MiddleOf(tiles), (gameMain) =>
+            {
+                List<FDCreature> arrived = new List<FDCreature>();
+                for (int i = 0; i < roster.GetLength(0); i++)
                 {
-                    return AddCreatureToMap(gameMain, faction, creatureId, definitionId, candidate, dropItemId, aiType);
+                    arrived.Add(AddCreatureAroundToMap(gameMain, faction, roster[i, 0], roster[i, 1], tiles[i], 0, aiType));
+                }
+                return arrived;
+            }));
+        }
+
+        /// <summary>The tile nearest the average of <paramref name="tiles"/>, where the cursor goes to show a group.</summary>
+        protected static FDPosition MiddleOf(IList<FDPosition> tiles)
+        {
+            double x = 0, y = 0;
+            foreach (FDPosition tile in tiles)
+            {
+                x += tile.X;
+                y += tile.Y;
+            }
+            return FDPosition.At((int)Math.Round(x / tiles.Count), (int)Math.Round(y / tiles.Count));
+        }
+
+        /// <summary>
+        /// Where <paramref name="creature"/> appears when it is meant for <paramref name="position"/>:
+        /// the tile itself when nobody stands on it -- taken as the script gives it, as the
+        /// original did, since a dragon may be meant to wake on ground nobody else can
+        /// tread -- otherwise the nearest tile that is free and that this creature could
+        /// stand on (the move-range rules: no gaps or walls, fliers only where they can fly,
+        /// swamp lurkers only in the marsh). The search goes out ring by ring; the first
+        /// ring is the original's eight tiles in their order (AroundOffsets) and every wider
+        /// ring follows the same turn, clockwise from the east. Null when the map is full.
+        /// </summary>
+        public static FDPosition FindStandingTile(FDMap map, FDCreature creature, FDPosition position)
+        {
+            if (map.GetCreatureAt(position) == null)
+            {
+                return position;
+            }
+
+            int maxRing = Math.Max(map.Field.Width, map.Field.Height);
+            for (int ring = 1; ring <= maxRing; ring++)
+            {
+                foreach (FDPosition candidate in RingAround(position, ring))
+                {
+                    if (candidate.X <= 0 || candidate.X > map.Field.Width
+                        || candidate.Y <= 0 || candidate.Y > map.Field.Height)
+                    {
+                        continue;
+                    }
+
+                    if (map.GetCreatureAt(candidate) != null)
+                    {
+                        continue;
+                    }
+
+                    if (MoveRangeFinder.GetMoveCost(map.Field.GetShapeAt(candidate), creature) == -1)
+                    {
+                        continue;
+                    }
+
+                    return candidate;
                 }
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// The tiles exactly <paramref name="ring"/> steps out from <paramref name="centre"/>
+        /// (in both directions, so a square's edge), clockwise from the east: down the east
+        /// side, west along the south, up the west side, east along the north and back
+        /// down to just above the start. Ring 1 is AroundOffsets without the centre.
+        /// </summary>
+        private static IEnumerable<FDPosition> RingAround(FDPosition centre, int ring)
+        {
+            int x = centre.X, y = centre.Y;
+            for (int dy = 0; dy <= ring; dy++) yield return FDPosition.At(x + ring, y + dy);
+            for (int dx = ring - 1; dx >= -ring; dx--) yield return FDPosition.At(x + dx, y + ring);
+            for (int dy = ring - 1; dy >= -ring; dy--) yield return FDPosition.At(x - ring, y + dy);
+            for (int dx = -ring + 1; dx <= ring; dx++) yield return FDPosition.At(x + dx, y - ring);
+            for (int dy = -ring + 1; dy < 0; dy++) yield return FDPosition.At(x + ring, y + dy);
         }
 
         /// <summary>
@@ -394,12 +496,12 @@ namespace WindingTale.Chapters
         }
 
         /// <summary>
-        /// How a creature behaves when the chapter script does not say: healers (occupations
-        /// 154 and 155) look after their own side, everybody else charges.
+        /// How a creature behaves when the chapter script does not say: healers (see
+        /// CreatureDefinition.IsHealer) look after their own side, everybody else charges.
         /// </summary>
         private static AITypes GetDefaultAiType(CreatureDefinition definition)
         {
-            if (definition != null && (definition.Occupation == 154 || definition.Occupation == 155))
+            if (definition != null && definition.IsHealer())
             {
                 return AITypes.AIType_Defensive;
             }
@@ -632,7 +734,7 @@ namespace WindingTale.Chapters
             FDPosition position = npc != null ? npc.Position : fallback;
 
             gameMain.gameMap.RemoveCreature(npcId);
-            return AddCreatureToMap(gameMain, CreatureFaction.Friend, definitionId, definitionId, position);
+            return AddCreatureAroundToMap(gameMain, CreatureFaction.Friend, definitionId, definitionId, position);
         }
 
 

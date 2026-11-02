@@ -70,6 +70,19 @@ public class EndingThemeScene : MonoBehaviour
         GlobalVariables.Set(EndingVariableName, new EndingInfo() { Party = party, IsGoodEnding = isGoodEnding });
     }
 
+    /// <summary>
+    /// Which ending SetEnding handed over, without taking it -- GameEndingScene, which both
+    /// endings pass through first, plays that ending's talk. False when none was set.
+    /// </summary>
+    public static bool IsGoodEnding
+    {
+        get
+        {
+            EndingInfo info = GlobalVariables.Get<EndingInfo>(EndingVariableName);
+            return info != null && info.IsGoodEnding;
+        }
+    }
+
     private const string MusicPath = "Audios/Musics/Ending_Theme_Final";
     private const string EndingsPath = "Endings/Endings";
     private const string BackgroundPath = "Endings/EndingBackground";

@@ -178,7 +178,7 @@ namespace WindingTale.Chapters
         {
             for (int i = 0; i < enemies.GetLength(0); i++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, enemies[i, 0], enemies[i, 1],
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, enemies[i, 0], enemies[i, 1],
                     FDPosition.At(enemies[i, 2], enemies[i, 3]), 0, aiType);
             }
         }
@@ -211,7 +211,7 @@ namespace WindingTale.Chapters
         /// <summary>A defence squad arrives by transfer, announced by its two lines of conversation 1.</summary>
         private static void Squad(GameMain gameMain, int[,] squad, int firstLine)
         {
-            AddEnemies(gameMain, squad);
+            TransferInCreatures(gameMain, CreatureFaction.Enemy, squad);
 
             // Talking
             PushConversationsActivities(gameMain, 28, 1, firstLine, firstLine + 1);

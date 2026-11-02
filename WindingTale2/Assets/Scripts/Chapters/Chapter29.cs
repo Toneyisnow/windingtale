@@ -24,9 +24,10 @@ namespace WindingTale.Chapters
     /// holds it -- at the end of the enemy turn, with her still standing there -- the
     /// fortress answers: two guards at (15, 33) and (17, 33) on each of four turns
     /// (201..208), and on the fifth the three dragons (301..303) wake on their heads
-    /// (conversation 3). Only then can the battle end: the enemy team event waits on
-    /// the dragons' waking. When the last enemy falls ASR-06 (999) walks in from the
-    /// top of the map for the closing scene (conversation 4) and the party goes on to
+    /// (conversation 3). The battle is won when the three dragons have fallen -- their
+    /// death events wait on the dragons' waking, so there is no win before it. (The
+    /// original waited for every enemy but the sentries.) Then ASR-06 (999) walks in from
+    /// the top of the map for the closing scene (conversation 4) and the party goes on to
     /// chapter 30.
     ///
     /// The original's turn-1..4 handlers also called endTurn on Youni; that ran at the
@@ -228,15 +229,19 @@ namespace WindingTale.Chapters
             FDEvent dragons = LoadTurnEndEvent(++eventId, 2, Console, dragonsWake);
             dragons.AddDependentEvent(previous);
 
-            FDEvent final = LoadTeamEvent(++eventId, CreatureFaction.Enemy, enemyClear);
-            final.AddDependentEvent(dragons);
+            // The win: the three dragons dead, once they have woken.
+            for (int i = 0; i < Dragons.GetLength(0); i++)
+            {
+                FDEvent fallen = LoadDeadEvent(++eventId, Dragons[i, 0], dragonDead);
+                fallen.AddDependentEvent(dragons);
+            }
         }
 
         private static void AddEnemies(GameMain gameMain, int[,] enemies, AITypes? aiType = null)
         {
             for (int i = 0; i < enemies.GetLength(0); i++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, enemies[i, 0], enemies[i, 1],
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, enemies[i, 0], enemies[i, 1],
                     FDPosition.At(enemies[i, 2], enemies[i, 3]), 0, aiType);
             }
         }
@@ -277,14 +282,18 @@ namespace WindingTale.Chapters
             PushConversationsActivities(gameMain, 29, 2, 1, 5);
         };
 
-        /// <summary>Another turn at the console: two more guards come up the corridor.</summary>
+        /// <summary>Another turn at the console: two more guards arrive by transfer in the corridor.</summary>
         private static void ConsoleAnswer(GameMain gameMain, int answer)
         {
+            int[,] pair = new int[2, 4];
             for (int k = 0; k < 2; k++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, ConsoleAnswers[answer, k], ConsoleAnswers[answer, 2],
-                    ConsoleAnswerTiles[k]);
+                pair[k, 0] = ConsoleAnswers[answer, k];
+                pair[k, 1] = ConsoleAnswers[answer, 2];
+                pair[k, 2] = ConsoleAnswerTiles[k].X;
+                pair[k, 3] = ConsoleAnswerTiles[k].Y;
             }
+            TransferInCreatures(gameMain, CreatureFaction.Enemy, pair);
         }
 
         /// <summary>The fifth turn at the console: the defence centre goes to its last line and the dragons wake.</summary>
@@ -302,13 +311,42 @@ namespace WindingTale.Chapters
             PushConversationsActivities(gameMain, 29, 5, 1, 1);
         };
 
+        /// <summary>
+        /// A dragon has fallen; with the last of the three the defence centre is down. Two
+        /// dragons dying in one blow both fire here in the same pass: the win's first call
+        /// sets IsVictoryReached, so the second does nothing.
+        /// </summary>
+        private Action<GameMain> dragonDead = (gameMain) =>
+        {
+            if (gameMain.IsVictoryReached)
+            {
+                return;
+            }
+
+            for (int i = 0; i < Dragons.GetLength(0); i++)
+            {
+                if (gameMain.gameMap.Map.GetCreatureById(Dragons[i, 0]) != null)
+                {
+                    return;
+                }
+            }
+
+            enemyClear(gameMain);
+        };
+
         /// <summary>The defence centre is down: ASR-06 shows himself, and the reactor is turned.</summary>
-        private Action<GameMain> enemyClear = (gameMain) =>
+        private static readonly Action<GameMain> enemyClear = (gameMain) =>
         {
             // Talking
             PushConversationsActivities(gameMain, 29, 4, 1, 4);
 
-            AddCreatureToMap(gameMain, CreatureFaction.Enemy, BossId, BossDefinitionId, BossEntry, 0, AITypes.AIType_StandBy);
+            // The cursor goes to the top of the map first, and only then does he step out
+            // there: queued, so he is not standing on the map through the lines above.
+            gameMain.PushActivity(new SlideCursorActivity(BossEntry));
+            gameMain.PushActivity((gameMain) =>
+            {
+                AddCreatureToMap(gameMain, CreatureFaction.Enemy, BossId, BossDefinitionId, BossEntry, 0, AITypes.AIType_StandBy);
+            });
             gameMain.PushActivity(ActivityFactory.CreatureWalkActivity(BossId, FDMovePath.Create(BossEntry, BossStop)));
 
             // Talking

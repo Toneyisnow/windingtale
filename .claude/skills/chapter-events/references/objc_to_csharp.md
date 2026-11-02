@@ -84,15 +84,22 @@ first with no creature on it. Reinforcements that appear mid-battle with no walk
 use it, because the tile they are aimed at may well have a party member standing
 on it by then.
 
-`ChapterEvents.AddCreatureAroundToMap` is the port of that search, offsets and
-order included. Like the original it tests occupancy only, **not** walkability —
-so still check the literal coordinate against the map — and it returns null when
-all nine tiles are taken, which is the original's silent skip.
+`ChapterEvents.AddCreatureAroundToMap` is the port of that search, widened
+(user rule 2026-11-01): the tile itself when nobody stands on it (taken as the
+script gives it, walkable or not), else the nearest free tile **this creature can
+stand on** (`FindStandingTile`: move-range ground rules), ring by ring outward —
+ring 1 is the original's eight in their order, wider rings keep the same turn. It
+returns null only when the whole map is full.
 
-Do not flatten an `Around:` into a plain `AddCreatureToMap`. It reads like a
-simplification and is a behaviour change: it drops an enemy on top of whoever is
-standing there, and `FDMap.GetCreatureAt` then resolves that tile to whichever of
-the two is earlier in the list.
+**Every creature that appears in place during the battle uses it**, whether the
+`.m` said `Around:` or `Position:`: mid-battle reinforcements and waves, guests
+who join, an NPC swapped for a Friend where it stood, anything spawned on a
+trigger tile. Plain `AddCreatureToMap` is only for the turn-1 setup and for
+walk-ins, which stack their group on the entry tile on purpose and walk off it.
+
+Do not flatten an in-place spawn into a plain `AddCreatureToMap`. It drops the
+creature on top of whoever is standing there, and `FDMap.GetCreatureAt` then
+resolves that tile to whichever of the two is earlier in the list.
 
 ## Movement
 

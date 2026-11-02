@@ -263,9 +263,9 @@ namespace WindingTale.Chapters
         /// </summary>
         private Action<GameMain> turn7 = (gameMain) =>
         {
-            AddCreatureToMap(gameMain, CreatureFaction.Enemy, Wolves[0, 0], WolfDefinitionId,
+            AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, Wolves[0, 0], WolfDefinitionId,
                 FDPosition.At(Wolves[0, 1], Wolves[0, 2]), WolfDropItemId);
-            AddCreatureToMap(gameMain, CreatureFaction.Enemy, Wolves[1, 0], WolfDefinitionId,
+            AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, Wolves[1, 0], WolfDefinitionId,
                 FDPosition.At(Wolves[1, 1], Wolves[1, 2]), WolfDropItemId);
             AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, Wolves[2, 0], WolfDefinitionId,
                 FDPosition.At(Wolves[2, 1], Wolves[2, 2]), WolfDropItemId);

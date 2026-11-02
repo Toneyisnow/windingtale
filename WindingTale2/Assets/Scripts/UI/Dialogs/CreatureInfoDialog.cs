@@ -626,7 +626,7 @@ namespace WindingTale.UI.Dialogs
             this.mvLabel.GetComponent<TextMeshProUGUI>().text = StatText(creature.Mv);
             this.apLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2Max(creatureAp);
             this.dpLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2Max(creatureDp);
-            this.dxLabel.GetComponent<TextMeshProUGUI>().text = StatText(creatureDx);
+            this.dxLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2Max(creatureDx);
             this.hitLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2Max(creatureHit);
             this.evLabel.GetComponent<TextMeshProUGUI>().text = StringUtils.Digit2Max(creatureEv);
 

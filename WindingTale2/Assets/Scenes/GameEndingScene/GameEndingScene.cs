@@ -10,13 +10,16 @@ using WindingTale.Scenes.GameFieldScene;
 using WindingTale.Scenes.GameFreeFieldScene;
 
 /// <summary>
-/// The bad ending. Chapter 27 is won without the Sky Key, Youni goes up to the Golden City
-/// alone, and the field fades out into this scene (GameMain.OnBadEnding).
+/// The last talk of either ending. Bad: chapter 27 is won without the Sky Key, Youni goes up
+/// to the Golden City alone, and the field fades out into this scene (GameMain.OnBadEnding).
+/// Good: chapter 31's party, home on the soil of Mara, has read lines 1..16 and the field
+/// fades out into this scene (GameMain.OnGoodEnding). EndingThemeScene.IsGoodEnding says which.
 ///
-/// First the party's last lines, chapter 27's conversation 6 (lines 1..7), in the talk
+/// First the party's last lines -- bad: chapter 27's conversation 6 (lines 1..7); good:
+/// chapter 31's conversation 1 (lines 17..24) -- in the talk
 /// dialog one per key press as on the field, under the sky (Endings/EndingSky) spanning the
-/// top of the screen. The Golden City (Endings/GoldenCity) fades in high in it before line 1, "看！是。。是
-/// 黄金城！"; after that line the screen flashes white twice and the city fades away, and the talk goes on. After the
+/// top of the screen. The Golden City (Endings/GoldenCity) fades in high in it before the line
+/// that sees it (bad 1, "看！是。。是黄金城！"; good 17, "那是。。那是黄金城！"); after that line the screen flashes white twice and the city fades away, and the talk goes on. After the
 /// last line the sky goes to black. Then the epilogue rolls up the black
 /// screen from below (RollEpilogue), and once it is gone the scene fades out into
 /// EndingThemeScene by itself -- or sooner, when the skip bar is held full.
@@ -38,10 +41,29 @@ public class GameEndingScene : MonoBehaviour
     /// <summary>Time the scene takes to go back to black on the way out, in seconds.</summary>
     public float fadeOutDuration = 3.0f;
 
-    private const int ChapterId = 27;
-    private const int ConversationId = 6;
-    private const int FirstLine = 1;
-    private const int LastLine = 7;
+    /// <summary>The lines one ending plays here, and the line the Golden City is seen on.</summary>
+    private class EndingTalk
+    {
+        public int ChapterId;
+        public int ConversationId;
+        public int FirstLine;
+        public int LastLine;
+        public int GoldenCityLine;
+    }
+
+    /// <summary>The bad ending: chapter 27's conversation 6.</summary>
+    private static readonly EndingTalk BadEndingTalk = new EndingTalk()
+    {
+        ChapterId = 27, ConversationId = 6, FirstLine = 1, LastLine = 7, GoldenCityLine = 1,
+    };
+
+    /// <summary>The good ending: the end of chapter 31's conversation 1, from "那是。。那是黄金城！" on.</summary>
+    private static readonly EndingTalk GoodEndingTalk = new EndingTalk()
+    {
+        ChapterId = 31, ConversationId = 1, FirstLine = 17, LastLine = 24, GoldenCityLine = 17,
+    };
+
+    private EndingTalk talk = null;
 
     /// <summary>The dialog's scale on the canvas -- the free field's.</summary>
     private const float DialogScale = 0.9f;
@@ -78,9 +100,6 @@ public class GameEndingScene : MonoBehaviour
 
     private const string SkyPath = "Endings/EndingSky";
     private const string GoldenCityPath = "Endings/GoldenCity";
-
-    /// <summary>The line the Golden City is seen on.</summary>
-    private const int GoldenCityLine = 1;
 
     /// <summary>The sky's and the city's sizes in the original's pixels.</summary>
     private static readonly Vector2 SkyOriginalSize = new Vector2(320f, 132f);
@@ -119,13 +138,15 @@ public class GameEndingScene : MonoBehaviour
 
     void Start()
     {
+        talk = EndingThemeScene.IsGoodEnding ? GoodEndingTalk : BadEndingTalk;
+
         CreateSky();
 
         GameObject dialog = Instantiate(talkDialogPrefab, canvasObject.transform, false);
         dialog.transform.localScale = Vector3.one * DialogScale;
         dialog.SetActive(false);
 
-        talkQueue = new FreeFieldTalkQueue(dialog, ChapterId);
+        talkQueue = new FreeFieldTalkQueue(dialog, talk.ChapterId);
 
         // The talk starts once the black has cleared, so a key still held from the
         // battle's last line cannot skip the first one.
@@ -136,22 +157,22 @@ public class GameEndingScene : MonoBehaviour
     /// <summary>The lines of the conversation, each with its speaker's portrait, from the bottom like a friend's.</summary>
     private void PushLines()
     {
-        ChapterDefinition chapter = DefinitionStore.Instance.LoadChapter(ChapterId);
-        for (int line = FirstLine; line <= LastLine; line++)
+        ChapterDefinition chapter = DefinitionStore.Instance.LoadChapter(talk.ChapterId);
+        for (int line = talk.FirstLine; line <= talk.LastLine; line++)
         {
             int creatureId = chapter.GetConversationCreatureId(
-                Conversation.Create(ChapterId, ConversationId, line));
+                Conversation.Create(talk.ChapterId, talk.ConversationId, line));
             CreatureDefinition speaker = DefinitionStore.Instance.GetCreatureDefinition(creatureId);
             int animationId = speaker != null ? speaker.AnimationId : 0;
 
-            if (line == GoldenCityLine)
+            if (line == talk.GoldenCityLine)
             {
                 PushRoutine(ShowGoldenCity);
             }
 
-            talkQueue.Push(ConversationId, line, animationId, GameCanvas.DialogPosition.Bottom);
+            talkQueue.Push(talk.ConversationId, line, animationId, GameCanvas.DialogPosition.Bottom);
 
-            if (line == GoldenCityLine)
+            if (line == talk.GoldenCityLine)
             {
                 PushRoutine(LoseGoldenCity);
             }

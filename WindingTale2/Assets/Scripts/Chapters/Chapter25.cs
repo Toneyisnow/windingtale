@@ -194,7 +194,7 @@ namespace WindingTale.Chapters
         {
             for (int i = 0; i < enemies.GetLength(0); i++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Enemy, enemies[i, 0], enemies[i, 1],
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, enemies[i, 0], enemies[i, 1],
                     FDPosition.At(enemies[i, 2], enemies[i, 3]), enemies[i, 4], aiType);
             }
         }
@@ -203,7 +203,7 @@ namespace WindingTale.Chapters
         {
             for (int i = 0; i < warriors.GetLength(0); i++)
             {
-                AddCreatureToMap(gameMain, CreatureFaction.Npc, warriors[i, 0], DragonWarriorDefinitionId,
+                AddCreatureAroundToMap(gameMain, CreatureFaction.Npc, warriors[i, 0], DragonWarriorDefinitionId,
                     FDPosition.At(warriors[i, 1], warriors[i, 2]));
             }
         }
@@ -273,14 +273,14 @@ namespace WindingTale.Chapters
         /// <summary>Sol steps up to the sword in the rock and its guardian rises on it.</summary>
         private Action<GameMain> onSword = (gameMain) =>
         {
-            AddCreatureToMap(gameMain, CreatureFaction.Enemy, SwordGuardianId, SwordGuardianDefinitionId,
+            AddCreatureAroundToMap(gameMain, CreatureFaction.Enemy, SwordGuardianId, SwordGuardianDefinitionId,
                 SwordTile, SwordItemId);
         };
 
         /// <summary>The last enemy falls: Azimegi comes out to join the party.</summary>
         private Action<GameMain> enemyClear = (gameMain) =>
         {
-            AddCreatureToMap(gameMain, CreatureFaction.Friend, AzimegiId, AzimegiId, AzimegiEntry);
+            AddCreatureAroundToMap(gameMain, CreatureFaction.Friend, AzimegiId, AzimegiId, AzimegiEntry);
 
             // Talking
             PushConversationsActivities(gameMain, 25, 4, 1, 18);

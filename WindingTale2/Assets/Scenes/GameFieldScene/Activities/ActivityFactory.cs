@@ -236,6 +236,68 @@ namespace WindingTale.Scenes.GameFieldScene.Activities
 
             return new SequencedActivity(new List<ActivityBase> { slide, rise, linger });
         }
+
+        /// <summary>
+        /// Creatures arriving by transfer, as the second half of 传送术 does it for a whole
+        /// group at once: the cursor slides to <paramref name="cursorAt"/> (the middle of
+        /// the group), then <paramref name="arrive"/> runs and puts the creatures on the map
+        /// -- new ones added, or ones already there moved to their new tiles -- and returns
+        /// them. Each is kept hidden while a column of light grows on its tile, and all of
+        /// them appear together once every column has grown.
+        ///
+        /// The creatures are placed only when this activity reaches them, not when it is
+        /// queued, so the free tiles are worked out from the map as it then is.
+        /// </summary>
+        public static ActivityBase CreaturesArriveActivity(FDPosition cursorAt, Func<GameMain, List<FDCreature>> arrive)
+        {
+            List<FDCreature> arrived = new List<FDCreature>();
+            List<TeleportPillar> pillars = new List<TeleportPillar>();
+            float shownAt = 0f;
+
+            DurationActivity slide = new DurationActivity(
+                gameMain => gameMain.gameMap.SlideCursorTo(cursorAt, GameCanvas.DialogPosition.Bottom, true),
+                gameMain => !gameMain.gameMap.IsSlideBusy);
+
+            DurationActivity rise = new DurationActivity(
+                gameMain =>
+                {
+                    foreach (FDCreature creature in arrive(gameMain))
+                    {
+                        if (creature == null)
+                        {
+                            continue;
+                        }
+                        arrived.Add(creature);
+                        gameMain.gameMap.GetCreature(creature)?.SetHidden(true);
+                        pillars.Add(gameMain.gameMap.CreateTeleportPillar(creature.Position));
+                    }
+                },
+                gameMain => pillars.TrueForAll(pillar => pillar == null || pillar.HasGrown),
+                gameMain =>
+                {
+                    foreach (FDCreature creature in arrived)
+                    {
+                        gameMain.gameMap.GetCreature(creature)?.SetHidden(false);
+                    }
+                    shownAt = Time.time;
+                });
+
+            DurationActivity linger = new DurationActivity(
+                null,
+                gameMain => Time.time - shownAt >= TeleportPillar.LingerDuration,
+                gameMain =>
+                {
+                    foreach (TeleportPillar pillar in pillars)
+                    {
+                        if (pillar != null)
+                        {
+                            UnityEngine.Object.Destroy(pillar.gameObject);
+                        }
+                    }
+                });
+
+            return new SequencedActivity(new List<ActivityBase> { slide, rise, linger });
+        }
     }
 
 }
