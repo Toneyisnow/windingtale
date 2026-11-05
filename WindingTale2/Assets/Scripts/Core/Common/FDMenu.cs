@@ -150,6 +150,12 @@ namespace WindingTale.Core.Common
 
         public FDPosition Position { get; set; }
 
+        /// <summary>
+        /// For an on/off item (the settings menu's 音效 / 音乐): true while its setting is
+        /// off, which the menu draws with its red-faced art (Menu_NNN_3 / _4). Null for other items.
+        /// </summary>
+        public Func<bool> IsOff { get; set; }
+
         public FDMenuItem(MenuItemId menuItemId, bool enabled, Func<IActionState> action, FDPosition position, FDMenu menu)
         {
             this.Id = menuItemId;

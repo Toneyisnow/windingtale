@@ -9,12 +9,12 @@ using UnityEngine;
 /// </summary>
 public static class WindowsBuilder
 {
-    [UnityEditor.MenuItem("Build/Build Windows (1280x768 Windowed)")]
+    [UnityEditor.MenuItem("Build/Build Windows (1280x720 Windowed)")]
     public static void BuildWindows()
     {
-        // Windowed mode, 1280x768, not full screen.
+        // Windowed mode, 1280x720, not full screen.
         PlayerSettings.defaultScreenWidth = 1280;
-        PlayerSettings.defaultScreenHeight = 768;
+        PlayerSettings.defaultScreenHeight = 720;
         PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
         PlayerSettings.defaultIsNativeResolution = false;
 
@@ -29,7 +29,7 @@ public static class WindowsBuilder
         if (Application.isBatchMode)
         {
             // No UI available in batch mode: fall back to the default folder.
-            outputDir = "Build/Windows";
+            outputDir = "Builds/Windows"; // WindingTale2/Builds is git-ignored
         }
         else
         {
@@ -49,7 +49,8 @@ public static class WindowsBuilder
             locationPathName = System.IO.Path.Combine(outputDir, exeName),
             target = BuildTarget.StandaloneWindows64,
             targetGroup = BuildTargetGroup.Standalone,
-            options = BuildOptions.None
+            // LZ4HC-compressed data files: textures and meshes ship uncompressed otherwise.
+            options = BuildOptions.CompressWithLz4HC
         };
 
         BuildReport report = BuildPipeline.BuildPlayer(options);

@@ -390,6 +390,18 @@ namespace WindingTale.MapObjects.GameMap
         }
 
         /// <summary>
+        /// Swaps the open menu's on/off items to their blue (on) or red (off) art after one flipped
+        /// (FDMenuItem.IsOff). No-op if no menu is shown.
+        /// </summary>
+        public void RefreshMenuOffMarks()
+        {
+            if (currentMenuComponent != null)
+            {
+                currentMenuComponent.RefreshOffMarks();
+            }
+        }
+
+        /// <summary>
         /// Lifts the camera to its highest, most top-down framing, so the board still reads
         /// while a menu covers part of it, and slides it across the map to put the cursor
         /// (the creature the menu is for) in the middle of the screen. The player's next

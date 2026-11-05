@@ -18,7 +18,6 @@ using WindingTale.Core.Definitions;
 /// </summary>
 public class BoughtItemAnimationDialog : MonoBehaviour
 {
-    private const string MessageFontPath = @"Fonts/FontAssets/zh/FZB_Message";
 
     private float duration = 2f;
     private float elapsed = 0f;
@@ -94,6 +93,11 @@ public class BoughtItemAnimationDialog : MonoBehaviour
         Canvas canvas = gameObject.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 1000; // over the picker and the shop picture beneath it
+        // Same 1.5x as the shop's prefab dialogs (their CanvasScaler scale factor), so the
+        // icon and the text grow with them.
+        CanvasScaler scaler = gameObject.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
+        scaler.scaleFactor = 1.5f;
         gameObject.AddComponent<GraphicRaycaster>();
 
         CreateBackdrop(transform);
@@ -164,9 +168,10 @@ public class BoughtItemAnimationDialog : MonoBehaviour
         label.raycastTarget = false;
         label.text = text;
 
-        // The bare TMP default (LiberationSans) carries no Chinese glyphs, so assign the whole
-        // FZB_Message asset -- the same fix the other shop dialogs use, or the line is tofu.
-        TMP_FontAsset messageFont = Resources.Load<TMP_FontAsset>(MessageFontPath);
+        // The bare TMP default (LiberationSans) carries no Chinese glyphs, and the baked
+        // FZB_Message atlas lacks some too (购 of 购买成功, rarer item names), so use the shop's
+        // dynamic FangZhengBlack asset, which rasterizes any glyph (falls back to FZB_Message).
+        TMP_FontAsset messageFont = ShoppingRecordDialog.GetRecordFont();
         if (messageFont != null)
         {
             label.font = messageFont;

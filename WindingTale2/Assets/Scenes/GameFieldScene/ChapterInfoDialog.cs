@@ -41,6 +41,10 @@ namespace WindingTale.Scenes.GameFieldScene
         // Canvas units between the box's top edge and the title plate above it.
         private const float TitleGap = 4f;
 
+        // How far the whole box (and its title plate) sits below the screen centre, in canvas
+        // units: 14.4 units is 20 px at the 1280 x 720 release size (scale factor ~1.386).
+        private const float DropFromCentre = 14.4f;
+
         private static readonly Color TextColor = new Color(0.86f, 0.90f, 0.98f, 1f);
         private static readonly Color ShadowColor = new Color(0f, 0f, 0f, 0.8f);
         private const float ShadowOffset = 2f;
@@ -89,7 +93,7 @@ namespace WindingTale.Scenes.GameFieldScene
             box.anchorMin = new Vector2(0.5f, 0.5f);
             box.anchorMax = new Vector2(0.5f, 0.5f);
             box.pivot = new Vector2(0.5f, 0.5f);
-            box.anchoredPosition = Vector2.zero;
+            box.anchoredPosition = new Vector2(0f, -DropFromCentre);
             box.sizeDelta = new Vector2(BitmapWidth * PixelScale, BitmapHeight * PixelScale);
 
             Image background = boxObject.GetComponent<Image>();
@@ -106,7 +110,7 @@ namespace WindingTale.Scenes.GameFieldScene
             titlePlate.anchorMin = new Vector2(0.5f, 0.5f);
             titlePlate.anchorMax = new Vector2(0.5f, 0.5f);
             titlePlate.pivot = new Vector2(0.5f, 0f);
-            titlePlate.anchoredPosition = new Vector2(0f, BitmapHeight * PixelScale / 2f + TitleGap);
+            titlePlate.anchoredPosition = new Vector2(0f, BitmapHeight * PixelScale / 2f + TitleGap - DropFromCentre);
 
             // MAP . nn   TURN . nn
             AddText(font, map.ChapterId.ToString(), 67, 3, 16, 12, NumberFontSize, TextAlignmentOptions.Left);

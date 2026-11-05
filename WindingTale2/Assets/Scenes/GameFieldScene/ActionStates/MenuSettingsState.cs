@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Common;
+using WindingTale.Core.Files;
+using WindingTale.UI.Audio;
 using WindingTale.Scenes.GameFieldScene;
 
 namespace WindingTale.Scenes.GameFieldScene.ActionStates
@@ -11,17 +13,27 @@ namespace WindingTale.Scenes.GameFieldScene.ActionStates
         public MenuSettingsState(GameMain gameMain, FDPosition position) 
             : base(gameMain, position, new MenuSystemState(gameMain, position))
         {
-            // Sound
+            // Sound effects on/off. The menu stays open so the change can be heard (turning
+            // sound back on answers with a confirm click).
             this.SetMenu(0, MenuItemId.SettingsSound, true, () =>
             {
+                bool isOn = !UserSettingsManager.Current.IsSoundOn;
+                UserSettingsManager.SetSoundOn(isOn);
+                if (isOn)
+                {
+                    SoundEffects.Play(SoundEffect.DialogConfirm);
+                }
+                gameMain.gameMap.RefreshMenuOffMarks();
                 return this;
-            });
+            }, () => !UserSettingsManager.Current.IsSoundOn);
 
-            // Music
+            // Background music on/off.
             this.SetMenu(1, MenuItemId.SettingsMusic, true, () =>
             {
+                UserSettingsManager.SetMusicOn(!UserSettingsManager.Current.IsMusicOn);
+                gameMain.gameMap.RefreshMenuOffMarks();
                 return this;
-            });
+            }, () => !UserSettingsManager.Current.IsMusicOn);
 
             // Fight Animation On/Off
             this.SetMenu(2, MenuItemId.SettingsFight, true, () =>

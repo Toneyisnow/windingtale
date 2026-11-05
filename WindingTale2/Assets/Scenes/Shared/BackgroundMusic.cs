@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using WindingTale.Core.Files;
 
 /// <summary>
 /// The scene's background music, played on a single looping AudioSource. Every start
@@ -38,6 +39,30 @@ public class BackgroundMusic : MonoBehaviour
         audioSource.loop = true;
         audioSource.playOnAwake = false;
         audioSource.volume = 0f;
+        ApplyMusicSetting();
+    }
+
+    void OnEnable()
+    {
+        UserSettingsManager.AudioSettingsChanged += ApplyMusicSetting;
+    }
+
+    void OnDisable()
+    {
+        UserSettingsManager.AudioSettingsChanged -= ApplyMusicSetting;
+    }
+
+    /// <summary>
+    /// The settings menu's 音乐 toggle. Off mutes the source instead of stopping it, so the
+    /// track keeps its place (and every play / switch / fade keeps working underneath);
+    /// switching back on is heard straight away.
+    /// </summary>
+    private void ApplyMusicSetting()
+    {
+        if (audioSource != null)
+        {
+            audioSource.mute = !UserSettingsManager.Current.IsMusicOn;
+        }
     }
 
     /// <summary>

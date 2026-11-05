@@ -97,6 +97,48 @@ namespace WindingTale.EditorTools
             AssetDatabase.Refresh();
         }
 
+        /// <summary>
+        /// Batch-mode entry: rebakes the chapters named after -chapters (comma separated),
+        /// e.g. Unity.exe -batchmode -quit -projectPath . -executeMethod
+        /// WindingTale.EditorTools.ChapterFontAtlasBuilder.BuildChaptersFromCommandLine -chapters 33
+        /// </summary>
+        public static void BuildChaptersFromCommandLine()
+        {
+            string[] args = System.Environment.GetCommandLineArgs();
+            int index = System.Array.IndexOf(args, "-chapters");
+            if (index < 0 || index + 1 >= args.Length)
+            {
+                Debug.LogError("ChapterFontAtlasBuilder: pass -chapters NN[,NN...]");
+                EditorApplication.Exit(1);
+                return;
+            }
+
+            Font font = LoadSourceFont();
+            if (font == null)
+            {
+                EditorApplication.Exit(1);
+                return;
+            }
+
+            foreach (string part in args[index + 1].Split(','))
+            {
+                int chapter = int.Parse(part.Trim());
+                string listPath = string.Format("{0}/CharacterList_Chapter-{1:D2}.txt", CharacterListFolder, chapter);
+                if (!File.Exists(listPath))
+                {
+                    Debug.LogError("ChapterFontAtlasBuilder: no character list " + listPath);
+                    EditorApplication.Exit(1);
+                    return;
+                }
+
+                BuildChapter(font, chapter, listPath);
+            }
+
+            EditorUtility.ClearProgressBar();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
         private static void Build(bool rebuildExisting)
         {
             Font font = LoadSourceFont();

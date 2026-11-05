@@ -402,13 +402,13 @@ public class TalkDialog : MonoBehaviour
             yield return new WaitForSeconds(1f / 6f);
         }
 
-        // Idle blink: frame 0 held, then frame 3 for 0.5s, once every 5 seconds.
+        // Idle blink: frame 0 held 2.7s, then frame 3 (eyes closed) for 0.24s.
         while (true)
         {
             SetDatoFrame(0);
             yield return new WaitForSeconds(2.7f);
             SetDatoFrame(3);
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.24f);
         }
     }
 

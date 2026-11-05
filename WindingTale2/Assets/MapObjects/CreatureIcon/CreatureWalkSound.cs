@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Definitions;
+using WindingTale.Core.Files;
 using WindingTale.UI.Audio;
 
 namespace WindingTale.MapObjects.CreatureIcon
@@ -54,6 +55,7 @@ namespace WindingTale.MapObjects.CreatureIcon
             sound.audioSource.playOnAwake = false;
             sound.audioSource.spatialBlend = 0f;
             sound.audioSource.volume = Volume;
+            sound.audioSource.mute = !SoundEffects.IsSoundOn;
 
             walking.Add(sound);
             Arrange(clip);
@@ -114,6 +116,25 @@ namespace WindingTale.MapObjects.CreatureIcon
             }
 
             StartCoroutine(FadeOutAndDestroy());
+        }
+
+        void OnEnable()
+        {
+            UserSettingsManager.AudioSettingsChanged += ApplySoundSetting;
+        }
+
+        void OnDisable()
+        {
+            UserSettingsManager.AudioSettingsChanged -= ApplySoundSetting;
+        }
+
+        /// <summary>The 音效 toggle flipped mid-walk: mute or unmute the loop at once.</summary>
+        private void ApplySoundSetting()
+        {
+            if (audioSource != null)
+            {
+                audioSource.mute = !SoundEffects.IsSoundOn;
+            }
         }
 
         void OnDestroy()

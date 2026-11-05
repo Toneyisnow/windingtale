@@ -35,7 +35,7 @@ public class Menu : MonoBehaviour
     {
         FDMenuItem item = FDMenu.Items[itemIndex];
 
-        GameObject menuItemPrefab = LoadItemPrefab(item, item.Enabled ? 1 : 3);
+        GameObject menuItemPrefab = LoadItemPrefab(item, StaticFrame(item));
 
         // Not every item has a disabled (3) variant drawn -- only the ones that were ever
         // expected to grey out. Fall back to the normal art rather than instantiating null:
@@ -74,6 +74,39 @@ public class Menu : MonoBehaviour
     }
 
     /// <summary>
+    /// The art an item shows when it is not the active one: disabled (3) for an item that
+    /// cannot be chosen, and the same red-faced 3 for an on/off item that is off (the
+    /// settings menu's 音效 / 音乐, FDMenuItem.IsOff); else the normal blue 1.
+    /// </summary>
+    private static int StaticFrame(FDMenuItem item)
+    {
+        return !item.Enabled || IsOff(item) ? 3 : 1;
+    }
+
+    private static bool IsOff(FDMenuItem item)
+    {
+        return item.IsOff != null && item.IsOff();
+    }
+
+    /// <summary>
+    /// Re-reads every on/off item's setting and swaps its art (blue on, red off) after one
+    /// flipped, keeping the active item active.
+    /// </summary>
+    public void RefreshOffMarks()
+    {
+        int active = -1;
+        for (int i = 0; i < 4; i++)
+        {
+            if (FDMenu.Items[i] != null && FDMenu.Items[i].Selected)
+            {
+                active = i;
+            }
+        }
+
+        SetActiveItem(active);
+    }
+
+    /// <summary>
     /// Marks one item as the selected one: it runs a 2-frame animation between its
     /// Menu_XXX_1 and Menu_XXX_2 meshes, while the others show their static normal (1)
     /// or disabled (3) mesh. Purely visual. Disabled items can't be selected.
@@ -103,9 +136,11 @@ public class Menu : MonoBehaviour
 
             if (item.Enabled && i == activeIndex)
             {
-                // Selected: animate between frame 1 and frame 2.
-                Mesh frame1 = LoadItemMesh(item, 1);
-                Mesh frame2 = LoadItemMesh(item, 2);
+                // Selected: animate between frame 1 and frame 2 -- or, for an on/off
+                // item that is off, between its red frames 3 and 4.
+                bool off = IsOff(item);
+                Mesh frame1 = LoadItemMesh(item, off ? 3 : 1);
+                Mesh frame2 = LoadItemMesh(item, off ? 4 : 2);
                 if (frame1 != null && frame2 != null)
                 {
                     MenuItemBlink blink = menuItemObjs[i].AddComponent<MenuItemBlink>();
@@ -118,8 +153,8 @@ public class Menu : MonoBehaviour
             }
             else
             {
-                // Not selected: static normal (1) or disabled (3).
-                Mesh staticMesh = LoadItemMesh(item, item.Enabled ? 1 : 3);
+                // Not selected: static normal (1), or disabled / off (3).
+                Mesh staticMesh = LoadItemMesh(item, StaticFrame(item));
                 if (staticMesh != null)
                 {
                     filter.mesh = staticMesh;

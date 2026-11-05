@@ -71,7 +71,7 @@ public class ShoppingItemsDialog : MonoBehaviour
     /// The attribute (and its parentheses) is drawn as an inline &lt;size&gt; run inside the name
     /// label, so it reads smaller than the name it trails.
     /// </summary>
-    public float AttributeFontSize = 14f;
+    public float AttributeFontSize = 10f;
 
     /// <summary>Point size of the price label ("250元").</summary>
     public float PriceFontSize = 18f;
@@ -81,10 +81,10 @@ public class ShoppingItemsDialog : MonoBehaviour
     /// right-anchored, so it sits at the cell's right end and the name / attribute grow up to
     /// it from the left.
     /// </summary>
-    public float PriceOffsetX = 125f;
+    public float PriceOffsetX = 145f;
 
     /// <summary>Nudge of the highlight band off the selected cell's centre, in canvas pixels.</summary>
-    public float IndicatorOffsetX = 0f;
+    public float IndicatorOffsetX = 10f;
 
     public float IndicatorOffsetY = 0f;
 
@@ -420,7 +420,7 @@ public class ShoppingItemsDialog : MonoBehaviour
             }
 
             slotIcons[i] = CreateIcon(slotRects[i]);
-            nameTexts[i] = CreateLabel(slotRects[i], "Name", NameFontSize, NameOffsetX, 200f, 0f, TextAlignmentOptions.Left);
+            nameTexts[i] = CreateLabel(slotRects[i], "Name", NameFontSize, NameOffsetX, 220f, 0f, TextAlignmentOptions.Left);
             priceTexts[i] = CreateLabel(slotRects[i], "Price", PriceFontSize, PriceOffsetX, 110f, 1f, TextAlignmentOptions.Right);
         }
     }

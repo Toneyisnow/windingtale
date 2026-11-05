@@ -205,7 +205,8 @@ public class MenuState : IActionState
     #endregion
 
 
-    protected void SetMenu(int index, MenuItemId menuItemId, bool enabled, Func<IActionState> action)
+    /// <param name="isOff">For an on/off item: true while its setting is off (drawn with its red art).</param>
+    protected void SetMenu(int index, MenuItemId menuItemId, bool enabled, Func<IActionState> action, Func<bool> isOff = null)
     {
         if (index < 0 || index >= 4)
         {
@@ -213,6 +214,7 @@ public class MenuState : IActionState
         }
 
         this.fdMenu.Items[index] = new FDMenuItem(menuItemId, enabled, action, this.fdMenu.GetItemPosition(index), this.fdMenu);
+        this.fdMenu.Items[index].IsOff = isOff;
     }
 
 

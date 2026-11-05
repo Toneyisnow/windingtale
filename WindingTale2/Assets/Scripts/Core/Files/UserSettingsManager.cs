@@ -104,6 +104,28 @@ namespace WindingTale.Core.Files
         }
 
         /// <summary>
+        /// Raised after the music or sound toggle changes, so players already sounding
+        /// (the music track, walking loops) can mute or unmute at once.
+        /// </summary>
+        public static event System.Action AudioSettingsChanged;
+
+        /// <summary>Records the background music toggle, applies it live, and persists it.</summary>
+        public static void SetMusicOn(bool isOn)
+        {
+            Current.IsMusicOn = isOn;
+            Save();
+            AudioSettingsChanged?.Invoke();
+        }
+
+        /// <summary>Records the sound effects toggle, applies it live, and persists it.</summary>
+        public static void SetSoundOn(bool isOn)
+        {
+            Current.IsSoundOn = isOn;
+            Save();
+            AudioSettingsChanged?.Invoke();
+        }
+
+        /// <summary>
         /// Applies the saved settings once, before the first scene loads, so every scene
         /// comes up at the player's chosen resolution without needing an object placed in it.
         /// </summary>

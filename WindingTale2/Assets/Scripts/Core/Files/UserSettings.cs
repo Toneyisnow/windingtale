@@ -13,17 +13,29 @@ namespace WindingTale.Core.Files
     public class UserSettings
     {
         /// <summary>
-        /// Chosen window/backbuffer size. Defaults to 1280x768 so the game comes up windowed
+        /// Chosen window/backbuffer size. Defaults to 1280x720 so the game comes up windowed
         /// at that size on first run; a 0x0 value (from an older saved file) still means
         /// "never chosen" and keeps the display's native resolution.
         /// </summary>
         public int ScreenWidth { get; set; } = 1280;
-        public int ScreenHeight { get; set; } = 768;
+        public int ScreenHeight { get; set; } = 720;
 
         /// <summary>
-        /// Fullscreen vs. windowed. Defaults to windowed, matching the fixed 1280x768 window
+        /// Fullscreen vs. windowed. Defaults to windowed, matching the fixed 1280x720 window
         /// the desktop build ships with.
         /// </summary>
         public bool IsFullScreen { get; set; } = false;
+
+        /// <summary>
+        /// Background music on/off (the battlefield settings menu's 音乐 toggle). Off mutes
+        /// the music player rather than stopping it, so switching back on resumes the track.
+        /// </summary>
+        public bool IsMusicOn { get; set; } = true;
+
+        /// <summary>
+        /// Sound effects on/off (the battlefield settings menu's 音效 toggle): every one-shot
+        /// effect, footsteps and spell hit sounds.
+        /// </summary>
+        public bool IsSoundOn { get; set; } = true;
     }
 }

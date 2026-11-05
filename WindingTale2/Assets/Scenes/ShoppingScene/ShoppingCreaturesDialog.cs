@@ -220,8 +220,8 @@ public class ShoppingCreaturesDialog : MonoBehaviour
     // one item and moves on).
     private bool reopenInfoAfterSelect = false;
 
-    /// <summary>How much larger the shop draws the CreatureInfoDialog than its prefab size.</summary>
-    private const float InfoDialogScale = 1.15f;
+    /// <summary>How much larger the shop draws the CreatureInfoDialog than its prefab size (1.8x).</summary>
+    private const float InfoDialogScale = 1.8f;
 
     // Per-cell built pieces, rebuilt each time the page turns: the three idle-frame holders
     // whose visibility AnimateIcons cycles, and the world-space name label, both parented
@@ -755,10 +755,18 @@ public class ShoppingCreaturesDialog : MonoBehaviour
             return;
         }
 
+        // The panel canvas is drawn at its CanvasScaler's scale factor (1.5 in the shop), grown
+        // about the screen centre. The world-space grid follows the same way: its centre is
+        // pushed out from the screen centre by that factor and the whole grid (icons, names,
+        // highlight) is scaled by it, so cells stay lined up with the scaled frame.
+        float panelScale = GetPanelScale();
+        Vector2 center = new Vector2(0.5f, 0.5f) + (GridViewportCenter - new Vector2(0.5f, 0.5f)) * panelScale;
+
         // Distance must be positive, else the grid lands behind the camera and vanishes.
         gridRoot.position = mainCamera.ViewportToWorldPoint(
-            new Vector3(GridViewportCenter.x, GridViewportCenter.y, Mathf.Max(0.1f, IconDistance)));
+            new Vector3(center.x, center.y, Mathf.Max(0.1f, IconDistance)));
         gridRoot.rotation = mainCamera.transform.rotation;
+        gridRoot.localScale = Vector3.one * panelScale;
 
         Quaternion iconRotation = Quaternion.Euler(0f, 180f + IconYaw, 0f);
 
@@ -798,6 +806,13 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         }
 
         PositionIndicator();
+    }
+
+    /// <summary>The scale factor of this dialog's panel canvas (its CanvasScaler), 1 when it has none.</summary>
+    private float GetPanelScale()
+    {
+        CanvasScaler scaler = GetComponentInChildren<CanvasScaler>(true);
+        return scaler != null && scaler.scaleFactor > 0f ? scaler.scaleFactor : 1f;
     }
 
     /// <summary>The fixed local position of cell <paramref name="index"/> in the 3 x 3 grid.</summary>
@@ -914,7 +929,7 @@ public class ShoppingCreaturesDialog : MonoBehaviour
         Transform parent = canvas != null ? canvas.transform : this.transform;
         GameObject dialogObject = Instantiate(creatureInfoDialogPrefab, parent, false);
 
-        // The shop shows the dialog 15% larger than the battlefield does. The root is centred
+        // The shop shows the dialog 1.8x the battlefield size. The root is centred
         // on the canvas with a centred pivot, so the three panels grow about the screen centre.
         dialogObject.transform.localScale = Vector3.one * InfoDialogScale;
 

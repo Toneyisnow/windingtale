@@ -500,6 +500,10 @@ public class ShoppingScene : MonoBehaviour
                 OpenTransferFlow();
                 break;
 
+            case ShoppingHomeDialog.ShopAction.ShowInfo:
+                OpenShowInfoCreaturesDialog();
+                break;
+
             case ShoppingHomeDialog.ShopAction.BuyItem:
             case ShoppingHomeDialog.ShopAction.BuyAmor:
             case ShoppingHomeDialog.ShopAction.BuySecret:
@@ -562,6 +566,35 @@ public class ShoppingScene : MonoBehaviour
         dialog.Init(record, ShoppingCreaturesDialog.CreatureSelectType.All, CreatureInfoType.SelectAllItem,
             PopDialog, null, OnSellItemChosen);
         sellCreaturesDialog = dialog;
+        PushDialog(dialogObject);
+    }
+
+    /// <summary>
+    /// ShowInfo (the bar's and the church's 情报): the party picker over the home dialog;
+    /// confirming anyone opens their info dialog view-only (CreatureInfoType.View), which
+    /// closes back to the picker. Esc on the picker returns to the home dialog.
+    /// </summary>
+    private void OpenShowInfoCreaturesDialog()
+    {
+        if (shoppingCreaturesDialogPrefab == null)
+        {
+            Debug.LogWarning("Shopping scene has no creatures dialog prefab to show.");
+            return;
+        }
+
+        GameObject dialogObject = Instantiate(shoppingCreaturesDialogPrefab);
+        ShoppingCreaturesDialog dialog = dialogObject.GetComponent<ShoppingCreaturesDialog>();
+        if (dialog == null)
+        {
+            Debug.LogWarning("Creatures dialog prefab has no ShoppingCreaturesDialog component.");
+            Destroy(dialogObject);
+            return;
+        }
+
+        // The money bar is an overlay that would draw over the info dialog; pull it while it is up.
+        dialog.OnInfoDialogOpened = HideMoneyBar;
+        dialog.OnInfoDialogClosed = ShowMoneyBar;
+        dialog.Init(record, ShoppingCreaturesDialog.CreatureSelectType.All, CreatureInfoType.View, PopDialog);
         PushDialog(dialogObject);
     }
 

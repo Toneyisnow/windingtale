@@ -112,7 +112,7 @@ namespace WindingTale.UI.Dialogs
         // open-eyed portrait, frame 3 the closed-eyed one. Characters without a frame 3
         // simply hold frame 0.
         private const float DatoOpenSeconds = 2.5f;
-        private const float DatoBlinkSeconds = 0.5f;
+        private const float DatoBlinkSeconds = 0.4f;
 
         private Sprite datoOpenSprite = null;
         private Sprite datoBlinkSprite = null;

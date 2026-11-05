@@ -67,7 +67,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -160, y: -105}
+  m_AnchoredPosition: {x: -180, y: -105}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2423038134379538485
@@ -190,7 +190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
   m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
+  m_ScaleFactor: 1.5
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
@@ -283,7 +283,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -160, y: -55}
+  m_AnchoredPosition: {x: -180, y: -55}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4233552983475451265
@@ -321,7 +321,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 260, y: -162}
+  m_AnchoredPosition: {x: 280, y: -162}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1656142790017468212
@@ -438,7 +438,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -160, y: -155}
+  m_AnchoredPosition: {x: -180, y: -155}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5846888906709754747
@@ -476,7 +476,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -113}
-  m_SizeDelta: {x: 600, y: 172}
+  m_SizeDelta: {x: 640, y: 172}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5882983264422641640
 CanvasRenderer:
@@ -574,10 +574,10 @@ MonoBehaviour:
   IconOffsetX: -105
   NameFontSize: 20
   NameOffsetX: -80
-  AttributeFontSize: 14
+  AttributeFontSize: 10
   PriceFontSize: 18
-  PriceOffsetX: 125
-  IndicatorOffsetX: 0
+  PriceOffsetX: 145
+  IndicatorOffsetX: 10
   IndicatorOffsetY: 0
   IndicatorAlpha: 0.2
   IndicatorAlphaMin: 0.05
@@ -616,8 +616,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -160, y: -55}
-  m_SizeDelta: {x: 260, y: 42}
+  m_AnchoredPosition: {x: -170, y: -55}
+  m_SizeDelta: {x: 280, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3428329332592668060
 CanvasRenderer:
@@ -692,7 +692,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 260, y: -65}
+  m_AnchoredPosition: {x: 280, y: -65}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5380779679089024906

@@ -338,7 +338,8 @@ namespace WindingTale.Scenes.GameBattleScene
         /// </summary>
         private void playHitSound()
         {
-            if (effectDefinition == null || string.IsNullOrEmpty(effectDefinition.HitSound))
+            if (effectDefinition == null || string.IsNullOrEmpty(effectDefinition.HitSound)
+                || !SoundEffects.IsSoundOn)
             {
                 return;
             }

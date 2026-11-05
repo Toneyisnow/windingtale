@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using WindingTale.Core.Definitions;
+using WindingTale.Core.Files;
 using WindingTale.Core.Definitions.Items;
 
 namespace WindingTale.UI.Audio
@@ -247,8 +248,19 @@ namespace WindingTale.UI.Audio
             return WalkSurface.Normal;
         }
 
+        /// <summary>The settings menu's 音效 toggle: off silences every sound effect.</summary>
+        public static bool IsSoundOn
+        {
+            get { return UserSettingsManager.Current.IsSoundOn; }
+        }
+
         private static void PlayClip(string clipName)
         {
+            if (!IsSoundOn)
+            {
+                return;
+            }
+
             AudioClip clip = LoadClip(clipName);
             if (clip == null)
             {
