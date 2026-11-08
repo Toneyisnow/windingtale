@@ -23,7 +23,9 @@ public static class WindowsBuilder
             .Select(s => s.path)
             .ToArray();
 
-        string exeName = PlayerSettings.productName + ".exe";
+        // Fixed ASCII name: productName is Chinese, and the exe name also names the _Data
+        // folder and the Steam launch option, where non-ASCII paths are an avoidable risk.
+        const string exeName = "WindingTale.exe";
 
         string outputDir;
         if (Application.isBatchMode)
